@@ -1,5 +1,11 @@
 import * as React from "react";
-import { Platform, StatusBar, StyleSheet, View } from "react-native";
+import {
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
@@ -65,10 +71,37 @@ export default function App(props) {
   }
 }
 
-function Main() {
+function Main({ navigation }) {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} />
+      <Stack.Screen
+        name="Root"
+        component={BottomTabNavigator}
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.openDrawer();
+              }}
+            >
+              <Ionicons
+                name="md-menu"
+                size={20}
+                style={{ padding: 10, marginLeft: 5 }}
+              />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity>
+              <Ionicons
+                name="md-settings"
+                size={20}
+                style={{ padding: 10, marginRight: 5 }}
+              />
+            </TouchableOpacity>
+          ),
+        }}
+      />
     </Stack.Navigator>
   );
 }
