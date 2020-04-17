@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
-import { MonoText } from "../components/StyledText";
+import { MonoText } from "components/StyledText";
 
 export default function HomeScreen() {
   return (
@@ -22,9 +22,7 @@ export default function HomeScreen() {
         <View style={styles.welcomeContainer}>
           <Image
             source={
-              __DEV__
-                ? require("../assets/images/robot-dev.png")
-                : require("../assets/images/robot-prod.png")
+              __DEV__ ? require("./robot-dev.png") : require("./robot-prod.png")
             }
             style={styles.welcomeImage}
           />

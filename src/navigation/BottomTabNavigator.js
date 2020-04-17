@@ -1,15 +1,15 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 
-import TabBarIcon from "../components/TabBarIcon";
-import HomeScreen from "../screens/HomeScreen";
-import ReceiveScreen from "../screens/ReceiveScreen";
-import SendScreen from "../screens/SendScreen";
-import LinksScreen from "../screens/LinksScreen";
-import HomeIcon from "../assets/icons/home.svg";
-import PayIcon from "../assets/icons/pay.svg";
-import SendIcon from "../assets/icons/send.svg";
-import TransactionIcon from "../assets/icons/transaction.svg";
+import HomeIcon from "icons/home.svg";
+import PayIcon from "icons/pay.svg";
+import SendIcon from "icons/send.svg";
+import TransactionIcon from "icons/transaction.svg";
+import TabBarIcon from "components/TabBarIcon";
+import HomeScreen from "screens/HomeScreen";
+import ReceiveScreen from "screens/ReceiveScreen";
+import SendScreen from "screens/SendScreen";
+import LinksScreen from "screens/LinksScreen";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -53,7 +53,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         }}
       />
       <BottomTab.Screen
-        name="Links"
+        name="Transactions"
         component={LinksScreen}
         options={{
           title: "Transactions",
@@ -72,8 +72,12 @@ function getHeaderTitle(route) {
 
   switch (routeName) {
     case "Home":
-      return "How to get started";
-    case "Links":
-      return "Links to learn more";
+      return "Overview";
+    case "Receive":
+      return "Receive";
+    case "Send":
+      return "Send";
+    case "Transactions":
+      return "Transactions";
   }
 }
