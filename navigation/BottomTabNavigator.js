@@ -6,6 +6,10 @@ import HomeScreen from "../screens/HomeScreen";
 import ReceiveScreen from "../screens/ReceiveScreen";
 import SendScreen from "../screens/SendScreen";
 import LinksScreen from "../screens/LinksScreen";
+import HomeIcon from "../assets/icons/home.svg";
+import PayIcon from "../assets/icons/pay.svg";
+import SendIcon from "../assets/icons/send.svg";
+import TransactionIcon from "../assets/icons/transaction.svg";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -24,7 +28,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Overview",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-home" />
+            <TabBarIcon svg component={HomeIcon} focused={focused} />
           ),
         }}
       />
@@ -34,7 +38,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Receive",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-cash" />
+            <TabBarIcon svg component={PayIcon} focused={focused} />
           ),
         }}
       />
@@ -44,7 +48,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Send",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-send" />
+            <TabBarIcon svg component={SendIcon} focused={focused} />
           ),
         }}
       />
@@ -54,7 +58,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Transactions",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-book" />
+            <TabBarIcon svg component={TransactionIcon} focused={focused} />
           ),
         }}
       />

@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -84,8 +84,9 @@ function Main({ navigation }) {
                 navigation.openDrawer();
               }}
             >
-              <Ionicons
-                name="md-menu"
+              <FontAwesome5
+                name="user-circle"
+                solid
                 size={20}
                 style={{ padding: 10, marginLeft: 5 }}
               />
