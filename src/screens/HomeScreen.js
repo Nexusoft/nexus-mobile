@@ -4,13 +4,12 @@ import {
   Image,
   Platform,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
-import { MonoText } from "components/StyledText";
+import { Text, MonoText } from "components/StyledText";
 
 export default function HomeScreen() {
   return (

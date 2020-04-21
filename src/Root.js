@@ -38,7 +38,7 @@ export default function Root(props) {
         // Load fonts
         await Font.loadAsync({
           ...Ionicons.font,
-          "space-mono": require("./fonts/SpaceMono-Regular.ttf"),
+          "noto-sans": require("./fonts/NotoSans-Regular.ttf"),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
