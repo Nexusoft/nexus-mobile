@@ -12,7 +12,7 @@ import ReceiveScreen from "screens/ReceiveScreen";
 import SendScreen from "screens/SendScreen";
 import LinksScreen from "screens/LinksScreen";
 import { Text } from "components/StyledText";
-import AgnosticComponent from "components/AgnosticComponent";
+import Component from "components/Component";
 import LogoIcon from "icons/logo-full.svg";
 
 const BottomTab = createBottomTabNavigator();
@@ -20,14 +20,13 @@ const INITIAL_ROUTE_NAME = "Home";
 
 const Logo = styled(LogoIcon)(({ theme }) => ({
   color: theme.primary,
-  height: 20,
-  width: 88,
+  height: 23,
+  width: 100,
 }));
 
-const TabBarIcon = styled(AgnosticComponent)(({ focused, theme }) => ({
-  width: 30,
-  height: 30,
-  marginBottom: -3,
+const TabBarIcon = styled(Component)(({ focused, theme }) => ({
+  width: 25,
+  height: 25,
   color: focused ? theme.primary : theme.mix(0.75),
 }));
 
@@ -63,11 +62,10 @@ const getRouteName = (route) =>
   route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
 
 const getHeaderTitle = (route) => {
-  const routeName =
-    route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
+  const routeName = getRouteName(route);
   switch (routeName) {
     case "Home":
-      return ({ style }) => <Logo />;
+      return () => <Logo />;
     case "Receive":
       return "Receive";
     case "Send":
@@ -97,7 +95,7 @@ const renderScreen = ({ name, component, IconComponent }) => (
   />
 );
 
-export default function BottomTabNavigator({ navigation, route }) {
+export default function Base({ navigation, route }) {
   const theme = useTheme();
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
@@ -121,6 +119,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         activeBackgroundColor: theme.background,
         style: {
           borderTopWidth: 0,
+          // borderTopColor: theme.mix(0.125),
         },
       }}
     >

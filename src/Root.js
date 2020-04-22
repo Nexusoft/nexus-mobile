@@ -1,61 +1,27 @@
 import * as React from "react";
-import { Platform, StatusBar, TouchableOpacity } from "react-native";
+import { Platform, StatusBar, YellowBox } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
 import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ThemeProvider } from "emotion-theming";
 import styled from "@emotion/native";
 
 import { darkTheme } from "constants/themes";
-import AgnosticComponent from "components/AgnosticComponent";
 
-import BottomTabNavigator from "./navigation/BottomTabNavigator";
+import Main from "./Main";
 import useLinking from "./navigation/useLinking";
 import SideMenu from "./navigation/SideMenu";
 
-const Stack = createStackNavigator();
+YellowBox.ignoreWarnings(["Remote debugger"]);
+
 const Drawer = createDrawerNavigator();
 
 const Container = styled.View(({ theme }) => ({
   flex: 1,
   backgroundColor: theme.background,
 }));
-
-const HeaderIcon = styled(AgnosticComponent)(({ theme }) => ({
-  padding: 10,
-  marginLeft: 5,
-  color: theme.mix(0.75),
-}));
-
-function Main({ navigation }) {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Base"
-        component={BottomTabNavigator}
-        options={{
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.openDrawer();
-              }}
-            >
-              <HeaderIcon as={MaterialIcons} name="menu" size={20} />
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity>
-              <HeaderIcon as={Ionicons} name="ios-settings" size={20} />
-            </TouchableOpacity>
-          ),
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
 
 export default function Root(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
