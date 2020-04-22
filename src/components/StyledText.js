@@ -1,12 +1,6 @@
-import * as React from "react";
-import { Text as NativeText } from "react-native";
+import styled from "@emotion/native";
 
-export function Text(props) {
-  return (
-    <NativeText {...props} style={[{ fontFamily: "noto-sans" }, props.style]} />
-  );
-}
-
-export function MonoText(props) {
-  return <NativeText {...props} style={[props.style, {}]} />;
-}
+export const Text = styled.Text(({ theme }) => ({
+  fontFamily: "noto-sans",
+  color: theme.mix(0.75),
+}));

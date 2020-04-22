@@ -8,67 +8,54 @@ import {
   View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import styled from "@emotion/native";
 
-import { Text, MonoText } from "components/StyledText";
+import { Text } from "components/StyledText";
+
+const Container = styled(ScrollView)(({ theme }) => ({
+  flex: 1,
+  backgroundColor: theme.background,
+}));
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-      >
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__ ? require("./robot-dev.png") : require("./robot-prod.png")
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
+    <Container contentContainerStyle={styles.contentContainer}>
+      <View style={styles.welcomeContainer}>
+        <Image
+          source={
+            __DEV__ ? require("./robot-dev.png") : require("./robot-prod.png")
+          }
+          style={styles.welcomeImage}
+        />
+      </View>
 
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
+      <View style={styles.getStartedContainer}>
+        <DevelopmentModeNotice />
 
-          <Text style={styles.getStartedText}>
-            Open up the code for this screen:
-          </Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
-          >
-            <MonoText>screens/HomeScreen.js</MonoText>
-          </View>
-
-          <Text style={styles.getStartedText}>
-            Change any of the text, save the file, and your app will
-            automatically reload.
-          </Text>
-        </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Help, it didn’t automatically reload!
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>
-          This is a tab bar. You can edit it in:
+        <Text style={styles.getStartedText}>
+          Open up the code for this screen:...
         </Text>
 
         <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}
+          style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
         >
-          <MonoText style={styles.codeHighlightText}>
-            navigation/BottomTabNavigator.js
-          </MonoText>
+          <Text>screens/HomeScreen.js</Text>
         </View>
+
+        <Text style={styles.getStartedText}>
+          Change any of the text, save the file, and your app will automatically
+          reload.
+        </Text>
       </View>
-    </View>
+
+      <View style={styles.helpContainer}>
+        <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
+          <Text style={styles.helpLinkText}>
+            Help, it didn’t automatically reload!
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </Container>
   );
 }
 
@@ -155,7 +142,6 @@ const styles = StyleSheet.create({
   },
   getStartedText: {
     fontSize: 17,
-    color: "rgba(96,100,109, 1)",
     lineHeight: 24,
     textAlign: "center",
   },
