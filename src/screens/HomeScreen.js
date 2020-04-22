@@ -20,18 +20,7 @@ const Container = styled(ScrollView)(({ theme }) => ({
 export default function HomeScreen() {
   return (
     <Container contentContainerStyle={styles.contentContainer}>
-      <View style={styles.welcomeContainer}>
-        <Image
-          source={
-            __DEV__ ? require("./robot-dev.png") : require("./robot-prod.png")
-          }
-          style={styles.welcomeImage}
-        />
-      </View>
-
       <View style={styles.getStartedContainer}>
-        <DevelopmentModeNotice />
-
         <Text style={styles.getStartedText}>
           Open up the code for this screen:...
         </Text>

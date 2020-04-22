@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import styled from "@emotion/native";
+import { useTheme } from "emotion-theming";
 
 import HomeIcon from "icons/home.svg";
 import PayIcon from "icons/pay.svg";
@@ -12,29 +13,27 @@ import SendScreen from "screens/SendScreen";
 import LinksScreen from "screens/LinksScreen";
 import { Text } from "components/StyledText";
 import AgnosticComponent from "components/AgnosticComponent";
-import Colors from "constants/Colors";
+import LogoIcon from "icons/logo-full.svg";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
-export default function BottomTabNavigator({ navigation, route }) {
-  // Set the header title on the parent stack navigator depending on the
-  // currently active tab. Learn more in the documentation:
-  // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({ headerTitle: getHeaderTitle(route) });
+const Logo = styled(LogoIcon)(({ theme }) => ({
+  color: theme.primary,
+  height: 20,
+  width: 88,
+}));
 
-  return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
-      {screens.map((screen) => getScreen(screen))}
-    </BottomTab.Navigator>
-  );
-}
-
-const TabBarIcon = styled(AgnosticComponent)(({ focused }) => ({
-  width: 25,
-  height: 25,
+const TabBarIcon = styled(AgnosticComponent)(({ focused, theme }) => ({
+  width: 30,
+  height: 30,
   marginBottom: -3,
-  color: focused ? Colors.tabIconSelected : Colors.tabIconDefault,
+  color: focused ? theme.primary : theme.mix(0.75),
+}));
+
+const TabBarLabel = styled(Text)(({ focused, theme }) => ({
+  color: focused ? theme.primary : theme.mix(0.75),
+  fontSize: 12,
 }));
 
 const screens = [
@@ -60,7 +59,28 @@ const screens = [
   },
 ];
 
-const getScreen = ({ name, component, IconComponent }) => (
+const getRouteName = (route) =>
+  route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
+
+const getHeaderTitle = (route) => {
+  const routeName =
+    route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
+  switch (routeName) {
+    case "Home":
+      return ({ style }) => <Logo />;
+    case "Receive":
+      return "Receive";
+    case "Send":
+      return "Send";
+    case "Transactions":
+      return "Transactions";
+  }
+};
+
+const getHeaderTitleAlign = (route) =>
+  getRouteName(route) === "Home" ? "center" : "left";
+
+const renderScreen = ({ name, component, IconComponent }) => (
   <BottomTab.Screen
     key={name}
     name={name}
@@ -77,23 +97,34 @@ const getScreen = ({ name, component, IconComponent }) => (
   />
 );
 
-const TabBarLabel = styled(Text)(({ focused, color }) => ({
-  color: focused ? Colors.tabIconSelected : Colors.tabIconDefault,
-  fontSize: 12,
-}));
+export default function BottomTabNavigator({ navigation, route }) {
+  const theme = useTheme();
+  // Set the header title on the parent stack navigator depending on the
+  // currently active tab. Learn more in the documentation:
+  // https://reactnavigation.org/docs/en/screen-options-resolution.html
+  navigation.setOptions({
+    headerTitle: getHeaderTitle(route),
+    headerTitleAlign: getHeaderTitleAlign(route),
+    headerTitleStyle: {
+      color: theme.mix(0.75),
+    },
+    headerStyle: {
+      backgroundColor: theme.background,
+    },
+  });
 
-function getHeaderTitle(route) {
-  const routeName =
-    route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
-
-  switch (routeName) {
-    case "Home":
-      return "Overview";
-    case "Receive":
-      return "Receive";
-    case "Send":
-      return "Send";
-    case "Transactions":
-      return "Transactions";
-  }
+  return (
+    <BottomTab.Navigator
+      initialRouteName={INITIAL_ROUTE_NAME}
+      tabBarOptions={{
+        inactiveBackgroundColor: theme.background,
+        activeBackgroundColor: theme.background,
+        style: {
+          borderTopWidth: 0,
+        },
+      }}
+    >
+      {screens.map((screen) => renderScreen(screen))}
+    </BottomTab.Navigator>
+  );
 }

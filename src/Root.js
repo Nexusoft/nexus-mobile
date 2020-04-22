@@ -1,14 +1,8 @@
 import * as React from "react";
-import {
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { Platform, StatusBar, TouchableOpacity } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -16,6 +10,7 @@ import { ThemeProvider } from "emotion-theming";
 import styled from "@emotion/native";
 
 import { darkTheme } from "constants/themes";
+import AgnosticComponent from "components/AgnosticComponent";
 
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import useLinking from "./navigation/useLinking";
@@ -27,6 +22,12 @@ const Drawer = createDrawerNavigator();
 const Container = styled.View(({ theme }) => ({
   flex: 1,
   backgroundColor: theme.background,
+}));
+
+const HeaderIcon = styled(AgnosticComponent)(({ theme }) => ({
+  padding: 10,
+  marginLeft: 5,
+  color: theme.mix(0.75),
 }));
 
 function Main({ navigation }) {
@@ -42,21 +43,12 @@ function Main({ navigation }) {
                 navigation.openDrawer();
               }}
             >
-              <FontAwesome5
-                name="user-circle"
-                solid
-                size={20}
-                style={{ padding: 10, marginLeft: 5 }}
-              />
+              <HeaderIcon as={MaterialIcons} name="menu" size={20} />
             </TouchableOpacity>
           ),
           headerRight: () => (
             <TouchableOpacity>
-              <Ionicons
-                name="md-settings"
-                size={20}
-                style={{ padding: 10, marginRight: 5 }}
-              />
+              <HeaderIcon as={Ionicons} name="ios-settings" size={20} />
             </TouchableOpacity>
           ),
         }}
