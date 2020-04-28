@@ -2,21 +2,18 @@ import * as React from "react";
 import { Platform, StatusBar, YellowBox } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
-import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+
 import { ThemeProvider } from "emotion-theming";
 import styled from "@emotion/native";
 
 import { darkTheme } from "constants/themes";
 
-import Main from "./Main";
+import DrawerNavigator from "./navigation/DrawerNavigator";
 import useLinking from "./navigation/useLinking";
-import SideMenu from "./navigation/SideMenu";
 
 YellowBox.ignoreWarnings(["Remote debugger"]);
-
-const Drawer = createDrawerNavigator();
 
 const Container = styled.View(({ theme }) => ({
   flex: 1,
@@ -41,6 +38,7 @@ export default function Root(props) {
         // Load fonts
         await Font.loadAsync({
           ...Ionicons.font,
+          ...MaterialIcons.font,
           "noto-sans": require("./fonts/NotoSans-Regular.ttf"),
         });
       } catch (e) {
@@ -66,11 +64,7 @@ export default function Root(props) {
             ref={containerRef}
             initialState={initialNavigationState}
           >
-            <Drawer.Navigator
-              drawerContent={(props) => <SideMenu {...props} />}
-            >
-              <Drawer.Screen name="Main" component={Main} />
-            </Drawer.Navigator>
+            <DrawerNavigator />
           </NavigationContainer>
         </Container>
       </ThemeProvider>

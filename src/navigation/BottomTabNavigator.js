@@ -13,16 +13,8 @@ import SendScreen from "screens/SendScreen";
 import LinksScreen from "screens/LinksScreen";
 import { Text } from "components/StyledText";
 import Component from "components/Component";
-import LogoIcon from "icons/logo-full.svg";
 
 const BottomTab = createBottomTabNavigator();
-const INITIAL_ROUTE_NAME = "Home";
-
-const Logo = styled(LogoIcon)(({ theme }) => ({
-  color: theme.primary,
-  height: 23,
-  width: 100,
-}));
 
 const TabBarIcon = styled(Component)(({ focused, theme }) => ({
   width: 25,
@@ -58,26 +50,6 @@ const screens = [
   },
 ];
 
-const getRouteName = (route) =>
-  route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
-
-const getHeaderTitle = (route) => {
-  const routeName = getRouteName(route);
-  switch (routeName) {
-    case "Home":
-      return () => <Logo />;
-    case "Receive":
-      return "Receive";
-    case "Send":
-      return "Send";
-    case "Transactions":
-      return "Transactions";
-  }
-};
-
-const getHeaderTitleAlign = (route) =>
-  getRouteName(route) === "Home" ? "center" : "left";
-
 const renderScreen = ({ name, component, IconComponent }) => (
   <BottomTab.Screen
     key={name}
@@ -95,25 +67,12 @@ const renderScreen = ({ name, component, IconComponent }) => (
   />
 );
 
-export default function Base({ navigation, route }) {
+export default function BottomTabNavigator() {
   const theme = useTheme();
-  // Set the header title on the parent stack navigator depending on the
-  // currently active tab. Learn more in the documentation:
-  // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({
-    headerTitle: getHeaderTitle(route),
-    headerTitleAlign: getHeaderTitleAlign(route),
-    headerTitleStyle: {
-      color: theme.mix(0.75),
-    },
-    headerStyle: {
-      backgroundColor: theme.background,
-    },
-  });
 
   return (
     <BottomTab.Navigator
-      initialRouteName={INITIAL_ROUTE_NAME}
+      initialRouteName="Home"
       tabBarOptions={{
         inactiveBackgroundColor: theme.background,
         activeBackgroundColor: theme.background,
