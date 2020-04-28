@@ -4,9 +4,12 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import styled from "@emotion/native";
 import { useTheme } from "emotion-theming";
+import { useNavigation } from "@react-navigation/native";
 
+import SettingsScreen from "screens/SettingsScreen";
 import Component from "components/Component";
 import LogoIcon from "icons/logo-full.svg";
+import { navigate } from "navigation/rootNavigator";
 
 import BottomTabNavigator from "./BottomTabNavigator";
 
@@ -78,12 +81,17 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigate("Settings");
+              }}
+            >
               <HeaderIcon as={Ionicons} name="ios-settings" size={25} />
             </TouchableOpacity>
           ),
         }}
       />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
     </Stack.Navigator>
   );
 }
