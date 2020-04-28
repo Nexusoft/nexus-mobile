@@ -1,6 +1,7 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "devtools": "react-devtools",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -16,10 +17,10 @@
     "@emotion/native": "^10.0.27",
     "@expo/vector-icons": "~10.0.6",
     "@react-native-community/masked-view": "0.1.6",
-    "@react-navigation/bottom-tabs": "^5.0.0",
-    "@react-navigation/drawer": "^5.4.1",
-    "@react-navigation/native": "^5.0.0",
-    "@react-navigation/stack": "^5.0.0",
+    "@react-navigation/bottom-tabs": "^5.2.8",
+    "@react-navigation/drawer": "^5.5.1",
+    "@react-navigation/native": "^5.1.7",
+    "@react-navigation/stack": "^5.2.14",
     "@react-navigation/web": "~1.0.0-alpha.9",
     "emotion-theming": "^10.0.27",
     "expo": "~37.0.3",
@@ -42,6 +43,7 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "~8.1.0",
     "jest-expo": "~37.0.0",
+    "react-devtools": "3",
     "react-native-svg-transformer": "^0.14.3"
   },
   "private": true
