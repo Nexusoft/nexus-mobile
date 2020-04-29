@@ -1,4 +1,5 @@
 import { getMixer } from "utils/color";
+import memoize from "utils/memoize";
 
 const darkColor = "rgb(33,33,38)";
 const lightColor = "rgb(239,240,236)";
@@ -45,3 +46,14 @@ export const lightTheme = {
   danger: dangerColor,
   dangerAccent: lightColor,
 };
+
+export const getNavTheme = memoize((theme) => ({
+  dark: theme.dark,
+  colors: {
+    background: theme.background,
+    border: theme.background,
+    card: theme.shade(-4),
+    primary: theme.primary,
+    text: theme.shade(1),
+  },
+}));

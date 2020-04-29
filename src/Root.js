@@ -6,7 +6,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { ThemeProvider } from "emotion-theming";
 import styled from "@emotion/native";
 
-import { darkTheme } from "constants/themes";
+import { darkTheme } from "lib/theme";
 
 import RootNavigator from "./navigation/RootNavigator";
 import { navContainerRef } from "./navigation/container";

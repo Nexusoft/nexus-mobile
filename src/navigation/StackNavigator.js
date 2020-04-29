@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { DefaultTheme, Button } from "react-native-paper";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import styled from "@emotion/native";
@@ -10,6 +10,8 @@ import { navigate } from "navigation/container";
 
 import { screens, DEFAULT_SCREEN } from "./bottomTabScreens";
 import BottomTabNavigator from "./BottomTabNavigator";
+
+console.log(DefaultTheme);
 
 const Stack = createStackNavigator();
 
@@ -37,22 +39,24 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
         component={BottomNavScreen}
         options={{
           headerLeft: () => (
-            <TouchableOpacity
+            <Button
+              mode="text"
               onPress={() => {
                 drawerNavigation.openDrawer();
               }}
             >
               <HeaderIcon as={MaterialIcons} name="menu" size={25} />
-            </TouchableOpacity>
+            </Button>
           ),
           headerRight: () => (
-            <TouchableOpacity
+            <Button
+              mode="text"
               onPress={() => {
                 navigate("Settings");
               }}
             >
               <HeaderIcon as={Ionicons} name="ios-settings" size={25} />
-            </TouchableOpacity>
+            </Button>
           ),
         }}
       />

@@ -1,22 +1,15 @@
 import React from "react";
-import { NavigationContainer, StackActions } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useTheme } from "emotion-theming";
 
-import memoize from "utils/memoize";
+import { getNavTheme } from "lib/theme";
 
-import DrawerNavigator from "./DrawerNavigator";
+import SideMenu from "./SideMenu";
+import StackNavigator from "./StackNavigator";
 import { navContainerRef } from "./container";
 
-const getNavTheme = memoize((theme) => ({
-  dark: theme.dark,
-  colors: {
-    background: theme.background,
-    border: theme.background,
-    card: theme.shade(-4),
-    primary: theme.primary,
-    text: theme.shade(1),
-  },
-}));
+const Drawer = createDrawerNavigator();
 
 export default function RootNavigator({ initialNavigationState }) {
   const theme = useTheme();
@@ -27,7 +20,9 @@ export default function RootNavigator({ initialNavigationState }) {
       initialState={initialNavigationState}
       theme={navTheme}
     >
-      <DrawerNavigator />
+      <Drawer.Navigator drawerContent={(props) => <SideMenu {...props} />}>
+        <Drawer.Screen name="StackNav" component={StackNavigator} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }
