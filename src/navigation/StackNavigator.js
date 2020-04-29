@@ -56,12 +56,6 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
               <HeaderIcon as={Ionicons} name="ios-settings" size={25} />
             </TouchableOpacity>
           ),
-          headerTitleStyle: {
-            color: theme.mix(0.75),
-          },
-          headerStyle: {
-            backgroundColor: theme.background,
-          },
         }}
       />
       <Stack.Screen name="Settings" component={SettingsScreen} />

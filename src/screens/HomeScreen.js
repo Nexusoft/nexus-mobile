@@ -1,12 +1,6 @@
 import * as WebBrowser from "expo-web-browser";
 import * as React from "react";
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import styled from "@emotion/native";
 

@@ -8,13 +8,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { ThemeProvider } from "emotion-theming";
 import styled from "@emotion/native";
 
-import { darkTheme } from "constants/themes";
+import { darkTheme, navDarkTheme } from "constants/themes";
 
 import { navContainerRef } from "./navigation/rootNavigator";
 import DrawerNavigator from "./navigation/DrawerNavigator";
 import useLinking from "./navigation/useLinking";
-
-YellowBox.ignoreWarnings(["Remote debugger"]);
 
 const Container = styled.View(({ theme }) => ({
   flex: 1,
@@ -63,8 +61,11 @@ export default function Root(props) {
           <NavigationContainer
             ref={navContainerRef}
             initialState={initialNavigationState}
+            theme={navDarkTheme}
           >
-            <DrawerNavigator />
+            <Container>
+              <DrawerNavigator />
+            </Container>
           </NavigationContainer>
         </Container>
       </ThemeProvider>

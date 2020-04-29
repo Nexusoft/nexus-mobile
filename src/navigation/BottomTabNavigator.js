@@ -44,8 +44,8 @@ export default function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName={DEFAULT_SCREEN}
       tabBarOptions={{
-        inactiveBackgroundColor: theme.background,
-        activeBackgroundColor: theme.background,
+        // inactiveBackgroundColor: theme.background,
+        // activeBackgroundColor: theme.background,
         style: {
           borderTopWidth: 0,
           // borderTopColor: theme.mix(0.125),
