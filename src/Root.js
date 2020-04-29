@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Platform, StatusBar } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
@@ -8,7 +8,8 @@ import styled from "@emotion/native";
 
 import { darkTheme } from "constants/themes";
 
-import RootNavigator, { navContainerRef } from "./navigation/RootNavigator";
+import RootNavigator from "./navigation/RootNavigator";
+import { navContainerRef } from "./navigation/container";
 import useLinking from "./navigation/useLinking";
 
 const Container = styled.View(({ theme }) => ({

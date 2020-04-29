@@ -1,20 +1,11 @@
-import * as React from "react";
+import React from "react";
 import { NavigationContainer, StackActions } from "@react-navigation/native";
 import { useTheme } from "emotion-theming";
 
 import memoize from "utils/memoize";
 
 import DrawerNavigator from "./DrawerNavigator";
-
-export const navContainerRef = React.createRef();
-
-export function navigate(...args) {
-  navContainerRef.current?.navigate(...args);
-}
-
-export function push(...args) {
-  navContainerRef.current?.dispatch(StackActions.push(...args));
-}
+import { navContainerRef } from "./container";
 
 const getNavTheme = memoize((theme) => ({
   dark: theme.dark,

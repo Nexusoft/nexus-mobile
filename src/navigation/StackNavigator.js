@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { TouchableOpacity } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -6,7 +6,7 @@ import styled from "@emotion/native";
 
 import SettingsScreen from "screens/SettingsScreen";
 import Component from "components/Component";
-import { navigate } from "navigation/RootNavigator";
+import { navigate } from "navigation/container";
 
 import { screens, DEFAULT_SCREEN } from "./bottomTabScreens";
 import BottomTabNavigator from "./BottomTabNavigator";

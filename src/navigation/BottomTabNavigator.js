@@ -1,5 +1,5 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import * as React from "react";
+import React from "react";
 import styled from "@emotion/native";
 import { useTheme } from "emotion-theming";
 
