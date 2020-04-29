@@ -3,7 +3,6 @@ import { TouchableOpacity } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import styled from "@emotion/native";
-import { useTheme } from "emotion-theming";
 
 import SettingsScreen from "screens/SettingsScreen";
 import Component from "components/Component";
@@ -31,7 +30,6 @@ function BottomNavScreen({ navigation: stackNavigation, route }) {
 }
 
 export default function StackNavigator({ navigation: drawerNavigation }) {
-  const theme = useTheme();
   return (
     <Stack.Navigator>
       <Stack.Screen

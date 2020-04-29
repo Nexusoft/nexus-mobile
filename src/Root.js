@@ -1,17 +1,14 @@
 import * as React from "react";
-import { Platform, StatusBar, YellowBox } from "react-native";
+import { Platform, StatusBar } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
-
 import { ThemeProvider } from "emotion-theming";
 import styled from "@emotion/native";
 
-import { darkTheme, navDarkTheme } from "constants/themes";
+import { darkTheme } from "constants/themes";
 
-import { navContainerRef } from "./navigation/rootNavigator";
-import DrawerNavigator from "./navigation/DrawerNavigator";
+import RootNavigator, { navContainerRef } from "./navigation/RootNavigator";
 import useLinking from "./navigation/useLinking";
 
 const Container = styled.View(({ theme }) => ({
@@ -58,15 +55,7 @@ export default function Root(props) {
       <ThemeProvider theme={darkTheme}>
         <Container>
           {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-          <NavigationContainer
-            ref={navContainerRef}
-            initialState={initialNavigationState}
-            theme={navDarkTheme}
-          >
-            <Container>
-              <DrawerNavigator />
-            </Container>
-          </NavigationContainer>
+          <RootNavigator initialNavigationState={initialNavigationState} />
         </Container>
       </ThemeProvider>
     );

@@ -8,6 +8,7 @@ const dangerColor = "rgb(143,36,14)";
 
 const darkThemeMixer = getMixer(darkColor, lightColor);
 export const darkTheme = {
+  dark: true,
   background: darkColor,
   foreground: lightColor,
   mix: darkThemeMixer,
@@ -19,6 +20,7 @@ export const darkTheme = {
 
 const lightThemeMixer = getMixer(lightColor, darkColor);
 export const lightTheme = {
+  dark: false,
   background: lightColor,
   foreground: darkColor,
   mix: lightThemeMixer,
@@ -26,26 +28,4 @@ export const lightTheme = {
   primaryAccent: lightColor,
   danger: dangerColor,
   dangerAccent: lightColor,
-};
-
-export const navDarkTheme = {
-  dark: true,
-  colors: {
-    background: darkColor,
-    border: darkColor,
-    card: darkThemeMixer(0.0625),
-    primary: lightPrimaryColor,
-    text: darkThemeMixer(0.75),
-  },
-};
-
-export const navLightTheme = {
-  dark: false,
-  colors: {
-    background: lightColor,
-    border: lightColor,
-    card: lightThemeMixer(0.0625),
-    primary: darkPrimaryColor,
-    text: lightThemeMixer(0.75),
-  },
 };
