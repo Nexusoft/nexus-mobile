@@ -6,7 +6,7 @@ import styled from "@emotion/native";
 
 import SettingsScreen from "screens/SettingsScreen";
 import Component from "components/Component";
-import { navigate } from "navigation/rootNavigator";
+import { navigate } from "navigation/RootNavigator";
 
 import { screens, DEFAULT_SCREEN } from "./bottomTabScreens";
 import BottomTabNavigator from "./BottomTabNavigator";
@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 const HeaderIcon = styled(Component)(({ theme }) => ({
   padding: 10,
   marginLeft: 5,
-  color: theme.mix(0.75),
+  color: theme.shade(1),
 }));
 
 const getRouteName = (route) =>

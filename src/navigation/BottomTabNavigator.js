@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import styled from "@emotion/native";
-import { useTheme } from "emotion-theming";
 
 import { DEFAULT_SCREEN, screens } from "./bottomTabScreens";
 import { Text } from "components/StyledText";
@@ -12,11 +11,11 @@ const BottomTab = createBottomTabNavigator();
 const TabBarIcon = styled(Component)(({ focused, theme }) => ({
   width: 25,
   height: 25,
-  color: focused ? theme.primary : theme.mix(0.75),
+  color: focused ? theme.primary : theme.shade(1),
 }));
 
 const TabBarLabel = styled(Text)(({ focused, theme }) => ({
-  color: focused ? theme.primary : theme.mix(0.75),
+  color: focused ? theme.primary : theme.shade(1),
   fontSize: 12,
 }));
 
@@ -38,20 +37,8 @@ const renderScreen = ({ name, component, IconComponent }) => (
 );
 
 export default function BottomTabNavigator() {
-  const theme = useTheme();
-
   return (
-    <BottomTab.Navigator
-      initialRouteName={DEFAULT_SCREEN}
-      tabBarOptions={{
-        // inactiveBackgroundColor: theme.background,
-        // activeBackgroundColor: theme.background,
-        style: {
-          borderTopWidth: 0,
-          // borderTopColor: theme.mix(0.125),
-        },
-      }}
-    >
+    <BottomTab.Navigator initialRouteName={DEFAULT_SCREEN}>
       {screens.map((screen) => renderScreen(screen))}
     </BottomTab.Navigator>
   );
