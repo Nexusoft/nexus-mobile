@@ -1,23 +1,17 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import * as React from "react";
 import styled from "@emotion/native";
+import { useTheme } from "emotion-theming";
 
 import { DEFAULT_SCREEN, screens } from "./bottomTabScreens";
-import { Text } from "components/StyledText";
 import Component from "components/Component";
 
-const BottomTab = createBottomTabNavigator();
+const BottomTab = createMaterialBottomTabNavigator();
 
-const TabBarIcon = styled(Component)(({ focused, theme }) => ({
+const TabBarIcon = styled(Component)({
   width: 25,
   height: 25,
-  color: focused ? theme.primary : theme.shade(1),
-}));
-
-const TabBarLabel = styled(Text)(({ focused, theme }) => ({
-  color: focused ? theme.primary : theme.shade(1),
-  fontSize: 12,
-}));
+});
 
 const renderScreen = ({ name, component, IconComponent }) => (
   <BottomTab.Screen
@@ -26,19 +20,18 @@ const renderScreen = ({ name, component, IconComponent }) => (
     component={component}
     options={{
       title: name,
-      tabBarIcon: ({ focused }) => (
-        <TabBarIcon as={IconComponent} focused={focused} />
+      tabBarIcon: ({ color }) => (
+        <TabBarIcon as={IconComponent} style={{ color }} />
       ),
-      tabBarLabel: ({ focused, color }) => (
-        <TabBarLabel {...{ focused, color }}>{name}</TabBarLabel>
-      ),
+      tabBarLabel: name,
     }}
   />
 );
 
 export default function BottomTabNavigator() {
+  const theme = useTheme();
   return (
-    <BottomTab.Navigator initialRouteName={DEFAULT_SCREEN}>
+    <BottomTab.Navigator initialRouteName={DEFAULT_SCREEN} shifting={false}>
       {screens.map((screen) => renderScreen(screen))}
     </BottomTab.Navigator>
   );

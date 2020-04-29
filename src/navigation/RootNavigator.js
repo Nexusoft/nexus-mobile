@@ -21,7 +21,7 @@ const getNavTheme = memoize((theme) => ({
   colors: {
     background: theme.background,
     border: theme.background,
-    card: theme.shade(-3),
+    card: theme.shade(-4),
     primary: theme.primary,
     text: theme.shade(1),
   },

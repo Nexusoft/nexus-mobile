@@ -1,6 +1,6 @@
 import { getMixer } from "utils/color";
 
-const darkColor = "rgb(27,27,33)";
+const darkColor = "rgb(33,33,38)";
 const lightColor = "rgb(239,240,236)";
 const lightPrimaryColor = "rgb(0,183,250)";
 const darkPrimaryColor = "rgb(8,154,207)";
