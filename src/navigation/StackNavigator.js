@@ -46,29 +46,25 @@ const getHeaderTitle = (route) => {
 const getHeaderTitleAlign = (route) =>
   getRouteName(route) === "Home" ? "center" : "left";
 
+function BottomNav({ navigation: stackNavigation, route }) {
+  // Set the header title on the parent stack navigator depending on the
+  // currently active tab. Learn more in the documentation:
+  // https://reactnavigation.org/docs/en/screen-options-resolution.html
+  stackNavigation.setOptions({
+    headerTitle: getHeaderTitle(route),
+    headerTitleAlign: getHeaderTitleAlign(route),
+  });
+
+  return <BottomTabNavigator />;
+}
+
 export default function StackNavigator({ navigation: drawerNavigation }) {
+  const theme = useTheme();
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="BottomNav"
-        component={function ({ navigation: stackNavigation, route }) {
-          const theme = useTheme();
-          // Set the header title on the parent stack navigator depending on the
-          // currently active tab. Learn more in the documentation:
-          // https://reactnavigation.org/docs/en/screen-options-resolution.html
-          stackNavigation.setOptions({
-            headerTitle: getHeaderTitle(route),
-            headerTitleAlign: getHeaderTitleAlign(route),
-            headerTitleStyle: {
-              color: theme.mix(0.75),
-            },
-            headerStyle: {
-              backgroundColor: theme.background,
-            },
-          });
-
-          return <BottomTabNavigator />;
-        }}
+        component={BottomNav}
         options={{
           headerLeft: () => (
             <TouchableOpacity
@@ -88,6 +84,12 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
               <HeaderIcon as={Ionicons} name="ios-settings" size={25} />
             </TouchableOpacity>
           ),
+          headerTitleStyle: {
+            color: theme.mix(0.75),
+          },
+          headerStyle: {
+            backgroundColor: theme.background,
+          },
         }}
       />
       <Stack.Screen name="Settings" component={SettingsScreen} />
