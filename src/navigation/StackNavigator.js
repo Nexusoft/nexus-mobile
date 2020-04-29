@@ -7,9 +7,9 @@ import { useTheme } from "emotion-theming";
 
 import SettingsScreen from "screens/SettingsScreen";
 import Component from "components/Component";
-import LogoIcon from "icons/logo-full.svg";
 import { navigate } from "navigation/rootNavigator";
 
+import { screens, DEFAULT_SCREEN } from "./bottomTabScreens";
 import BottomTabNavigator from "./BottomTabNavigator";
 
 const Stack = createStackNavigator();
@@ -20,41 +20,13 @@ const HeaderIcon = styled(Component)(({ theme }) => ({
   color: theme.mix(0.75),
 }));
 
-const Logo = styled(LogoIcon)(({ theme }) => ({
-  color: theme.primary,
-  height: 23,
-  width: 100,
-}));
-
 const getRouteName = (route) =>
-  route.state?.routes[route.state.index]?.name ?? "Home";
+  route.state?.routes[route.state.index]?.name ?? DEFAULT_SCREEN;
 
-const getHeaderTitle = (route) => {
+function BottomNavScreen({ navigation: stackNavigation, route }) {
   const routeName = getRouteName(route);
-  switch (routeName) {
-    case "Home":
-      return () => <Logo />;
-    case "Receive":
-      return "Receive";
-    case "Send":
-      return "Send";
-    case "Transactions":
-      return "Transactions";
-  }
-};
-
-const getHeaderTitleAlign = (route) =>
-  getRouteName(route) === "Home" ? "center" : "left";
-
-function BottomNav({ navigation: stackNavigation, route }) {
-  // Set the header title on the parent stack navigator depending on the
-  // currently active tab. Learn more in the documentation:
-  // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  stackNavigation.setOptions({
-    headerTitle: getHeaderTitle(route),
-    headerTitleAlign: getHeaderTitleAlign(route),
-  });
-
+  const screen = screens.find((screen) => screen.name === routeName);
+  stackNavigation.setOptions(screen?.options);
   return <BottomTabNavigator />;
 }
 
@@ -64,7 +36,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
     <Stack.Navigator>
       <Stack.Screen
         name="BottomNav"
-        component={BottomNav}
+        component={BottomNavScreen}
         options={{
           headerLeft: () => (
             <TouchableOpacity
