@@ -4,7 +4,6 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import styled from "@emotion/native";
 import { useTheme } from "emotion-theming";
-import { useNavigation } from "@react-navigation/native";
 
 import SettingsScreen from "screens/SettingsScreen";
 import Component from "components/Component";
