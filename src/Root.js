@@ -5,8 +5,10 @@ import * as Font from "expo-font";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { ThemeProvider } from "emotion-theming";
 import styled from "@emotion/native";
+import { Provider as PaperProvider } from "react-native-paper";
+import { useTheme } from "emotion-theming";
 
-import { darkTheme } from "lib/theme";
+import { darkTheme, getPaperTheme } from "lib/theme";
 
 import RootNavigator from "./navigation/RootNavigator";
 import { navContainerRef } from "./navigation/container";
@@ -16,6 +18,11 @@ const Container = styled.View(({ theme }) => ({
   flex: 1,
   backgroundColor: theme.background,
 }));
+
+function PaperContainer({ children }) {
+  const theme = useTheme();
+  return <PaperProvider theme={getPaperTheme(theme)}>{children}</PaperProvider>;
+}
 
 export default function Root(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
@@ -54,10 +61,12 @@ export default function Root(props) {
   } else {
     return (
       <ThemeProvider theme={darkTheme}>
-        <Container>
-          {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-          <RootNavigator initialNavigationState={initialNavigationState} />
-        </Container>
+        <PaperContainer>
+          <Container>
+            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+            <RootNavigator initialNavigationState={initialNavigationState} />
+          </Container>
+        </PaperContainer>
       </ThemeProvider>
     );
   }

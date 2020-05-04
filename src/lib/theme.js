@@ -1,3 +1,5 @@
+import { DefaultTheme } from "react-native-paper";
+
 import { getMixer } from "utils/color";
 import memoize from "utils/memoize";
 
@@ -55,5 +57,17 @@ export const getNavTheme = memoize((theme) => ({
     card: theme.shade(-4),
     primary: theme.primary,
     text: theme.shade(1),
+  },
+}));
+
+export const getPaperTheme = memoize((theme) => ({
+  ...DefaultTheme,
+  dark: theme.dark,
+  mode: "adaptive",
+  colors: {
+    background: theme.background,
+    accent: theme.shade(1),
+    primary: theme.primary,
+    error: theme.danger,
   },
 }));

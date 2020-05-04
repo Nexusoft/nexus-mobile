@@ -1,8 +1,9 @@
 import React from "react";
-import { DefaultTheme, Button } from "react-native-paper";
+import { TouchableNativeFeedback } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import styled from "@emotion/native";
+import { useTheme } from "emotion-theming";
 
 import SettingsScreen from "screens/SettingsScreen";
 import Component from "components/Component";
@@ -11,13 +12,14 @@ import { navigate } from "navigation/container";
 import { screens, DEFAULT_SCREEN } from "./bottomTabScreens";
 import BottomTabNavigator from "./BottomTabNavigator";
 
-console.log(DefaultTheme);
-
 const Stack = createStackNavigator();
 
+const HeaderButton = styled.View({
+  marginHorizontal: 10,
+});
+
 const HeaderIcon = styled(Component)(({ theme }) => ({
-  padding: 10,
-  marginLeft: 5,
+  padding: 2.5,
   color: theme.shade(1),
 }));
 
@@ -32,6 +34,7 @@ function BottomNavScreen({ navigation: stackNavigation, route }) {
 }
 
 export default function StackNavigator({ navigation: drawerNavigation }) {
+  const theme = useTheme();
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -39,24 +42,32 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
         component={BottomNavScreen}
         options={{
           headerLeft: () => (
-            <Button
-              mode="text"
+            <TouchableNativeFeedback
+              delayPressIn={0}
+              background={TouchableNativeFeedback.Ripple(theme.shade(1), true)}
+              useForeground
               onPress={() => {
                 drawerNavigation.openDrawer();
               }}
             >
-              <HeaderIcon as={MaterialIcons} name="menu" size={25} />
-            </Button>
+              <HeaderButton>
+                <HeaderIcon as={MaterialIcons} name="menu" size={25} />
+              </HeaderButton>
+            </TouchableNativeFeedback>
           ),
           headerRight: () => (
-            <Button
-              mode="text"
+            <TouchableNativeFeedback
+              delayPressIn={0}
+              background={TouchableNativeFeedback.Ripple(theme.shade(1), true)}
+              useForeground
               onPress={() => {
                 navigate("Settings");
               }}
             >
-              <HeaderIcon as={Ionicons} name="ios-settings" size={25} />
-            </Button>
+              <HeaderButton>
+                <HeaderIcon as={Ionicons} name="ios-settings" size={25} />
+              </HeaderButton>
+            </TouchableNativeFeedback>
           ),
         }}
       />
