@@ -21,7 +21,7 @@ const ButtonContent = styled.View({
 
 const HeaderIcon = styled(Component)(({ theme }) => ({
   padding: 2.5,
-  color: theme.shade(1),
+  color: theme.foreground,
 }));
 
 const getRouteName = (route) =>
@@ -30,7 +30,7 @@ const getRouteName = (route) =>
 function BottomNavScreen({ navigation: stackNavigation, route }) {
   const routeName = getRouteName(route);
   const screen = screens.find((screen) => screen.name === routeName);
-  stackNavigation.setOptions(screen?.options);
+  stackNavigation.setOptions(screen?.stackOptions);
   return <BottomTabNavigator />;
 }
 
@@ -45,7 +45,10 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           headerLeft: () => (
             <NativeButton
               delayPressIn={0}
-              background={TouchableNativeFeedback.Ripple(theme.shade(1), true)}
+              background={TouchableNativeFeedback.Ripple(
+                theme.foreground,
+                true
+              )}
               useForeground
               onPress={() => {
                 drawerNavigation.openDrawer();
@@ -59,7 +62,10 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           headerRight: () => (
             <NativeButton
               delayPressIn={0}
-              background={TouchableNativeFeedback.Ripple(theme.shade(1), true)}
+              background={TouchableNativeFeedback.Ripple(
+                theme.foreground,
+                true
+              )}
               useForeground
               onPress={() => {
                 navigate("Settings");

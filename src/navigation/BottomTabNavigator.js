@@ -1,6 +1,7 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import React from "react";
 import styled from "@emotion/native";
+import { useTheme } from "emotion-theming";
 
 import { defaultScreen, screens } from "./bottomTabScreens";
 import Component from "components/Component";
@@ -28,8 +29,16 @@ const renderScreen = ({ name, component, IconComponent }) => (
 );
 
 export default function BottomTabNavigator() {
+  const theme = useTheme();
   return (
-    <BottomTab.Navigator initialRouteName={defaultScreen} shifting={false}>
+    <BottomTab.Navigator
+      initialRouteName={defaultScreen}
+      shifting={false}
+      activeColor={theme.primary}
+      barStyle={{
+        backgroundColor: theme.surface,
+      }}
+    >
       {screens.map((screen) => renderScreen(screen))}
     </BottomTab.Navigator>
   );
