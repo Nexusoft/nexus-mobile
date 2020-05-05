@@ -63,10 +63,12 @@ export const darkTheme = {
   dark: true,
   background: darkColor,
   surface: elevatedDarkColors[1],
-  foreground: lightColor,
+  foreground: fade(lightColor, 0.4),
+  foregroundEmphasis: fade(lightColor, 0.17),
+  foregroundDisabled: fade(lightColor, 0.62),
   // shade: getShade(getMixer(darkColor, lightColor)),
   primary: primaryShades[300],
-  primaryAccent: lightColor,
+  primaryAccent: darkColor,
   danger: dangerColor,
   dangerAccent: lightColor,
 };
@@ -75,7 +77,9 @@ export const lightTheme = {
   dark: false,
   background: lightColor,
   surface: lightColor,
-  foreground: darkColor,
+  foreground: fade(darkColor, 0.4),
+  foregroundEmphasis: fade(darkColor, 0.17),
+  foregroundDisabled: fade(darkColor, 0.62),
   // shade: getShade(getMixer(lightColor, darkColor)),
   primary: primaryShades[600],
   primaryAccent: lightColor,
@@ -90,7 +94,7 @@ export const getNavTheme = memoize((theme) => ({
     border: theme.background,
     card: theme.surface,
     primary: theme.primary,
-    text: fade(theme.foreground, 0.13),
+    text: theme.foregroundEmphasis,
   },
 }));
 
@@ -100,7 +104,7 @@ export const getPaperTheme = memoize((theme) => ({
   mode: "adaptive",
   colors: {
     background: theme.background,
-    accent: theme.foreground,
+    accent: theme.foregroundEmphasis,
     primary: theme.primary,
     error: theme.danger,
   },

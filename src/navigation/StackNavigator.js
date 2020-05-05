@@ -21,7 +21,7 @@ const ButtonContent = styled.View({
 
 const HeaderIcon = styled(Component)(({ theme }) => ({
   padding: 2.5,
-  color: theme.foreground,
+  color: theme.foregroundEmphasis,
 }));
 
 const getRouteName = (route) =>
@@ -46,7 +46,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             <NativeButton
               delayPressIn={0}
               background={TouchableNativeFeedback.Ripple(
-                theme.foreground,
+                theme.foregroundEmphasis,
                 true
               )}
               useForeground
@@ -63,7 +63,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             <NativeButton
               delayPressIn={0}
               background={TouchableNativeFeedback.Ripple(
-                theme.foreground,
+                theme.foregroundEmphasis,
                 true
               )}
               useForeground
