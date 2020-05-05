@@ -2,7 +2,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import React from "react";
 import styled from "@emotion/native";
 
-import { DEFAULT_SCREEN, screens } from "./bottomTabScreens";
+import { defaultScreen, screens } from "./bottomTabScreens";
 import Component from "components/Component";
 
 const BottomTab = createMaterialBottomTabNavigator();
@@ -29,7 +29,7 @@ const renderScreen = ({ name, component, IconComponent }) => (
 
 export default function BottomTabNavigator() {
   return (
-    <BottomTab.Navigator initialRouteName={DEFAULT_SCREEN} shifting={false}>
+    <BottomTab.Navigator initialRouteName={defaultScreen} shifting={false}>
       {screens.map((screen) => renderScreen(screen))}
     </BottomTab.Navigator>
   );

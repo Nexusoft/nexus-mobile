@@ -7,9 +7,10 @@ import { useTheme } from "emotion-theming";
 
 import SettingsScreen from "screens/SettingsScreen";
 import Component from "components/Component";
+import Button from "components/Button";
 import { navigate } from "navigation/container";
 
-import { screens, DEFAULT_SCREEN } from "./bottomTabScreens";
+import { screens, defaultScreen } from "./bottomTabScreens";
 import BottomTabNavigator from "./BottomTabNavigator";
 
 const Stack = createStackNavigator();
@@ -24,7 +25,7 @@ const HeaderIcon = styled(Component)(({ theme }) => ({
 }));
 
 const getRouteName = (route) =>
-  route.state?.routes[route.state.index]?.name ?? DEFAULT_SCREEN;
+  route.state?.routes[route.state.index]?.name ?? defaultScreen;
 
 function BottomNavScreen({ navigation: stackNavigation, route }) {
   const routeName = getRouteName(route);
@@ -42,7 +43,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
         component={BottomNavScreen}
         options={{
           headerLeft: () => (
-            <TouchableNativeFeedback
+            <Button
               delayPressIn={0}
               background={TouchableNativeFeedback.Ripple(theme.shade(1), true)}
               useForeground
@@ -53,10 +54,10 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
               <HeaderButton>
                 <HeaderIcon as={MaterialIcons} name="menu" size={25} />
               </HeaderButton>
-            </TouchableNativeFeedback>
+            </Button>
           ),
           headerRight: () => (
-            <TouchableNativeFeedback
+            <Button
               delayPressIn={0}
               background={TouchableNativeFeedback.Ripple(theme.shade(1), true)}
               useForeground
@@ -67,7 +68,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
               <HeaderButton>
                 <HeaderIcon as={Ionicons} name="ios-settings" size={25} />
               </HeaderButton>
-            </TouchableNativeFeedback>
+            </Button>
           ),
         }}
       />

@@ -56,4 +56,4 @@ export const screens = [
   },
 ];
 
-export const DEFAULT_SCREEN = "Home";
+export const defaultScreen = "Home";
