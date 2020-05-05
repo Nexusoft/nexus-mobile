@@ -7,7 +7,7 @@ import { useTheme } from "emotion-theming";
 
 import SettingsScreen from "screens/SettingsScreen";
 import Component from "components/Component";
-import Button from "components/Button";
+import NativeButton from "components/NativeButton";
 import { navigate } from "navigation/container";
 
 import { screens, defaultScreen } from "./bottomTabScreens";
@@ -15,7 +15,7 @@ import BottomTabNavigator from "./BottomTabNavigator";
 
 const Stack = createStackNavigator();
 
-const HeaderButton = styled.View({
+const ButtonContent = styled.View({
   marginHorizontal: 10,
 });
 
@@ -43,7 +43,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
         component={BottomNavScreen}
         options={{
           headerLeft: () => (
-            <Button
+            <NativeButton
               delayPressIn={0}
               background={TouchableNativeFeedback.Ripple(theme.shade(1), true)}
               useForeground
@@ -51,13 +51,13 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
                 drawerNavigation.openDrawer();
               }}
             >
-              <HeaderButton>
+              <ButtonContent>
                 <HeaderIcon as={MaterialIcons} name="menu" size={25} />
-              </HeaderButton>
-            </Button>
+              </ButtonContent>
+            </NativeButton>
           ),
           headerRight: () => (
-            <Button
+            <NativeButton
               delayPressIn={0}
               background={TouchableNativeFeedback.Ripple(theme.shade(1), true)}
               useForeground
@@ -65,10 +65,10 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
                 navigate("Settings");
               }}
             >
-              <HeaderButton>
+              <ButtonContent>
                 <HeaderIcon as={Ionicons} name="ios-settings" size={25} />
-              </HeaderButton>
-            </Button>
+              </ButtonContent>
+            </NativeButton>
           ),
         }}
       />

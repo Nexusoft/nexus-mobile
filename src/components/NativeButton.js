@@ -5,7 +5,7 @@ import {
   TouchableHighlight,
 } from "react-native";
 
-export default function Button(props) {
+export default function NativeButton(props) {
   if (Platform.OS === "android") {
     return <TouchableNativeFeedback {...props} />;
   } else {
