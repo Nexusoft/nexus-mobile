@@ -23,6 +23,7 @@ export const screens = [
     component: HomeScreen,
     IconComponent: HomeIcon,
     options: {
+      title: 'Home',
       headerTitle: () => <Logo />,
       headerTitleAlign: "center",
     },
@@ -32,6 +33,7 @@ export const screens = [
     component: ReceiveScreen,
     IconComponent: PayIcon,
     options: {
+      title: 'Receive',
       headerTitle: "Receive",
       headerTitleAlign: "left",
     },
@@ -41,6 +43,7 @@ export const screens = [
     component: SendScreen,
     IconComponent: SendIcon,
     options: {
+      title: 'Send',
       headerTitle: "Send",
       headerTitleAlign: "left",
     },
@@ -50,6 +53,7 @@ export const screens = [
     component: LinksScreen,
     IconComponent: TransactionIcon,
     options: {
+      title: 'Transactions',
       headerTitle: "Transactions",
       headerTitleAlign: "left",
     },
