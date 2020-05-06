@@ -63,7 +63,7 @@ export default function Root(props) {
       <ThemeProvider theme={darkTheme}>
         <PaperContainer>
           <Container>
-            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+            <StatusBar barStyle="default" animated />
             <RootNavigator initialNavigationState={initialNavigationState} />
           </Container>
         </PaperContainer>
