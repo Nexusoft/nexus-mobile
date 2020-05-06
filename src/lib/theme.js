@@ -102,10 +102,16 @@ export const getPaperTheme = memoize((theme) => ({
   ...DefaultTheme,
   dark: theme.dark,
   mode: "adaptive",
+  roundness: 4,
   colors: {
+    ...DefaultTheme.colors,
     background: theme.background,
-    accent: theme.foregroundEmphasis,
+    surface: theme.surface,
+    text: theme.foreground,
+    disabled: theme.foregroundDisabled,
     primary: theme.primary,
+    accent: theme.foregroundEmphasis,
     error: theme.danger,
+    placeholder: fade(theme.foreground, 0.46),
   },
 }));
