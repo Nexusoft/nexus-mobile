@@ -35,6 +35,7 @@ export default function BottomTabNavigator() {
       initialRouteName={defaultScreen}
       shifting={false}
       activeColor={theme.primary}
+      inactiveColor={theme.foregroundEmphasis}
       barStyle={{
         backgroundColor: theme.surface,
       }}

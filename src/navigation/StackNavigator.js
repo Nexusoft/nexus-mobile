@@ -46,7 +46,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             <NativeButton
               delayPressIn={0}
               background={TouchableNativeFeedback.Ripple(
-                theme.foregroundEmphasis,
+                theme.foreground,
                 true
               )}
               useForeground
@@ -63,7 +63,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             <NativeButton
               delayPressIn={0}
               background={TouchableNativeFeedback.Ripple(
-                theme.foregroundEmphasis,
+                theme.foreground,
                 true
               )}
               useForeground
