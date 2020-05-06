@@ -61,13 +61,13 @@ const lightColor = baseLightColor;
 
 export const darkTheme = {
   dark: true,
-  background: darkColor,
+  background: elevatedDarkColors[1],
   surface: elevatedDarkColors[4],
   foreground: fade(lightColor, 0.4),
   foregroundEmphasis: fade(lightColor, 0.17),
   foregroundDisabled: fade(lightColor, 0.62),
   // shade: getShade(getMixer(darkColor, lightColor)),
-  primary: primaryShades[300],
+  primary: primaryShades[200],
   primaryAccent: darkColor,
   danger: dangerColor,
   dangerAccent: lightColor,
