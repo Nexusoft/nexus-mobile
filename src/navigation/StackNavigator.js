@@ -1,11 +1,14 @@
 import React from "react";
-import { TouchableNativeFeedback } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import styled from "@emotion/native";
 import { useTheme } from "emotion-theming";
 
 import SettingsScreen from "screens/SettingsScreen";
+import TokensScreen from "screens/TokensScreen";
+import NamesScreen from "screens/NamesScreen";
+import NamespacesScreen from "screens/NamespacesScreen";
+import AssetsScreen from "screens/AssetsScreen";
 import Component from "components/Component";
 import NativeButton from "components/NativeButton";
 import { navigate } from "navigation/container";
@@ -44,12 +47,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
         options={{
           headerLeft: () => (
             <NativeButton
-              delayPressIn={0}
-              background={TouchableNativeFeedback.Ripple(
-                theme.foreground,
-                true
-              )}
-              useForeground
+              borderless
               onPress={() => {
                 drawerNavigation.openDrawer();
               }}
@@ -61,12 +59,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           ),
           headerRight: () => (
             <NativeButton
-              delayPressIn={0}
-              background={TouchableNativeFeedback.Ripple(
-                theme.foreground,
-                true
-              )}
-              useForeground
+              borderless
               onPress={() => {
                 navigate("Settings");
               }}
@@ -79,6 +72,10 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
         }}
       />
       <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="Tokens" component={TokensScreen} />
+      <Stack.Screen name="Names" component={NamesScreen} />
+      <Stack.Screen name="Namespaces" component={NamespacesScreen} />
+      <Stack.Screen name="Assets" component={AssetsScreen} />
     </Stack.Navigator>
   );
 }

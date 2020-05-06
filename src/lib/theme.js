@@ -62,7 +62,7 @@ const lightColor = baseLightColor;
 export const darkTheme = {
   dark: true,
   background: darkColor,
-  surface: elevatedDarkColors[1],
+  surface: elevatedDarkColors[4],
   foreground: fade(lightColor, 0.4),
   foregroundEmphasis: fade(lightColor, 0.17),
   foregroundDisabled: fade(lightColor, 0.62),
@@ -113,5 +113,23 @@ export const getPaperTheme = memoize((theme) => ({
     accent: theme.foregroundEmphasis,
     error: theme.danger,
     placeholder: fade(theme.foreground, 0.46),
+  },
+  fonts: {
+    thin: {
+      fontFamily: "noto-sans",
+      fontWeight: "normal",
+    },
+    light: {
+      fontFamily: "noto-sans",
+      fontWeight: "normal",
+    },
+    regular: {
+      fontFamily: "noto-sans",
+      fontWeight: "normal",
+    },
+    medium: {
+      fontFamily: "noto-sans",
+      fontWeight: "normal",
+    },
   },
 }));

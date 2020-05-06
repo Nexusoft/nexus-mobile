@@ -4,11 +4,23 @@ import {
   TouchableNativeFeedback,
   TouchableHighlight,
 } from "react-native";
+import { useTheme } from "emotion-theming";
 
-export default function NativeButton(props) {
+export default function NativeButton({ borderless = true, ...rest }) {
+  const theme = useTheme();
   if (Platform.OS === "android") {
-    return <TouchableNativeFeedback {...props} />;
+    return (
+      <TouchableNativeFeedback
+        delayPressIn={0}
+        background={TouchableNativeFeedback.Ripple(
+          theme.foregroundDisabled,
+          borderless
+        )}
+        useForeground
+        {...rest}
+      />
+    );
   } else {
-    return <TouchableHighlight {...props} />;
+    return <TouchableHighlight delayPressIn={0} {...rest} />;
   }
 }
