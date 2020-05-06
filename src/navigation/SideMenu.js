@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "@emotion/native";
+import { IconButton } from "react-native-paper";
+import { useTheme } from "emotion-theming";
 
 import { Text } from "components/StyledText";
 import NativeButton from "components/NativeButton";
@@ -13,7 +15,12 @@ import AssetIcon from "icons/asset.svg";
 
 const StyledSideMenu = styled.View({
   flex: 1,
-  paddingTop: 56,
+});
+
+const MenuHeader = styled.View({
+  height: 56,
+  flexDirection: "row",
+  alignItems: "center",
 });
 
 const Divider = styled.View(({ theme }) => ({
@@ -21,7 +28,7 @@ const Divider = styled.View(({ theme }) => ({
   backgroundColor: theme.foreground,
 }));
 
-const MenuHeader = styled.View({
+const UserArea = styled.View({
   paddingVertical: 10,
   paddingHorizontal: 20,
 });
@@ -73,15 +80,27 @@ const MenuItem = ({ linkTo, icon, label }) => (
   </NativeButton>
 );
 
-export default function SideMenu(props) {
+export default function SideMenu({ navigation }) {
+  const theme = useTheme();
   return (
     <StyledSideMenu>
       <MenuHeader>
+        <IconButton
+          icon="arrow-left"
+          color={theme.foregroundEmphasis}
+          size={25}
+          onPress={() => {
+            navigation.closeDrawer();
+          }}
+        />
+      </MenuHeader>
+
+      <UserArea>
         <UserInfo>
           <UserAvatar />
           <UserName>krysto</UserName>
         </UserInfo>
-      </MenuHeader>
+      </UserArea>
       <Divider />
 
       <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" />
