@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, TouchableHighlight } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import styled from "@emotion/native";
 import { IconButton } from "react-native-paper";
 import { useTheme } from "emotion-theming";
@@ -10,6 +10,12 @@ const IconComponent = styled(Component)(({ color, size }) => ({
   color,
   width: size,
   height: size,
+}));
+
+const IconWrapperIos = styled(TouchableOpacity)(({ size }) => ({
+  margin: 6,
+  width: size * 1.5,
+  height: size * 1.5,
 }));
 
 export default function TouchableIcon({
@@ -37,6 +43,10 @@ export default function TouchableIcon({
       />
     );
   } else {
-    return <TouchableHighlight delayPressIn={0}>{iconEl}</TouchableHighlight>;
+    return (
+      <IconWrapperIos delayPressIn={0} size={size} {...rest}>
+        <View>{iconEl}</View>
+      </IconWrapperIos>
+    );
   }
 }
