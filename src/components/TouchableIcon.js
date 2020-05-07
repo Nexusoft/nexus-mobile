@@ -16,6 +16,8 @@ const IconWrapperIos = styled(TouchableOpacity)(({ size }) => ({
   margin: 6,
   width: size * 1.5,
   height: size * 1.5,
+  alignItems: "center",
+  justifyContent: "center",
 }));
 
 export default function TouchableIcon({
