@@ -1,14 +1,16 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { IconButton } from "react-native-paper";
 import { useTheme } from "emotion-theming";
 
+import TouchableIcon from "components/TouchableIcon";
 import SettingsScreen from "screens/SettingsScreen";
 import TokensScreen from "screens/TokensScreen";
 import NamesScreen from "screens/NamesScreen";
 import NamespacesScreen from "screens/NamespacesScreen";
 import AssetsScreen from "screens/AssetsScreen";
 import { navigate } from "navigation/container";
+import MenuIcon from "icons/menu.svg";
+import SettingsIcon from "icons/settings.svg";
 
 import { screens, defaultScreen } from "./bottomTabScreens";
 import BottomTabNavigator from "./BottomTabNavigator";
@@ -34,9 +36,9 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
         component={BottomNavScreen}
         options={{
           headerLeft: () => (
-            <IconButton
-              icon="menu"
-              color={theme.foregroundEmphasis}
+            <TouchableIcon
+              icon={MenuIcon}
+              color="foregroundEmphasis"
               size={25}
               onPress={() => {
                 drawerNavigation.openDrawer();
@@ -44,9 +46,9 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             />
           ),
           headerRight: () => (
-            <IconButton
-              icon="settings"
-              color={theme.foregroundEmphasis}
+            <TouchableIcon
+              icon={SettingsIcon}
+              color="foregroundEmphasis"
               size={25}
               onPress={() => {
                 navigate("Settings");
