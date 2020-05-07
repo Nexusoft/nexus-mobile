@@ -1,7 +1,5 @@
 import React from "react";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
-import styled from "@emotion/native";
 import { IconButton } from "react-native-paper";
 import { useTheme } from "emotion-theming";
 

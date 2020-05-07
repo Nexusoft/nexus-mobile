@@ -1,10 +1,9 @@
 import React from "react";
 import styled from "@emotion/native";
-import { IconButton } from "react-native-paper";
+import { IconButton, TouchableRipple } from "react-native-paper";
 import { useTheme } from "emotion-theming";
 
 import { Text } from "components/StyledText";
-import NativeButton from "components/NativeButton";
 import Component from "components/Component";
 import { navigate } from "navigation/container";
 import UserIcon from "icons/user.svg";
@@ -65,7 +64,7 @@ const MenuItemIcon = styled(Component)(({ theme }) => ({
 }));
 
 const MenuItem = ({ linkTo, icon, label }) => (
-  <NativeButton
+  <TouchableRipple
     borderless={false}
     onPress={() => {
       if (linkTo) {
@@ -77,7 +76,7 @@ const MenuItem = ({ linkTo, icon, label }) => (
       {!!icon && <MenuItemIcon as={icon} />}
       <Text emphasis>{label}</Text>
     </MenuItemWrapper>
-  </NativeButton>
+  </TouchableRipple>
 );
 
 export default function SideMenu({ navigation }) {
