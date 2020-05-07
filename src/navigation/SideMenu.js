@@ -1,4 +1,5 @@
 import React from "react";
+import { Platform } from "react-native";
 import styled from "@emotion/native";
 import { IconButton, TouchableRipple } from "react-native-paper";
 import { useTheme } from "emotion-theming";
@@ -84,14 +85,16 @@ export default function SideMenu({ navigation }) {
   return (
     <StyledSideMenu>
       <MenuHeader>
-        <IconButton
-          icon="arrow-left"
-          color={theme.foregroundEmphasis}
-          size={25}
-          onPress={() => {
-            navigation.closeDrawer();
-          }}
-        />
+        {Platform.OS !== "ios" && (
+          <IconButton
+            icon="arrow-left"
+            color={theme.foregroundEmphasis}
+            size={25}
+            onPress={() => {
+              navigation.closeDrawer();
+            }}
+          />
+        )}
       </MenuHeader>
 
       <UserArea>

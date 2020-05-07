@@ -33,7 +33,7 @@ export default function TouchableIcon({
   const iconColor =
     (typeof color === "string" ? theme[color] : color) || theme.foreground;
   const iconEl = <IconComponent as={icon} color={iconColor} size={size} />;
-  if (Platform.OS === "android") {
+  if (Platform.OS !== "ios") {
     return (
       <IconButton
         icon={() => iconEl}
