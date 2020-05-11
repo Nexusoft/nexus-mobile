@@ -43,6 +43,7 @@ export default function Root(props) {
           ...Ionicons.font,
           ...MaterialIcons.font,
           "noto-sans": require("./fonts/NotoSans-Regular.ttf"),
+          "noto-sans-bold": require("./fonts/NotoSans-Bold.ttf"),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

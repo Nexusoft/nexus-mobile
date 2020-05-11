@@ -128,8 +128,8 @@ export const getPaperTheme = memoize((theme) => ({
       fontWeight: "normal",
     },
     medium: {
-      fontFamily: "noto-sans",
-      fontWeight: "normal",
+      fontFamily: "noto-sans-bold",
+      fontWeight: "bold",
     },
   },
 }));

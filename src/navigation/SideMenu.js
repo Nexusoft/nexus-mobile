@@ -6,6 +6,7 @@ import { useTheme } from "emotion-theming";
 
 import { Text } from "components/StyledText";
 import Component from "components/Component";
+import Divider from "components/Divider";
 import { navigate } from "navigation/container";
 import UserIcon from "icons/user.svg";
 import TokenIcon from "icons/token.svg";
@@ -23,13 +24,8 @@ const MenuHeader = styled.View({
   alignItems: "center",
 });
 
-const Divider = styled.View(({ theme }) => ({
-  height: 0.33,
-  backgroundColor: theme.foreground,
-}));
-
 const UserArea = styled.View({
-  paddingVertical: 10,
+  paddingVertical: 20,
   paddingHorizontal: 20,
 });
 
@@ -51,7 +47,7 @@ const UserName = styled(Text)(({ theme }) => ({
 }));
 
 const MenuItemWrapper = styled.View({
-  paddingVertical: 10,
+  paddingVertical: 15,
   paddingHorizontal: 20,
   flexDirection: "row",
   alignItems: "center",
@@ -106,7 +102,6 @@ export default function SideMenu({ navigation }) {
       <Divider />
 
       <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" />
-      <Divider />
       <MenuItem linkTo="Names" icon={NameIcon} label="Names" />
       <MenuItem linkTo="Namespaces" icon={NamespaceIcon} label="Namespaces" />
       <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" />
