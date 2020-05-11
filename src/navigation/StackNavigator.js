@@ -1,6 +1,5 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { useTheme } from "emotion-theming";
 
 import TouchableIcon from "components/TouchableIcon";
 import SettingsScreen from "screens/SettingsScreen";
@@ -28,9 +27,8 @@ function BottomNavScreen({ navigation: stackNavigation, route }) {
 }
 
 export default function StackNavigator({ navigation: drawerNavigation }) {
-  const theme = useTheme();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="BottomNav">
       <Stack.Screen
         name="BottomNav"
         component={BottomNavScreen}

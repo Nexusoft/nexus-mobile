@@ -106,6 +106,7 @@ export default function SideMenu({ navigation }) {
       <Divider />
 
       <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" />
+      <Divider />
       <MenuItem linkTo="Names" icon={NameIcon} label="Names" />
       <MenuItem linkTo="Namespaces" icon={NamespaceIcon} label="Namespaces" />
       <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" />
