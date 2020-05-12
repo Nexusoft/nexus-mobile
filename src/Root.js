@@ -1,20 +1,20 @@
-import React from "react";
-import { Provider as ReduxProvider } from "react-redux";
-import { Platform, StatusBar } from "react-native";
-import { SplashScreen } from "expo";
-import * as Font from "expo-font";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { ThemeProvider } from "emotion-theming";
-import styled from "@emotion/native";
-import { Provider as PaperProvider } from "react-native-paper";
-import { useTheme } from "emotion-theming";
+import React from 'react';
+import { Provider as ReduxProvider, useSelector } from 'react-redux';
+import { Platform, StatusBar } from 'react-native';
+import { SplashScreen } from 'expo';
+import * as Font from 'expo-font';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { ThemeProvider } from 'emotion-theming';
+import styled from '@emotion/native';
+import { Provider as PaperProvider } from 'react-native-paper';
+import { useTheme } from 'emotion-theming';
 
-import { darkTheme, getPaperTheme } from "lib/theme";
-import { createStore } from "store";
+import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
+import { createStore } from 'store';
 
-import RootNavigator from "./navigation/RootNavigator";
-import { navContainerRef } from "./navigation/container";
-import useLinking from "./navigation/useLinking";
+import RootNavigator from './navigation/RootNavigator';
+import { navContainerRef } from './navigation/container';
+import useLinking from './navigation/useLinking';
 
 const Container = styled.View(({ theme }) => ({
   flex: 1,
@@ -45,8 +45,8 @@ export default function Root(props) {
         await Font.loadAsync({
           ...Ionicons.font,
           ...MaterialIcons.font,
-          "noto-sans": require("./fonts/NotoSans-Regular.ttf"),
-          "noto-sans-bold": require("./fonts/NotoSans-Bold.ttf"),
+          'noto-sans': require('./fonts/NotoSans-Regular.ttf'),
+          'noto-sans-bold': require('./fonts/NotoSans-Bold.ttf'),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
@@ -71,15 +71,20 @@ export default function Root(props) {
   } else {
     return (
       <ReduxProvider store={store}>
-        <ThemeProvider theme={darkTheme}>
+        <ThemeController>
           <PaperContainer>
             <Container>
               <StatusBar barStyle="default" animated />
               <RootNavigator initialNavigationState={initialNavigationState} />
             </Container>
           </PaperContainer>
-        </ThemeProvider>
+        </ThemeController>
       </ReduxProvider>
     );
   }
+}
+
+function ThemeController(props) {
+  const darkMode = useSelector((state) => state.settings.darkMode);
+  return <ThemeProvider theme={darkMode ? darkTheme : lightTheme} {...props} />;
 }

@@ -1,10 +1,12 @@
-import React from "react";
-import { TouchableRipple } from "react-native-paper";
-import styled from "@emotion/native";
+import React from 'react';
+import { TouchableRipple } from 'react-native-paper';
+import styled from '@emotion/native';
+import { useSelector } from 'react-redux';
 
-import { Text } from "components/StyledText";
-import Switch from "components/Switch";
-import Divider from "components/Divider";
+import { Text } from 'components/StyledText';
+import Switch from 'components/Switch';
+import Divider from 'components/Divider';
+import { updateSettings } from 'lib/settings';
 
 const Wrapper = styled.View({
   flex: 1,
@@ -18,8 +20,8 @@ const SettingDivider = styled(Divider)({
 const Setting = styled.View({
   paddingVertical: 20,
   paddingHorizontal: 20,
-  flexDirection: "row",
-  alignItems: "center",
+  flexDirection: 'row',
+  alignItems: 'center',
 });
 
 const SettingText = styled.View({
@@ -46,6 +48,7 @@ const SettingSwitch = styled.View(({ theme }) => ({
 }));
 
 export default function ApplicationSettings() {
+  const settings = useSelector((state) => state.settings);
   return (
     <Wrapper>
       <TouchableRipple borderless={false} onPress={() => {}}>
@@ -55,7 +58,12 @@ export default function ApplicationSettings() {
             <SettingDescription primary>On</SettingDescription>
           </SettingText>
           <SettingSwitch>
-            <Switch value={true} />
+            <Switch
+              value={settings.darkMode}
+              onValueChange={() => {
+                updateSettings({ darkMode: !settings.darkMode });
+              }}
+            />
           </SettingSwitch>
         </Setting>
       </TouchableRipple>
