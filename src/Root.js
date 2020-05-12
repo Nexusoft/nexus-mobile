@@ -1,4 +1,5 @@
 import React from "react";
+import { Provider as ReduxProvider } from "react-redux";
 import { Platform, StatusBar } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
@@ -9,6 +10,7 @@ import { Provider as PaperProvider } from "react-native-paper";
 import { useTheme } from "emotion-theming";
 
 import { darkTheme, getPaperTheme } from "lib/theme";
+import { createStore } from "store";
 
 import RootNavigator from "./navigation/RootNavigator";
 import { navContainerRef } from "./navigation/container";
@@ -25,6 +27,7 @@ function PaperContainer({ children }) {
 }
 
 export default function Root(props) {
+  const [store, setStore] = React.useState(null);
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
   const [initialNavigationState, setInitialNavigationState] = React.useState();
   const { getInitialState } = useLinking(navContainerRef);
@@ -54,21 +57,29 @@ export default function Root(props) {
       }
     }
 
+    async function initializeStore() {
+      const store = await createStore();
+      setStore(store);
+    }
+
     loadResourcesAndDataAsync();
+    initializeStore();
   }, []);
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+  if ((!isLoadingComplete && !props.skipLoadingScreen) || !store) {
     return null;
   } else {
     return (
-      <ThemeProvider theme={darkTheme}>
-        <PaperContainer>
-          <Container>
-            <StatusBar barStyle="default" animated />
-            <RootNavigator initialNavigationState={initialNavigationState} />
-          </Container>
-        </PaperContainer>
-      </ThemeProvider>
+      <ReduxProvider store={store}>
+        <ThemeProvider theme={darkTheme}>
+          <PaperContainer>
+            <Container>
+              <StatusBar barStyle="default" animated />
+              <RootNavigator initialNavigationState={initialNavigationState} />
+            </Container>
+          </PaperContainer>
+        </ThemeProvider>
+      </ReduxProvider>
     );
   }
 }
