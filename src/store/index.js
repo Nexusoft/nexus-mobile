@@ -1,15 +1,9 @@
 import configureStore from './configureStore';
-import getInitialState from './getInitialState';
 
 let store = null;
 
-export function getStore() {
-  return store;
-}
-
-export async function createStore() {
+export function getStore(initialState) {
   if (!store) {
-    const initialState = await getInitialState();
     store = configureStore(initialState);
   }
   return store;

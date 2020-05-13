@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider as ReduxProvider, useSelector } from 'react-redux';
-import { Platform, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -10,7 +10,8 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
 import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
-import { createStore } from 'store';
+import { getStore } from 'store';
+import getInitialState from 'store/getInitialState';
 
 import RootNavigator from './navigation/RootNavigator';
 import { navContainerRef } from './navigation/container';
@@ -58,7 +59,8 @@ export default function Root(props) {
     }
 
     async function initializeStore() {
-      const store = await createStore();
+      const initialState = await getInitialState();
+      const store = getStore(initialState);
       setStore(store);
     }
 
