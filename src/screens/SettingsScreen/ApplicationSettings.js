@@ -40,30 +40,25 @@ const SettingDescription = styled(Text)({
   marginTop: 3,
 });
 
-const SettingSwitch = styled.View(({ theme }) => ({
+const SettingSwitch = styled.View({
   paddingHorizontal: 10,
-  // borderLeftWidth: 0.5,
-  // borderLeftColor: theme.foreground,
-  // borderLeftStyle: "solid",
-}));
+});
 
 export default function ApplicationSettings() {
   const settings = useSelector((state) => state.settings);
+  const toggleDarkMode = React.useCallback(() => {
+    updateSettings({ darkMode: !settings.darkMode });
+  }, [settings.darkMode]);
   return (
     <Wrapper>
-      <TouchableRipple borderless={false} onPress={() => {}}>
+      <TouchableRipple borderless={false} onPress={toggleDarkMode}>
         <Setting>
           <SettingText>
             <SettingLabel>Dark mode</SettingLabel>
             <SettingDescription primary>On</SettingDescription>
           </SettingText>
           <SettingSwitch>
-            <Switch
-              value={settings.darkMode}
-              onValueChange={() => {
-                updateSettings({ darkMode: !settings.darkMode });
-              }}
-            />
+            <Switch value={settings.darkMode} onValueChange={toggleDarkMode} />
           </SettingSwitch>
         </Setting>
       </TouchableRipple>
