@@ -1,22 +1,22 @@
-import { DefaultTheme } from "react-native-paper";
+import { DefaultTheme } from 'react-native-paper';
 
-import { getMixer, mix, fade } from "utils/color";
-import memoize from "utils/memoize";
+import { getMixer, mix, fade } from 'utils/color';
+import memoize from 'utils/memoize';
 
-const baseDarkColor = "#121212";
-const baseLightColor = "#ffffff";
-const dangerColor = "#8f240e";
+const baseDarkColor = '#121212';
+const baseLightColor = '#ffffff';
+const dangerColor = '#8f240e';
 const primaryShades = {
-  50: "#dff3fa",
-  100: "#b0dff1",
-  200: "#7dcae8",
-  300: "#4db6df",
-  400: "#29a7da",
-  500: "#0099d4",
-  600: "#008cc7",
-  700: "#007ab4",
-  800: "#0069a0",
-  900: "#004b80",
+  50: '#dff3fa',
+  100: '#b0dff1',
+  200: '#7dcae8',
+  300: '#4db6df',
+  400: '#29a7da',
+  500: '#0099d4',
+  600: '#008cc7',
+  700: '#007ab4',
+  800: '#0069a0',
+  900: '#004b80',
 };
 
 // const darkPrimary = mix(baseDarkColor, primaryColor, 0.08);
@@ -64,7 +64,7 @@ export const darkTheme = {
   background: elevatedDarkColors[1],
   surface: elevatedDarkColors[4],
   foreground: fade(lightColor, 0.4),
-  foregroundEmphasis: fade(lightColor, 0.17),
+  foregroundEmphasis: lightColor,
   foregroundDisabled: fade(lightColor, 0.62),
   // shade: getShade(getMixer(darkColor, lightColor)),
   primary: primaryShades[200],
@@ -78,7 +78,7 @@ export const lightTheme = {
   background: lightColor,
   surface: lightColor,
   foreground: fade(darkColor, 0.4),
-  foregroundEmphasis: fade(darkColor, 0.17),
+  foregroundEmphasis: darkColor,
   foregroundDisabled: fade(darkColor, 0.62),
   // shade: getShade(getMixer(lightColor, darkColor)),
   primary: primaryShades[600],
@@ -101,7 +101,7 @@ export const getNavTheme = memoize((theme) => ({
 export const getPaperTheme = memoize((theme) => ({
   ...DefaultTheme,
   dark: theme.dark,
-  mode: "adaptive",
+  mode: 'adaptive',
   roundness: 4,
   colors: {
     ...DefaultTheme.colors,
@@ -116,20 +116,20 @@ export const getPaperTheme = memoize((theme) => ({
   },
   fonts: {
     thin: {
-      fontFamily: "noto-sans",
-      fontWeight: "normal",
+      fontFamily: 'noto-sans',
+      fontWeight: 'normal',
     },
     light: {
-      fontFamily: "noto-sans",
-      fontWeight: "normal",
+      fontFamily: 'noto-sans',
+      fontWeight: 'normal',
     },
     regular: {
-      fontFamily: "noto-sans",
-      fontWeight: "normal",
+      fontFamily: 'noto-sans',
+      fontWeight: 'normal',
     },
     medium: {
-      fontFamily: "noto-sans-bold",
-      fontWeight: "bold",
+      fontFamily: 'noto-sans-bold',
+      fontWeight: 'bold',
     },
   },
 }));

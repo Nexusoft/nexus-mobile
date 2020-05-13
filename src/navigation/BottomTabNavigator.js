@@ -1,10 +1,10 @@
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import React from "react";
-import styled from "@emotion/native";
-import { useTheme } from "emotion-theming";
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import React from 'react';
+import styled from '@emotion/native';
+import { useTheme } from 'emotion-theming';
 
-import { defaultScreen, screens } from "./bottomTabScreens";
-import Component from "components/Component";
+import { defaultScreen, screens } from './bottomTabScreens';
+import Component from 'components/Component';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -35,7 +35,7 @@ export default function BottomTabNavigator() {
       initialRouteName={defaultScreen}
       shifting={false}
       activeColor={theme.primary}
-      inactiveColor={theme.foregroundEmphasis}
+      inactiveColor={theme.foreground}
       barStyle={{
         backgroundColor: theme.surface,
       }}
