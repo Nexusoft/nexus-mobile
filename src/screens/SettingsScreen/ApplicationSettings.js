@@ -10,7 +10,7 @@ import { updateSettings } from 'lib/settings';
 
 const Wrapper = styled.View({
   flex: 1,
-  paddingVertical: 30,
+  paddingVertical: 20,
 });
 
 const SettingDivider = styled(Divider)({

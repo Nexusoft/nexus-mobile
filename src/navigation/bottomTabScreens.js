@@ -1,15 +1,15 @@
-import React from "react";
-import styled from "@emotion/native";
+import React from 'react';
+import styled from '@emotion/native';
 
-import HomeIcon from "icons/home.svg";
-import PayIcon from "icons/pay.svg";
-import SendIcon from "icons/send.svg";
-import TransactionIcon from "icons/transaction.svg";
-import LogoIcon from "icons/logo-full.svg";
-import HomeScreen from "screens/HomeScreen";
-import ReceiveScreen from "screens/ReceiveScreen";
-import SendScreen from "screens/SendScreen";
-import LinksScreen from "screens/LinksScreen";
+import HomeIcon from 'icons/home.svg';
+import PayIcon from 'icons/pay.svg';
+import SendIcon from 'icons/send.svg';
+import TransactionIcon from 'icons/transaction.svg';
+import LogoIcon from 'icons/logo-full.svg';
+import HomeScreen from 'screens/HomeScreen';
+import ReceiveScreen from 'screens/ReceiveScreen';
+import SendScreen from 'screens/SendScreen';
+import LinksScreen from 'screens/LinksScreen';
 
 const Logo = styled(LogoIcon)(({ theme }) => ({
   color: theme.primary,
@@ -19,45 +19,45 @@ const Logo = styled(LogoIcon)(({ theme }) => ({
 
 export const screens = [
   {
-    name: "Home",
+    name: 'Home',
     component: HomeScreen,
     IconComponent: HomeIcon,
     stackOptions: {
-      title: "Home",
+      title: 'Home',
       headerTitle: () => <Logo />,
-      headerTitleAlign: "center",
+      headerTitleAlign: 'center',
     },
   },
   {
-    name: "Receive",
+    name: 'Receive',
     component: ReceiveScreen,
     IconComponent: PayIcon,
     stackOptions: {
-      title: "Receive",
-      headerTitle: "Receive",
-      headerTitleAlign: "left",
+      title: 'Receive',
+      headerTitle: 'Receive',
+      headerTitleAlign: 'left',
     },
   },
   {
-    name: "Send",
+    name: 'Send',
     component: SendScreen,
     IconComponent: SendIcon,
     stackOptions: {
-      title: "Send",
-      headerTitle: "Send",
-      headerTitleAlign: "left",
+      title: 'Send',
+      headerTitle: 'Send',
+      headerTitleAlign: 'left',
     },
   },
   {
-    name: "Transactions",
+    name: 'Transactions',
     component: LinksScreen,
     IconComponent: TransactionIcon,
     stackOptions: {
-      title: "Transactions",
-      headerTitle: "Transactions",
-      headerTitleAlign: "left",
+      title: 'Transactions',
+      headerTitle: 'Transactions',
+      headerTitleAlign: 'left',
     },
   },
 ];
 
-export const defaultScreen = "Home";
+export const defaultScreen = 'Home';
