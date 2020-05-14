@@ -4,6 +4,7 @@ import { Surface, TouchableRipple } from 'react-native-paper';
 
 import { Text } from 'components/StyledText';
 import Divider from 'components/Divider';
+import { navigate } from 'navigation/container';
 
 const AccountSurface = styled(Surface)({
   marginVertical: 15,
@@ -52,13 +53,21 @@ export default function Account({ account }) {
       </AccountInfo>
 
       <AccountButtons>
-        <AccountButton onPress={() => {}}>
+        <AccountButton
+          onPress={() => {
+            navigate('Receive');
+          }}
+        >
           <AccountButtonLabel>RECEIVE</AccountButtonLabel>
         </AccountButton>
 
         <Divider vertical style={{ marginVertical: 10 }} />
 
-        <AccountButton onPress={() => {}}>
+        <AccountButton
+          onPress={() => {
+            navigate('Send');
+          }}
+        >
           <AccountButtonLabel>SEND</AccountButtonLabel>
         </AccountButton>
       </AccountButtons>
