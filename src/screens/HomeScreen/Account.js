@@ -9,7 +9,7 @@ import { navigate } from 'navigation/container';
 const AccountSurface = styled(Surface)({
   marginVertical: 15,
   marginHorizontal: 20,
-  elevation: 2,
+  elevation: 3,
 });
 
 const AccountInfo = styled.View({
