@@ -5,30 +5,12 @@ import styled from '@emotion/native';
 
 import { Text } from 'components/StyledText';
 import Divider from 'components/Divider';
+import BalanceSection from './BalanceSection';
 import Account from './Account';
 
-const Container = styled(ScrollView)(({ theme }) => ({
+const Container = styled(ScrollView)({
   flex: 1,
   paddingVertical: 20,
-}));
-
-const BalanceSection = styled.View({
-  paddingVertical: 20,
-  alignItems: 'center',
-});
-
-const BalanceLabel = styled(Text)({
-  fontSize: 12,
-  textTransform: 'uppercase',
-});
-
-const Balance = styled(Text)({
-  fontSize: 30,
-});
-
-const Value = styled(Text)({
-  marginTop: 5,
-  fontSize: 17,
 });
 
 const AccountsHeading = styled.View({
@@ -52,11 +34,7 @@ const AccountsHeadingLabel = styled(Text)(({ theme }) => ({
 export default function HomeScreen() {
   return (
     <Container>
-      <BalanceSection>
-        <BalanceLabel emphasis>Balance</BalanceLabel>
-        <Balance emphasis>10,435.643 NXS</Balance>
-        <Value>≈ 1,931.32 USD</Value>
-      </BalanceSection>
+      <BalanceSection />
 
       <View>
         <AccountsHeading>
@@ -70,7 +48,3 @@ export default function HomeScreen() {
     </Container>
   );
 }
-
-HomeScreen.navigationOptions = {
-  header: null,
-};

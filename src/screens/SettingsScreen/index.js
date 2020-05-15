@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from '@emotion/native';
 import { Surface } from 'react-native-paper';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import { Text } from 'components/StyledText';
 import ApplicationSettings from './ApplicationSettings';
 import CoreSettings from './CoreSettings';
 
-const Wrapper = styled.View({
+const Wrapper = styled(ScrollView)({
   flex: 1,
 });
 

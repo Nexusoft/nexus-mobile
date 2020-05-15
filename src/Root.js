@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider as ReduxProvider, useSelector } from 'react-redux';
-import { StatusBar } from 'react-native';
+import { StatusBar, Platform, UIManager } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -16,6 +16,13 @@ import getInitialState from 'store/getInitialState';
 import RootNavigator from './navigation/RootNavigator';
 import { navContainerRef } from './navigation/container';
 import useLinking from './navigation/useLinking';
+
+// For using LayoutAnimation
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 
 const Container = styled.View(({ theme }) => ({
   flex: 1,
