@@ -5,7 +5,10 @@ import { getStore } from 'store';
 
 export const defaultSettings = {
   darkMode: true,
+  baseCurrency: 'USD',
 };
+
+AsyncStorage.removeItem('baseCurrency');
 
 export async function loadSettings() {
   const keys = Object.keys(defaultSettings);

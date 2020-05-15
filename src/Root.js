@@ -67,7 +67,6 @@ export default function Root(props) {
 
     async function initializeStore() {
       const initialState = await loadInitialState();
-      console.log('state', initialState);
       const store = getStore(initialState);
       setStore(store);
     }
