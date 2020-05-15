@@ -120,6 +120,7 @@ const SettingSelect = ({ title, options, value, updateValue }) => {
                     key={value}
                     value={value}
                     color={theme.primary}
+                    uncheckedColor={theme.foregroundEmphasis}
                     label={display}
                     labelStyle={{
                       color: theme.foregroundEmphasis,
