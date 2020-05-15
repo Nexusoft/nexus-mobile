@@ -1,18 +1,19 @@
-import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { shadow } from 'react-native-paper';
 
-import TouchableIcon from "components/TouchableIcon";
-import SettingsScreen from "screens/SettingsScreen";
-import TokensScreen from "screens/TokensScreen";
-import NamesScreen from "screens/NamesScreen";
-import NamespacesScreen from "screens/NamespacesScreen";
-import AssetsScreen from "screens/AssetsScreen";
-import { navigate } from "navigation/container";
-import MenuIcon from "icons/menu.svg";
-import SettingsIcon from "icons/settings.svg";
+import TouchableIcon from 'components/TouchableIcon';
+import SettingsScreen from 'screens/SettingsScreen';
+import TokensScreen from 'screens/TokensScreen';
+import NamesScreen from 'screens/NamesScreen';
+import NamespacesScreen from 'screens/NamespacesScreen';
+import AssetsScreen from 'screens/AssetsScreen';
+import { navigate } from 'navigation/container';
+import MenuIcon from 'icons/menu.svg';
+import SettingsIcon from 'icons/settings.svg';
 
-import { screens, defaultScreen } from "./bottomTabScreens";
-import BottomTabNavigator from "./BottomTabNavigator";
+import { screens, defaultScreen } from './bottomTabScreens';
+import BottomTabNavigator from './BottomTabNavigator';
 
 const Stack = createStackNavigator();
 
@@ -28,7 +29,15 @@ function BottomNavScreen({ navigation: stackNavigation, route }) {
 
 export default function StackNavigator({ navigation: drawerNavigation }) {
   return (
-    <Stack.Navigator initialRouteName="BottomNav">
+    <Stack.Navigator
+      initialRouteName="BottomNav"
+      screenOptions={{
+        headerStyle: {
+          elevation: 4,
+          ...shadow(3),
+        },
+      }}
+    >
       <Stack.Screen
         name="BottomNav"
         component={BottomNavScreen}
@@ -49,7 +58,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
               color="foregroundEmphasis"
               size={25}
               onPress={() => {
-                navigate("Settings");
+                navigate('Settings');
               }}
             />
           ),
