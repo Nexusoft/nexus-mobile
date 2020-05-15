@@ -11,7 +11,7 @@ import { useTheme } from 'emotion-theming';
 
 import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
 import { getStore } from 'store';
-import getInitialState from 'store/getInitialState';
+import loadInitialState from 'store/loadInitialState';
 
 import RootNavigator from './navigation/RootNavigator';
 import { navContainerRef } from './navigation/container';
@@ -66,7 +66,8 @@ export default function Root(props) {
     }
 
     async function initializeStore() {
-      const initialState = await getInitialState();
+      const initialState = await loadInitialState();
+      console.log('state', initialState);
       const store = getStore(initialState);
       setStore(store);
     }
