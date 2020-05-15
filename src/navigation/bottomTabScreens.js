@@ -13,8 +13,8 @@ import LinksScreen from 'screens/LinksScreen';
 
 const Logo = styled(LogoIcon)(({ theme }) => ({
   color: theme.primary,
-  height: 30,
-  width: 120,
+  height: 25,
+  width: 110,
 }));
 
 export const screens = [

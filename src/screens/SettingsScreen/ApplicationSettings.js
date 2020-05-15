@@ -9,8 +9,8 @@ import Divider from 'components/Divider';
 import { updateSettings } from 'lib/settings';
 
 const Wrapper = styled.View({
-  flex: 1,
-  paddingVertical: 20,
+  // flex: 1,
+  // paddingVertical: 20,
 });
 
 const SettingDivider = styled(Divider)({
