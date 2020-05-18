@@ -1,13 +1,15 @@
 import React from 'react';
 import { TextInput } from 'react-native';
 import styled from '@emotion/native';
-import { TextInput as PaperTextInput } from 'react-native-paper';
+import { TextInput as PaperTextInput, Button } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useTheme } from 'emotion-theming';
 
+import { Text } from 'components/StyledText';
 import TouchableIcon from 'components/TouchableIcon';
 import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
-import CloseIcon from 'icons/close.svg';
+import SendIcon from 'icons/send.svg';
 
 const Wrapper = styled(ScrollView)({
   flex: 1,
@@ -27,6 +29,24 @@ const RecipientWrapper = styled.View({
 const RecipientInput = styled(TextInput)({
   flex: 1,
 });
+
+const SendButton = () => {
+  const theme = useTheme();
+  return (
+    <Button
+      mode="contained"
+      icon={({ size, color }) => (
+        <SendIcon style={{ width: size, height: size, color }} />
+      )}
+      onPress={() => {}}
+      contentStyle={{
+        color: theme.primaryAccent,
+      }}
+    >
+      Send
+    </Button>
+  );
+};
 
 export default function SendScreen() {
   return (
@@ -68,7 +88,9 @@ export default function SendScreen() {
       <StyledInput
         label="Reference number (Optional)"
         keyboardType="number-pad"
+        style={{ marginBottom: 50 }}
       />
+      <SendButton />
     </Wrapper>
   );
 }
