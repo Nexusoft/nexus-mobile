@@ -38,7 +38,7 @@ const AccountWrapper = styled(Surface)(({ active }) => ({
 }));
 
 const AccountHeader = styled.View(({ theme, active }) => ({
-  backgroundColor: active ? theme.primary : 'rgba(0,0,0,0)',
+  backgroundColor: active && !theme.dark ? theme.primary : 'rgba(0,0,0,0)',
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -49,11 +49,11 @@ const AccountHeader = styled.View(({ theme, active }) => ({
 }));
 
 const AccountName = styled(Text)(({ theme, active }) => ({
-  color: active ? theme.primaryAccent : theme.foregroundEmphasis,
+  color: active && !theme.dark ? theme.primaryAccent : theme.foregroundEmphasis,
 }));
 
 const AccountBalance = styled(Text)(({ theme, active }) => ({
-  color: active ? theme.primaryAccent : theme.foregroundEmphasis,
+  color: active && !theme.dark ? theme.primaryAccent : theme.foregroundEmphasis,
 }));
 
 const AccountDetails = styled.View(({ expanded }) => ({
@@ -65,11 +65,11 @@ const AccountDetails = styled.View(({ expanded }) => ({
 }));
 
 const AccountAddressLabel = styled(Text)({
-  marginTop: 10,
+  marginTop: 15,
 });
 
 const AccountAddress = styled(Text)({
-  marginTop: 15,
+  marginTop: 10,
 });
 
 const Copy = styled(CopyIcon)(({ theme }) => ({
