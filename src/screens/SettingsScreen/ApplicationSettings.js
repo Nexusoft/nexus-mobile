@@ -1,18 +1,12 @@
 import React from 'react';
-import {
-  TouchableRipple,
-  RadioButton,
-  Portal,
-  Dialog,
-} from 'react-native-paper';
+import { TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
 import { useSelector } from 'react-redux';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useTheme } from 'emotion-theming';
 
 import { Text } from 'components/StyledText';
 import Switch from 'components/Switch';
 import Divider from 'components/Divider';
+import SelectOptions from 'components/SelectOptions';
 import { updateSettings } from 'lib/settings';
 import baseCurrencies from 'consts/baseCurrencies';
 
@@ -52,13 +46,8 @@ const SettingSwitch = styled.View({
   paddingHorizontal: 10,
 });
 
-const SettingSelectDialog = styled(Dialog)({
-  marginVertical: 50,
-});
-
 const SettingSelect = ({ title, options, value, updateValue }) => {
   const [open, setOpen] = React.useState(false);
-  const theme = useTheme();
   return (
     <TouchableRipple
       borderless={false}
@@ -71,37 +60,13 @@ const SettingSelect = ({ title, options, value, updateValue }) => {
           <SettingLabel>{title}</SettingLabel>
           <SettingDescription primary>{options[value]}</SettingDescription>
         </SettingText>
-        <Portal>
-          <SettingSelectDialog
-            visible={open}
-            onDismiss={() => {
-              setOpen(false);
-            }}
-          >
-            <ScrollView>
-              <RadioButton.Group
-                value={value}
-                onValueChange={(value) => {
-                  updateValue(value);
-                  setOpen(false);
-                }}
-              >
-                {Object.entries(options).map(([value, display]) => (
-                  <RadioButton.Item
-                    key={value}
-                    value={value}
-                    color={theme.primary}
-                    uncheckedColor={theme.foregroundEmphasis}
-                    label={display}
-                    labelStyle={{
-                      color: theme.foregroundEmphasis,
-                    }}
-                  />
-                ))}
-              </RadioButton.Group>
-            </ScrollView>
-          </SettingSelectDialog>
-        </Portal>
+        <SelectOptions
+          options={options}
+          value={value}
+          updateValue={updateValue}
+          open={open}
+          setOpen={setOpen}
+        />
       </Setting>
     </TouchableRipple>
   );
