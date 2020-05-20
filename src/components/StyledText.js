@@ -1,9 +1,9 @@
-import styled from "@emotion/native";
+import styled from '@emotion/native';
 
 export const Text = styled.Text(
-  ({ theme, emphasis, bold, disabled, primary }) => {
+  ({ theme, emphasis, mono, bold, disabled, primary }) => {
     return {
-      fontFamily: bold ? "noto-sans-bold" : "noto-sans",
+      fontFamily: mono ? 'robotomono' : bold ? 'noto-sans-bold' : 'noto-sans',
       color: primary
         ? theme.primary
         : disabled
@@ -11,7 +11,7 @@ export const Text = styled.Text(
         : emphasis
         ? theme.foregroundEmphasis
         : theme.foreground,
-      fontWeight: bold ? "bold" : "normal",
+      fontWeight: bold ? 'bold' : 'normal',
     };
   }
 );

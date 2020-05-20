@@ -55,6 +55,7 @@ export default function Root(props) {
           ...MaterialIcons.font,
           'noto-sans': require('./fonts/NotoSans-Regular.ttf'),
           'noto-sans-bold': require('./fonts/NotoSans-Bold.ttf'),
+          robotomono: require('./fonts/RobotoMono-Regular.ttf'),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
