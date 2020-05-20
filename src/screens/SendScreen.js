@@ -1,12 +1,17 @@
 import React from 'react';
-import { TextInput } from 'react-native';
+import { TextInput, View, StyleSheet } from 'react-native';
 import styled from '@emotion/native';
-import { TextInput as PaperTextInput, Button } from 'react-native-paper';
+import {
+  TextInput as PaperTextInput,
+  Button,
+  TouchableRipple,
+} from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'emotion-theming';
 
 import { Text } from 'components/StyledText';
 import TouchableIcon from 'components/TouchableIcon';
+import SelectOptions from 'components/SelectOptions';
 import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
 import SendIcon from 'icons/send.svg';
@@ -30,6 +35,42 @@ const RecipientInput = styled(TextInput)({
   flex: 1,
 });
 
+const AccountSelect = ({ options, value, updateValue }) => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <View>
+      <PaperTextInput
+        mode="outlined"
+        label="Send from"
+        value={options[value]}
+        editable={false}
+        style={{ marginBottom: 15 }}
+        render={({ value, style, ...rest }) => (
+          <TouchableRipple
+            onPress={() => {
+              setOpen(true);
+            }}
+          >
+            <Text
+              style={[{ lineHeight: StyleSheet.flatten(style).height }, style]}
+              {...rest}
+            >
+              {value}
+            </Text>
+          </TouchableRipple>
+        )}
+      />
+      <SelectOptions
+        options={options}
+        value={value}
+        updateValue={updateValue}
+        open={open}
+        setOpen={setOpen}
+      />
+    </View>
+  );
+};
+
 const SendButton = () => {
   const theme = useTheme();
   return (
@@ -49,14 +90,13 @@ const SendButton = () => {
 };
 
 export default function SendScreen() {
+  const [account, setAccount] = React.useState('default');
   return (
     <Wrapper>
-      <PaperTextInput
-        mode="outlined"
-        label="Send from"
-        value="default"
-        editable={false}
-        style={{ marginBottom: 15 }}
+      <AccountSelect
+        options={{ default: 'default', trust: 'trust' }}
+        value={account}
+        updateValue={setAccount}
       />
       <PaperTextInput
         mode="outlined"
