@@ -69,7 +69,7 @@ const AccountAddressLabel = styled(Text)({
 });
 
 const AccountAddress = styled(Text)({
-  marginTop: 10,
+  marginTop: 15,
 });
 
 const Copy = styled(CopyIcon)(({ theme }) => ({

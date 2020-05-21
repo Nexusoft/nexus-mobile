@@ -4,7 +4,7 @@ import { Surface, TouchableRipple } from 'react-native-paper';
 
 import { Text } from 'components/StyledText';
 import Divider from 'components/Divider';
-import { navigate } from 'navigation/container';
+import { navigate } from 'lib/navigation';
 
 const AccountSurface = styled(Surface)({
   marginVertical: 15,

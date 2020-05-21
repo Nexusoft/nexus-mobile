@@ -8,7 +8,7 @@ import TokensScreen from 'screens/TokensScreen';
 import NamesScreen from 'screens/NamesScreen';
 import NamespacesScreen from 'screens/NamespacesScreen';
 import AssetsScreen from 'screens/AssetsScreen';
-import { navigate } from 'navigation/container';
+import { navigate } from 'lib/navigation';
 import MenuIcon from 'icons/menu.svg';
 import SettingsIcon from 'icons/settings.svg';
 

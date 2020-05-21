@@ -15,7 +15,7 @@ import loadInitialState from 'store/loadInitialState';
 
 import Notifications from './Notifications';
 import RootNavigator from './navigation/RootNavigator';
-import { navContainerRef } from './navigation/container';
+import { navContainerRef } from './lib/navigation';
 import useLinking from './navigation/useLinking';
 
 // For using LayoutAnimation

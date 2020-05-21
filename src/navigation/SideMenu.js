@@ -1,18 +1,18 @@
-import React from "react";
-import { Platform } from "react-native";
-import styled from "@emotion/native";
-import { IconButton, TouchableRipple } from "react-native-paper";
-import { useTheme } from "emotion-theming";
+import React from 'react';
+import { Platform } from 'react-native';
+import styled from '@emotion/native';
+import { IconButton, TouchableRipple } from 'react-native-paper';
+import { useTheme } from 'emotion-theming';
 
-import { Text } from "components/StyledText";
-import Component from "components/Component";
-import Divider from "components/Divider";
-import { navigate } from "navigation/container";
-import UserIcon from "icons/user.svg";
-import TokenIcon from "icons/token.svg";
-import NameIcon from "icons/abc.svg";
-import NamespaceIcon from "icons/abc-cube.svg";
-import AssetIcon from "icons/asset.svg";
+import { Text } from 'components/StyledText';
+import Component from 'components/Component';
+import Divider from 'components/Divider';
+import { navigate } from 'lib/navigation';
+import UserIcon from 'icons/user.svg';
+import TokenIcon from 'icons/token.svg';
+import NameIcon from 'icons/abc.svg';
+import NamespaceIcon from 'icons/abc-cube.svg';
+import AssetIcon from 'icons/asset.svg';
 
 const StyledSideMenu = styled.View({
   flex: 1,
@@ -20,8 +20,8 @@ const StyledSideMenu = styled.View({
 
 const MenuHeader = styled.View({
   height: 56,
-  flexDirection: "row",
-  alignItems: "center",
+  flexDirection: 'row',
+  alignItems: 'center',
 });
 
 const UserArea = styled.View({
@@ -30,8 +30,8 @@ const UserArea = styled.View({
 });
 
 const UserInfo = styled.View({
-  flexDirection: "row",
-  alignItems: "center",
+  flexDirection: 'row',
+  alignItems: 'center',
 });
 
 const UserAvatar = styled(UserIcon)(({ theme }) => ({
@@ -49,8 +49,8 @@ const UserName = styled(Text)(({ theme }) => ({
 const MenuItemWrapper = styled.View({
   paddingVertical: 15,
   paddingHorizontal: 20,
-  flexDirection: "row",
-  alignItems: "center",
+  flexDirection: 'row',
+  alignItems: 'center',
 });
 
 const MenuItemIcon = styled(Component)(({ theme }) => ({
@@ -81,7 +81,7 @@ export default function SideMenu({ navigation }) {
   return (
     <StyledSideMenu>
       <MenuHeader>
-        {Platform.OS !== "ios" && (
+        {Platform.OS !== 'ios' && (
           <IconButton
             icon="arrow-left"
             color={theme.foregroundEmphasis}

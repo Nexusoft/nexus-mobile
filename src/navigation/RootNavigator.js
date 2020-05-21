@@ -7,7 +7,7 @@ import { getNavTheme } from 'lib/theme';
 
 import SideMenu from './SideMenu';
 import StackNavigator from './StackNavigator';
-import { navContainerRef } from './container';
+import { navContainerRef } from '../lib/navigation';
 
 const Drawer = createDrawerNavigator();
 
