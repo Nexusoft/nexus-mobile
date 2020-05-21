@@ -6,7 +6,7 @@ import styled from '@emotion/native';
 import QRCode from 'react-native-qrcode-svg';
 
 import { Text } from 'components/StyledText';
-import Component from 'components/Component';
+import { showNotification } from 'lib/notifications';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';
 
@@ -91,7 +91,11 @@ const Account = ({ account, active, activate }) => (
       </AccountHeader>
     </TouchableRipple>
 
-    <TouchableRipple onPress={() => {}}>
+    <TouchableRipple
+      onPress={() => {
+        showNotification('Copied to clipboard');
+      }}
+    >
       <AccountDetails expanded={active}>
         <QRCode value={account.address} size={200} />
         <AccountAddress mono emphasis>

@@ -1,13 +1,13 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { useTheme } from "emotion-theming";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { useTheme } from 'emotion-theming';
 
-import { getNavTheme } from "lib/theme";
+import { getNavTheme } from 'lib/theme';
 
-import SideMenu from "./SideMenu";
-import StackNavigator from "./StackNavigator";
-import { navContainerRef } from "./container";
+import SideMenu from './SideMenu';
+import StackNavigator from './StackNavigator';
+import { navContainerRef } from './container';
 
 const Drawer = createDrawerNavigator();
 

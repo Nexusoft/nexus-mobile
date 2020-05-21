@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider as ReduxProvider, useSelector } from 'react-redux';
-import { StatusBar, Platform, UIManager } from 'react-native';
+import { StatusBar, Platform, UIManager, View } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -13,6 +13,7 @@ import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
 import { getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
 
+import Notifications from './Notifications';
 import RootNavigator from './navigation/RootNavigator';
 import { navContainerRef } from './navigation/container';
 import useLinking from './navigation/useLinking';
@@ -86,6 +87,7 @@ export default function Root(props) {
             <Container>
               <StatusBar barStyle="default" animated />
               <RootNavigator initialNavigationState={initialNavigationState} />
+              <Notifications />
             </Container>
           </PaperContainer>
         </ThemeController>
