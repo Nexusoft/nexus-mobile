@@ -15,6 +15,7 @@ import SelectOptions from 'components/SelectOptions';
 import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
 import SendIcon from 'icons/send.svg';
+import ClearIcon from 'icons/x-circle.svg';
 
 const Wrapper = styled(ScrollView)({
   flex: 1,
@@ -115,7 +116,15 @@ export default function SendScreen() {
               clearButtonMode="while-editing"
               {...props}
             />
-            {!props.value && (
+            {props.value ? (
+              <TouchableIcon
+                icon={ClearIcon}
+                size={15}
+                onPress={() => {
+                  setRecipient('');
+                }}
+              />
+            ) : (
               <>
                 <TouchableIcon
                   icon={PasteIcon}
