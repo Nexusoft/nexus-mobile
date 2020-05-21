@@ -97,22 +97,26 @@ export const getNavTheme = memoize((theme) => ({
     text: theme.foregroundEmphasis,
   },
 }));
-
+console.log(DefaultTheme);
 export const getPaperTheme = memoize((theme) => ({
   ...DefaultTheme,
   dark: theme.dark,
   mode: 'adaptive',
   roundness: 4,
   colors: {
-    ...DefaultTheme.colors,
     background: theme.background,
+    backdrop: fade(theme.foregroundEmphasis, 0.5),
     surface: theme.surface,
     text: theme.foreground,
+    onBackground: theme.foregroundEmphasis,
+    onSurface: theme.foregroundEmphasis,
     disabled: theme.foregroundDisabled,
     primary: theme.primary,
-    accent: theme.foregroundEmphasis,
+    accent: theme.primary,
     error: theme.danger,
     placeholder: fade(theme.foreground, 0.46),
+    disabled: fade(theme.foregroundEmphasis, 0.74),
+    notification: theme.primary,
   },
   fonts: {
     thin: {

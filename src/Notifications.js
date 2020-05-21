@@ -25,7 +25,7 @@ function Notification({ notification }) {
       onDismiss={dismiss}
       visible={!closing}
     >
-      <Text emphasis>{notification.content}</Text>
+      {notification.content}
     </Snackbar>
   );
 }
