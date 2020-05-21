@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, View, StyleSheet } from 'react-native';
+import { TextInput, View, StyleSheet, Clipboard } from 'react-native';
 import styled from '@emotion/native';
 import {
   TextInput as PaperTextInput,
@@ -91,6 +91,7 @@ const SendButton = () => {
 
 export default function SendScreen() {
   const [account, setAccount] = React.useState('default');
+  const [recipient, setRecipient] = React.useState('');
   return (
     <Wrapper>
       <AccountSelect
@@ -99,10 +100,13 @@ export default function SendScreen() {
         updateValue={setAccount}
       />
       <PaperTextInput
+        multiline
         mode="outlined"
         label="Send to"
         placeholder="Recipient address"
         style={{ marginBottom: 15 }}
+        value={recipient}
+        onChangeText={setRecipient}
         render={(props) => (
           <RecipientWrapper>
             <RecipientInput
@@ -113,7 +117,14 @@ export default function SendScreen() {
             />
             {!props.value && (
               <>
-                <TouchableIcon icon={PasteIcon} size={15} onPress={() => {}} />
+                <TouchableIcon
+                  icon={PasteIcon}
+                  size={15}
+                  onPress={async () => {
+                    const clipboard = await Clipboard.getString();
+                    setRecipient(clipboard);
+                  }}
+                />
                 <TouchableIcon icon={QRIcon} size={15} onPress={() => {}} />
               </>
             )}

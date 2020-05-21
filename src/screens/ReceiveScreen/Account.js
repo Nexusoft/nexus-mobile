@@ -1,4 +1,5 @@
 import React from 'react';
+import { Clipboard } from 'react-native';
 import { Surface, TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
 import QRCode from 'react-native-qrcode-svg';
@@ -72,6 +73,7 @@ export default function Account({ account, active, activate }) {
 
       <TouchableRipple
         onPress={() => {
+          Clipboard.setString(account.address);
           showNotification('Copied to clipboard');
         }}
       >
