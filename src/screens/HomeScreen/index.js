@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import styled from '@emotion/native';
 
-import { Text } from 'components/StyledText';
+import Text from 'components/Text';
 import Divider from 'components/Divider';
 import BalanceSection from './BalanceSection';
 import Account from './Account';

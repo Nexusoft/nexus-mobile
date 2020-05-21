@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
 
-import { Text } from 'components/StyledText';
+import Text from 'components/Text';
 
 const Wrapper = styled.View({
   paddingVertical: 20,

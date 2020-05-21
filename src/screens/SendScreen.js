@@ -9,7 +9,7 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'emotion-theming';
 
-import { Text } from 'components/StyledText';
+import Text from 'components/Text';
 import TouchableIcon from 'components/TouchableIcon';
 import SelectOptions from 'components/SelectOptions';
 import QRIcon from 'icons/qr.svg';

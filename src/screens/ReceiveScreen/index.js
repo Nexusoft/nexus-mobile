@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import styled from '@emotion/native';
 import QRCode from 'react-native-qrcode-svg';
 
-import { Text } from 'components/StyledText';
+import Text from 'components/Text';
 import { showNotification } from 'lib/notifications';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';

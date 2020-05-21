@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
 
-export const Text = styled.Text(
+export default styled.Text(
   ({ theme, emphasis, mono, bold, disabled, primary }) => {
     return {
       fontFamily: mono ? 'robotomono' : bold ? 'noto-sans-bold' : 'noto-sans',

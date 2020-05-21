@@ -3,7 +3,7 @@ import { TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
 import { useSelector } from 'react-redux';
 
-import { Text } from 'components/StyledText';
+import Text from 'components/Text';
 import Switch from 'components/Switch';
 import Divider from 'components/Divider';
 import SelectOptions from 'components/SelectOptions';

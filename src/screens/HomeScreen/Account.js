@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/native';
 import { Surface, TouchableRipple } from 'react-native-paper';
 
-import { Text } from 'components/StyledText';
+import Text from 'components/Text';
 import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
 

@@ -4,7 +4,7 @@ import styled from '@emotion/native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
-import { Text } from 'components/StyledText';
+import Text from 'components/Text';
 import Component from 'components/Component';
 import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';

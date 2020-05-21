@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Snackbar } from 'react-native-paper';
 
-import { Text } from 'components/StyledText';
+import Text from 'components/Text';
 import { dismissNotification } from 'lib/notifications';
 
 function Notification({ notification }) {
