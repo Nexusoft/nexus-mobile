@@ -19,7 +19,7 @@ import ClearIcon from 'icons/x-circle.svg';
 
 const Wrapper = styled(ScrollView)({
   flex: 1,
-  paddingVertical: 20,
+  paddingVertical: 30,
   paddingHorizontal: 20,
 });
 
@@ -82,7 +82,7 @@ const SendButton = () => {
       )}
       onPress={() => {}}
       contentStyle={{
-        color: theme.primaryAccent,
+        color: theme.onPrimary,
       }}
     >
       Send

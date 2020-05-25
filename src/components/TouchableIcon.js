@@ -1,43 +1,35 @@
-import React from "react";
-import { Platform, TouchableOpacity, View } from "react-native";
-import styled from "@emotion/native";
-import { IconButton } from "react-native-paper";
-import { useTheme } from "emotion-theming";
+import React from 'react';
+import { Platform, TouchableOpacity, View } from 'react-native';
+import styled from '@emotion/native';
+import { IconButton } from 'react-native-paper';
 
-import Component from "components/Component";
-
-const IconComponent = styled(Component)(({ color, size }) => ({
-  color,
-  width: size,
-  height: size,
-}));
+import SvgIcon from 'components/SvgIcon';
+import useColorName from 'hooks/useColorName';
 
 const IconWrapperIos = styled(TouchableOpacity)(({ size }) => ({
   margin: 6,
   width: size * 1.5,
   height: size * 1.5,
-  alignItems: "center",
-  justifyContent: "center",
+  alignItems: 'center',
+  justifyContent: 'center',
 }));
 
 export default function TouchableIcon({
   icon,
-  color,
-  size,
+  colorName,
+  sub,
   disabled,
+  size,
   animated,
   ...rest
 }) {
-  const theme = useTheme();
-
-  const iconColor =
-    (typeof color === "string" ? theme[color] : color) || theme.foreground;
-  const iconEl = <IconComponent as={icon} color={iconColor} size={size} />;
-  if (Platform.OS !== "ios") {
+  const color = useColorName(colorName, { sub, disabled });
+  const iconEl = <SvgIcon {...{ icon, colorName, sub, disabled, size }} />;
+  if (Platform.OS !== 'ios') {
     return (
       <IconButton
         icon={() => iconEl}
-        color={iconColor}
+        color={color}
         size={size}
         disabled={disabled}
         animated={animated}

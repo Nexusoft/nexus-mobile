@@ -5,6 +5,7 @@ import styled from '@emotion/native';
 import QRCode from 'react-native-qrcode-svg';
 
 import Text from 'components/Text';
+import SvgIcon from 'components/SvgIcon';
 import { showNotification } from 'lib/notifications';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';
@@ -28,11 +29,11 @@ const AccountHeader = styled.View(({ theme, active }) => ({
 }));
 
 const AccountName = styled(Text)(({ theme, active }) => ({
-  color: active && !theme.dark ? theme.primaryAccent : theme.foregroundEmphasis,
+  color: active && !theme.dark ? theme.onPrimary : theme.foreground,
 }));
 
 const AccountBalance = styled(Text)(({ theme, active }) => ({
-  color: active && !theme.dark ? theme.primaryAccent : theme.foregroundEmphasis,
+  color: active && !theme.dark ? theme.onPrimary : theme.foreground,
 }));
 
 const AccountDetails = styled.View(({ expanded }) => ({
@@ -43,19 +44,13 @@ const AccountDetails = styled.View(({ expanded }) => ({
   justifyContent: 'center',
 }));
 
-const AccountAddressLabel = styled(Text)({
+const AccountAddressLabel = styled(Text.template({ modifier: 'sub' }))({
   marginTop: 15,
 });
 
 const AccountAddress = styled(Text)({
   marginTop: 15,
 });
-
-const Copy = styled(CopyIcon)(({ theme }) => ({
-  color: theme.foreground,
-  width: 14,
-  height: 14,
-}));
 
 export default function Account({ account, active, activate }) {
   return (
@@ -83,7 +78,7 @@ export default function Account({ account, active, activate }) {
             {segmentAddress(account.address)}
           </AccountAddress>
           <AccountAddressLabel>
-            <Copy /> Touch to copy account address
+            <SvgIcon icon={CopyIcon} size={14} /> Touch to copy account address
           </AccountAddressLabel>
         </AccountDetails>
       </TouchableRipple>

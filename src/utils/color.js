@@ -1,4 +1,4 @@
-import Color from "color";
+import Color from 'color';
 
 export function negate(color) {
   return Color(color).negate().string();
@@ -89,3 +89,11 @@ export const getMixer = (() => {
     return mixer;
   };
 })();
+
+export function subColor(color) {
+  return fade(color, 0.34);
+}
+
+export function disabledColor(color) {
+  return fade(color, 0.62);
+}

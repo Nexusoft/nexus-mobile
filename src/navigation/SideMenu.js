@@ -54,7 +54,7 @@ const MenuItemWrapper = styled.View({
 });
 
 const MenuItemIcon = styled(Component)(({ theme }) => ({
-  color: theme.foregroundEmphasis,
+  color: theme.foreground,
   width: 14,
   height: 14,
   marginRight: 10,
@@ -84,7 +84,7 @@ export default function SideMenu({ navigation }) {
         {Platform.OS !== 'ios' && (
           <IconButton
             icon="arrow-left"
-            color={theme.foregroundEmphasis}
+            color={theme.foreground}
             size={25}
             onPress={() => {
               navigation.closeDrawer();

@@ -37,10 +37,10 @@ export default function SelectOptions({
                 key={value}
                 value={value}
                 color={theme.primary}
-                uncheckedColor={theme.foregroundEmphasis}
+                uncheckedColor={theme.foreground}
                 label={display}
                 labelStyle={{
-                  color: theme.foregroundEmphasis,
+                  color: theme.foreground,
                 }}
               />
             ))}

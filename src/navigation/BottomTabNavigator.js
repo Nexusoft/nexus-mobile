@@ -3,8 +3,9 @@ import React from 'react';
 import styled from '@emotion/native';
 import { useTheme } from 'emotion-theming';
 
-import { defaultScreen, screens } from './bottomTabScreens';
 import Component from 'components/Component';
+import { subColor } from 'utils/color';
+import { defaultScreen, screens } from './bottomTabScreens';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -34,10 +35,12 @@ export default function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName={defaultScreen}
       shifting={false}
-      activeColor={theme.primary}
-      inactiveColor={theme.foreground}
+      activeColor={theme.dark ? theme.primary : theme.surface}
+      inactiveColor={
+        theme.dark ? subColor(theme.foreground) : subColor(theme.surface)
+      }
       barStyle={{
-        backgroundColor: theme.surface,
+        backgroundColor: theme.dark ? theme.surface : theme.primary,
       }}
     >
       {screens.map((screen) => renderScreen(screen))}

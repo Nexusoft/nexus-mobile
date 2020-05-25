@@ -1,41 +1,37 @@
 import { DefaultTheme } from 'react-native-paper';
 
-import { getMixer, mix, fade } from 'utils/color';
+import { disabledColor, mix, fade } from 'utils/color';
 import memoize from 'utils/memoize';
 
-const baseDarkColor = '#121212';
-const baseLightColor = '#ffffff';
+const darkColor = '#121212';
+const lightColor = '#ffffff';
 const dangerColor = '#8f240e';
 const primaryShades = {
-  50: '#dff3fa',
-  100: '#b0dff1',
-  200: '#7dcae8',
-  300: '#4db6df',
-  400: '#29a7da',
-  500: '#0099d4',
-  600: '#008cc7',
-  700: '#007ab4',
-  800: '#0069a0',
-  900: '#004b80',
+  50: '#e8ebfd',
+  100: '#c5ccf9',
+  200: '#9dacf6',
+  300: '#718bf3',
+  400: '#4a6ff0',
+  500: '#0954eb',
+  600: '#004ce0',
+  700: '#0041d3',
+  800: '#0036c8',
+  900: '#001fb6',
 };
+const primaryDark = '#002cb7';
 
-// const darkPrimary = mix(baseDarkColor, primaryColor, 0.08);
-
-// const darkColor = "rgb(33,33,38)";
-const darkColor = baseDarkColor;
 const elevatedDarkColors = {
   0: darkColor,
-  1: mix(darkColor, baseLightColor, 0.05),
-  2: mix(darkColor, baseLightColor, 0.07),
-  3: mix(darkColor, baseLightColor, 0.08),
-  4: mix(darkColor, baseLightColor, 0.09),
-  6: mix(darkColor, baseLightColor, 0.11),
-  8: mix(darkColor, baseLightColor, 0.12),
-  12: mix(darkColor, baseLightColor, 0.14),
-  16: mix(darkColor, baseLightColor, 0.15),
-  24: mix(darkColor, baseLightColor, 0.16),
+  1: mix(darkColor, lightColor, 0.05),
+  2: mix(darkColor, lightColor, 0.07),
+  3: mix(darkColor, lightColor, 0.08),
+  4: mix(darkColor, lightColor, 0.09),
+  6: mix(darkColor, lightColor, 0.11),
+  8: mix(darkColor, lightColor, 0.12),
+  12: mix(darkColor, lightColor, 0.14),
+  16: mix(darkColor, lightColor, 0.15),
+  24: mix(darkColor, lightColor, 0.16),
 };
-const lightColor = baseLightColor;
 // const lightColor = "rgb(239,240,236)";
 // const lightPrimaryColor = "rgb(0,183,250)";
 // const darkPrimaryColor = "rgb(8,154,207)";
@@ -62,29 +58,25 @@ const lightColor = baseLightColor;
 export const darkTheme = {
   dark: true,
   background: elevatedDarkColors[1],
+  foreground: lightColor,
   surface: elevatedDarkColors[4],
-  foreground: fade(lightColor, 0.4),
-  foregroundEmphasis: lightColor,
-  foregroundDisabled: fade(lightColor, 0.62),
-  // shade: getShade(getMixer(darkColor, lightColor)),
-  primary: primaryShades[300],
-  primaryAccent: darkColor,
+  primary: primaryShades[200],
+  primaryVariant: primaryShades[300],
+  onPrimary: darkColor,
   danger: dangerColor,
-  dangerAccent: lightColor,
+  onDanger: lightColor,
 };
 
 export const lightTheme = {
   dark: false,
   background: lightColor,
+  foreground: darkColor,
   surface: lightColor,
-  foreground: fade(darkColor, 0.34),
-  foregroundEmphasis: darkColor,
-  foregroundDisabled: fade(darkColor, 0.62),
-  // shade: getShade(getMixer(lightColor, darkColor)),
-  primary: primaryShades[600],
-  primaryAccent: lightColor,
+  primary: primaryShades[500],
+  onPrimary: lightColor,
+  primaryVariant: primaryDark,
   danger: dangerColor,
-  dangerAccent: lightColor,
+  onDanger: lightColor,
 };
 
 export const getNavTheme = memoize((theme) => ({
@@ -94,10 +86,10 @@ export const getNavTheme = memoize((theme) => ({
     border: theme.background,
     card: theme.surface,
     primary: theme.primary,
-    text: theme.foregroundEmphasis,
+    text: theme.foreground,
   },
 }));
-console.log(DefaultTheme);
+
 export const getPaperTheme = memoize((theme) => ({
   ...DefaultTheme,
   dark: theme.dark,
@@ -105,17 +97,17 @@ export const getPaperTheme = memoize((theme) => ({
   roundness: 4,
   colors: {
     background: theme.background,
-    backdrop: fade(theme.foregroundEmphasis, 0.5),
+    backdrop: 'rgba(0,0,0,0.5)',
     surface: theme.surface,
     text: theme.foreground,
-    onBackground: theme.foregroundEmphasis,
-    onSurface: theme.foregroundEmphasis,
-    disabled: theme.foregroundDisabled,
+    foreground: theme.foreground,
+    onSurface: theme.foreground,
+    disabled: disabledColor(theme.foreground),
     primary: theme.primary,
     accent: theme.primary,
     error: theme.danger,
     placeholder: fade(theme.foreground, 0.46),
-    disabled: fade(theme.foregroundEmphasis, 0.74),
+    disabled: fade(theme.foreground, 0.74),
     notification: theme.primary,
   },
   fonts: {

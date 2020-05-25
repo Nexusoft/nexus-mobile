@@ -5,6 +5,7 @@ import { TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
 
 import Text from 'components/Text';
+import { subColor } from 'utils/color';
 
 const Wrapper = styled.View({
   paddingVertical: 20,
@@ -30,7 +31,7 @@ const ExpandIcon = styled(Ionicons)(({ theme }) => ({
   position: 'absolute',
   top: 23,
   right: 30,
-  color: theme.foreground,
+  color: subColor(theme.foreground),
   fontSize: 15,
   alignSelf: 'flex-end',
 }));

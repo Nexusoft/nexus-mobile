@@ -45,7 +45,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           headerLeft: () => (
             <TouchableIcon
               icon={MenuIcon}
-              color="foregroundEmphasis"
+              colorName="foreground"
               size={25}
               onPress={() => {
                 drawerNavigation.openDrawer();
@@ -55,7 +55,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           headerRight: () => (
             <TouchableIcon
               icon={SettingsIcon}
-              color="foregroundEmphasis"
+              colorName="foreground"
               size={25}
               onPress={() => {
                 navigate('Settings');
