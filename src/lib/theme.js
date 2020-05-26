@@ -1,4 +1,4 @@
-import { DefaultTheme } from 'react-native-paper';
+import { DefaultTheme, DarkTheme } from 'react-native-paper';
 
 import { disabledColor, mix, fade } from 'utils/color';
 import memoize from 'utils/memoize';
@@ -7,18 +7,18 @@ const darkColor = '#121212';
 const lightColor = '#ffffff';
 const dangerColor = '#8f240e';
 const primaryShades = {
-  50: '#e8ebfd',
-  100: '#c5ccf9',
-  200: '#9dacf6',
-  300: '#718bf3',
-  400: '#4a6ff0',
-  500: '#0954eb',
-  600: '#004ce0',
-  700: '#0041d3',
-  800: '#0036c8',
-  900: '#001fb6',
+  50: '#e2f2ff',
+  100: '#badfff',
+  200: '#8acbff',
+  300: '#53b6ff',
+  400: '#19a6ff',
+  500: '#0095ff',
+  600: '#0086ff',
+  700: '#0073f7',
+  800: '#1261e4',
+  900: '#1f3fc5',
 };
-const primaryDark = '#002cb7';
+const primaryDark = '#005acb';
 
 const elevatedDarkColors = {
   0: darkColor,
@@ -60,8 +60,8 @@ export const darkTheme = {
   background: elevatedDarkColors[1],
   foreground: lightColor,
   surface: elevatedDarkColors[4],
-  primary: primaryShades[200],
-  primaryVariant: primaryShades[300],
+  primary: primaryShades[300],
+  primaryVariant: primaryShades[400],
   onPrimary: darkColor,
   danger: dangerColor,
   onDanger: lightColor,
@@ -72,7 +72,7 @@ export const lightTheme = {
   background: lightColor,
   foreground: darkColor,
   surface: lightColor,
-  primary: primaryShades[500],
+  primary: primaryShades[600],
   onPrimary: lightColor,
   primaryVariant: primaryDark,
   danger: dangerColor,
@@ -91,7 +91,7 @@ export const getNavTheme = memoize((theme) => ({
 }));
 
 export const getPaperTheme = memoize((theme) => ({
-  ...DefaultTheme,
+  ...(theme.dark ? DarkTheme : DefaultTheme),
   dark: theme.dark,
   mode: 'adaptive',
   roundness: 4,
@@ -100,7 +100,7 @@ export const getPaperTheme = memoize((theme) => ({
     backdrop: 'rgba(0,0,0,0.5)',
     surface: theme.surface,
     text: theme.foreground,
-    foreground: theme.foreground,
+    onBackground: theme.foreground,
     onSurface: theme.foreground,
     disabled: disabledColor(theme.foreground),
     primary: theme.primary,

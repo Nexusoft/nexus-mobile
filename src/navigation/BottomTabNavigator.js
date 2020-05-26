@@ -10,8 +10,8 @@ import { defaultScreen, screens } from './bottomTabScreens';
 const BottomTab = createMaterialBottomTabNavigator();
 
 const TabBarIcon = styled(Component)({
-  width: 25,
-  height: 25,
+  width: 24,
+  height: 24,
 });
 
 const renderScreen = ({ name, component, IconComponent }) => (
@@ -39,8 +39,13 @@ export default function BottomTabNavigator() {
       inactiveColor={
         theme.dark ? subColor(theme.foreground) : subColor(theme.surface)
       }
+      screenOptions={{
+        tabBarColor: theme.dark ? theme.surface : theme.primary,
+      }}
       barStyle={{
         backgroundColor: theme.dark ? theme.surface : theme.primary,
+        paddingTop: 1,
+        paddingBottom: 2,
       }}
     >
       {screens.map((screen) => renderScreen(screen))}
