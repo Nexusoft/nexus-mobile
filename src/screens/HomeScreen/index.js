@@ -19,7 +19,7 @@ const AccountsPane = styled(Surface)(({ theme }) => ({
   borderTopLeftRadius: 20,
   borderTopRightRadius: 20,
   paddingHorizontal: 20,
-  elevation: theme.dark ? 1 : 6,
+  elevation: theme.dark ? 1 : 8,
   ...shadow(theme.dark ? 1 : 6),
 }));
 
