@@ -18,7 +18,7 @@ const primaryShades = {
   800: '#1261e4',
   900: '#1f3fc5',
 };
-const primaryDark = '#005acb';
+const primaryDark = '#0049c3';
 
 const elevatedDarkColors = {
   0: darkColor,
@@ -82,7 +82,7 @@ export const lightTheme = {
   background: lightColor,
   foreground: darkColor,
   surface: lightColor,
-  primary: primaryShades[600],
+  primary: primaryShades[700],
   onPrimary: lightColor,
   primaryVariant: primaryDark,
   danger: dangerColor,

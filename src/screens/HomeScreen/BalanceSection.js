@@ -36,7 +36,7 @@ const Value = styled(Text)(({ theme }) => ({
 
 const ExpandIcon = styled(Ionicons)(({ theme }) => ({
   position: 'absolute',
-  top: 3,
+  top: 4,
   right: 10,
   color: subColor(theme.dark ? theme.foreground : theme.onPrimary),
   fontSize: 15,

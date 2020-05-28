@@ -13,7 +13,7 @@ import SendScreen from 'screens/SendScreen';
 import LinksScreen from 'screens/LinksScreen';
 
 const Logo = styled(LogoIcon)(({ theme }) => ({
-  color: theme.dark ? theme.foreground : theme.onPrimary,
+  color: theme.dark ? theme.primary : theme.onPrimary,
   height: 25,
   width: 110,
 }));
