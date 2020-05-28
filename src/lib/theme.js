@@ -7,18 +7,18 @@ const darkColor = '#121212';
 const lightColor = '#ffffff';
 const dangerColor = '#8f240e';
 const primaryShades = {
-  50: '#e2f2ff',
-  100: '#badfff',
-  200: '#8acbff',
-  300: '#53b6ff',
-  400: '#19a6ff',
-  500: '#0095ff',
-  600: '#0086ff',
-  700: '#0073f7',
-  800: '#1261e4',
-  900: '#1f3fc5',
+  50: '#e3f3ff',
+  100: '#bbe1ff',
+  200: '#8dcfff',
+  300: '#58bbff',
+  400: '#26abff',
+  500: '#009cff',
+  600: '#008dff',
+  700: '#007af2',
+  800: '#0069e0',
+  900: '#0e48c1',
 };
-const primaryDark = '#0049c3';
+const primaryDark = '#0040ad';
 
 const elevatedDarkColors = {
   0: darkColor,
@@ -68,8 +68,8 @@ export const darkTheme = {
   background: elevatedDarkColors[1],
   foreground: lightColor,
   surface: elevatedDarkColors[4],
-  primary: primaryShades[300],
-  primaryVariant: primaryShades[400],
+  primary: primaryShades[400],
+  primaryVariant: primaryShades[300],
   onPrimary: darkColor,
   danger: dangerColor,
   onDanger: lightColor,
@@ -82,7 +82,7 @@ export const lightTheme = {
   background: lightColor,
   foreground: darkColor,
   surface: lightColor,
-  primary: primaryShades[700],
+  primary: primaryShades[800],
   onPrimary: lightColor,
   primaryVariant: primaryDark,
   danger: dangerColor,
