@@ -2,9 +2,10 @@ import React from 'react';
 import { Platform, TouchableOpacity, View } from 'react-native';
 import styled from '@emotion/native';
 import { IconButton } from 'react-native-paper';
+import { useTheme } from 'emotion-theming';
 
 import SvgIcon from 'components/SvgIcon';
-import useColorName from 'hooks/useColorName';
+import resolveColor from 'utils/resolveColor';
 
 const IconWrapperIos = styled(TouchableOpacity)(({ size }) => ({
   margin: 6,
@@ -16,6 +17,7 @@ const IconWrapperIos = styled(TouchableOpacity)(({ size }) => ({
 
 export default function TouchableIcon({
   icon,
+  color,
   colorName,
   sub,
   disabled,
@@ -23,13 +25,16 @@ export default function TouchableIcon({
   animated,
   ...rest
 }) {
-  const color = useColorName(colorName, { sub, disabled });
-  const iconEl = <SvgIcon {...{ icon, colorName, sub, disabled, size }} />;
+  const theme = useTheme();
+  const iconColor = color || resolveColor(colorName, { sub, disabled }, theme);
+  const iconEl = (
+    <SvgIcon {...{ icon, color, colorName, sub, disabled, size }} />
+  );
   if (Platform.OS !== 'ios') {
     return (
       <IconButton
         icon={() => iconEl}
-        color={color}
+        color={iconColor}
         size={size}
         disabled={disabled}
         animated={animated}

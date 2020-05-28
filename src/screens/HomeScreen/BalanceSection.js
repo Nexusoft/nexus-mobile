@@ -7,37 +7,44 @@ import styled from '@emotion/native';
 import Text from 'components/Text';
 import { subColor } from 'utils/color';
 
-const Wrapper = styled.View({
-  paddingVertical: 20,
+const Wrapper = styled.View(({ theme }) => ({
+  paddingVertical: 25,
   paddingHorizontal: 20,
+}));
+
+const BalanceBrief = styled.View({
   alignItems: 'center',
+  paddingBottom: 20,
 });
 
-const BalanceLabel = styled(Text)({
+const BalanceLabel = styled(Text)(({ theme }) => ({
   fontSize: 12,
   textTransform: 'uppercase',
-});
+  color: theme.dark ? theme.foreground : theme.onPrimary,
+}));
 
-const Balance = styled(Text)({
-  fontSize: 30,
-});
+const Balance = styled(Text)(({ theme }) => ({
+  fontSize: 34,
+  color: theme.dark ? theme.foreground : theme.onPrimary,
+}));
 
-const Value = styled(Text)({
+const Value = styled(Text)(({ theme }) => ({
   marginTop: 5,
-  fontSize: 17,
-});
+  fontSize: 18,
+  color: theme.subColor(theme.dark ? theme.foreground : theme.onPrimary),
+}));
 
 const ExpandIcon = styled(Ionicons)(({ theme }) => ({
   position: 'absolute',
-  top: 23,
-  right: 30,
-  color: subColor(theme.foreground),
+  top: 3,
+  right: 10,
+  color: subColor(theme.dark ? theme.foreground : theme.onPrimary),
   fontSize: 15,
   alignSelf: 'flex-end',
 }));
 
 const DetailedBalances = styled.View(({ expanded }) => ({
-  height: expanded ? undefined : 0,
+  height: expanded ? undefined : 0.01,
   overflow: 'hidden',
   alignSelf: 'stretch',
   paddingTop: expanded ? 30 : 0,
@@ -51,6 +58,10 @@ const DetailedBalance = styled.View({
   marginVertical: 4,
 });
 
+const DetailedText = styled(Text)(({ theme }) => ({
+  color: theme.dark ? theme.foreground : theme.onPrimary,
+}));
+
 export default function BalanceSection() {
   const [expanded, setExpanded] = React.useState(false);
 
@@ -62,35 +73,37 @@ export default function BalanceSection() {
       }}
     >
       <Wrapper>
-        <BalanceLabel emphasis>Balance</BalanceLabel>
-        <Balance emphasis>10,435.643 NXS</Balance>
-        <Value>≈ 1,931.32 USD</Value>
-        <ExpandIcon name={expanded ? 'ios-arrow-up' : 'ios-arrow-down'} />
+        <BalanceBrief>
+          <BalanceLabel>Balance</BalanceLabel>
+          <Balance>10,435.643 NXS</Balance>
+          <Value>≈ 1,931.32 USD</Value>
+          <ExpandIcon name={expanded ? 'ios-arrow-up' : 'ios-arrow-down'} />
+        </BalanceBrief>
 
         <DetailedBalances expanded={expanded}>
           <DetailedBalance>
-            <Text>Available</Text>
-            <Text>24,464.345474 NXS</Text>
+            <DetailedText>Available</DetailedText>
+            <DetailedText>24,464.345474 NXS</DetailedText>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Stake</Text>
-            <Text>35,378.343457 NXS</Text>
+            <DetailedText>Stake</DetailedText>
+            <DetailedText>35,378.343457 NXS</DetailedText>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Pending</Text>
-            <Text>0 NXS</Text>
+            <DetailedText>Pending</DetailedText>
+            <DetailedText>0 NXS</DetailedText>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Unconfirmed</Text>
-            <Text>0 NXS</Text>
+            <DetailedText>Unconfirmed</DetailedText>
+            <DetailedText>0 NXS</DetailedText>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Immature</Text>
-            <Text>0 NXS</Text>
+            <DetailedText>Immature</DetailedText>
+            <DetailedText>0 NXS</DetailedText>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Total</Text>
-            <Text>64,324.565803 NXS</Text>
+            <DetailedText>Total</DetailedText>
+            <DetailedText>64,324.565803 NXS</DetailedText>
           </DetailedBalance>
         </DetailedBalances>
       </Wrapper>

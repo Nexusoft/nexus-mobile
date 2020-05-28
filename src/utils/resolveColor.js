@@ -1,8 +1,6 @@
-import { useTheme } from 'emotion-theming';
 import { subColor, disabledColor } from 'utils/color';
 
-export default function useColorName(colorName, { sub, disabled }) {
-  const theme = useTheme();
+export default function resolveColor(colorName, { sub, disabled }, theme) {
   const baseColor = theme[colorName];
   return (
     baseColor &&

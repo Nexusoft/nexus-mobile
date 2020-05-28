@@ -11,7 +11,7 @@ import { navContainerRef } from '../lib/navigation';
 
 const Drawer = createDrawerNavigator();
 
-export default function RootNavigator({ initialNavigationState }) {
+export default function DrawerNavigator({ initialNavigationState }) {
   const theme = useTheme();
   const navTheme = getNavTheme(theme);
   return (
@@ -20,7 +20,12 @@ export default function RootNavigator({ initialNavigationState }) {
       initialState={initialNavigationState}
       theme={navTheme}
     >
-      <Drawer.Navigator drawerContent={(props) => <SideMenu {...props} />}>
+      <Drawer.Navigator
+        drawerContent={(props) => <SideMenu {...props} />}
+        sceneContainerStyle={{
+          backgroundColor: theme.dark ? undefined : theme.primary,
+        }}
+      >
         <Drawer.Screen name="StackNav" component={StackNavigator} />
       </Drawer.Navigator>
     </NavigationContainer>

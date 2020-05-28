@@ -1,6 +1,6 @@
 import { DefaultTheme, DarkTheme } from 'react-native-paper';
 
-import { disabledColor, mix, fade } from 'utils/color';
+import { mix, fade } from 'utils/color';
 import memoize from 'utils/memoize';
 
 const darkColor = '#121212';
@@ -55,6 +55,14 @@ const elevatedDarkColors = {
 //   };
 // };
 
+export function subColor(color) {
+  return fade(color, 0.34);
+}
+
+export function disabledColor(color) {
+  return fade(color, 0.62);
+}
+
 export const darkTheme = {
   dark: true,
   background: elevatedDarkColors[1],
@@ -65,6 +73,8 @@ export const darkTheme = {
   onPrimary: darkColor,
   danger: dangerColor,
   onDanger: lightColor,
+  subColor,
+  disabledColor,
 };
 
 export const lightTheme = {
@@ -77,6 +87,8 @@ export const lightTheme = {
   primaryVariant: primaryDark,
   danger: dangerColor,
   onDanger: lightColor,
+  subColor,
+  disabledColor,
 };
 
 export const getNavTheme = memoize((theme) => ({

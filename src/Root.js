@@ -14,7 +14,7 @@ import { getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
 
 import Notifications from './Notifications';
-import RootNavigator from './navigation/RootNavigator';
+import DrawerNavigator from './navigation/DrawerNavigator';
 import { navContainerRef } from './lib/navigation';
 import useLinking from './navigation/useLinking';
 
@@ -27,7 +27,7 @@ if (Platform.OS === 'android') {
 
 const Container = styled.View(({ theme }) => ({
   flex: 1,
-  backgroundColor: theme.background,
+  backgroundColor: theme.dark ? theme.background : theme.primary,
 }));
 
 function PaperContainer({ children }) {
@@ -85,8 +85,9 @@ export default function Root(props) {
         <ThemeController>
           <PaperContainer>
             <Container>
-              <StatusBar barStyle="default" animated />
-              <RootNavigator initialNavigationState={initialNavigationState} />
+              <DrawerNavigator
+                initialNavigationState={initialNavigationState}
+              />
               <Notifications />
             </Container>
           </PaperContainer>

@@ -2,6 +2,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import React from 'react';
 import styled from '@emotion/native';
 import { useTheme } from 'emotion-theming';
+import { shadow } from 'react-native-paper';
 
 import Component from 'components/Component';
 import { subColor } from 'utils/color';
@@ -35,18 +36,12 @@ export default function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName={defaultScreen}
       shifting={false}
-      activeColor={theme.dark ? theme.primary : theme.surface}
-      inactiveColor={
-        theme.dark ? subColor(theme.foreground) : subColor(theme.surface)
+      barStyle={
+        {
+          // elevation: 1,
+          // ...shadow(1),
+        }
       }
-      screenOptions={{
-        tabBarColor: theme.dark ? theme.surface : theme.primary,
-      }}
-      barStyle={{
-        backgroundColor: theme.dark ? theme.surface : theme.primary,
-        paddingTop: 1,
-        paddingBottom: 2,
-      }}
     >
       {screens.map((screen) => renderScreen(screen))}
     </BottomTab.Navigator>
