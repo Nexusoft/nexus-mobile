@@ -23,7 +23,7 @@ export const screens = [
     name: 'Home',
     component: HomeScreen,
     IconComponent: HomeIcon,
-    stackOptions: (theme) => ({
+    stackOptions: ({ theme }) => ({
       title: 'Home',
       headerTitle: () => <Logo />,
       headerTitleAlign: 'center',

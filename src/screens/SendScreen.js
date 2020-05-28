@@ -84,6 +84,7 @@ const SendButton = () => {
       contentStyle={{
         color: theme.onPrimary,
       }}
+      style={{ alignSelf: 'flex-end' }}
     >
       Send
     </Button>

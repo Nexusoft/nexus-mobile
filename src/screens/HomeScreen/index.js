@@ -19,7 +19,6 @@ const AccountsPane = styled(Surface)(({ theme }) => ({
   borderTopLeftRadius: 20,
   borderTopRightRadius: 20,
   paddingHorizontal: 20,
-  // backgroundColor: theme.surface,
   elevation: theme.dark ? 1 : 6,
   ...shadow(theme.dark ? 1 : 6),
 }));
@@ -42,11 +41,9 @@ export default function HomeScreen() {
 
       <AccountsPane>
         <SubHeader>Accounts</SubHeader>
-        <Divider />
         <Accounts>
           <Account account={{ name: 'default', balance: '2,232' }} />
           <Account account={{ name: 'trust', balance: '34,742.34' }} />
-          <Account account={{ name: 'saving', balance: '0' }} />
         </Accounts>
       </AccountsPane>
     </Container>

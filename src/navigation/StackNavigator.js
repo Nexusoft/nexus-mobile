@@ -1,6 +1,6 @@
 import React from 'react';
-import { StatusBar, View } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { StatusBar } from 'react-native';
+import { createStackNavigator, Header } from '@react-navigation/stack';
 import { shadow } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
@@ -19,23 +19,6 @@ import BottomTabNavigator from './BottomTabNavigator';
 
 const Stack = createStackNavigator();
 
-const getRouteName = (route) =>
-  route.state?.routes[route.state.index]?.name ?? defaultScreen;
-let i = 1;
-
-function BottomNavScreen({ navigation: stackNavigation, route }) {
-  const theme = useTheme();
-  const routeName = getRouteName(route);
-  const screen = screens.find((screen) => screen.name === routeName);
-  const options =
-    typeof screen.stackOptions === 'function'
-      ? screen.stackOptions(theme)
-      : screen.stackOptions;
-  console.log('setOptions', i++);
-  stackNavigation.setOptions(options);
-  return <BottomTabNavigator />;
-}
-
 export default function StackNavigator({ navigation: drawerNavigation }) {
   const theme = useTheme();
   return (
@@ -46,6 +29,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
       />
       <Stack.Navigator
         initialRouteName="BottomNav"
+        headerMode="screen"
         screenOptions={{
           headerStyle: {
             backgroundColor: theme.dark ? theme.surface : theme.primary,
@@ -53,32 +37,45 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             ...shadow(3),
           },
           headerTintColor: theme.dark ? theme.foreground : theme.onPrimary,
+          // Fix header background color not changing when theme is changed
+          header: (props) => <Header {...props} />,
         }}
       >
         <Stack.Screen
           name="BottomNav"
-          component={BottomNavScreen}
-          options={{
-            headerLeft: ({ tintColor }) => (
-              <TouchableIcon
-                icon={MenuIcon}
-                color={tintColor}
-                size={25}
-                onPress={() => {
-                  drawerNavigation.openDrawer();
-                }}
-              />
-            ),
-            headerRight: ({ tintColor }) => (
-              <TouchableIcon
-                icon={SettingsIcon}
-                color={tintColor}
-                size={25}
-                onPress={() => {
-                  navigate('Settings');
-                }}
-              />
-            ),
+          component={BottomTabNavigator}
+          options={({ route }) => {
+            const routeName =
+              route.state?.routes[route.state.index]?.name ?? defaultScreen;
+            const screen = screens.find((screen) => screen.name === routeName);
+            const customOptions =
+              typeof screen.stackOptions === 'function'
+                ? screen.stackOptions({ theme })
+                : screen.stackOptions;
+
+            return {
+              headerLeft: ({ tintColor }) => (
+                <TouchableIcon
+                  icon={MenuIcon}
+                  color={tintColor}
+                  size={25}
+                  onPress={() => {
+                    drawerNavigation.openDrawer();
+                  }}
+                />
+              ),
+              headerRight: ({ tintColor }) => (
+                <TouchableIcon
+                  icon={SettingsIcon}
+                  color={tintColor}
+                  size={25}
+                  onPress={() => {
+                    navigate('Settings');
+                  }}
+                />
+              ),
+              ...customOptions,
+            };
           }}
         />
         <Stack.Screen name="Settings" component={SettingsScreen} />
