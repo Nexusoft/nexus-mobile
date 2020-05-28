@@ -6,10 +6,8 @@ import Text from 'components/Text';
 import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
 
-const AccountSurface = styled(Surface)({
-  marginVertical: 15,
-  marginHorizontal: 20,
-  elevation: 3,
+const AccountWrapper = styled.View({
+  marginVertical: 5,
 });
 
 const AccountInfo = styled.View({
@@ -20,9 +18,10 @@ const AccountInfo = styled.View({
   paddingHorizontal: 20,
 });
 
-const AccountName = styled(Text)({
+const AccountName = styled(Text)(({ theme }) => ({
   fontSize: 15,
-});
+  color: theme.dark ? theme.primary : theme.foreground,
+}));
 
 const AccountBalance = styled(Text)({
   fontSize: 15,
@@ -35,42 +34,47 @@ const AccountButtons = styled.View({
 const AccountButton = styled(TouchableRipple)({
   flex: 1,
   alignItems: 'center',
-  paddingVertical: 12,
+  paddingVertical: 10,
+});
+
+const ButtonDivider = styled(Divider)({
+  marginVertical: 10,
 });
 
 const AccountButtonLabel = styled(Text)({
-  fontSize: 12,
+  fontSize: 11,
 });
 
 export default function Account({ account }) {
   return (
-    <AccountSurface>
-      <AccountInfo>
-        <AccountName primary bold>
-          {account.name}
-        </AccountName>
-        <AccountBalance emphasis>{account.balance} NXS</AccountBalance>
-      </AccountInfo>
+    <>
+      <AccountWrapper>
+        <AccountInfo>
+          <AccountName bold>{account.name}</AccountName>
+          <AccountBalance emphasis>{account.balance} NXS</AccountBalance>
+        </AccountInfo>
 
-      <AccountButtons>
-        <AccountButton
-          onPress={() => {
-            navigate('Receive');
-          }}
-        >
-          <AccountButtonLabel>RECEIVE</AccountButtonLabel>
-        </AccountButton>
+        <AccountButtons>
+          <AccountButton
+            onPress={() => {
+              navigate('Receive');
+            }}
+          >
+            <AccountButtonLabel>RECEIVE</AccountButtonLabel>
+          </AccountButton>
 
-        <Divider vertical style={{ marginVertical: 10 }} />
+          <ButtonDivider vertical />
 
-        <AccountButton
-          onPress={() => {
-            navigate('Send');
-          }}
-        >
-          <AccountButtonLabel>SEND</AccountButtonLabel>
-        </AccountButton>
-      </AccountButtons>
-    </AccountSurface>
+          <AccountButton
+            onPress={() => {
+              navigate('Send');
+            }}
+          >
+            <AccountButtonLabel>SEND</AccountButtonLabel>
+          </AccountButton>
+        </AccountButtons>
+      </AccountWrapper>
+      <Divider />
+    </>
   );
 }

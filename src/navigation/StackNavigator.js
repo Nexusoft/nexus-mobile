@@ -16,22 +16,23 @@ import SettingsIcon from 'icons/settings.svg';
 
 import { screens, defaultScreen } from './bottomTabScreens';
 import BottomTabNavigator from './BottomTabNavigator';
-import { clockRunning } from 'react-native-reanimated';
 
 const Stack = createStackNavigator();
 
 const getRouteName = (route) =>
   route.state?.routes[route.state.index]?.name ?? defaultScreen;
+let i = 1;
 
 function BottomNavScreen({ navigation: stackNavigation, route }) {
   const theme = useTheme();
   const routeName = getRouteName(route);
   const screen = screens.find((screen) => screen.name === routeName);
-  const stackOptions =
+  const options =
     typeof screen.stackOptions === 'function'
       ? screen.stackOptions(theme)
       : screen.stackOptions;
-  stackNavigation.setOptions(stackOptions);
+  console.log('setOptions', i++);
+  stackNavigation.setOptions(options);
   return <BottomTabNavigator />;
 }
 

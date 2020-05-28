@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Surface } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 import { shadow } from 'react-native-paper';
 import styled from '@emotion/native';
@@ -14,22 +14,15 @@ const Container = styled.View(({ theme }) => ({
   backgroundColor: theme.dark ? theme.background : theme.primary,
 }));
 
-const AccountsPane = styled.View(({ theme }) => ({
+const AccountsPane = styled(Surface)(({ theme }) => ({
   flex: 1,
   borderTopLeftRadius: 20,
   borderTopRightRadius: 20,
-  backgroundColor: theme.surface,
-  elevation: 6,
-  ...shadow(6),
+  paddingHorizontal: 20,
+  // backgroundColor: theme.surface,
+  elevation: theme.dark ? 1 : 6,
+  ...shadow(theme.dark ? 1 : 6),
 }));
-
-const AccountsHeading = styled.View({
-  flexDirection: 'row',
-  alignItems: 'center',
-  marginHorizontal: 20,
-  marginTop: 30,
-  marginBottom: 10,
-});
 
 const SubHeader = styled(Text.template({ modifier: 'sub' }))({
   paddingVertical: 15,
@@ -37,16 +30,6 @@ const SubHeader = styled(Text.template({ modifier: 'sub' }))({
   fontSize: 12,
   textAlign: 'center',
 });
-
-const AccountsDivider = styled(Divider)({
-  flex: 1,
-  marginTop: 3,
-});
-
-const AccountsHeadingLabel = styled(Text)(({ theme }) => ({
-  backgroundColor: theme.background,
-  paddingHorizontal: 15,
-}));
 
 const Accounts = styled(ScrollView)({
   flex: 1,
@@ -58,15 +41,12 @@ export default function HomeScreen() {
       <BalanceSection />
 
       <AccountsPane>
-        {/*<AccountsHeading>
-          <AccountsDivider />
-          <AccountsHeadingLabel>Accounts</AccountsHeadingLabel>
-          <AccountsDivider />
-        </AccountsHeading>*/}
         <SubHeader>Accounts</SubHeader>
+        <Divider />
         <Accounts>
           <Account account={{ name: 'default', balance: '2,232' }} />
           <Account account={{ name: 'trust', balance: '34,742.34' }} />
+          <Account account={{ name: 'saving', balance: '0' }} />
         </Accounts>
       </AccountsPane>
     </Container>
