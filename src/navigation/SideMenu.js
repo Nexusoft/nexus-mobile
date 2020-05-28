@@ -18,16 +18,19 @@ const StyledSideMenu = styled.View({
   flex: 1,
 });
 
-const MenuHeader = styled.View({
+const MenuHeader = styled.View(({ theme }) => ({
   height: 56,
   flexDirection: 'row',
   alignItems: 'center',
-});
+  backgroundColor: theme.primary,
+}));
 
-const UserArea = styled.View({
-  paddingVertical: 20,
+const UserArea = styled.View(({ theme }) => ({
+  paddingTop: 30,
+  paddingBottom: 40,
   paddingHorizontal: 20,
-});
+  backgroundColor: theme.primary,
+}));
 
 const UserInfo = styled.View({
   flexDirection: 'row',
@@ -35,14 +38,14 @@ const UserInfo = styled.View({
 });
 
 const UserAvatar = styled(UserIcon)(({ theme }) => ({
-  color: theme.primary,
+  color: theme.onPrimary,
   width: 25,
   height: 25,
   marginRight: 15,
 }));
 
 const UserName = styled(Text)(({ theme }) => ({
-  color: theme.primary,
+  color: theme.onPrimary,
   fontSize: 24,
 }));
 
@@ -84,7 +87,7 @@ export default function SideMenu({ navigation }) {
         {Platform.OS !== 'ios' && (
           <IconButton
             icon="arrow-left"
-            color={theme.foreground}
+            color={theme.onPrimary}
             size={25}
             onPress={() => {
               navigation.closeDrawer();

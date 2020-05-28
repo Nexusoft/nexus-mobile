@@ -7,7 +7,7 @@ import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
 
 const AccountWrapper = styled.View({
-  marginVertical: 5,
+  marginVertical: 10,
 });
 
 const AccountInfo = styled.View({
