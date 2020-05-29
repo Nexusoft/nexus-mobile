@@ -7,14 +7,16 @@ import styled from '@emotion/native';
 import Text from 'components/Text';
 import { subColor } from 'utils/color';
 
-const Wrapper = styled.View(({ theme }) => ({
+const Wrapper = styled(TouchableRipple)({
+  minHeight: '30%',
   paddingVertical: 25,
   paddingHorizontal: 20,
-}));
+  justifyContent: 'center',
+});
 
 const BalanceBrief = styled.View({
   alignItems: 'center',
-  paddingBottom: 20,
+  // paddingBottom: 20,
 });
 
 const BalanceLabel = styled(Text)(({ theme }) => ({
@@ -44,6 +46,8 @@ const ExpandIcon = styled(Ionicons)(({ theme }) => ({
 }));
 
 const DetailedBalances = styled.View(({ expanded }) => ({
+  // setting height to 0 makes text have the stretch effect
+  // setting height to > 0 makes text have the revealing effect
   height: expanded ? undefined : 0.01,
   overflow: 'hidden',
   alignSelf: 'stretch',
@@ -66,13 +70,13 @@ export default function BalanceSection() {
   const [expanded, setExpanded] = React.useState(false);
 
   return (
-    <TouchableRipple
+    <Wrapper
       onPress={() => {
         LayoutAnimation.easeInEaseOut();
         setExpanded(!expanded);
       }}
     >
-      <Wrapper>
+      <>
         <BalanceBrief>
           <BalanceLabel>Balance</BalanceLabel>
           <Balance>10,435.643 NXS</Balance>
@@ -106,7 +110,7 @@ export default function BalanceSection() {
             <DetailedText>64,324.565803 NXS</DetailedText>
           </DetailedBalance>
         </DetailedBalances>
-      </Wrapper>
-    </TouchableRipple>
+      </>
+    </Wrapper>
   );
 }

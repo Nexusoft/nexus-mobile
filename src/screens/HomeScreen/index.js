@@ -5,7 +5,6 @@ import { shadow } from 'react-native-paper';
 import styled from '@emotion/native';
 
 import Text from 'components/Text';
-import Divider from 'components/Divider';
 import BalanceSection from './BalanceSection';
 import Account from './Account';
 
