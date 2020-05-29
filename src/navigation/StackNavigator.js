@@ -2,10 +2,10 @@ import React from 'react';
 import styled from '@emotion/native';
 import { StatusBar } from 'react-native';
 import { createStackNavigator, Header } from '@react-navigation/stack';
-import { shadow } from 'react-native-paper';
+import { shadow, IconButton } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
-import TouchableIcon from 'components/TouchableIcon';
+import SvgIcon from 'components/SvgIcon';
 import HomeScreen from 'screens/HomeScreen';
 import SettingsScreen from 'screens/SettingsScreen';
 import TokensScreen from 'screens/TokensScreen';
@@ -35,7 +35,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
         backgroundColor={theme.dark ? '#000' : theme.primaryVariant}
       />
       <Stack.Navigator
-        initialRouteName="BottomNav"
+        initialRouteName="Home"
         headerMode="screen"
         screenOptions={{
           headerStyle: {
@@ -46,15 +46,21 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           headerTintColor: theme.dark ? theme.foreground : theme.onPrimary,
           // Fix header background color not changing when theme is changed
           header: (props) => <Header {...props} />,
+          headerBackImage: ({ tintColor }) => (
+            <IconButton icon="arrow-left" color={tintColor} size={25} />
+          ),
+          headerBackTitleVisible: false,
         }}
       >
         <Stack.Screen
-          name="BottomNav"
+          name="Home"
           component={HomeScreen}
           options={{
             headerLeft: ({ tintColor }) => (
-              <TouchableIcon
-                icon={MenuIcon}
+              <IconButton
+                icon={({ color, size }) => (
+                  <SvgIcon icon={MenuIcon} {...{ color, size }} />
+                )}
                 color={tintColor}
                 size={25}
                 onPress={() => {
@@ -63,8 +69,10 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
               />
             ),
             headerRight: ({ tintColor }) => (
-              <TouchableIcon
-                icon={SettingsIcon}
+              <IconButton
+                icon={({ color, size }) => (
+                  <SvgIcon icon={SettingsIcon} {...{ color, size }} />
+                )}
                 color={tintColor}
                 size={25}
                 onPress={() => {
