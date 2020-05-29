@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from '@emotion/native';
-import { Surface } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import Text from 'components/Text';
+import { Surface, Text } from 'components/Typo';
 import ApplicationSettings from './ApplicationSettings';
 import CoreSettings from './CoreSettings';
 

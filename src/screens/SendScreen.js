@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, View, StyleSheet, Clipboard } from 'react-native';
+import { TextInput, StyleSheet, Clipboard } from 'react-native';
 import styled from '@emotion/native';
 import {
   TextInput as PaperTextInput,
@@ -9,7 +9,8 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'emotion-theming';
 
-import Text from 'components/Text';
+import { Text } from 'components/Typo';
+import SvgIcon from 'components/SvgIcon';
 import TouchableIcon from 'components/TouchableIcon';
 import SelectOptions from 'components/SelectOptions';
 import QRIcon from 'icons/qr.svg';
@@ -23,9 +24,9 @@ const Wrapper = styled(ScrollView)({
   paddingHorizontal: 20,
 });
 
-const StyledInput = styled(PaperTextInput)(({ theme }) => ({
+const StyledInput = styled(PaperTextInput)({
   backgroundColor: 'transparent',
-}));
+});
 
 const RecipientWrapper = styled.View({
   flexDirection: 'row',
@@ -39,7 +40,7 @@ const RecipientInput = styled(TextInput)({
 const AccountSelect = ({ options, value, updateValue }) => {
   const [open, setOpen] = React.useState(false);
   return (
-    <View>
+    <>
       <PaperTextInput
         mode="outlined"
         label="Send from"
@@ -68,7 +69,7 @@ const AccountSelect = ({ options, value, updateValue }) => {
         open={open}
         setOpen={setOpen}
       />
-    </View>
+    </>
   );
 };
 
@@ -78,7 +79,7 @@ const SendButton = () => {
     <Button
       mode="contained"
       icon={({ size, color }) => (
-        <SendIcon style={{ width: size, height: size, color }} />
+        <SvgIcon icon={SendIcon} {...{ size, color }} />
       )}
       onPress={() => {}}
       contentStyle={{

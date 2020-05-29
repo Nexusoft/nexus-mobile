@@ -1,11 +1,10 @@
 import React from 'react';
-import { TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
+import { TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
-import Text from 'components/Text';
+import { Text, Divider } from 'components/Typo';
 import Switch from 'components/Switch';
-import Divider from 'components/Divider';
 import SelectOptions from 'components/SelectOptions';
 import { updateSettings } from 'lib/settings';
 import baseCurrencies from 'consts/baseCurrencies';
@@ -13,10 +12,6 @@ import baseCurrencies from 'consts/baseCurrencies';
 const Wrapper = styled.View({
   // flex: 1,
   // paddingVertical: 20,
-});
-
-const SettingDivider = styled(Divider)({
-  marginHorizontal: 20,
 });
 
 const Setting = styled.View({
@@ -31,16 +26,15 @@ const SettingText = styled.View({
   paddingRight: 10,
 });
 
-const StyledSettingLabel = styled(Text)({
+const SettingLabel = styled(Text)({
   fontSize: 18,
 });
 
-const SettingLabel = (props) => <StyledSettingLabel emphasis {...props} />;
-
-const SettingDescription = styled(Text)({
+const SettingDescription = styled(Text)(({ theme, primary }) => ({
+  color: primary ? theme.primary : undefined,
   fontSize: 14,
   marginTop: 3,
-});
+}));
 
 const SettingSwitch = styled.View({
   paddingHorizontal: 10,
@@ -97,7 +91,7 @@ export default function ApplicationSettings() {
           </SettingSwitch>
         </Setting>
       </TouchableRipple>
-      <SettingDivider />
+      <Divider inset={20} />
       <SettingSelect
         title="Base currency"
         options={baseCurrencies}

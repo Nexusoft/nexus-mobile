@@ -5,9 +5,9 @@ import { useTheme } from 'emotion-theming';
 
 import { getNavTheme } from 'lib/theme';
 
+import { navContainerRef } from 'lib/navigation';
 import SideMenu from './SideMenu';
 import StackNavigator from './StackNavigator';
-import { navContainerRef } from '../lib/navigation';
 
 const Drawer = createDrawerNavigator();
 
@@ -21,6 +21,7 @@ export default function DrawerNavigator({ initialNavigationState }) {
       theme={navTheme}
     >
       <Drawer.Navigator
+        hideStatusBar={false}
         drawerContent={(props) => <SideMenu {...props} />}
         sceneContainerStyle={{
           backgroundColor: theme.dark ? undefined : theme.primary,

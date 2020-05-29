@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from '@emotion/native';
-import { Surface, TouchableRipple } from 'react-native-paper';
+import { TouchableRipple } from 'react-native-paper';
 
-import Text from 'components/Text';
-import Divider from 'components/Divider';
+import { Text, Divider } from 'components/Typo';
 import { navigate } from 'lib/navigation';
 
 const AccountWrapper = styled.View({
@@ -20,7 +19,7 @@ const AccountInfo = styled.View({
 
 const AccountName = styled(Text)(({ theme }) => ({
   fontSize: 15,
-  color: theme.dark ? theme.primary : theme.foreground,
+  color: theme.dark ? theme.primary : undefined,
 }));
 
 const AccountBalance = styled(Text)({
@@ -37,10 +36,6 @@ const AccountButton = styled(TouchableRipple)({
   paddingVertical: 10,
 });
 
-const ButtonDivider = styled(Divider)({
-  marginVertical: 10,
-});
-
 const AccountButtonLabel = styled(Text)({
   fontSize: 11,
 });
@@ -51,7 +46,7 @@ export default function Account({ account }) {
       <AccountWrapper>
         <AccountInfo>
           <AccountName bold>{account.name}</AccountName>
-          <AccountBalance emphasis>{account.balance} NXS</AccountBalance>
+          <AccountBalance>{account.balance} NXS</AccountBalance>
         </AccountInfo>
 
         <AccountButtons>
@@ -63,7 +58,7 @@ export default function Account({ account }) {
             <AccountButtonLabel>RECEIVE</AccountButtonLabel>
           </AccountButton>
 
-          <ButtonDivider vertical />
+          <Divider vertical inset={10} />
 
           <AccountButton
             onPress={() => {

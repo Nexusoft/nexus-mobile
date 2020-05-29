@@ -1,12 +1,17 @@
 import React from 'react';
-import { View, ScrollView, LayoutAnimation } from 'react-native';
+import { LayoutAnimation } from 'react-native';
 import styled from '@emotion/native';
 import { IconButton, TouchableRipple, shadow } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
-import Text from 'components/Text';
-import Component from 'components/Component';
-import Divider from 'components/Divider';
+import {
+  View,
+  ScrollView,
+  Text,
+  SubText,
+  Icon,
+  Divider,
+} from 'components/Typo';
 import { navigate } from 'lib/navigation';
 import UserIcon from 'icons/user.svg';
 import TransactionIcon from 'icons/transaction.svg';
@@ -19,7 +24,7 @@ const StyledSideMenu = styled.View({
   flex: 1,
 });
 
-const MenuHeader = styled.View(({ theme }) => ({
+const MenuHeader = styled(View)(({ theme }) => ({
   backgroundColor: theme.primary,
 }));
 
@@ -29,35 +34,31 @@ const TopArea = styled.View({
   alignItems: 'center',
 });
 
-const UserArea = styled.View(({ theme }) => ({
+const UserArea = styled.View({
   paddingTop: 30,
   paddingBottom: 40,
   paddingHorizontal: 20,
-  backgroundColor: theme.primary,
-}));
+});
 
 const UserInfo = styled.View({
   flexDirection: 'row',
   alignItems: 'center',
 });
 
-const UserAvatar = styled(UserIcon)(({ theme }) => ({
-  color: theme.onPrimary,
+const UserAvatar = styled(Icon)({
   width: 25,
   height: 25,
   marginRight: 15,
-}));
+});
 
-const UserName = styled(Text)(({ theme }) => ({
-  color: theme.onPrimary,
+const UserName = styled(Text)({
   fontSize: 24,
-}));
+});
 
-const UserID = styled(Text)(({ theme }) => ({
-  color: theme.subColor(theme.onPrimary),
+const UserID = styled(SubText)({
   fontFamily: 'robotomono',
   fontSize: 12,
-}));
+});
 
 const MenuItems = styled.View({
   flex: 1,
@@ -71,16 +72,10 @@ const MenuItemWrapper = styled.View({
   alignItems: 'center',
 });
 
-const MenuItemIcon = styled(Component)(({ theme }) => ({
-  color: theme.foreground,
+const MenuItemIcon = styled(Icon)({
   width: 14,
   height: 14,
   marginRight: 10,
-}));
-
-const MenuDivider = styled(Divider)({
-  marginHorizontal: 20,
-  marginVertical: 5,
 });
 
 const UserActions = styled(ScrollView)(({ theme, expanded }) => ({
@@ -104,7 +99,7 @@ const MenuItem = ({ linkTo, icon, label }) => (
     }}
   >
     <MenuItemWrapper>
-      {!!icon && <MenuItemIcon as={icon} />}
+      {!!icon && <MenuItemIcon icon={icon} />}
       <Text emphasis>{label}</Text>
     </MenuItemWrapper>
   </TouchableRipple>
@@ -135,7 +130,7 @@ export default function SideMenu({ navigation }) {
 
           <UserArea>
             <UserInfo>
-              <UserAvatar />
+              <UserAvatar icon={UserIcon} />
               <UserName>krysto</UserName>
             </UserInfo>
           </UserArea>
@@ -157,18 +152,18 @@ export default function SideMenu({ navigation }) {
             label="Namespaces"
           />
           <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" />
-          <MenuDivider />
+          <Divider inset={20} spacing={5} />
 
           <MenuItem label="About Nexus Wallet" />
         </ScrollView>
 
         <UserActions expanded={expanded}>
-          <MenuDivider />
+          <Divider inset={20} spacing={5} />
           <UserID>
             a1dbd4c955b60dcf74e372aed71b814d9de043e94faf9a29216c582b67f69907
           </UserID>
           <MenuItem label="Change password & PIN" />
-          <MenuDivider />
+          <Divider inset={20} spacing={5} />
           <MenuItem label="Change recovery phrase" />
           <MenuItem label="Log out" />
         </UserActions>

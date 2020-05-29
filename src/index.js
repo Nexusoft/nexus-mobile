@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider as ReduxProvider, useSelector } from 'react-redux';
-import { StatusBar, Platform, UIManager, View } from 'react-native';
+import { Platform, UIManager } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import styled from '@emotion/native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
+import { View } from 'components/Typo';
 import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
 import { getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
@@ -25,14 +26,19 @@ if (Platform.OS === 'android') {
   }
 }
 
-const Container = styled.View(({ theme }) => ({
+const Container = styled(View)(({ theme }) => ({
   flex: 1,
-  backgroundColor: theme.dark ? theme.background : theme.primary,
+  backgroundColor: theme.background,
 }));
 
 function PaperContainer({ children }) {
   const theme = useTheme();
   return <PaperProvider theme={getPaperTheme(theme)}>{children}</PaperProvider>;
+}
+
+function ThemeController(props) {
+  const darkMode = useSelector((state) => state.settings.darkMode);
+  return <ThemeProvider theme={darkMode ? darkTheme : lightTheme} {...props} />;
 }
 
 export default function Root(props) {
@@ -95,9 +101,4 @@ export default function Root(props) {
       </ReduxProvider>
     );
   }
-}
-
-function ThemeController(props) {
-  const darkMode = useSelector((state) => state.settings.darkMode);
-  return <ThemeProvider theme={darkMode ? darkTheme : lightTheme} {...props} />;
 }

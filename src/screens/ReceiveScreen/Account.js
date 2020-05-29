@@ -1,10 +1,10 @@
 import React from 'react';
 import { Clipboard } from 'react-native';
-import { Surface, TouchableRipple } from 'react-native-paper';
+import { TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
 import QRCode from 'react-native-qrcode-svg';
 
-import Text from 'components/Text';
+import { Surface, View, Text, SubText } from 'components/Typo';
 import SvgIcon from 'components/SvgIcon';
 import { showNotification } from 'lib/notifications';
 import segmentAddress from 'utils/segmentAddress';
@@ -17,7 +17,7 @@ const AccountWrapper = styled(Surface)(({ active }) => ({
   borderRadius: 4,
 }));
 
-const AccountHeader = styled.View(({ theme, active }) => ({
+const AccountHeader = styled(View)(({ theme, active }) => ({
   backgroundColor: active && !theme.dark ? theme.primary : 'rgba(0,0,0,0)',
   flexDirection: 'row',
   alignItems: 'center',
@@ -28,14 +28,6 @@ const AccountHeader = styled.View(({ theme, active }) => ({
   borderTopRightRadius: 4,
 }));
 
-const AccountName = styled(Text)(({ theme, active }) => ({
-  color: active && !theme.dark ? theme.onPrimary : theme.foreground,
-}));
-
-const AccountBalance = styled(Text)(({ theme, active }) => ({
-  color: active && !theme.dark ? theme.onPrimary : theme.foreground,
-}));
-
 const AccountDetails = styled.View(({ expanded }) => ({
   height: expanded ? undefined : 0,
   overflow: 'hidden',
@@ -44,7 +36,7 @@ const AccountDetails = styled.View(({ expanded }) => ({
   justifyContent: 'center',
 }));
 
-const AccountAddressLabel = styled(Text.template({ modifier: 'sub' }))({
+const AccountAddressLabel = styled(SubText)({
   marginTop: 15,
 });
 
@@ -57,12 +49,10 @@ export default function Account({ account, active, activate }) {
     <AccountWrapper active={active}>
       <TouchableRipple onPress={active ? undefined : activate}>
         <AccountHeader active={active}>
-          <AccountName bold active={active}>
-            {account.name}
-          </AccountName>
-          <AccountBalance active={active}>
+          <Text bold>{account.name}</Text>
+          <Text>
             {account.balance} {account.token_name}
-          </AccountBalance>
+          </Text>
         </AccountHeader>
       </TouchableRipple>
 
@@ -74,7 +64,7 @@ export default function Account({ account, active, activate }) {
       >
         <AccountDetails expanded={active}>
           <QRCode value={account.address} size={200} />
-          <AccountAddress mono emphasis>
+          <AccountAddress mono>
             {segmentAddress(account.address)}
           </AccountAddress>
           <AccountAddressLabel>
