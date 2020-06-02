@@ -53,7 +53,12 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           // Fix header background color not changing when theme is changed
           header: (props) => <Header {...props} />,
           headerBackImage: ({ tintColor }) => (
-            <IconButton icon="arrow-left" color={tintColor} size={25} />
+            <IconButton
+              icon="arrow-left"
+              color={tintColor}
+              rippleColor={tintColor}
+              size={25}
+            />
           ),
           headerBackTitleVisible: false,
         }}

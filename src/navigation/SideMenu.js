@@ -53,11 +53,6 @@ const UserName = styled(Text)({
   fontSize: 24,
 });
 
-const UserID = styled(SubText)({
-  fontFamily: 'robotomono',
-  fontSize: 12,
-});
-
 const MenuItems = styled.View({
   flex: 1,
   paddingTop: 10,
@@ -73,17 +68,6 @@ const MenuItemWrapper = styled.View({
 const MenuItemIcon = styled(Icon)({
   marginRight: 10,
 });
-
-const UserActions = styled(ScrollView)(({ theme, expanded }) => ({
-  backgroundColor: theme.primary,
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: expanded ? 0 : '100%',
-  elevation: expanded ? 4 : 0,
-  ...shadow(expanded ? 4 : 0),
-}));
 
 const MenuItem = ({ linkTo, icon, label }) => (
   <TouchableRipple
@@ -150,19 +134,13 @@ export default function SideMenu({ navigation }) {
           <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" />
           <Divider inset={20} spacing={5} />
 
-          <MenuItem label="About Nexus Wallet" />
-        </ScrollView>
-
-        <UserActions expanded={expanded}>
-          <Divider inset={20} spacing={5} />
-          <UserID>
-            a1dbd4c955b60dcf74e372aed71b814d9de043e94faf9a29216c582b67f69907
-          </UserID>
           <MenuItem label="Change password & PIN" />
-          <Divider inset={20} spacing={5} />
           <MenuItem label="Change recovery phrase" />
           <MenuItem label="Log out" />
-        </UserActions>
+          <Divider inset={20} spacing={5} />
+
+          <MenuItem label="About Nexus Wallet" />
+        </ScrollView>
       </MenuItems>
     </StyledSideMenu>
   );
