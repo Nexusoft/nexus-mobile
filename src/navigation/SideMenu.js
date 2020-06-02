@@ -46,8 +46,6 @@ const UserInfo = styled.View({
 });
 
 const UserAvatar = styled(Icon)({
-  width: 25,
-  height: 25,
   marginRight: 15,
 });
 
@@ -73,8 +71,6 @@ const MenuItemWrapper = styled.View({
 });
 
 const MenuItemIcon = styled(Icon)({
-  width: 14,
-  height: 14,
   marginRight: 10,
 });
 
@@ -99,7 +95,7 @@ const MenuItem = ({ linkTo, icon, label }) => (
     }}
   >
     <MenuItemWrapper>
-      {!!icon && <MenuItemIcon icon={icon} />}
+      {!!icon && <MenuItemIcon icon={icon} size={14} />}
       <Text emphasis>{label}</Text>
     </MenuItemWrapper>
   </TouchableRipple>
@@ -130,7 +126,7 @@ export default function SideMenu({ navigation }) {
 
           <UserArea>
             <UserInfo>
-              <UserAvatar icon={UserIcon} />
+              <UserAvatar icon={UserIcon} size={25} />
               <UserName>krysto</UserName>
             </UserInfo>
           </UserArea>
