@@ -38,7 +38,7 @@ const BackButton = ForegroundComponentFactory(IconButton, null, true);
 
 const UserArea = styled.View({
   paddingTop: 30,
-  paddingBottom: 40,
+  paddingBottom: 50,
   paddingHorizontal: 20,
 });
 
@@ -130,6 +130,7 @@ export default function SideMenu({ navigation }) {
         <MenuItem linkTo="Namespaces" icon={NamespaceIcon} label="Namespaces" />
         <Divider spacing={5} />
 
+        <MenuItem label="Copy User ID to clipboard" />
         <MenuItem label="Change password & PIN" />
         <MenuItem label="Change recovery phrase" />
         <MenuItem label="Log out" />
