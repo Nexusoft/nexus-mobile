@@ -1,18 +1,24 @@
 import React from 'react';
 import styled from '@emotion/native';
 import { StatusBar } from 'react-native';
-import { createStackNavigator, Header } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  Header,
+  HeaderStyleInterpolators,
+} from '@react-navigation/stack';
 import { shadow, IconButton } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
 import SvgIcon from 'components/SvgIcon';
 import HomeScreen from 'screens/HomeScreen';
+import ReceiveScreen from 'screens/ReceiveScreen';
+import SendScreen from 'screens/SendScreen';
+import TransactionsScreen from 'screens/TransactionsScreen';
 import SettingsScreen from 'screens/SettingsScreen';
 import TokensScreen from 'screens/TokensScreen';
 import NamesScreen from 'screens/NamesScreen';
 import NamespacesScreen from 'screens/NamespacesScreen';
 import AssetsScreen from 'screens/AssetsScreen';
-import TransactionsScreen from 'screens/TransactionsScreen';
 import { navigate } from 'lib/navigation';
 import MenuIcon from 'icons/menu.svg';
 import SettingsIcon from 'icons/settings.svg';
@@ -91,12 +97,14 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             headerTintColor: theme.dark ? theme.foreground : theme.onPrimary,
           }}
         />
+        <Stack.Screen name="Receive" component={ReceiveScreen} />
+        <Stack.Screen name="Send" component={SendScreen} />
+        <Stack.Screen name="Transactions" component={TransactionsScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="Tokens" component={TokensScreen} />
         <Stack.Screen name="Names" component={NamesScreen} />
         <Stack.Screen name="Namespaces" component={NamespacesScreen} />
         <Stack.Screen name="Assets" component={AssetsScreen} />
-        <Stack.Screen name="Transactions" component={TransactionsScreen} />
       </Stack.Navigator>
     </>
   );
