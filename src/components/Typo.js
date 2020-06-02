@@ -16,7 +16,7 @@ import SvgIcon from 'components/SvgIcon';
 
 function getColorName(viewStyle, theme) {
   const style = StyleSheet.flatten(viewStyle);
-  switch (style && style.background) {
+  switch (style && style.backgroundColor) {
     case theme.background:
       return 'foreground';
     case theme.surface:
