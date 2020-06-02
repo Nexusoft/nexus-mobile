@@ -1,16 +1,16 @@
 import React from 'react';
 import { LayoutAnimation } from 'react-native';
 import styled from '@emotion/native';
-import { IconButton, TouchableRipple, shadow } from 'react-native-paper';
+import { IconButton, TouchableRipple } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
 import {
   View,
   ScrollView,
   Text,
-  SubText,
   Icon,
   Divider,
+  ForegroundFactory,
 } from 'components/Typo';
 import { navigate } from 'lib/navigation';
 import UserIcon from 'icons/user.svg';
@@ -25,7 +25,7 @@ const StyledSideMenu = styled.View({
 });
 
 const MenuHeader = styled(View)(({ theme }) => ({
-  backgroundColor: theme.primary,
+  backgroundColor: theme.dark ? theme.background : theme.primary,
 }));
 
 const TopArea = styled.View({
@@ -33,6 +33,8 @@ const TopArea = styled.View({
   flexDirection: 'row',
   alignItems: 'center',
 });
+
+const BackButton = ForegroundFactory(IconButton, null, true);
 
 const UserArea = styled.View({
   paddingTop: 30,
@@ -53,7 +55,7 @@ const UserName = styled(Text)({
   fontSize: 24,
 });
 
-const MenuItems = styled.View({
+const MenuItems = styled(ScrollView)({
   flex: 1,
   paddingTop: 10,
 });
@@ -98,9 +100,8 @@ export default function SideMenu({ navigation }) {
       >
         <MenuHeader>
           <TopArea>
-            <IconButton
+            <BackButton
               icon="arrow-left"
-              color={theme.onPrimary}
               size={25}
               onPress={() => {
                 navigation.closeDrawer();
@@ -118,29 +119,23 @@ export default function SideMenu({ navigation }) {
       </TouchableRipple>
 
       <MenuItems>
-        <ScrollView>
-          <MenuItem
-            linkTo="Transactions"
-            icon={TransactionIcon}
-            label="Transactions"
-          />
-          <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" />
-          <MenuItem linkTo="Names" icon={NameIcon} label="Names" />
-          <MenuItem
-            linkTo="Namespaces"
-            icon={NamespaceIcon}
-            label="Namespaces"
-          />
-          <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" />
-          <Divider inset={20} spacing={5} />
+        <MenuItem
+          linkTo="Transactions"
+          icon={TransactionIcon}
+          label="Transactions"
+        />
+        <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" />
+        <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" />
+        <MenuItem linkTo="Names" icon={NameIcon} label="Names" />
+        <MenuItem linkTo="Namespaces" icon={NamespaceIcon} label="Namespaces" />
+        <Divider spacing={5} />
 
-          <MenuItem label="Change password & PIN" />
-          <MenuItem label="Change recovery phrase" />
-          <MenuItem label="Log out" />
-          <Divider inset={20} spacing={5} />
+        <MenuItem label="Change password & PIN" />
+        <MenuItem label="Change recovery phrase" />
+        <MenuItem label="Log out" />
+        <Divider spacing={5} />
 
-          <MenuItem label="About Nexus Wallet" />
-        </ScrollView>
+        <MenuItem label="About Nexus Wallet" />
       </MenuItems>
     </StyledSideMenu>
   );

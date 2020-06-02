@@ -32,7 +32,7 @@ const Value = styled(SubText)({
   fontSize: 18,
 });
 
-const ExpandIcon = styled(ForegroundFactory(Ionicons, 'sub'))({
+const ExpandIcon = styled(ForegroundFactory(Ionicons, 'sub', true))({
   position: 'absolute',
   top: 4,
   right: 10,

@@ -63,13 +63,17 @@ export const View = BackgroundFactory(NativeView);
 export const ScrollView = BackgroundFactory(NativeScrollView);
 export const Surface = BackgroundFactory(PaperSurface, 'foreground');
 
-export function ForegroundFactory(Component, modifier) {
+export function ForegroundFactory(Component, modifier, colorProp) {
   return (props) => {
     const theme = useTheme();
     const colorName = React.useContext(ColorContext);
     const color = colorName && resolveColor(colorName, modifier, theme);
     if (color) {
-      return <Component {...props} style={[{ color }, props.style]} />;
+      if (colorProp) {
+        return <Component color={color} {...props} />;
+      } else {
+        return <Component {...props} style={[{ color }, props.style]} />;
+      }
     } else {
       return <Component {...props} />;
     }
@@ -85,9 +89,9 @@ export const Text = ForegroundFactory(MyText);
 export const SubText = ForegroundFactory(MyText, 'sub');
 export const DisabledText = ForegroundFactory(MyText, 'disabled');
 
-export const Icon = ForegroundFactory(SvgIcon);
-export const SubIcon = ForegroundFactory(SvgIcon, 'sub');
-export const DisabledIcon = ForegroundFactory(SvgIcon, 'disabled');
+export const Icon = ForegroundFactory(SvgIcon, null, true);
+export const SubIcon = ForegroundFactory(SvgIcon, 'sub', true);
+export const DisabledIcon = ForegroundFactory(SvgIcon, 'disabled', true);
 
 export const Divider = ({ vertical, inset, spacing }) => {
   const theme = useTheme();
