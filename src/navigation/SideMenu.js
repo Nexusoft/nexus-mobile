@@ -10,7 +10,7 @@ import {
   Text,
   Icon,
   Divider,
-  ForegroundFactory,
+  ForegroundComponentFactory,
 } from 'components/Typo';
 import { navigate } from 'lib/navigation';
 import UserIcon from 'icons/user.svg';
@@ -34,7 +34,7 @@ const TopArea = styled.View({
   alignItems: 'center',
 });
 
-const BackButton = ForegroundFactory(IconButton, null, true);
+const BackButton = ForegroundComponentFactory(IconButton, null, true);
 
 const UserArea = styled.View({
   paddingTop: 30,

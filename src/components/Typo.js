@@ -13,6 +13,7 @@ import { subColor, disabledColor } from 'lib/theme';
 import ColorContext from 'lib/ColorContext';
 import { fade } from 'utils/color';
 import SvgIcon from 'components/SvgIcon';
+import PlainDivider from 'components/Divider';
 
 function getColorName(viewStyle, theme) {
   const style = StyleSheet.flatten(viewStyle);
@@ -44,7 +45,7 @@ function resolveColor(colorName, modifier, theme) {
   }
 }
 
-export function BackgroundFactory(Component, presetColorName) {
+export function BackgroundComponentFactory(Component, presetColorName) {
   return (props) => {
     const theme = useTheme();
     const colorName = presetColorName || getColorName(props.style, theme);
@@ -59,11 +60,7 @@ export function BackgroundFactory(Component, presetColorName) {
   };
 }
 
-export const View = BackgroundFactory(NativeView);
-export const ScrollView = BackgroundFactory(NativeScrollView);
-export const Surface = BackgroundFactory(PaperSurface, 'foreground');
-
-export function ForegroundFactory(Component, modifier, colorProp) {
+export function ForegroundComponentFactory(Component, modifier, colorProp) {
   return (props) => {
     const theme = useTheme();
     const colorName = React.useContext(ColorContext);
@@ -85,35 +82,20 @@ const MyText = styled(NativeText)(({ mono, bold }) => ({
   fontWeight: bold ? 'bold' : 'normal',
 }));
 
-export const Text = ForegroundFactory(MyText);
-export const SubText = ForegroundFactory(MyText, 'sub');
-export const DisabledText = ForegroundFactory(MyText, 'disabled');
+export const View = BackgroundComponentFactory(NativeView);
+export const ScrollView = BackgroundComponentFactory(NativeScrollView);
+export const Surface = BackgroundComponentFactory(PaperSurface, 'foreground');
 
-export const Icon = ForegroundFactory(SvgIcon, null, true);
-export const SubIcon = ForegroundFactory(SvgIcon, 'sub', true);
-export const DisabledIcon = ForegroundFactory(SvgIcon, 'disabled', true);
+export const Text = ForegroundComponentFactory(MyText);
+export const SubText = ForegroundComponentFactory(MyText, 'sub');
+export const DisabledText = ForegroundComponentFactory(MyText, 'disabled');
 
-export const Divider = ({ vertical, inset, spacing }) => {
-  const theme = useTheme();
-  const colorName = React.useContext(ColorContext);
-  const color = fade(theme[colorName] || theme.foreground, 0.8);
-  return (
-    <NativeView
-      style={[
-        {
-          backgroundColor: color,
-        },
-        vertical && {
-          width: 1,
-          marginVertical: inset,
-          marginHorizontal: spacing,
-        },
-        !vertical && {
-          height: 1,
-          marginHorizontal: inset,
-          marginVertical: spacing,
-        },
-      ]}
-    />
-  );
-};
+export const Icon = ForegroundComponentFactory(SvgIcon, null, true);
+export const SubIcon = ForegroundComponentFactory(SvgIcon, 'sub', true);
+export const DisabledIcon = ForegroundComponentFactory(
+  SvgIcon,
+  'disabled',
+  true
+);
+
+export const Divider = ForegroundComponentFactory(PlainDivider);
