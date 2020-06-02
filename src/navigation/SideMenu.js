@@ -1,5 +1,4 @@
 import React from 'react';
-import { LayoutAnimation } from 'react-native';
 import styled from '@emotion/native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
@@ -88,35 +87,26 @@ const MenuItem = ({ linkTo, icon, label }) => (
 );
 
 export default function SideMenu({ navigation }) {
-  const theme = useTheme();
-  const [expanded, setExpanded] = React.useState(false);
   return (
     <StyledSideMenu>
-      <TouchableRipple
-        onPress={() => {
-          LayoutAnimation.easeInEaseOut();
-          setExpanded(!expanded);
-        }}
-      >
-        <MenuHeader>
-          <TopArea>
-            <BackButton
-              icon="arrow-left"
-              size={25}
-              onPress={() => {
-                navigation.closeDrawer();
-              }}
-            />
-          </TopArea>
+      <MenuHeader>
+        <TopArea>
+          <BackButton
+            icon="arrow-left"
+            size={25}
+            onPress={() => {
+              navigation.closeDrawer();
+            }}
+          />
+        </TopArea>
 
-          <UserArea>
-            <UserInfo>
-              <UserAvatar icon={UserIcon} size={25} />
-              <UserName>krysto</UserName>
-            </UserInfo>
-          </UserArea>
-        </MenuHeader>
-      </TouchableRipple>
+        <UserArea>
+          <UserInfo>
+            <UserAvatar icon={UserIcon} size={25} />
+            <UserName>krysto</UserName>
+          </UserInfo>
+        </UserArea>
+      </MenuHeader>
 
       <MenuItems>
         <MenuItem

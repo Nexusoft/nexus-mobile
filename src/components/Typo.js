@@ -46,10 +46,10 @@ function resolveColor(colorName, modifier, theme) {
 }
 
 export function BackgroundComponentFactory(Component, presetColorName) {
-  return (props) => {
+  return React.forwardRef((props, ref) => {
     const theme = useTheme();
     const colorName = presetColorName || getColorName(props.style, theme);
-    const child = <Component {...props} />;
+    const child = <Component ref={ref} {...props} />;
     if (colorName) {
       return (
         <ColorContext.Provider value={colorName}>{child}</ColorContext.Provider>
@@ -57,24 +57,26 @@ export function BackgroundComponentFactory(Component, presetColorName) {
     } else {
       return child;
     }
-  };
+  });
 }
 
 export function ForegroundComponentFactory(Component, modifier, colorProp) {
-  return (props) => {
+  return React.forwardRef((props, ref) => {
     const theme = useTheme();
     const colorName = React.useContext(ColorContext);
     const color = colorName && resolveColor(colorName, modifier, theme);
     if (color) {
       if (colorProp) {
-        return <Component color={color} {...props} />;
+        return <Component ref={ref} color={color} {...props} />;
       } else {
-        return <Component {...props} style={[{ color }, props.style]} />;
+        return (
+          <Component ref={ref} {...props} style={[{ color }, props.style]} />
+        );
       }
     } else {
-      return <Component {...props} />;
+      return <Component ref={ref} {...props} />;
     }
-  };
+  });
 }
 
 const MyText = styled(NativeText)(({ mono, bold }) => ({
