@@ -1,7 +1,8 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import styled from '@emotion/native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
-import { useTheme } from 'emotion-theming';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 import {
   View,
@@ -28,6 +29,7 @@ const MenuHeader = styled(View)(({ theme }) => ({
 }));
 
 const TopArea = styled.View({
+  marginTop: Platform.OS === 'ios' ? getStatusBarHeight() : 0,
   height: 56,
   flexDirection: 'row',
   alignItems: 'center',
