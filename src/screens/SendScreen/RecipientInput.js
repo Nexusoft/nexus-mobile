@@ -7,12 +7,13 @@ import {
   Button,
 } from 'react-native-paper';
 
-import { Icon } from 'components/Typo';
+import { Icon, SubIcon } from 'components/Typo';
 import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
 import ClearIcon from 'icons/x-circle.svg';
 
 const RecipientWrapper = styled.View({
+  flex: 1,
   flexDirection: 'row',
   alignItems: 'center',
 });
@@ -40,7 +41,7 @@ export default function RecipientInput({ recipient, setRecipient }) {
           />
           {props.value ? (
             <IconButton
-              icon={({ size }) => <Icon icon={ClearIcon} size={size} />}
+              icon={({ size }) => <SubIcon icon={ClearIcon} size={size} />}
               size={15}
               onPress={() => {
                 setRecipient('');
