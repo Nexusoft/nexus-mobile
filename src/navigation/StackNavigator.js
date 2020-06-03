@@ -4,7 +4,7 @@ import { StatusBar } from 'react-native';
 import {
   createStackNavigator,
   Header,
-  HeaderStyleInterpolators,
+  HeaderBackground,
 } from '@react-navigation/stack';
 import { shadow, IconButton } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
@@ -100,6 +100,18 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
               ...shadow(0),
             },
             headerTintColor: theme.dark ? theme.foreground : theme.onPrimary,
+            headerBackground: theme.dark
+              ? undefined
+              : () => (
+                  <HeaderBackground
+                    style={{
+                      backgroundColor: theme.primary,
+                      shadowOpacity: 0,
+                      borderBottomWidth: 0,
+                      elevation: 0,
+                    }}
+                  />
+                ),
           }}
         />
         <Stack.Screen name="Receive" component={ReceiveScreen} />
