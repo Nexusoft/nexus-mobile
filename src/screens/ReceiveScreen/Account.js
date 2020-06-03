@@ -4,8 +4,7 @@ import { TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
 import QRCode from 'react-native-qrcode-svg';
 
-import { Surface, View, Text, SubText } from 'components/Typo';
-import SvgIcon from 'components/SvgIcon';
+import { Surface, View, Text, SubText, Icon } from 'components/Typo';
 import { showNotification } from 'lib/notifications';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';
@@ -18,7 +17,7 @@ const AccountWrapper = styled(Surface)(({ active }) => ({
 }));
 
 const AccountHeader = styled(View)(({ theme, active }) => ({
-  backgroundColor: active && !theme.dark ? theme.primary : 'rgba(0,0,0,0)',
+  backgroundColor: active && !theme.dark ? theme.primary : undefined,
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -68,7 +67,7 @@ export default function Account({ account, active, activate }) {
             {segmentAddress(account.address)}
           </AccountAddress>
           <AccountAddressLabel>
-            <SvgIcon icon={CopyIcon} size={14} /> Touch to copy account address
+            <Icon icon={CopyIcon} size={14} /> Touch to copy account address
           </AccountAddressLabel>
         </AccountDetails>
       </TouchableRipple>
