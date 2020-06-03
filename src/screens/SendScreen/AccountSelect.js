@@ -13,21 +13,6 @@ const AccountTextInput = styled(PaperTextInput)({
   marginBottom: 15,
 });
 
-const renderContent = ({ value, style, ...rest }) => (
-  <TouchableRipple
-    onPress={() => {
-      setOpen(true);
-    }}
-  >
-    <Text
-      style={[{ lineHeight: StyleSheet.flatten(style).height }, style]}
-      {...rest}
-    >
-      {value}
-    </Text>
-  </TouchableRipple>
-);
-
 export default function AccountSelect({ options, value, updateValue }) {
   const [open, setOpen] = React.useState(false);
   return (
@@ -37,7 +22,20 @@ export default function AccountSelect({ options, value, updateValue }) {
         label="Send from"
         value={options[value]}
         editable={false}
-        render={renderContent}
+        render={({ value, style, ...rest }) => (
+          <TouchableRipple
+            onPress={() => {
+              setOpen(true);
+            }}
+          >
+            <Text
+              style={[{ lineHeight: StyleSheet.flatten(style).height }, style]}
+              {...rest}
+            >
+              {value}
+            </Text>
+          </TouchableRipple>
+        )}
       />
       <SelectOptions
         options={options}

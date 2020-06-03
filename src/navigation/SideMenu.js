@@ -38,7 +38,7 @@ const TopArea = styled.View({
 const BackButton = ForegroundComponentFactory(IconButton, null, true);
 
 const UserArea = styled.View({
-  paddingTop: 30,
+  paddingTop: 25,
   paddingBottom: 50,
   paddingHorizontal: 20,
 });

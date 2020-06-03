@@ -52,15 +52,14 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           headerTintColor: theme.dark ? theme.foreground : theme.onPrimary,
           // Fix header background color not changing when theme is changed
           header: (props) => <Header {...props} />,
-          headerBackImage: ({ tintColor }) => (
-            <IconButton
-              icon="arrow-left"
-              color={tintColor}
-              rippleColor={tintColor}
-              size={25}
-            />
-          ),
-          headerBackTitleVisible: false,
+          // headerBackImage: ({ tintColor }) => (
+          //   <IconButton
+          //     icon="arrow-left"
+          //     color={tintColor}
+          //     rippleColor={tintColor}
+          //     size={25}
+          //   />
+          // ),
         }}
       >
         <Stack.Screen
