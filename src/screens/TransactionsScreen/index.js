@@ -1,6 +1,6 @@
 import React from 'react';
+import { FlatList } from 'react-native';
 import styled from '@emotion/native';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import { Divider } from 'components/Typo';
 import Transaction from './Transaction';
@@ -281,20 +281,17 @@ const transactions = [
   },
 ];
 
-const Wrapper = styled(ScrollView)({
+const Transactions = styled(FlatList)({
   flex: 1,
-  // paddingVertical: 30,
 });
 
 export default function TransactionsScreen() {
   return (
-    <Wrapper>
-      {transactions.map((tx, i) => (
-        <React.Fragment key={tx.txid}>
-          <Divider />
-          <Transaction transaction={tx} />
-        </React.Fragment>
-      ))}
-    </Wrapper>
+    <Transactions
+      data={transactions}
+      ItemSeparatorComponent={Divider}
+      keyExtractor={(tx) => tx.txid}
+      renderItem={({ item }) => <Transaction transaction={item} />}
+    ></Transactions>
   );
 }

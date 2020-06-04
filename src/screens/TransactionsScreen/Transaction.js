@@ -37,6 +37,7 @@ const Contracts = styled.View({
 
 export default function Transaction({ transaction }) {
   const txTime = new Date(transaction.timestamp * 1000);
+  console.log(transaction);
   return (
     <TransactionWrapper>
       <TxDate>
