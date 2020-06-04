@@ -20,7 +20,7 @@ const TxDate = styled.View({
 });
 
 const Day = styled(Text)({
-  fontSize: 24,
+  fontSize: 23,
 });
 
 const Month = styled(Text)({
