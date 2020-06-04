@@ -14,7 +14,6 @@ import {
 } from 'components/Typo';
 import { navigate } from 'lib/navigation';
 import UserIcon from 'icons/user.svg';
-import TransactionIcon from 'icons/transaction.svg';
 import TokenIcon from 'icons/token.svg';
 import NameIcon from 'icons/abc.svg';
 import NamespaceIcon from 'icons/abc-cube.svg';
@@ -111,11 +110,6 @@ export default function SideMenu({ navigation }) {
       </MenuHeader>
 
       <MenuItems>
-        <MenuItem
-          linkTo="Transactions"
-          icon={TransactionIcon}
-          label="Transactions"
-        />
         <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" />
         <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" />
         <MenuItem linkTo="Names" icon={NameIcon} label="Names" />

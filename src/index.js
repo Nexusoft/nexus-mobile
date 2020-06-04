@@ -8,6 +8,8 @@ import { ThemeProvider } from 'emotion-theming';
 import styled from '@emotion/native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
+import 'intl';
+import 'intl/locale-data/jsonp/en';
 
 import { View } from 'components/Typo';
 import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
