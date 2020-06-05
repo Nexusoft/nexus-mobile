@@ -11,7 +11,6 @@ import { useTheme } from 'emotion-theming';
 
 import { subColor, disabledColor } from 'lib/theme';
 import ColorContext from 'lib/ColorContext';
-import { fade } from 'utils/color';
 import SvgIcon from 'components/SvgIcon';
 import PlainDivider from 'components/Divider';
 

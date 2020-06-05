@@ -71,6 +71,58 @@ const transactions = [
   },
   {
     txid:
+      '015df5292ef7dc8ffa968be6d12b28214289b73e2b08184399f72dada4dd75e5d8877a89a71c48bdc74cd32f000e165a6de89fe1d1e4663b90ab96da68f06ea8',
+    type: 'tritium user',
+    version: 1,
+    sequence: 22,
+    timestamp: 1574998687,
+    blockhash:
+      '6372ee61c9e055b7e5dd2372f3ffd439d5637186aa6f62917c53831bc7e6855fca4d02820f9b014854ae5c7ecc2b7bfa09b0f842bc446d81aac526c0543394a84eb660b8ee21ef8b194e0f212c7e82081d55ac21131420d1cad27e143ab57a574e758d9e24d0ffa5e173ed42c2df7da6a7d2bb1699b426011d16b38b38a68862',
+    confirmations: 308008,
+    contracts: [
+      {
+        id: 0,
+        OP: 'CREDIT',
+        for: 'DEBIT',
+        txid:
+          '0117e7734abbb8cbcd9b061cd20164b591eab59c65f01295b652776b275b62b9e1c6bb3ef6867d764c7a34948c73c451bd8c7b509f465badf5a6a0ffbe885aa7',
+        contract: 0,
+        proof: '8C53PdQLuXamTiWw3yXS8fVB4c2eQSwvmssHYzWfLsr5Wtj4jHr',
+        to: '8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW',
+        to_name: 'default',
+        amount: 15900,
+        token: '0',
+        token_name: 'NXS',
+        from: '8C53PdQLuXamTiWw3yXS8fVB4c2eQSwvmssHYzWfLsr5Wtj4jHr',
+        reference: 0,
+      },
+    ],
+  },
+  {
+    txid:
+      '0159de92f36a313141dfbbcdf2b8b2bee5d17fa673a19791319d930295e69601f414af78360c4831b81ac5093eae641c50b60249bffd760853ce26be4fcfcb17',
+    type: 'tritium user',
+    version: 1,
+    sequence: 25,
+    timestamp: 1575257519,
+    blockhash:
+      'a46f820ecbfe19350c422249df4077e0cfe5e126f2222d8cff6fc852f4b0e6a4453b6ec213c05827e954a6367c6e201f84f73094ffc4a0bc3178c013ffdc734d4dc6193031955f1a7a4af87706683b621657a6e492ab5d120ebd1d1fd30baec378a52ce383955b4797f9d6e85ea0c6cfec73296117a54cc37890497a32e214f6',
+    confirmations: 303241,
+    contracts: [
+      {
+        id: 0,
+        OP: 'LEGACY',
+        from: '8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW',
+        from_name: 'default',
+        to: '2QoqABGnMK2sc9fZLck4LrtoNtLzZcuUozrCE5PHMAaeyrbckzj',
+        amount: 25000,
+        token: '0',
+        token_name: 'NXS',
+      },
+    ],
+  },
+  {
+    txid:
       '0170762eda69545b7e493e2d8ff9d46ea207e0a49739daa3ac017dae11908ec988b1caf6b502784b11ba34ca7bb90d34ac166db336bf0217b189b2f48faf672c',
     type: 'tritium trust',
     version: 2,
@@ -111,6 +163,80 @@ const transactions = [
       },
     ],
   },
+  {
+    txid:
+      '017e9855e99f553ee1a718ebd75081fe0ad81fec180b720420b2187a210e72d5477115eb34da96fdc8eaa73281f27cf62ca8e19ab4bca91a4b0724c8019917ba',
+    type: 'tritium user',
+    version: 1,
+    sequence: 41,
+    timestamp: 1576513928,
+    blockhash:
+      'ef85bd86ea7ecf4a112c42ad2c366a31ce51e78edecda92f03531a6f0bca9eefdd56a93f168558e6c1ac542bc915a4e715423079943abae5b04a5f3504763f7c776d3ca96d78de313643c482e85dfa45d3fdb67e7908463872de001ce8b483c092c208438b51585961e22bd68c660184f8f87fc3984be3cd569770c122313d6f',
+    confirmations: 279333,
+    contracts: [
+      {
+        id: 0,
+        OP: 'DEBIT',
+        from: '8Gbwm4sH9VttWNLpyuXe4zjH1wf5UFxkjjnuGjihPqsdodVBcwk',
+        from_name: 'trust',
+        to: '8CPxES4aikALTMNS9oaW1Sv4h471WKWPCE521aEbatVSEqcGood',
+        amount: 0.000001,
+        reference: 0,
+        token: '0',
+        token_name: 'NXS',
+      },
+    ],
+  },
+  {
+    txid:
+      '01e66942fc7e54b1957475c238b751e52a1fe236b79d09bd57c7162efced972a54162cb1681a59a85680a3dbb17d70d1b451d10382177d2c1a449e56b7a0a453',
+    type: 'tritium user',
+    version: 1,
+    sequence: 40,
+    timestamp: 1576513903,
+    blockhash:
+      'ef85bd86ea7ecf4a112c42ad2c366a31ce51e78edecda92f03531a6f0bca9eefdd56a93f168558e6c1ac542bc915a4e715423079943abae5b04a5f3504763f7c776d3ca96d78de313643c482e85dfa45d3fdb67e7908463872de001ce8b483c092c208438b51585961e22bd68c660184f8f87fc3984be3cd569770c122313d6f',
+    confirmations: 279369,
+    contracts: [
+      {
+        id: 0,
+        OP: 'DEBIT',
+        from: '8Gbwm4sH9VttWNLpyuXe4zjH1wf5UFxkjjnuGjihPqsdodVBcwk',
+        from_name: 'trust',
+        to: '8CuQHqRweELC1M35dsWsWmhzj4feYHcKAcxhgLw28aVpmN6cWho',
+        amount: 0.000001,
+        reference: 0,
+        token: '0',
+        token_name: 'NXS',
+      },
+    ],
+  },
+  {
+    txid:
+      '0128d605626bf6ead3d81836f5e4bd348108ad7ce586ac344aaf2b9cd47b07d0f81bab7b4ebeb55e0d82e8af37180d440554a43f0b7057b2aa640dffaff8d1c7',
+    type: 'tritium user',
+    version: 1,
+    sequence: 20,
+    timestamp: 1574919182,
+    blockhash:
+      'ece66408dcd21bba7ec32678538334750bbd5fe674a69a498f577a02024f104373780d7e7cd42b4e074e4699c09699b4df83b8f13dc4bb9422ebdac8ad1b6e67813241a7683a07678271b76984c17a099e684d1b476bf16acc5f353ba62fde1e0f91493a3a0d9bb43de5c66780d00dd24a72ee6fddf824e27eb006b1cda976c9',
+    confirmations: 309525,
+    contracts: [
+      {
+        id: 0,
+        OP: 'DEBIT',
+        from: '8Gbwm4sH9VttWNLpyuXe4zjH1wf5UFxkjjnuGjihPqsdodVBcwk',
+        from_name: 'trust',
+        to: '8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW',
+        to_name: 'default',
+        amount: 1,
+        reference: 0,
+        token: '0',
+        token_name: 'NXS',
+      },
+    ],
+  },
+
   {
     txid:
       '01f1a1526664294e49e1a0e0e6d6fb0a4b63ac32f156d10d0ce356c6a8712abb369a2327ece2c66e8dda30d54e352f7c41cff8e61b2a970ab3a633f01e7d34a8',
@@ -171,6 +297,63 @@ const transactions = [
           '01b3a04d4e88033b9593842b053e488cb503a20c13bbfd241b8813bfd13ff9bdc7fccd6867744cfe8320aa7effdc9bcf8ead5635e35a6068ed982d2346024166',
         score: 12856064,
         amount: 7.102727,
+      },
+    ],
+  },
+  {
+    txid:
+      '015d3d1ad1cfc6c4b12588487337d9199522e8ef9e29f45196c70871674a51800446a3c9835b0f724ea1c66f5d662a9843aeb58a03e2db83c6970edbe9345823',
+    type: 'tritium user',
+    version: 1,
+    sequence: 13,
+    timestamp: 1574237978,
+    blockhash:
+      '3d98d9bf8a64b2fe1d1c99f9de11bf0e848d1d77f03efedbdc577f7dfe8099993a2bafe14c897c4bc2972db3b68c472bbe3a242c2c6265b755b9d66028719aa4c2b47a447d725d10b3dc3ce6c2cdecd8ec3170444a278c114be927e89dbd7af41eb93d1bd256dec6eded7e8a498f5aa523b2788d65db49019b1b2b6a30f95c6a',
+    confirmations: 322435,
+    contracts: [
+      {
+        id: 0,
+        OP: 'CREDIT',
+        for: 'DEBIT',
+        txid:
+          '01f5ee0149bd731432d17f517d9fc3a1798e46d90c3a015030c0f68252e73dadfaef034c47563b193d24953ff4d02ccdd9551ba14114e6b6f3526e4c87c83719',
+        contract: 0,
+        proof: '8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW',
+        to: '8Gbwm4sH9VttWNLpyuXe4zjH1wf5UFxkjjnuGjihPqsdodVBcwk',
+        to_name: 'trust',
+        amount: 5200,
+        token: '0',
+        token_name: 'NXS',
+        from: '8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW',
+        from_name: 'default',
+        reference: 0,
+      },
+    ],
+  },
+  {
+    txid:
+      '01f307f3824e7aa3fe7e5b207687af091656ab780c6541f73d3e299b4b7cf005c02aa22070005164a4d41de0cfee8e9a336d4d39eefca620f1f93cd4e70c5664',
+    type: 'tritium user',
+    version: 1,
+    sequence: 8,
+    timestamp: 1573804025,
+    blockhash:
+      '0584a4e8e892371c84068da6ac43daec73f80d7cce5e8155e4a5478c7302c2cc7a363b6f50e39a23a9905d4166e2e5e2296f9bfafbfc65acb85ee43335f88a5bd5eeef86a52edf1b12bb0e36863d074fdea0b8ebd69050db9a429fe8b6454555ea6924935648e47a08f39722b863508dc1d44acce48ea5acee3362f01fdef801',
+    confirmations: 330376,
+    contracts: [
+      {
+        id: 0,
+        OP: 'CREDIT',
+        for: 'LEGACY',
+        txid:
+          '02e8eb3da265173ce8e7622d92edb4ff751c7eb1b12aedbc4b161ebda45c7658bc7c3bbd7aa844801947f237de2d42b9748d8076836263d259a47fea23d9828e',
+        contract: 1,
+        proof: '9adaAMuB9v8yX1mZ5PtoB6VFSCeqRGjASd8ZTM6VUkiHLA5Bib6',
+        to: '8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW',
+        to_name: 'default',
+        amount: 20000.8,
+        token: '0',
+        token_name: 'NXS',
       },
     ],
   },

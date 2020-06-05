@@ -16,9 +16,12 @@ const ContractContent = styled.View({
   flex: 1,
 });
 
-const Operation = styled.Text({
+const Operation = styled.Text(({ theme }) => ({
+  color: theme.primary,
   textTransform: 'uppercase',
-});
+  fontFamily: 'noto-sans-bold',
+  fontWeight: 'bold',
+}));
 
 const AccountName = styled.Text({});
 
@@ -27,7 +30,7 @@ const RegisterType = styled.Text({
 });
 
 const Delta = styled(Text)({
-  fontSize: 15,
+  fontSize: 14,
 });
 
 const Hash = ({ children, ...rest }) => {
@@ -233,7 +236,7 @@ export default function Contract({ contract }) {
 
       <Delta>
         {getDeltaSign(contract)}
-        {contract.amount} {contract.token_name}
+        {contract.amount} {contract.token_name || 'NXS'}
       </Delta>
     </ContractWrapper>
   );
