@@ -22,6 +22,13 @@ const RecipientTextInput = styled(TextInput)({
   flex: 1,
 });
 
+const InputIconButton = styled(IconButton)({
+  margin: 0,
+  width: 36,
+  height: 36,
+  borderRadius: 18,
+});
+
 export default function RecipientInput({ recipient, setRecipient }) {
   return (
     <PaperTextInput
@@ -40,26 +47,27 @@ export default function RecipientInput({ recipient, setRecipient }) {
             {...props}
           />
           {props.value ? (
-            <IconButton
+            <InputIconButton
               icon={({ size }) => <SubIcon icon={ClearIcon} size={size} />}
-              size={15}
+              size={16}
               onPress={() => {
                 setRecipient('');
               }}
             />
           ) : (
             <>
-              <IconButton
+              <InputIconButton
                 icon={({ size }) => <Icon icon={PasteIcon} size={size} />}
-                size={15}
+                size={16}
                 onPress={async () => {
                   const clipboard = await Clipboard.getString();
                   setRecipient(clipboard);
                 }}
               />
-              <IconButton
+              <InputIconButton
+                style={{ marginRight: 5 }}
                 icon={({ size }) => <Icon icon={QRIcon} size={size} />}
-                size={15}
+                size={16}
                 onPress={() => {}}
               />
             </>

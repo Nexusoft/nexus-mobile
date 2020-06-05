@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '@emotion/native';
 import { TextInput as PaperTextInput, Button } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useTheme } from 'emotion-theming';
 
 import SvgIcon from 'components/SvgIcon';
 import SendIcon from 'icons/send.svg';
@@ -20,27 +19,13 @@ const StyledInput = styled(PaperTextInput)({
 });
 
 const Field = styled.View({
-  marginBottom: 15,
+  marginTop: 20,
 });
 
-const SendButton = () => {
-  const theme = useTheme();
-  return (
-    <Button
-      mode="contained"
-      icon={({ size, color }) => (
-        <SvgIcon icon={SendIcon} {...{ size, color }} />
-      )}
-      onPress={() => {}}
-      contentStyle={{
-        color: theme.onPrimary,
-      }}
-      style={{ alignSelf: 'flex-end' }}
-    >
-      Send
-    </Button>
-  );
-};
+const SendButton = styled(Button)({
+  alignSelf: 'flex-end',
+  marginTop: 50,
+});
 
 export default function SendScreen() {
   const [account, setAccount] = React.useState('default');
@@ -73,7 +58,20 @@ export default function SendScreen() {
           keyboardType="number-pad"
         />
       </Field>
-      <SendButton />
+
+      <SendButton
+        mode="contained"
+        icon={({ size, color }) => (
+          <SvgIcon icon={SendIcon} {...{ size, color }} />
+        )}
+        onPress={() => {}}
+        contentStyle={{
+          paddingVertical: 5,
+          paddingHorizontal: 10,
+        }}
+      >
+        Send
+      </SendButton>
     </Wrapper>
   );
 }
