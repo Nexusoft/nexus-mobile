@@ -1,11 +1,9 @@
 import React from 'react';
 import styled from '@emotion/native';
+import moment from 'moment';
 
 import { Text, Divider } from 'components/Typo';
 import Contract from './Contract';
-
-const dayFormat = new Intl.DateTimeFormat('en', { day: '2-digit' });
-const monthFormat = new Intl.DateTimeFormat('en', { month: 'short' });
 
 const TransactionWrapper = styled.View({
   flexDirection: 'row',
@@ -20,11 +18,11 @@ const TxDate = styled.View({
 });
 
 const Day = styled(Text)({
-  fontSize: 23,
+  fontSize: 21,
 });
 
 const Month = styled(Text)({
-  fontSize: 15,
+  fontSize: 14,
 });
 
 const Year = styled(Text)({
@@ -36,13 +34,12 @@ const Contracts = styled.View({
 });
 
 export default function Transaction({ transaction }) {
-  const txTime = new Date(transaction.timestamp * 1000);
-  console.log(transaction);
+  const txTime = moment.unix(transaction.timestamp);
   return (
     <TransactionWrapper>
       <TxDate>
-        <Day>{dayFormat.format(txTime)}</Day>
-        <Month>{monthFormat.format(txTime)}</Month>
+        <Day>{txTime.format('DD')}</Day>
+        <Month>{txTime.format('MMM')}</Month>
       </TxDate>
 
       <Contracts>
