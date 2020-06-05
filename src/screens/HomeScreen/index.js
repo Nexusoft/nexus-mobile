@@ -40,8 +40,20 @@ export default function HomeScreen() {
       <AccountsPane>
         <SubHeader>Accounts</SubHeader>
         <Accounts>
-          <Account account={{ name: 'default', balance: '2,232' }} />
-          <Account account={{ name: 'trust', balance: '34,742.34' }} />
+          <Account
+            account={{
+              name: 'default',
+              address: '8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW',
+              balance: '2,232',
+            }}
+          />
+          <Account
+            account={{
+              name: 'trust',
+              address: '8Gbwm4sH9VttWNLpyuXe4zjH1wf5UFxkjjnuGjihPqsdodVBcwk',
+              balance: '34,742.34',
+            }}
+          />
         </Accounts>
       </AccountsPane>
     </Container>

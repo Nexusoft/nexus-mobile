@@ -52,7 +52,10 @@ export default function Account({ account }) {
         <AccountButtons>
           <AccountButton
             onPress={() => {
-              navigate('Receive');
+              navigate('Receive', {
+                accountName: account.name,
+                address: account.address,
+              });
             }}
           >
             <AccountButtonLabel>RECEIVE</AccountButtonLabel>

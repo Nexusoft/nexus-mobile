@@ -1,6 +1,5 @@
 import React from 'react';
 import { shadow } from 'react-native-paper';
-import { HeaderBackground } from '@react-navigation/stack';
 
 import { Icon } from 'components/Typo';
 import HomeIcon from 'icons/home.svg';
@@ -23,18 +22,6 @@ export const screens = [
         elevation: 0,
         ...shadow(0),
       },
-      headerBackground: theme.dark
-        ? undefined
-        : () => (
-            <HeaderBackground
-              style={{
-                backgroundColor: theme.primary,
-                shadowOpacity: 0,
-                borderBottomWidth: 0,
-                elevation: 0,
-              }}
-            />
-          ),
     }),
   },
   {

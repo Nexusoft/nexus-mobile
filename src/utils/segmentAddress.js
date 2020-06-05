@@ -1,4 +1,5 @@
 export default function segmentAddress(address) {
+  if (!address || typeof address !== 'string') return address;
   const line1 = [
     address.substring(0, 6),
     address.substring(6, 11),

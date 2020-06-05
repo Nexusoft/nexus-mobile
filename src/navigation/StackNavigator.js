@@ -1,11 +1,16 @@
 import React from 'react';
 import styled from '@emotion/native';
 import { StatusBar } from 'react-native';
-import { createStackNavigator, Header } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  Header,
+  HeaderBackground,
+} from '@react-navigation/stack';
 import { shadow, IconButton } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
-import { Icon, BackgroundComponentFactory } from 'components/Typo';
+import { BackgroundComponentFactory } from 'components/Typo';
+import SvgIcon from 'components/SvgIcon';
 import ReceiveScreen from 'screens/ReceiveScreen';
 import SendScreen from 'screens/SendScreen';
 import SettingsScreen from 'screens/SettingsScreen';
@@ -49,6 +54,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           },
           headerTintColor: theme.dark ? theme.foreground : theme.onPrimary,
           // Fix header background color not changing when theme is changed
+          // and populate ColorContext to children
           header: (props) => (
             <BottomNavHeader
               {...props}
@@ -57,6 +63,19 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
               }}
             />
           ),
+          // Fix the white line at the header bottom
+          headerBackground: theme.dark
+            ? undefined
+            : () => (
+                <HeaderBackground
+                  style={{
+                    backgroundColor: theme.primary,
+                    shadowOpacity: 0,
+                    borderBottomWidth: 0,
+                    elevation: 0,
+                  }}
+                />
+              ),
           // headerBackImage: ({ tintColor }) => (
           //   <IconButton
           //     icon="arrow-left"
@@ -82,7 +101,9 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             return {
               headerLeft: ({ tintColor }) => (
                 <IconButton
-                  icon={({ size }) => <Icon icon={MenuIcon} size={size} />}
+                  icon={({ size }) => (
+                    <SvgIcon icon={MenuIcon} size={size} color={tintColor} />
+                  )}
                   color={tintColor}
                   size={25}
                   onPress={() => {
@@ -92,7 +113,13 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
               ),
               headerRight: ({ tintColor }) => (
                 <IconButton
-                  icon={({ size }) => <Icon icon={SettingsIcon} size={size} />}
+                  icon={({ size }) => (
+                    <SvgIcon
+                      icon={SettingsIcon}
+                      size={size}
+                      color={tintColor}
+                    />
+                  )}
                   color={tintColor}
                   size={25}
                   onPress={() => {
@@ -104,7 +131,22 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             };
           }}
         />
-        <Stack.Screen name="Receive" component={ReceiveScreen} />
+        <Stack.Screen
+          name="Receive"
+          component={ReceiveScreen}
+          options={({ route }) => ({
+            title: 'Receive',
+            headerTitleAlign: 'center',
+            headerTitle: route.params?.accountName,
+            headerStyle: {
+              backgroundColor: theme.dark ? theme.background : theme.primary,
+              elevation: 0,
+              ...shadow(0),
+            },
+            // headerTintColor: theme.foreground,
+            // headerBackTitleVisible: false,
+          })}
+        />
         <Stack.Screen name="Send" component={SendScreen} />
         {/* <Stack.Screen name="Transactions" component={TransactionsScreen} /> */}
         <Stack.Screen name="Settings" component={SettingsScreen} />
