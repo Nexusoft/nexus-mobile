@@ -8,7 +8,6 @@ import QRCode from 'react-native-qrcode-svg';
 
 import {
   Surface,
-  View,
   Divider,
   Text,
   SubText,
@@ -30,15 +29,9 @@ const TopInstruction = styled.View({
   alignItems: 'center',
 });
 
-const AddressInfo = styled.View({
-  // flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
-const Title = styled(Text)({
-  fontSize: 20,
-  marginBottom: 30,
+const TopContainer = styled.View({
+  flex: 1,
+  justifyContent: 'flex-end',
 });
 
 const Main = styled(Surface)({
@@ -46,10 +39,11 @@ const Main = styled(Surface)({
   paddingHorizontal: 30,
   alignItems: 'center',
   borderRadius: 20,
+  elevation: 5,
 });
 
-const AccountAddressLabel = styled(SubText)({
-  marginTop: 15,
+const BottomContainer = styled.View({
+  flex: 3,
 });
 
 const AccountAddress = styled(Text)({
@@ -73,15 +67,8 @@ const SeparatorLabel = styled(DisabledText)({
   paddingHorizontal: 15,
 });
 
-const BottomInstruction = styled.View({
-  // flex: 2,
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
 export default function ReceiveScreen() {
   const route = useRoute();
-  const accountName = route.params?.accountName;
   const address = route.params?.address;
   return (
     <Wrapper
@@ -89,34 +76,36 @@ export default function ReceiveScreen() {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100%',
-        paddingTop: 20,
-        paddingBottom: 80,
+        paddingVertical: 20,
       }}
     >
-      <Main>
-        <TopInstruction>
-          <SubText>Show this QR code to the sender</SubText>
-        </TopInstruction>
-        <QRCode value={address} size={200} />
-        <AccountAddress mono>{segmentAddress(address)}</AccountAddress>
-        <Separator>
-          <SeparatorLine />
-          <SeparatorLabel>or</SeparatorLabel>
-          <SeparatorLine />
-        </Separator>
-        <Button
-          style={{ alignSelf: 'stretch' }}
-          mode="outlined"
-          uppercase={false}
-          icon={({ size }) => <Icon icon={CopyIcon} size={size} />}
-          onPress={() => {
-            Clipboard.setString(address);
-            showNotification('Copied to clipboard');
-          }}
-        >
-          <Text>Copy account address</Text>
-        </Button>
-      </Main>
+      <TopContainer>
+        <Main>
+          <TopInstruction>
+            <SubText>Show this QR code to the sender</SubText>
+          </TopInstruction>
+          <QRCode value={address} size={200} />
+          <AccountAddress mono>{segmentAddress(address)}</AccountAddress>
+          <Separator>
+            <SeparatorLine />
+            <SeparatorLabel>or</SeparatorLabel>
+            <SeparatorLine />
+          </Separator>
+          <Button
+            style={{ alignSelf: 'stretch' }}
+            mode="outlined"
+            uppercase={false}
+            icon={({ size }) => <Icon icon={CopyIcon} size={size} />}
+            onPress={() => {
+              Clipboard.setString(address);
+              showNotification('Copied to clipboard');
+            }}
+          >
+            <Text>Copy account address</Text>
+          </Button>
+        </Main>
+      </TopContainer>
+      <BottomContainer />
     </Wrapper>
   );
 }
