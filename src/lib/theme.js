@@ -5,7 +5,7 @@ import memoize from 'utils/memoize';
 
 const darkColor = '#121212';
 const lightColor = '#ffffff';
-const dangerColor = '#8f240e';
+const dangerColor = '#d04500';
 const primaryShades = {
   50: '#e3f3ff',
   100: '#bbe1ff',
@@ -19,6 +19,18 @@ const primaryShades = {
   900: '#0e48c1',
 };
 const primaryDark = '#0040ad';
+const dangerShades = {
+  50: '#fae9e6',
+  100: '#fdccb9',
+  200: '#fbaa8b',
+  300: '#f98a5d',
+  400: '#f87138',
+  500: '#f6590e',
+  600: '#eb5409',
+  700: '#de4c03',
+  800: '#d04500',
+  900: '#b83800',
+};
 
 const elevatedDarkColors = {
   0: darkColor,
@@ -71,8 +83,9 @@ export const darkTheme = {
   primary: primaryShades[400],
   primaryVariant: primaryShades[300],
   onPrimary: darkColor,
-  danger: dangerColor,
-  onDanger: lightColor,
+  secondary: '#57c34c',
+  danger: dangerShades[300],
+  onDanger: darkColor,
 };
 
 export const lightTheme = {
@@ -81,9 +94,10 @@ export const lightTheme = {
   foreground: darkColor,
   surface: lightColor,
   primary: primaryShades[800],
-  onPrimary: lightColor,
   primaryVariant: primaryDark,
-  danger: dangerColor,
+  onPrimary: lightColor,
+  secondary: '#008500',
+  danger: dangerShades[800],
   onDanger: lightColor,
 };
 

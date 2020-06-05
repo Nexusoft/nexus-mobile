@@ -16,12 +16,11 @@ const ContractContent = styled.View({
   flex: 1,
 });
 
-const Operation = styled.Text(({ theme }) => ({
-  color: theme.primary,
+const Operation = styled.Text({
   textTransform: 'uppercase',
   fontFamily: 'noto-sans-bold',
   fontWeight: 'bold',
-}));
+});
 
 const AccountName = styled.Text({});
 
@@ -29,9 +28,11 @@ const RegisterType = styled.Text({
   textTransform: 'lowercase',
 });
 
-const Delta = styled(Text)({
+const Delta = styled(Text)(({ theme, negative }) => ({
+  color: negative ? theme.danger : theme.primary,
+  // opacity: sign === '-' ? 0.6 : 1,
   fontSize: 14,
-});
+}));
 
 const Hash = ({ children, ...rest }) => {
   if (!children || typeof children !== 'string' || children.length <= 11) {
@@ -230,14 +231,17 @@ const contractContent = (contract) => {
 };
 
 export default function Contract({ contract }) {
+  const sign = getDeltaSign(contract);
   return (
     <ContractWrapper>
       <ContractContent>{contractContent(contract)}</ContractContent>
 
-      <Delta>
-        {getDeltaSign(contract)}
-        {contract.amount} {contract.token_name || 'NXS'}
-      </Delta>
+      {!!contract.amount && (
+        <Delta negative={sign === '-'}>
+          {sign}
+          {contract.amount} {contract.token_name || 'NXS'}
+        </Delta>
+      )}
     </ContractWrapper>
   );
 }
