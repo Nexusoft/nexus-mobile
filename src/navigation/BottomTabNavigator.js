@@ -1,6 +1,6 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { shadow } from 'react-native-paper';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { shadow, TouchableRipple } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
 import SvgIcon from 'components/SvgIcon';
@@ -32,9 +32,14 @@ export default function BottomTabNavigator() {
       shifting={false}
       tabBarOptions={{
         activeTintColor: theme.foreground,
-        inactiveTintColor: fade(theme.foreground, 0.45),
+        inactiveTintColor: fade(theme.foreground, 0.5),
         style: { paddingTop: 5, elevation: 4, ...shadow(4) },
         labelStyle: { marginBottom: 5 },
+      }}
+      screenOptions={{
+        tabBarButton: (props) => {
+          return <TouchableRipple {...props} />;
+        },
       }}
     >
       {screens.map((screen) => renderScreen(screen))}

@@ -83,7 +83,6 @@ export const darkTheme = {
   primary: primaryShades[400],
   primaryVariant: primaryShades[300],
   onPrimary: darkColor,
-  secondary: '#57c34c',
   danger: dangerShades[300],
   onDanger: darkColor,
 };
@@ -96,7 +95,6 @@ export const lightTheme = {
   primary: primaryShades[800],
   primaryVariant: primaryDark,
   onPrimary: lightColor,
-  secondary: '#008500',
   danger: dangerShades[800],
   onDanger: lightColor,
 };
