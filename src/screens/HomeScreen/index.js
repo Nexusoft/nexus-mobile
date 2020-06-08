@@ -14,9 +14,9 @@ const Container = styled(View)(({ theme }) => ({
 
 const AccountsPane = styled(Surface)(({ theme }) => ({
   flex: 1,
-  borderTopLeftRadius: 20,
-  borderTopRightRadius: 20,
-  paddingHorizontal: 20,
+  borderTopLeftRadius: 30,
+  borderTopRightRadius: 30,
+  paddingHorizontal: 40,
   elevation: theme.dark ? 1 : 8,
   ...shadow(theme.dark ? 1 : 6),
 }));

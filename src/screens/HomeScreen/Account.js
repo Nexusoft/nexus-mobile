@@ -14,7 +14,6 @@ const AccountInfo = styled.View({
   justifyContent: 'space-between',
   alignItems: 'center',
   paddingVertical: 15,
-  paddingHorizontal: 20,
 });
 
 const AccountName = styled(Text)(({ theme }) => ({

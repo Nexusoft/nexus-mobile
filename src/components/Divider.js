@@ -8,13 +8,17 @@ export default styled.View(
   ({ vertical, inset, spacing }) =>
     vertical && {
       width: 1,
-      marginVertical: inset,
-      marginHorizontal: spacing,
+      marginTop: Array.isArray(inset) ? inset[0] : inset,
+      marginBottom: Array.isArray(inset) ? inset[1] : inset,
+      marginLeft: Array.isArray(spacing) ? spacing[0] : spacing,
+      marginRight: Array.isArray(spacing) ? spacing[1] : spacing,
     },
   ({ vertical, inset, spacing }) =>
     !vertical && {
       height: 1,
-      marginHorizontal: inset,
-      marginVertical: spacing,
+      marginLeft: Array.isArray(inset) ? inset[0] : inset,
+      marginRight: Array.isArray(inset) ? inset[1] : inset,
+      marginTop: Array.isArray(spacing) ? spacing[0] : spacing,
+      marginBottom: Array.isArray(spacing) ? spacing[1] : spacing,
     }
 );

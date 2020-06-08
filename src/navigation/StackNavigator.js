@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/native';
-import { StatusBar } from 'react-native';
+import { StatusBar, Platform } from 'react-native';
 import {
   createStackNavigator,
   Header,
@@ -18,6 +18,7 @@ import TokensScreen from 'screens/TokensScreen';
 import NamesScreen from 'screens/NamesScreen';
 import NamespacesScreen from 'screens/NamespacesScreen';
 import AssetsScreen from 'screens/AssetsScreen';
+import TransactionDetailsScreen from 'screens/TransactionDetailsScreen';
 import { navigate } from 'lib/navigation';
 import MenuIcon from 'icons/menu.svg';
 import SettingsIcon from 'icons/settings.svg';
@@ -135,7 +136,6 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           name="Receive"
           component={ReceiveScreen}
           options={({ route }) => ({
-            title: 'Receive',
             headerTitleAlign: 'center',
             headerTitle: route.params?.accountName,
             headerStyle: {
@@ -154,6 +154,13 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
         <Stack.Screen name="Names" component={NamesScreen} />
         <Stack.Screen name="Namespaces" component={NamespacesScreen} />
         <Stack.Screen name="Assets" component={AssetsScreen} />
+        <Stack.Screen
+          name="TransactionDetails"
+          component={TransactionDetailsScreen}
+          options={{
+            title: Platform.OS === 'ios' ? 'Details' : 'Transaction Details',
+          }}
+        />
       </Stack.Navigator>
     </>
   );

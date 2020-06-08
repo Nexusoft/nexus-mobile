@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from '@emotion/native';
 import moment from 'moment';
+import { TouchableRipple } from 'react-native-paper';
 
 import { Text, Divider } from 'components/Typo';
+import { navigate } from 'lib/navigation';
 import Contract from './Contract';
 
 const TransactionWrapper = styled.View({
@@ -36,20 +38,26 @@ const Contracts = styled.View({
 export default function Transaction({ transaction }) {
   const txTime = moment.unix(transaction.timestamp);
   return (
-    <TransactionWrapper>
-      <TxDate>
-        <Day>{txTime.format('DD')}</Day>
-        <Month>{txTime.format('MMM')}</Month>
-      </TxDate>
+    <TouchableRipple
+      onPress={() => {
+        navigate('TransactionDetails', { transaction });
+      }}
+    >
+      <TransactionWrapper>
+        <TxDate>
+          <Day>{txTime.format('DD')}</Day>
+          <Month>{txTime.format('MMM')}</Month>
+        </TxDate>
 
-      <Contracts>
-        {transaction.contracts.map((contract, i) => (
-          <React.Fragment key={i}>
-            {i !== 0 && <Divider />}
-            <Contract contract={contract} />
-          </React.Fragment>
-        ))}
-      </Contracts>
-    </TransactionWrapper>
+        <Contracts>
+          {transaction.contracts.map((contract, i) => (
+            <React.Fragment key={i}>
+              {i !== 0 && <Divider />}
+              <Contract contract={contract} />
+            </React.Fragment>
+          ))}
+        </Contracts>
+      </TransactionWrapper>
+    </TouchableRipple>
   );
 }
