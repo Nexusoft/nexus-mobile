@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import styled from '@emotion/native';
 
-import { Divider } from 'components/Typo';
+import { Surface, Divider } from 'components/Typo';
 import Transaction from './Transaction';
 
 const transactions = [
@@ -464,17 +464,20 @@ const transactions = [
   },
 ];
 
-const Transactions = styled(FlatList)({
+const Transactions = styled(Surface)({
   flex: 1,
+  elevation: 0,
 });
 
 export default function TransactionsScreen() {
   return (
-    <Transactions
-      data={transactions}
-      ItemSeparatorComponent={Divider}
-      keyExtractor={(tx) => tx.txid}
-      renderItem={({ item }) => <Transaction transaction={item} />}
-    ></Transactions>
+    <Transactions>
+      <FlatList
+        data={transactions}
+        ItemSeparatorComponent={Divider}
+        keyExtractor={(tx) => tx.txid}
+        renderItem={({ item }) => <Transaction transaction={item} />}
+      />
+    </Transactions>
   );
 }

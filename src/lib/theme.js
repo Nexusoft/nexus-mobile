@@ -1,11 +1,10 @@
 import { DefaultTheme, DarkTheme } from 'react-native-paper';
 
-import { mix, fade } from 'utils/color';
+import { mix, fade, darken } from 'utils/color';
 import memoize from 'utils/memoize';
 
 const darkColor = '#121212';
 const lightColor = '#ffffff';
-const dangerColor = '#d04500';
 const primaryShades = {
   50: '#e3f3ff',
   100: '#bbe1ff',
@@ -89,7 +88,7 @@ export const darkTheme = {
 
 export const lightTheme = {
   dark: false,
-  background: lightColor,
+  background: darken(lightColor, 0.05),
   foreground: darkColor,
   surface: lightColor,
   primary: primaryShades[800],
