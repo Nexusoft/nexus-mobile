@@ -18,6 +18,7 @@ import TokenIcon from 'icons/token.svg';
 import NameIcon from 'icons/abc.svg';
 import NamespaceIcon from 'icons/abc-cube.svg';
 import AssetIcon from 'icons/asset.svg';
+import WalletIcon from 'icons/wallet.svg';
 
 const StyledSideMenu = styled.View({
   flex: 1,
@@ -71,6 +72,10 @@ const MenuItemIcon = styled(Icon)({
   marginRight: 10,
 });
 
+const MenuItemLabel = styled(Text)({
+  fontSize: 15,
+});
+
 const MenuItem = ({ linkTo, icon, label }) => (
   <TouchableRipple
     borderless={false}
@@ -81,8 +86,8 @@ const MenuItem = ({ linkTo, icon, label }) => (
     }}
   >
     <MenuItemWrapper>
-      {!!icon && <MenuItemIcon icon={icon} size={14} />}
-      <Text emphasis>{label}</Text>
+      {!!icon && <MenuItemIcon icon={icon} size={15} />}
+      <MenuItemLabel emphasis>{label}</MenuItemLabel>
     </MenuItemWrapper>
   </TouchableRipple>
 );
@@ -110,6 +115,7 @@ export default function SideMenu({ navigation }) {
       </MenuHeader>
 
       <MenuItems>
+        <MenuItem linkTo="Accounts" icon={WalletIcon} label="Accounts" />
         <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" />
         <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" />
         <MenuItem linkTo="Names" icon={NameIcon} label="Names" />

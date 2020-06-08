@@ -14,6 +14,7 @@ import SvgIcon from 'components/SvgIcon';
 import ReceiveScreen from 'screens/ReceiveScreen';
 import SendScreen from 'screens/SendScreen';
 import SettingsScreen from 'screens/SettingsScreen';
+import AccountsScreen from 'screens/AccountsScreen';
 import TokensScreen from 'screens/TokensScreen';
 import NamesScreen from 'screens/NamesScreen';
 import NamespacesScreen from 'screens/NamespacesScreen';
@@ -150,6 +151,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
         <Stack.Screen name="Send" component={SendScreen} />
         {/* <Stack.Screen name="Transactions" component={TransactionsScreen} /> */}
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="Accounts" component={AccountsScreen} />
         <Stack.Screen name="Tokens" component={TokensScreen} />
         <Stack.Screen name="Names" component={NamesScreen} />
         <Stack.Screen name="Namespaces" component={NamespacesScreen} />
