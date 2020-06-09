@@ -35,6 +35,7 @@ export default function TransactionDetails({ transaction }) {
         }
         value={transaction.txid}
         mono
+        bordered
       />
       <Divider />
       <InfoField

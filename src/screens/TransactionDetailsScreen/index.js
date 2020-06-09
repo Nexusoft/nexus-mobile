@@ -1,13 +1,14 @@
 import React from 'react';
+import { SafeAreaView } from 'react-native';
 import styled from '@emotion/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
-import { ScrollView, SubText } from 'components/Typo';
+import { SubText } from 'components/Typo';
 import TransactionDetails from './TransactionDetails';
 import ContractDetails from './ContractDetails';
 
 const Wrapper = styled(ScrollView)({
   flex: 1,
-  paddingTop: 30,
 });
 
 const SubHeader = styled(SubText)({
@@ -17,10 +18,6 @@ const SubHeader = styled(SubText)({
   textTransform: 'uppercase',
 });
 
-const Inner = styled.View({
-  paddingBottom: 100,
-});
-
 export default function TransactionDetailsScreen({ route }) {
   const {
     params: { transaction },
@@ -28,7 +25,7 @@ export default function TransactionDetailsScreen({ route }) {
   return (
     !!transaction && (
       <Wrapper>
-        <Inner>
+        <SafeAreaView>
           <TransactionDetails transaction={transaction} />
 
           <SubHeader>Contracts</SubHeader>
@@ -36,7 +33,7 @@ export default function TransactionDetailsScreen({ route }) {
             transaction.contracts.map((contract) => (
               <ContractDetails key={contract.id} contract={contract} />
             ))}
-        </Inner>
+        </SafeAreaView>
       </Wrapper>
     )
   );

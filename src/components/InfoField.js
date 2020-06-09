@@ -56,6 +56,7 @@ export default function InfoField({
   control,
   value,
   mono,
+  bordered,
 }) {
   return (
     <Line inline={inline} compact={compact}>
@@ -63,7 +64,7 @@ export default function InfoField({
         <Label>{label}</Label>
         {!inline && control}
       </LabelWrapper>
-      <ValueWrapper inline={inline} bordered={!inline && mono}>
+      <ValueWrapper inline={inline} bordered={bordered}>
         <Value inline={inline} selectable mono={mono}>
           {value}
         </Value>
