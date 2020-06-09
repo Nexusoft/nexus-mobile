@@ -138,7 +138,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           component={ReceiveScreen}
           options={({ route }) => ({
             headerTitleAlign: 'center',
-            headerTitle: route.params?.accountName,
+            headerTitle: route.params?.account?.name,
             headerStyle: {
               backgroundColor: theme.dark ? theme.background : theme.primary,
               elevation: 0,
@@ -149,7 +149,6 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           })}
         />
         <Stack.Screen name="Send" component={SendScreen} />
-        {/* <Stack.Screen name="Transactions" component={TransactionsScreen} /> */}
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="Accounts" component={AccountsScreen} />
         <Stack.Screen name="Tokens" component={TokensScreen} />

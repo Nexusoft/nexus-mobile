@@ -3,7 +3,6 @@ import { Clipboard } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Button } from 'react-native-paper';
 import styled from '@emotion/native';
-import { useRoute } from '@react-navigation/native';
 import QRCode from 'react-native-qrcode-svg';
 
 import {
@@ -67,9 +66,8 @@ const SeparatorLabel = styled(DisabledText)({
   paddingHorizontal: 15,
 });
 
-export default function ReceiveScreen() {
-  const route = useRoute();
-  const address = route.params?.address;
+export default function ReceiveScreen({ route }) {
+  const address = route.params?.account?.address;
   return (
     <Wrapper
       contentContainerStyle={{
