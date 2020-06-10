@@ -16,7 +16,7 @@ const ScreenWrapper = styled(ScrollView)(
 
 export default function ScreenBody({ children, surface, ...rest }) {
   return (
-    <ScreenWrapper surfac={surface}>
+    <ScreenWrapper surface={surface}>
       <SafeAreaView>
         <View {...rest}>{children}</View>
       </SafeAreaView>

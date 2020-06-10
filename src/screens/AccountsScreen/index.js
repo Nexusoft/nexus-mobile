@@ -63,7 +63,7 @@ const Address = styled(Text)({
 
 export default function AccountsScreen() {
   return (
-    <ScreenBody>
+    <ScreenBody surface>
       {accounts.map((account, i) => (
         <React.Fragment key={account.address}>
           <TouchableRipple
