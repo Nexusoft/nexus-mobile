@@ -4,7 +4,7 @@ import * as TYPE from 'consts/actionTypes';
 import { getStore } from 'store';
 
 export const defaultSettings = {
-  darkMode: true,
+  darkMode: false,
   baseCurrency: 'USD',
 };
 
