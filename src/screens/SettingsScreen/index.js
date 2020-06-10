@@ -1,14 +1,12 @@
 import React from 'react';
 import styled from '@emotion/native';
-import { ScrollView } from 'react-native-gesture-handler';
 
+import ScreenBody from 'components/ScreenBody';
 import { Surface, SubText } from 'components/Typo';
 import ApplicationSettings from './ApplicationSettings';
 import CoreSettings from './CoreSettings';
 
-const Wrapper = styled(ScrollView)({
-  flex: 1,
-});
+const Wrapper = styled(ScreenBody)({});
 
 const Section = styled(Surface)({
   elevation: 2,

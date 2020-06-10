@@ -5,15 +5,14 @@ import {
   Button,
   TouchableRipple,
 } from 'react-native-paper';
-import { ScrollView, Text } from 'react-native-gesture-handler';
 
+import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import SendIcon from 'icons/send.svg';
 import AccountSelect from './AccountSelect';
 import RecipientInput from './RecipientInput';
 
-const Wrapper = styled(ScrollView)({
-  flex: 1,
+const Wrapper = styled(ScreenBody)({
   paddingVertical: 30,
   paddingHorizontal: 20,
 });

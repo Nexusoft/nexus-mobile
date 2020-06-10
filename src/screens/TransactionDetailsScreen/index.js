@@ -1,15 +1,13 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native';
 import styled from '@emotion/native';
-import { ScrollView } from 'react-native-gesture-handler';
 
+import ScreenBody from 'components/ScreenBody';
 import { SubText } from 'components/Typo';
 import TransactionDetails from './TransactionDetails';
 import ContractDetails from './ContractDetails';
 
-const Wrapper = styled(ScrollView)({
-  flex: 1,
-});
+const Wrapper = styled(ScreenBody)({});
 
 const SubHeader = styled(SubText)({
   marginLeft: 30,
