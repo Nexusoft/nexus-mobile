@@ -29,6 +29,7 @@ export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName={defaultScreen}
+      backBehavior="initialRoute"
       shifting={false}
       tabBarOptions={{
         activeTintColor: theme.foreground,

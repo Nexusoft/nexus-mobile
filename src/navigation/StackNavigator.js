@@ -20,6 +20,7 @@ import NamesScreen from 'screens/NamesScreen';
 import NamespacesScreen from 'screens/NamespacesScreen';
 import AssetsScreen from 'screens/AssetsScreen';
 import TransactionDetailsScreen from 'screens/TransactionDetailsScreen';
+import AccountDetailsScreen from 'screens/AccountDetailsScreen';
 import { navigate } from 'lib/navigation';
 import MenuIcon from 'icons/menu.svg';
 import SettingsIcon from 'icons/settings.svg';
@@ -160,6 +161,13 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           component={TransactionDetailsScreen}
           options={{
             title: Platform.OS === 'ios' ? 'Details' : 'Transaction Details',
+          }}
+        />
+        <Stack.Screen
+          name="AccountDetails"
+          component={AccountDetailsScreen}
+          options={{
+            title: Platform.OS === 'ios' ? 'Details' : 'Account Details',
           }}
         />
       </Stack.Navigator>

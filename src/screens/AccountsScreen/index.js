@@ -1,9 +1,12 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
 import styled from '@emotion/native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { TouchableRipple } from 'react-native-paper';
 
-import AccountDetails from './AccountDetails';
+import { Divider, Text, SubText, DisabledText } from 'components/Typo';
+import ScreenBody from 'components/ScreenBody';
+import { navigate } from 'lib/navigation';
+import { disabledColor } from 'lib/theme';
+import segmentAddress from 'utils/segmentAddress';
 
 const accounts = [
   {
@@ -31,18 +34,57 @@ const accounts = [
   },
 ];
 
-const Wrapper = styled(ScrollView)({
-  flex: 1,
+const Account = styled.View({
+  paddingVertical: 20,
+  paddingHorizontal: 30,
+});
+
+const AccountName = styled(Text)({
+  fontSize: 16,
+});
+
+const NoName = styled(DisabledText)({
+  fontSize: 16,
+});
+
+const AddressBox = styled.View(({ theme }) => ({
+  borderWidth: 1,
+  borderColor: disabledColor(theme.foreground),
+  borderRadius: 4,
+  paddingVertical: 5,
+  paddingHorizontal: 8,
+  marginTop: 12,
+}));
+
+const Address = styled(Text)({
+  fontSize: 15,
+  textAlign: 'center',
 });
 
 export default function AccountsScreen() {
   return (
-    <Wrapper>
-      <SafeAreaView>
-        {accounts.map((account) => (
-          <AccountDetails key={account.address} account={account} />
-        ))}
-      </SafeAreaView>
-    </Wrapper>
+    <ScreenBody>
+      {accounts.map((account, i) => (
+        <React.Fragment key={account.address}>
+          <TouchableRipple
+            onPress={() => {
+              navigate('AccountDetails', { account });
+            }}
+          >
+            <Account>
+              {account.name ? (
+                <AccountName bold>{account.name}</AccountName>
+              ) : (
+                <NoName>No name</NoName>
+              )}
+              <AddressBox>
+                <Address mono>{segmentAddress(account.address)}</Address>
+              </AddressBox>
+            </Account>
+          </TouchableRipple>
+          <Divider />
+        </React.Fragment>
+      ))}
+    </ScreenBody>
   );
 }
