@@ -67,7 +67,7 @@ export default function Account({ account }) {
 
           <AccountButton
             onPress={() => {
-              navigate('Send');
+              navigate('Send', { accountName: account.name });
             }}
           >
             <AccountButtonLabel>SEND</AccountButtonLabel>

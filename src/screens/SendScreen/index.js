@@ -27,8 +27,10 @@ const SendButton = styled(Button)({
   marginTop: 50,
 });
 
-export default function SendScreen() {
-  const [account, setAccount] = React.useState('default');
+export default function SendScreen({ route }) {
+  const [account, setAccount] = React.useState(
+    route.params?.accountName || 'default'
+  );
   const [recipient, setRecipient] = React.useState('');
   return (
     <Wrapper>
