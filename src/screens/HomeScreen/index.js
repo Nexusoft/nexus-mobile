@@ -7,6 +7,32 @@ import { Surface, View, SubText } from 'components/Typo';
 import BalanceSection from './BalanceSection';
 import Account from './Account';
 
+const accounts = [
+  {
+    created: 1573539403,
+    modified: 1589688048,
+    name: 'default',
+    address: '8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW',
+    token_name: 'NXS',
+    token: '0',
+    balance: 0,
+    pending: 0,
+    unconfirmed: 0,
+  },
+  {
+    created: 1573539403,
+    modified: 1591674440,
+    name: 'trust',
+    address: '8Gbwm4sH9VttWNLpyuXe4zjH1wf5UFxkjjnuGjihPqsdodVBcwk',
+    token_name: 'NXS',
+    token: '0',
+    balance: 44.745334,
+    pending: 0,
+    unconfirmed: 0,
+    stake: 40397,
+  },
+];
+
 const Container = styled(View)(({ theme }) => ({
   flex: 1,
   backgroundColor: theme.dark ? theme.background : theme.primary,
@@ -40,20 +66,9 @@ export default function HomeScreen() {
       <AccountsPane>
         <SubHeader>Accounts</SubHeader>
         <Accounts>
-          <Account
-            account={{
-              name: 'default',
-              address: '8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW',
-              balance: '2,232',
-            }}
-          />
-          <Account
-            account={{
-              name: 'trust',
-              address: '8Gbwm4sH9VttWNLpyuXe4zjH1wf5UFxkjjnuGjihPqsdodVBcwk',
-              balance: '34,742.34',
-            }}
-          />
+          {accounts.map((account) => (
+            <Account key={account.address} account={account} />
+          ))}
         </Accounts>
       </AccountsPane>
     </Container>

@@ -43,10 +43,16 @@ export default function Account({ account }) {
   return (
     <>
       <AccountWrapper>
-        <AccountInfo>
-          <AccountName bold>{account.name}</AccountName>
-          <AccountBalance>{account.balance} NXS</AccountBalance>
-        </AccountInfo>
+        <TouchableRipple
+          onPress={() => {
+            navigate('AccountDetails', { account });
+          }}
+        >
+          <AccountInfo>
+            <AccountName bold>{account.name}</AccountName>
+            <AccountBalance>{account.balance} NXS</AccountBalance>
+          </AccountInfo>
+        </TouchableRipple>
 
         <AccountButtons>
           <AccountButton
