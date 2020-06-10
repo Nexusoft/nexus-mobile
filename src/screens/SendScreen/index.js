@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from '@emotion/native';
-import { TextInput as PaperTextInput, Button } from 'react-native-paper';
-import { ScrollView } from 'react-native-gesture-handler';
+import {
+  TextInput as PaperTextInput,
+  Button,
+  TouchableRipple,
+} from 'react-native-paper';
+import { ScrollView, Text } from 'react-native-gesture-handler';
 
 import SvgIcon from 'components/SvgIcon';
 import SendIcon from 'icons/send.svg';
@@ -21,6 +25,13 @@ const StyledInput = styled(PaperTextInput)({
 const Field = styled.View({
   marginTop: 20,
 });
+
+const SendAllButton = styled.Text(({ theme }) => ({
+  alignSelf: 'flex-start',
+  paddingVertical: 8,
+  paddingHorizontal: 12,
+  color: theme.primary,
+}));
 
 const SendButton = styled(Button)({
   alignSelf: 'flex-end',
@@ -52,6 +63,9 @@ export default function SendScreen({ route }) {
           keyboardType="numeric"
           style={{ marginBottom: 15 }}
         />
+        <TouchableRipple onPress={() => {}}>
+          <SendAllButton>Send All</SendAllButton>
+        </TouchableRipple>
       </Field>
 
       <Field>
