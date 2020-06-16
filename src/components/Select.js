@@ -66,10 +66,14 @@ function SelectOptions({ open, setOpen, value, updateValue, options }) {
 
 export default function Select({ options, value, updateValue, render }) {
   const [open, setOpen] = React.useState(false);
+  const selectedOption = normalizeOptions(options).find(
+    (o) => o.value === value
+  );
   return (
     <>
       {render({
         value,
+        display: selectedOption && selectedOption.display,
         openSelect: () => {
           setOpen(true);
         },

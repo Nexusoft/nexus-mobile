@@ -10,8 +10,7 @@ import { getPaperTheme, primaryTheme } from 'lib/theme';
 import { toggleTransactionsFilter } from 'lib/ui';
 import { fade } from 'utils/color';
 
-const opOptions = [
-  { value: null, display: 'All' },
+const operations = [
   'APPEND',
   'AUTHORIZE',
   'CLAIM',
@@ -27,9 +26,17 @@ const opOptions = [
   'WRITE',
 ];
 
+const opOptions = [
+  { value: 'all', display: 'All' },
+  ...operations.map((op) => ({
+    value: op,
+    display: op,
+  })),
+];
+
 const timeOptions = [
   {
-    value: null,
+    value: 'all',
     display: 'All',
   },
   {
@@ -87,8 +94,8 @@ const ApplyButton = styled(Button)({
 
 export default function Filters() {
   const filterOpen = useSelector((state) => state.ui.txFilterOpen);
-  const [op, setOp] = React.useState(null);
-  const [time, setTime] = React.useState(null);
+  const [op, setOp] = React.useState('all');
+  const [time, setTime] = React.useState('all');
   const theme = useTheme();
   const paperTheme = theme.dark ? undefined : getPaperTheme(primaryTheme);
 
@@ -99,11 +106,11 @@ export default function Filters() {
           options={opOptions}
           value={op}
           updateValue={setOp}
-          render={({ value, openSelect }) => (
+          render={({ value, display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
               <FilterSelect>
                 <FilterLabel>Operation:</FilterLabel>
-                <FilterValue>{value || 'All'}</FilterValue>
+                <FilterValue>{display}</FilterValue>
               </FilterSelect>
             </TouchableRipple>
           )}
@@ -112,13 +119,11 @@ export default function Filters() {
           options={timeOptions}
           value={time}
           updateValue={setTime}
-          render={({ value, openSelect }) => (
+          render={({ value, display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
               <FilterSelect>
                 <FilterLabel>Time:</FilterLabel>
-                <FilterValue>
-                  {timeOptions.find((option) => option.value === value).display}
-                </FilterValue>
+                <FilterValue>{display}</FilterValue>
               </FilterSelect>
             </TouchableRipple>
           )}
