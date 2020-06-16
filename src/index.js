@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider as ReduxProvider, useSelector } from 'react-redux';
-import { Platform, UIManager } from 'react-native';
+import { Platform, UIManager, KeyboardAvoidingView } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import styled from '@emotion/native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
-import { View } from 'components/Typo';
+import { ForegroundComponentFactory } from 'components/Typo';
 import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
 import { getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
@@ -26,10 +26,12 @@ if (Platform.OS === 'android') {
   }
 }
 
-const Container = styled(View)(({ theme }) => ({
-  flex: 1,
-  backgroundColor: theme.background,
-}));
+const Container = styled(ForegroundComponentFactory(KeyboardAvoidingView))(
+  ({ theme }) => ({
+    flex: 1,
+    backgroundColor: theme.background,
+  })
+);
 
 function PaperContainer({ children }) {
   const theme = useTheme();
@@ -90,7 +92,7 @@ export default function Root(props) {
       <ReduxProvider store={store}>
         <ThemeController>
           <PaperContainer>
-            <Container>
+            <Container behavior="padding">
               <DrawerNavigator
                 initialNavigationState={initialNavigationState}
               />

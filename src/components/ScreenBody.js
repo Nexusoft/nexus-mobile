@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/native';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View, KeyboardAvoidingView } from 'react-native';
 
 import { ScrollView } from 'components/Typo';
 

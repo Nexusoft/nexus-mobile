@@ -1,4 +1,5 @@
 import React from 'react';
+import { KeyboardAvoidingView } from 'react-native';
 import styled from '@emotion/native';
 import {
   TextInput as PaperTextInput,
