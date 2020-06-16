@@ -9,7 +9,7 @@ import transactions from './transactions';
 
 export default function TransactionsScreen() {
   return (
-    <ScreenBody surface>
+    <ScreenBody surface scroll={false}>
       <Filters />
       <FlatList
         data={transactions}
