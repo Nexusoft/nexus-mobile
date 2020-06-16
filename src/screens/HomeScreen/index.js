@@ -1,9 +1,11 @@
 import React from 'react';
+import { TouchableWithoutFeedback } from 'react-native';
 import { shadow } from 'react-native-paper';
 import styled from '@emotion/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { Surface, View, SubText } from 'components/Typo';
+import { navigate } from 'lib/navigation';
 import BalanceSection from './BalanceSection';
 import Account from './Account';
 
@@ -64,7 +66,13 @@ export default function HomeScreen() {
       <BalanceSection />
 
       <AccountsPane>
-        <SubHeader>Accounts</SubHeader>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            navigate('Accounts');
+          }}
+        >
+          <SubHeader>Accounts</SubHeader>
+        </TouchableWithoutFeedback>
         <Accounts>
           {accounts.map((account) => (
             <Account key={account.address} account={account} />

@@ -1,8 +1,9 @@
 import React from 'react';
+import { FlatList } from 'react-native';
 import styled from '@emotion/native';
-import { TouchableRipple } from 'react-native-paper';
+import { TouchableRipple, FAB } from 'react-native-paper';
 
-import { Divider, Text, SubText, DisabledText } from 'components/Typo';
+import { Divider, Text, DisabledText } from 'components/Typo';
 import ScreenBody from 'components/ScreenBody';
 import { navigate } from 'lib/navigation';
 import { disabledColor } from 'lib/theme';
@@ -34,6 +35,10 @@ const accounts = [
   },
 ];
 
+const Wrapper = styled(ScreenBody)({
+  paddingBottom: 106,
+});
+
 const Account = styled.View({
   paddingVertical: 20,
   paddingHorizontal: 30,
@@ -61,30 +66,47 @@ const Address = styled(Text)({
   textAlign: 'center',
 });
 
+const AddButton = styled(FAB)({
+  position: 'absolute',
+  right: 30,
+  bottom: 30,
+});
+
 export default function AccountsScreen() {
   return (
-    <ScreenBody surface>
-      {accounts.map((account, i) => (
-        <React.Fragment key={account.address}>
-          <TouchableRipple
-            onPress={() => {
-              navigate('AccountDetails', { account });
-            }}
-          >
-            <Account>
-              {account.name ? (
-                <AccountName bold>{account.name}</AccountName>
-              ) : (
-                <NoName>No name</NoName>
-              )}
-              <AddressBox>
-                <Address mono>{segmentAddress(account.address)}</Address>
-              </AddressBox>
-            </Account>
-          </TouchableRipple>
-          <Divider />
-        </React.Fragment>
-      ))}
-    </ScreenBody>
+    <Wrapper scroll={false} surface>
+      <FlatList
+        data={accounts}
+        ItemSeparatorComponent={Divider}
+        keyExtractor={(acc) => acc.address}
+        renderItem={({ item: account }) => (
+          <>
+            <TouchableRipple
+              onPress={() => {
+                navigate('AccountDetails', { account });
+              }}
+            >
+              <Account>
+                {account.name ? (
+                  <AccountName bold>{account.name}</AccountName>
+                ) : (
+                  <NoName>No name</NoName>
+                )}
+                <AddressBox>
+                  <Address mono>{segmentAddress(account.address)}</Address>
+                </AddressBox>
+              </Account>
+            </TouchableRipple>
+            <Divider />
+          </>
+        )}
+      />
+      <AddButton
+        icon="plus"
+        onPress={() => {
+          navigate('CreateAccount');
+        }}
+      />
+    </Wrapper>
   );
 }
