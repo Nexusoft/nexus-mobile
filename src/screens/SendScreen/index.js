@@ -1,14 +1,15 @@
 import React from 'react';
-import { KeyboardAvoidingView } from 'react-native';
 import styled from '@emotion/native';
 import {
   TextInput as PaperTextInput,
   Button,
   TouchableRipple,
 } from 'react-native-paper';
+import { useTheme } from 'emotion-theming';
 
 import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
+import { getPaperTheme } from 'lib/theme';
 import SendIcon from 'icons/send.svg';
 import AccountSelect from './AccountSelect';
 import RecipientInput from './RecipientInput';
@@ -43,18 +44,25 @@ export default function SendScreen({ route }) {
     route.params?.accountName || 'default'
   );
   const [recipient, setRecipient] = React.useState('');
+  const theme = useTheme();
+  const paperTheme = getPaperTheme({ ...theme, background: theme.surface });
   return (
-    <Wrapper>
+    <Wrapper surface>
       <Field>
         <AccountSelect
           options={['default', 'trust']}
           value={account}
           updateValue={setAccount}
+          customTheme={paperTheme}
         />
       </Field>
 
       <Field>
-        <RecipientInput recipient={recipient} setRecipient={setRecipient} />
+        <RecipientInput
+          recipient={recipient}
+          setRecipient={setRecipient}
+          customTheme={paperTheme}
+        />
       </Field>
 
       <Field>

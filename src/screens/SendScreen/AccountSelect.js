@@ -13,14 +13,21 @@ const AccountTextInput = styled(PaperTextInput)({
   marginBottom: 15,
 });
 
-export default function AccountSelect({ options, value, updateValue }) {
+export default function AccountSelect({
+  options,
+  value,
+  updateValue,
+  customTheme,
+}) {
   return (
     <Select
       options={options}
       value={value}
       updateValue={updateValue}
       render={({ value, openSelect }) => (
-        <AccountTextInput
+        <PaperTextInput
+          style={{ marginBottom: 15 }}
+          theme={customTheme}
           mode="outlined"
           label="Send from"
           value={options[value]}

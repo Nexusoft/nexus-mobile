@@ -13,7 +13,6 @@ import { useTheme } from 'emotion-theming';
 import { BackgroundComponentFactory } from 'components/Typo';
 import SvgIcon from 'components/SvgIcon';
 import ReceiveScreen from 'screens/ReceiveScreen';
-import SendScreen from 'screens/SendScreen';
 import SettingsScreen from 'screens/SettingsScreen';
 import AccountsScreen from 'screens/AccountsScreen';
 import TokensScreen from 'screens/TokensScreen';
@@ -159,7 +158,6 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
             // headerBackTitleVisible: false,
           })}
         />
-        <Stack.Screen name="Send" component={SendScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="Accounts" component={AccountsScreen} />
         <Stack.Screen name="Tokens" component={TokensScreen} />

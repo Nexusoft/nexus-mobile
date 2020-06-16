@@ -29,9 +29,14 @@ const InputIconButton = styled(IconButton)({
   borderRadius: 18,
 });
 
-export default function RecipientInput({ recipient, setRecipient }) {
+export default function RecipientInput({
+  recipient,
+  setRecipient,
+  customTheme,
+}) {
   return (
     <PaperTextInput
+      theme={customTheme}
       multiline
       mode="outlined"
       label="Send to"
