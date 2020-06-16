@@ -92,7 +92,9 @@ export default function Root(props) {
       <ReduxProvider store={store}>
         <ThemeController>
           <PaperContainer>
-            <Container behavior="padding">
+            <Container
+              behavior={Platform.OS === 'android' ? undefined : 'padding'}
+            >
               <DrawerNavigator
                 initialNavigationState={initialNavigationState}
               />
