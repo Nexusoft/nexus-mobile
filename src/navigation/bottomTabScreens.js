@@ -1,8 +1,9 @@
 import React from 'react';
-import { shadow, IconButton } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 
 import { Icon } from 'components/Typo';
 import SvgIcon from 'components/SvgIcon';
+import { toggleTransactionsFilter } from 'lib/ui';
 import HomeScreen from 'screens/HomeScreen';
 import TransactionsScreen from 'screens/TransactionsScreen';
 import HomeIcon from 'icons/home.svg';
@@ -19,11 +20,6 @@ export const screens = [
       title: 'Overview',
       headerTitle: () => <Icon icon={LogoIcon} width={110} height={25} />,
       headerTitleAlign: 'center',
-      headerStyle: {
-        backgroundColor: theme.dark ? theme.background : theme.primary,
-        elevation: 0,
-        ...shadow(0),
-      },
     }),
   },
   {
@@ -41,7 +37,9 @@ export const screens = [
           )}
           color={tintColor}
           size={25}
-          onPress={() => {}}
+          onPress={() => {
+            toggleTransactionsFilter();
+          }}
         />
       ),
     },

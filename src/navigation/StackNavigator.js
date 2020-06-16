@@ -7,6 +7,7 @@ import {
   HeaderBackground,
 } from '@react-navigation/stack';
 import { shadow, IconButton } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { useTheme } from 'emotion-theming';
 
 import { BackgroundComponentFactory } from 'components/Typo';
@@ -34,12 +35,19 @@ const Logo = styled(LogoIcon)(({ theme }) => ({
   width: 110,
 }));
 
+const flatHeader = (theme) => ({
+  backgroundColor: theme.dark ? theme.background : theme.primary,
+  elevation: 0,
+  ...shadow(0),
+});
+
 const BottomNavHeader = BackgroundComponentFactory(Header);
 
 const Stack = createStackNavigator();
 
 export default function StackNavigator({ navigation: drawerNavigation }) {
   const theme = useTheme();
+  const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
   return (
     <>
       <StatusBar
@@ -130,6 +138,11 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
                   }}
                 />
               ),
+              headerStyle:
+                routeName === 'Overview' ||
+                (routeName === 'Transactions' && txFilterOpen)
+                  ? flatHeader(theme)
+                  : undefined,
               ...customOptions,
             };
           }}
@@ -140,11 +153,7 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           options={({ route }) => ({
             headerTitleAlign: 'center',
             headerTitle: route.params?.account?.name,
-            headerStyle: {
-              backgroundColor: theme.dark ? theme.background : theme.primary,
-              elevation: 0,
-              ...shadow(0),
-            },
+            headerStyle: flatHeader(theme),
             // headerTintColor: theme.foreground,
             // headerBackTitleVisible: false,
           })}
