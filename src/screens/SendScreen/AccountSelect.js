@@ -7,43 +7,39 @@ import {
 } from 'react-native-paper';
 
 import { Text } from 'components/Typo';
-import SelectOptions from 'components/SelectOptions';
+import Select from 'components/Select';
 
 const AccountTextInput = styled(PaperTextInput)({
   marginBottom: 15,
 });
 
 export default function AccountSelect({ options, value, updateValue }) {
-  const [open, setOpen] = React.useState(false);
   return (
-    <>
-      <AccountTextInput
-        mode="outlined"
-        label="Send from"
-        value={options[value]}
-        editable={false}
-        render={({ value, style, ...rest }) => (
-          <TouchableRipple
-            onPress={() => {
-              setOpen(true);
-            }}
-          >
-            <Text
-              style={[{ lineHeight: StyleSheet.flatten(style).height }, style]}
-              {...rest}
-            >
-              {value}
-            </Text>
-          </TouchableRipple>
-        )}
-      />
-      <SelectOptions
-        options={options}
-        value={value}
-        updateValue={updateValue}
-        open={open}
-        setOpen={setOpen}
-      />
-    </>
+    <Select
+      options={options}
+      value={value}
+      updateValue={updateValue}
+      render={({ value, openSelect }) => (
+        <AccountTextInput
+          mode="outlined"
+          label="Send from"
+          value={options[value]}
+          editable={false}
+          render={({ value, style, ...rest }) => (
+            <TouchableRipple onPress={openSelect}>
+              <Text
+                style={[
+                  { lineHeight: StyleSheet.flatten(style).height },
+                  style,
+                ]}
+                {...rest}
+              >
+                {value}
+              </Text>
+            </TouchableRipple>
+          )}
+        />
+      )}
+    />
   );
 }

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 import { Text, Divider } from 'components/Typo';
 import Switch from 'components/Switch';
-import SelectOptions from 'components/SelectOptions';
+import Select from 'components/Select';
 import { updateSettings } from 'lib/settings';
 import baseCurrencies from 'consts/baseCurrencies';
 
@@ -40,31 +40,23 @@ const SettingSwitch = styled.View({
   paddingHorizontal: 10,
 });
 
-const SettingSelect = ({ title, options, value, updateValue }) => {
-  const [open, setOpen] = React.useState(false);
-  return (
-    <TouchableRipple
-      borderless={false}
-      onPress={() => {
-        setOpen(true);
-      }}
-    >
-      <Setting>
-        <SettingText>
-          <SettingLabel>{title}</SettingLabel>
-          <SettingDescription primary>{options[value]}</SettingDescription>
-        </SettingText>
-        <SelectOptions
-          options={options}
-          value={value}
-          updateValue={updateValue}
-          open={open}
-          setOpen={setOpen}
-        />
-      </Setting>
-    </TouchableRipple>
-  );
-};
+const SettingSelect = ({ title, options, value, updateValue }) => (
+  <Select
+    options={options}
+    value={value}
+    updateValue={updateValue}
+    render={({ value, openSelect }) => (
+      <TouchableRipple borderless={false} onPress={openSelect}>
+        <Setting>
+          <SettingText>
+            <SettingLabel>{title}</SettingLabel>
+            <SettingDescription primary>{options[value]}</SettingDescription>
+          </SettingText>
+        </Setting>
+      </TouchableRipple>
+    )}
+  />
+);
 
 export default function ApplicationSettings() {
   const settings = useSelector((state) => state.settings);

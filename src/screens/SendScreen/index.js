@@ -46,7 +46,7 @@ export default function SendScreen({ route }) {
     <Wrapper>
       <Field>
         <AccountSelect
-          options={{ default: 'default', trust: 'trust' }}
+          options={['default', 'trust']}
           value={account}
           updateValue={setAccount}
         />

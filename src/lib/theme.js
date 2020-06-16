@@ -98,6 +98,18 @@ export const lightTheme = {
   onDanger: lightColor,
 };
 
+export const primaryTheme = {
+  dark: false,
+  background: lightTheme.primary,
+  foreground: lightTheme.onPrimary,
+  surface: lightTheme.primary,
+  primary: lightTheme.onPrimary,
+  primaryVariant: lightTheme.onPrimary,
+  onPrimary: lightTheme.primary,
+  danger: lightTheme.danger,
+  onDanger: lightTheme.onDanger,
+};
+
 export const getNavTheme = memoize((theme) => ({
   dark: theme.dark,
   colors: {
