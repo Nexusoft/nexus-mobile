@@ -52,9 +52,6 @@ function SelectOptions({ open, setOpen, value, updateValue, options }) {
                 color={theme.primary}
                 uncheckedColor={theme.foreground}
                 label={display}
-                labelStyle={{
-                  color: theme.foreground,
-                }}
               />
             ))}
           </RadioButton.Group>

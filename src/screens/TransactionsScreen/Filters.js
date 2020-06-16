@@ -27,7 +27,7 @@ const operations = [
 ];
 
 const opOptions = [
-  { value: 'all', display: 'All' },
+  { value: 'all', display: <Text bold>All</Text> },
   ...operations.map((op) => ({
     value: op,
     display: op,
@@ -37,7 +37,7 @@ const opOptions = [
 const timeOptions = [
   {
     value: 'all',
-    display: 'All',
+    display: <Text bold>All</Text>,
   },
   {
     value: 'year',
