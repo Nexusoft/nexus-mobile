@@ -8,6 +8,7 @@ export default function ScreenBody({
   children,
   scroll = true,
   surface,
+  style,
   ...rest
 }) {
   const theme = useTheme();
@@ -16,8 +17,10 @@ export default function ScreenBody({
     <ScreenWrapper
       style={[{ flex: 1 }, surface ? { backgroundColor: theme.surface } : null]}
     >
-      <SafeAreaView>
-        <View {...rest}>{children}</View>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={[{ flex: 1 }, style]} {...rest}>
+          {children}
+        </View>
       </SafeAreaView>
     </ScreenWrapper>
   );
