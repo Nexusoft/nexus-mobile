@@ -17,7 +17,7 @@ export default function AccountSelect({
   options,
   value,
   updateValue,
-  customTheme,
+  paperTheme,
 }) {
   return (
     <Select
@@ -27,7 +27,7 @@ export default function AccountSelect({
       render={({ value, openSelect }) => (
         <PaperTextInput
           style={{ marginBottom: 15 }}
-          theme={customTheme}
+          theme={paperTheme}
           mode="outlined"
           label="Send from"
           value={options[value]}

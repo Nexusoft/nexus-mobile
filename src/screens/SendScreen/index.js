@@ -53,7 +53,7 @@ export default function SendScreen({ route }) {
           options={['default', 'trust']}
           value={account}
           updateValue={setAccount}
-          customTheme={paperTheme}
+          paperTheme={paperTheme}
         />
       </Field>
 
@@ -61,7 +61,7 @@ export default function SendScreen({ route }) {
         <RecipientInput
           recipient={recipient}
           setRecipient={setRecipient}
-          customTheme={paperTheme}
+          paperTheme={paperTheme}
         />
       </Field>
 

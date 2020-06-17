@@ -32,11 +32,11 @@ const InputIconButton = styled(IconButton)({
 export default function RecipientInput({
   recipient,
   setRecipient,
-  customTheme,
+  paperTheme,
 }) {
   return (
     <PaperTextInput
-      theme={customTheme}
+      theme={paperTheme}
       multiline
       mode="outlined"
       label="Send to"
