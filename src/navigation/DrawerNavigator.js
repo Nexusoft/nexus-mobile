@@ -5,9 +5,14 @@ import { useTheme } from 'emotion-theming';
 
 import { getNavTheme } from 'lib/theme';
 
+import { AdaptiveBackground } from 'components/Adaptive';
 import { navContainerRef } from 'lib/navigation';
 import SideMenu from './SideMenu';
 import StackNavigator from './StackNavigator';
+
+const AdaptiveSideMenu = AdaptiveBackground(SideMenu, {
+  presetBgColorName: 'surface',
+});
 
 const Drawer = createDrawerNavigator();
 
@@ -22,7 +27,7 @@ export default function DrawerNavigator({ initialNavigationState }) {
     >
       <Drawer.Navigator
         hideStatusBar={false}
-        drawerContent={(props) => <SideMenu {...props} />}
+        drawerContent={(props) => <AdaptiveSideMenu {...props} />}
         sceneContainerStyle={{
           backgroundColor: theme.dark ? undefined : theme.primary,
         }}

@@ -3,10 +3,10 @@ import { Platform } from 'react-native';
 import styled from '@emotion/native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import {
   View,
-  ScrollView,
   Text,
   Icon,
   Divider,

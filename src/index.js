@@ -9,7 +9,7 @@ import styled from '@emotion/native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
-import { AdaptiveForeground } from 'components/Adaptive';
+import { AdaptiveBackground } from 'components/Adaptive';
 import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
 import { getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
@@ -26,7 +26,7 @@ if (Platform.OS === 'android') {
   }
 }
 
-const Container = styled(AdaptiveForeground(KeyboardAvoidingView))(
+const Container = styled(AdaptiveBackground(KeyboardAvoidingView))(
   ({ theme }) => ({
     flex: 1,
     backgroundColor: theme.background,

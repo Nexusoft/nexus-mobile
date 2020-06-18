@@ -88,7 +88,7 @@ export function AdaptiveBackground(
           ? elevationStyle
           : defaultElevation)
       : '';
-    const backgroundString = bgColorName + elevation;
+    const backgroundString = bgColorName ? bgColorName + elevation : null;
     const child = <Component ref={ref} {...props} />;
     if (backgroundString) {
       return (
