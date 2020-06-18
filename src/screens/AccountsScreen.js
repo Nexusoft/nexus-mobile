@@ -92,25 +92,22 @@ export default function AccountsScreen() {
         ItemSeparatorComponent={Divider}
         keyExtractor={(acc) => acc.address}
         renderItem={({ item: account }) => (
-          <>
-            <TouchableRipple
-              onPress={() => {
-                navigate('AccountDetails', { account });
-              }}
-            >
-              <Account>
-                {account.name ? (
-                  <AccountName bold>{account.name}</AccountName>
-                ) : (
-                  <NoName>No name</NoName>
-                )}
-                <AddressBox>
-                  <Address mono>{segmentAddress(account.address)}</Address>
-                </AddressBox>
-              </Account>
-            </TouchableRipple>
-            <Divider />
-          </>
+          <TouchableRipple
+            onPress={() => {
+              navigate('AccountDetails', { account });
+            }}
+          >
+            <Account>
+              {account.name ? (
+                <AccountName bold>{account.name}</AccountName>
+              ) : (
+                <NoName>No name</NoName>
+              )}
+              <AddressBox>
+                <Address mono>{segmentAddress(account.address)}</Address>
+              </AddressBox>
+            </Account>
+          </TouchableRipple>
         )}
       />
       <AddButton
@@ -132,7 +129,13 @@ export default function AccountsScreen() {
         }}
       >
         <PaperTextInput label="Account name" />
-        <Button mode="contained" style={{ marginTop: 15 }}>
+        <Button
+          mode="contained"
+          style={{ marginTop: 20 }}
+          onPress={() => {
+            setModalOpen(false);
+          }}
+        >
           Create account
         </Button>
       </AddModal>
