@@ -1,13 +1,9 @@
 import React from 'react';
 import { TextInput, Clipboard } from 'react-native';
 import styled from '@emotion/native';
-import {
-  TextInput as PaperTextInput,
-  IconButton,
-  Button,
-} from 'react-native-paper';
+import { IconButton, Button } from 'react-native-paper';
 
-import { Icon, SubIcon } from 'components/Adaptive';
+import { Icon, SubIcon, PaperTextInput } from 'components/Adaptive';
 import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
 import ClearIcon from 'icons/x-circle.svg';
@@ -29,14 +25,9 @@ const InputIconButton = styled(IconButton)({
   borderRadius: 18,
 });
 
-export default function RecipientInput({
-  recipient,
-  setRecipient,
-  paperTheme,
-}) {
+export default function RecipientInput({ recipient, setRecipient }) {
   return (
     <PaperTextInput
-      theme={paperTheme}
       multiline
       mode="outlined"
       label="Send to"

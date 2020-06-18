@@ -1,33 +1,23 @@
 import React from 'react';
 import styled from '@emotion/native';
 import { StyleSheet } from 'react-native';
-import {
-  TextInput as PaperTextInput,
-  TouchableRipple,
-} from 'react-native-paper';
+import { TouchableRipple } from 'react-native-paper';
 
-import { Text } from 'components/Adaptive';
+import { Text, PaperTextInput } from 'components/Adaptive';
 import Select from 'components/Select';
 
 const AccountTextInput = styled(PaperTextInput)({
   marginBottom: 15,
 });
 
-export default function AccountSelect({
-  options,
-  value,
-  updateValue,
-  paperTheme,
-}) {
+export default function AccountSelect({ options, value, updateValue }) {
   return (
     <Select
       options={options}
       value={value}
       updateValue={updateValue}
       render={({ value, openSelect }) => (
-        <PaperTextInput
-          style={{ marginBottom: 15 }}
-          theme={paperTheme}
+        <AccountTextInput
           mode="outlined"
           label="Send from"
           value={options[value]}

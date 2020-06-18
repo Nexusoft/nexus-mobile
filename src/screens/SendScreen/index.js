@@ -1,15 +1,10 @@
 import React from 'react';
 import styled from '@emotion/native';
-import {
-  TextInput as PaperTextInput,
-  Button,
-  TouchableRipple,
-} from 'react-native-paper';
-import { useTheme } from 'emotion-theming';
+import { Button, TouchableRipple } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
-import { getPaperTheme } from 'lib/theme';
+import { PaperTextInput } from 'components/Adaptive';
 import SendIcon from 'icons/send.svg';
 import AccountSelect from './AccountSelect';
 import RecipientInput from './RecipientInput';
@@ -17,10 +12,6 @@ import RecipientInput from './RecipientInput';
 const Wrapper = styled(ScreenBody)({
   paddingVertical: 30,
   paddingHorizontal: 20,
-});
-
-const StyledInput = styled(PaperTextInput)({
-  backgroundColor: 'transparent',
 });
 
 const Field = styled.View({
@@ -44,8 +35,6 @@ export default function SendScreen({ route }) {
     route.params?.accountName || 'default'
   );
   const [recipient, setRecipient] = React.useState('');
-  const theme = useTheme();
-  const paperTheme = getPaperTheme({ ...theme, background: theme.surface });
   return (
     <Wrapper surface>
       <Field>
@@ -53,20 +42,15 @@ export default function SendScreen({ route }) {
           options={['default', 'trust']}
           value={account}
           updateValue={setAccount}
-          paperTheme={paperTheme}
         />
       </Field>
 
       <Field>
-        <RecipientInput
-          recipient={recipient}
-          setRecipient={setRecipient}
-          paperTheme={paperTheme}
-        />
+        <RecipientInput recipient={recipient} setRecipient={setRecipient} />
       </Field>
 
       <Field>
-        <StyledInput
+        <PaperTextInput
           label="Amount (NXS)"
           keyboardType="numeric"
           style={{ marginBottom: 15 }}
@@ -77,7 +61,7 @@ export default function SendScreen({ route }) {
       </Field>
 
       <Field>
-        <StyledInput
+        <PaperTextInput
           label="Reference number (Optional)"
           keyboardType="number-pad"
         />

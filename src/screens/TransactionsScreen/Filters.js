@@ -2,11 +2,10 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/native';
 import { useTheme } from 'emotion-theming';
-import { TouchableRipple, TextInput, Button, shadow } from 'react-native-paper';
+import { TouchableRipple, Button, shadow } from 'react-native-paper';
 
-import { View, Text, SubText } from 'components/Adaptive';
+import { View, Text, SubText, PaperTextInput } from 'components/Adaptive';
 import Select from 'components/Select';
-import { getPaperTheme, primaryTheme } from 'lib/theme';
 import { toggleTransactionsFilter } from 'lib/ui';
 import { fade } from 'utils/color';
 
@@ -82,10 +81,9 @@ const FilterLabel = styled(SubText)({
 
 const FilterValue = styled(Text)();
 
-const inputStyle = (theme) => ({
+const FilterInput = styled(PaperTextInput)({
   marginVertical: 6,
   fontSize: 15,
-  backgroundColor: theme.dark ? undefined : theme.primary,
 });
 
 const ApplyButton = styled(Button)({
@@ -97,7 +95,6 @@ export default function Filters() {
   const [op, setOp] = React.useState('all');
   const [time, setTime] = React.useState('all');
   const theme = useTheme();
-  const paperTheme = theme.dark ? undefined : getPaperTheme(primaryTheme);
 
   return (
     <FiltersWrapper expanded={filterOpen}>
@@ -130,18 +127,8 @@ export default function Filters() {
         />
       </FilterSelects>
 
-      <TextInput
-        dense
-        label="Account/token name"
-        theme={paperTheme}
-        style={inputStyle(theme)}
-      />
-      <TextInput
-        dense
-        label="Account/token address"
-        theme={paperTheme}
-        style={inputStyle(theme)}
-      />
+      <FilterInput dense label="Account/token name" />
+      <FilterInput dense label="Account/token address" />
 
       <ApplyButton
         mode={theme.dark ? 'outlined' : 'contained'}
