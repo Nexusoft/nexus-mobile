@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/native';
 
 import ScreenBody from 'components/ScreenBody';
-import { Surface, SubText } from 'components/Typo';
+import { Surface, SubText } from 'components/Adaptive';
 import ApplicationSettings from './ApplicationSettings';
 import CoreSettings from './CoreSettings';
 

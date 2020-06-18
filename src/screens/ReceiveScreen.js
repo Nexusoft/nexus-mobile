@@ -12,7 +12,7 @@ import {
   SubText,
   DisabledText,
   Icon,
-} from 'components/Typo';
+} from 'components/Adaptive';
 import { showNotification } from 'lib/notifications';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';

@@ -10,7 +10,7 @@ import { shadow, IconButton } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'emotion-theming';
 
-import { BackgroundComponentFactory } from 'components/Typo';
+import { AdaptiveBackground } from 'components/Adaptive';
 import SvgIcon from 'components/SvgIcon';
 import ReceiveScreen from 'screens/ReceiveScreen';
 import SettingsScreen from 'screens/SettingsScreen';
@@ -41,7 +41,7 @@ const flatHeader = (theme) => ({
   ...shadow(0),
 });
 
-const BottomNavHeader = BackgroundComponentFactory(Header);
+const BottomNavHeader = AdaptiveBackground(Header);
 
 const Stack = createStackNavigator();
 

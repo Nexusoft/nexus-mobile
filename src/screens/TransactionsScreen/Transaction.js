@@ -3,7 +3,7 @@ import styled from '@emotion/native';
 import moment from 'moment';
 import { TouchableRipple } from 'react-native-paper';
 
-import { Text, Divider } from 'components/Typo';
+import { Text, Divider } from 'components/Adaptive';
 import { navigate } from 'lib/navigation';
 import Contract from './Contract';
 

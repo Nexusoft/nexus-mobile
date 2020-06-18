@@ -6,7 +6,7 @@ import {
   TouchableRipple,
 } from 'react-native-paper';
 
-import { Text } from 'components/Typo';
+import { Text } from 'components/Adaptive';
 import Select from 'components/Select';
 
 const AccountTextInput = styled(PaperTextInput)({

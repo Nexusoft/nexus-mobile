@@ -4,7 +4,7 @@ import { shadow } from 'react-native-paper';
 import styled from '@emotion/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { Surface, View, SubText } from 'components/Typo';
+import { Surface, View, SubText } from 'components/Adaptive';
 import { navigate } from 'lib/navigation';
 import BalanceSection from './BalanceSection';
 import Account from './Account';

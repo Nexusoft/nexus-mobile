@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native';
 import styled from '@emotion/native';
 
 import ScreenBody from 'components/ScreenBody';
-import { SubText } from 'components/Typo';
+import { SubText } from 'components/Adaptive';
 import TransactionDetails from './TransactionDetails';
 import ContractDetails from './ContractDetails';
 

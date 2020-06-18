@@ -4,7 +4,7 @@ import styled from '@emotion/native';
 import moment from 'moment';
 import { Button } from 'react-native-paper';
 
-import { Surface, Divider } from 'components/Typo';
+import { Surface, Divider } from 'components/Adaptive';
 import SvgIcon from 'components/SvgIcon';
 import InfoField from 'components/InfoField';
 import { showNotification } from 'lib/notifications';

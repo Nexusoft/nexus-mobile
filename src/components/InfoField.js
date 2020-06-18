@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/native';
 
-import { SubText, Text } from 'components/Typo';
+import { SubText, Text } from 'components/Adaptive';
 import { disabledColor } from 'lib/theme';
 
 const Line = styled.View(

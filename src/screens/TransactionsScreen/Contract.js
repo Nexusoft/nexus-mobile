@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/native';
 
-import { Text, SubText } from 'components/Typo';
+import { Text, SubText } from 'components/Adaptive';
 import { getDeltaSign } from 'lib/contracts';
 
 const ContractWrapper = styled.View({

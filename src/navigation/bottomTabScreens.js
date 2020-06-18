@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconButton } from 'react-native-paper';
 
-import { Icon } from 'components/Typo';
+import { Icon } from 'components/Adaptive';
 import SvgIcon from 'components/SvgIcon';
 import { toggleTransactionsFilter } from 'lib/ui';
 import HomeScreen from 'screens/HomeScreen';

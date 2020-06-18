@@ -4,7 +4,7 @@ import styled from '@emotion/native';
 import { useTheme } from 'emotion-theming';
 import { TouchableRipple, TextInput, Button, shadow } from 'react-native-paper';
 
-import { View, Text, SubText } from 'components/Typo';
+import { View, Text, SubText } from 'components/Adaptive';
 import Select from 'components/Select';
 import { getPaperTheme, primaryTheme } from 'lib/theme';
 import { toggleTransactionsFilter } from 'lib/ui';

@@ -10,8 +10,8 @@ import {
   Text,
   Icon,
   Divider,
-  ForegroundComponentFactory,
-} from 'components/Typo';
+  AdaptiveForeground,
+} from 'components/Adaptive';
 import { navigate } from 'lib/navigation';
 import UserIcon from 'icons/user.svg';
 import TokenIcon from 'icons/token.svg';
@@ -35,7 +35,7 @@ const TopArea = styled.View({
   alignItems: 'center',
 });
 
-const BackButton = ForegroundComponentFactory(IconButton, null, true);
+const BackButton = AdaptiveForeground(IconButton, { colorProp: true });
 
 const UserArea = styled.View({
   paddingTop: 25,

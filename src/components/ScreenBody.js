@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { useTheme } from 'emotion-theming';
 
-import { ScrollView } from 'components/Typo';
+import { ScrollView } from 'components/Adaptive';
 
 export default function ScreenBody({
   children,

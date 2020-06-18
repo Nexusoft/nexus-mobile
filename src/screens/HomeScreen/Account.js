@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { Text, Divider } from 'components/Typo';
+import { Text, Divider } from 'components/Adaptive';
 import { navigate } from 'lib/navigation';
 
 const AccountWrapper = styled.View({

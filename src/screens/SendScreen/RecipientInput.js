@@ -7,7 +7,7 @@ import {
   Button,
 } from 'react-native-paper';
 
-import { Icon, SubIcon } from 'components/Typo';
+import { Icon, SubIcon } from 'components/Adaptive';
 import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
 import ClearIcon from 'icons/x-circle.svg';

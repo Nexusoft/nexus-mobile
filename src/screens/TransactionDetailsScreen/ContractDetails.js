@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/native';
 
-import { Surface, Divider } from 'components/Typo';
+import { Surface, Divider } from 'components/Adaptive';
 import InfoField from 'components/InfoField';
 
 const ContractWrapper = styled(Surface)({
