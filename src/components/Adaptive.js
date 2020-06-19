@@ -181,7 +181,7 @@ const adaptTheme = (theme, backgroundString) => {
   }
 };
 
-export function PaperTextInput({ style, ...rest }) {
+export function PaperTextInput({ mode, style, ...rest }) {
   const theme = useTheme();
   const backgroundString = React.useContext(ColorContext);
   const adaptedPaperTheme = getPaperTheme({
@@ -190,8 +190,9 @@ export function PaperTextInput({ style, ...rest }) {
   });
   return (
     <OrigPaperTextInput
+      mode={mode}
       theme={adaptedPaperTheme}
-      style={[{ backgroundColor: 'transparent' }, style]}
+      style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
       {...rest}
     />
   );

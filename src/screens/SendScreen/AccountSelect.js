@@ -16,11 +16,11 @@ export default function AccountSelect({ options, value, updateValue }) {
       options={options}
       value={value}
       updateValue={updateValue}
-      render={({ value, openSelect }) => (
+      render={({ display, openSelect }) => (
         <AccountTextInput
           mode="outlined"
           label="Send from"
-          value={options[value]}
+          value={display}
           editable={false}
           render={({ value, style, ...rest }) => (
             <TouchableRipple onPress={openSelect}>
