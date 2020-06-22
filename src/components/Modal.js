@@ -6,7 +6,6 @@ import { Surface } from 'components/Adaptive';
 
 const ModalWrapper = styled(Surface)({
   marginVertical: 50,
-  // marginHorizontal: 50,
   borderRadius: 2,
 });
 
