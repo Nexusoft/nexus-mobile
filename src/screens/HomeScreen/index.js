@@ -4,7 +4,7 @@ import { shadow } from 'react-native-paper';
 import styled from '@emotion/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { Surface, View, SubText } from 'components/Adaptive';
+import { View, SubText } from 'components/Adaptive';
 import { navigate } from 'lib/navigation';
 import BalanceSection from './BalanceSection';
 import Account from './Account';
@@ -40,13 +40,14 @@ const Container = styled(View)(({ theme }) => ({
   backgroundColor: theme.dark ? theme.background : theme.primary,
 }));
 
-const AccountsPane = styled(Surface)(({ theme }) => ({
+const AccountsPane = styled(View)(({ theme }) => ({
   flex: 1,
   borderTopLeftRadius: 30,
   borderTopRightRadius: 30,
   paddingHorizontal: 40,
-  elevation: theme.dark ? 1 : 8,
-  ...shadow(theme.dark ? 1 : 6),
+  backgroundColor: theme.surface,
+  elevation: 8,
+  ...shadow(8),
 }));
 
 const SubHeader = styled(SubText)({

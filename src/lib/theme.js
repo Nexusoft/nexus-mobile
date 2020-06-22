@@ -3,7 +3,7 @@ import { DefaultTheme, DarkTheme } from 'react-native-paper';
 import { mix, fade, darken } from 'utils/color';
 import memoize from 'utils/memoize';
 
-const darkColor = '#121212';
+const darkColor = '#060606';
 const lightColor = '#ffffff';
 const primaryShades = {
   50: '#e3f3ff',
