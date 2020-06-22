@@ -1,14 +1,9 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 import styled from '@emotion/native';
-import { TouchableRipple, FAB, Button } from 'react-native-paper';
+import { TouchableRipple, FAB } from 'react-native-paper';
 
-import {
-  Divider,
-  Text,
-  DisabledText,
-  PaperTextInput,
-} from 'components/Adaptive';
+import { Divider, Text, DisabledText } from 'components/Adaptive';
 import ScreenBody from 'components/ScreenBody';
 import Modal from 'components/Modal';
 import { navigate } from 'lib/navigation';
@@ -84,7 +79,6 @@ const AddModal = styled(Modal)({
 });
 
 export default function AccountsScreen() {
-  const [modalOpen, setModalOpen] = React.useState(false);
   return (
     <Wrapper scroll={false} surface>
       <FlatList
@@ -113,32 +107,9 @@ export default function AccountsScreen() {
       <AddButton
         icon="plus"
         onPress={() => {
-          setModalOpen(true);
+          navigate('CreateAccount');
         }}
       />
-      <AddModal
-        visible={modalOpen}
-        onDismiss={() => {
-          setModalOpen(false);
-        }}
-        contentContainerStyle={{
-          width: 300,
-          alignSelf: 'center',
-          paddingVertical: 30,
-          paddingHorizontal: 20,
-        }}
-      >
-        <PaperTextInput label="Account name" />
-        <Button
-          mode="contained"
-          style={{ marginTop: 20 }}
-          onPress={() => {
-            setModalOpen(false);
-          }}
-        >
-          Create account
-        </Button>
-      </AddModal>
     </Wrapper>
   );
 }
