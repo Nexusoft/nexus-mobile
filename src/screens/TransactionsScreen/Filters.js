@@ -127,8 +127,18 @@ export default function Filters() {
         />
       </FilterSelects>
 
-      <FilterInput dense label="Account/token name" />
-      <FilterInput dense label="Account/token address" />
+      <FilterInput
+        dense
+        label="Account/token name"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+      <FilterInput
+        dense
+        label="Account/token address"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
 
       <ApplyButton
         mode={theme.dark ? 'outlined' : 'contained'}
