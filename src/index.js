@@ -1,11 +1,6 @@
 import React from 'react';
 import { Provider as ReduxProvider, useSelector } from 'react-redux';
-import {
-  Platform,
-  UIManager,
-  KeyboardAvoidingView,
-  Keyboard,
-} from 'react-native';
+import { Platform, UIManager, KeyboardAvoidingView } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';

@@ -3,7 +3,7 @@ import { Button } from 'react-native-paper';
 
 import { PaperTextInput } from 'components/Adaptive';
 import ScreenBody from 'components/ScreenBody';
-import PinModal from 'components/PinModal';
+import PinDialog from 'components/PinDialog';
 
 export default function () {
   const [confirmingPin, setConfirmingPin] = React.useState(false);
@@ -24,7 +24,7 @@ export default function () {
         Create account
       </Button>
 
-      <PinModal
+      <PinDialog
         visible={confirmingPin}
         dismissModal={() => {
           setConfirmingPin(false);
