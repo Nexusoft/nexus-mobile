@@ -21,7 +21,7 @@ import NamespacesScreen from 'screens/NamespacesScreen';
 import AssetsScreen from 'screens/AssetsScreen';
 import TransactionDetailsScreen from 'screens/TransactionDetailsScreen';
 import AccountDetailsScreen from 'screens/AccountDetailsScreen';
-import CreateAccountScreen from 'screens/CreateAccountScreen';
+import NewAccountScreen from 'screens/NewAccountScreen';
 import { navigate } from 'lib/navigation';
 import MenuIcon from 'icons/menu.svg';
 import SettingsIcon from 'icons/settings.svg';
@@ -179,8 +179,8 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           }}
         />
         <Stack.Screen
-          name="CreateAccount"
-          component={CreateAccountScreen}
+          name="NewAccount"
+          component={NewAccountScreen}
           options={{
             title: 'New account',
           }}

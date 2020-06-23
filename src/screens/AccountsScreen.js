@@ -107,7 +107,7 @@ export default function AccountsScreen() {
       <AddButton
         icon="plus"
         onPress={() => {
-          navigate('CreateAccount');
+          navigate('NewAccount');
         }}
       />
     </Wrapper>
