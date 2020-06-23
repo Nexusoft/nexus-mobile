@@ -35,16 +35,6 @@ export default function PinDialog({ dismissModal, ...rest }) {
           >
             Proceed
           </Button>
-          <Button
-            mode="contained"
-            icon={({ color, size }) => (
-              <SvgIcon icon={LockIcon} color={color} size={size} />
-            )}
-            style={{ marginTop: 30 }}
-            onPress={dismissModal}
-          >
-            Proceed
-          </Button>
         </Dialog.Content>
       </Dialog>
     </Portal>
