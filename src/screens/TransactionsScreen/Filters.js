@@ -104,7 +104,7 @@ export default function Filters() {
           options={opOptions}
           value={op}
           updateValue={setOp}
-          render={({ value, display, openSelect }) => (
+          render={({ display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
               <FilterSelect>
                 <FilterLabel>Operation:</FilterLabel>
@@ -117,7 +117,7 @@ export default function Filters() {
           options={timeOptions}
           value={time}
           updateValue={setTime}
-          render={({ value, display, openSelect }) => (
+          render={({ display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
               <FilterSelect>
                 <FilterLabel>Time:</FilterLabel>

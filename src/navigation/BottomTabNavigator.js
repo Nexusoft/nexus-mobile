@@ -9,11 +9,12 @@ import { defaultScreen, screens } from './bottomTabScreens';
 
 const BottomTab = createBottomTabNavigator();
 
-const renderScreen = ({ name, component, icon }) => (
+const renderScreen = ({ name, component, icon, listeners }) => (
   <BottomTab.Screen
     key={name}
     name={name}
     component={component}
+    listeners={listeners}
     options={{
       title: name,
       tabBarIcon: ({ color }) => (

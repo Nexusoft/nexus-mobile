@@ -3,6 +3,7 @@ import { IconButton } from 'react-native-paper';
 
 import { Icon } from 'components/Adaptive';
 import SvgIcon from 'components/SvgIcon';
+import { getStore } from 'store';
 import { toggleTransactionsFilter } from 'lib/ui';
 import HomeScreen from 'screens/HomeScreen';
 import TransactionsScreen from 'screens/TransactionsScreen';
@@ -43,6 +44,15 @@ export const screens = [
           }}
         />
       ),
+    },
+    listeners: {
+      blur: () => {
+        console.log('blur');
+        const filterOpen = getStore().getState().ui.txFilterOpen;
+        if (filterOpen) {
+          toggleTransactionsFilter();
+        }
+      },
     },
   },
   {
