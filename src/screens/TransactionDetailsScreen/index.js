@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
+import { Platform, SafeAreaView } from 'react-native';
 import styled from '@emotion/native';
 
 import ScreenBody from 'components/ScreenBody';
@@ -36,3 +36,10 @@ export default function TransactionDetailsScreen({ route }) {
     )
   );
 }
+
+TransactionDetailsScreen.nav = {
+  name: 'TransactionDetails',
+  options: {
+    title: Platform.OS === 'ios' ? 'Details' : 'Transaction Details',
+  },
+};

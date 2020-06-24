@@ -15,6 +15,7 @@ import {
 import Divider from 'components/Divider';
 import { showNotification } from 'lib/notifications';
 import segmentAddress from 'utils/segmentAddress';
+import { flatHeader } from 'utils/styles';
 import CopyIcon from 'icons/copy.svg';
 
 const Wrapper = styled(ScrollView)(({ theme }) => ({
@@ -107,3 +108,12 @@ export default function ReceiveScreen({ route }) {
     </Wrapper>
   );
 }
+
+ReceiveScreen.nav = ({ theme }) => ({
+  name: 'Receive',
+  options: ({ route }) => ({
+    headerTitleAlign: 'center',
+    headerTitle: route.params?.account?.name,
+    headerStyle: flatHeader(theme),
+  }),
+});

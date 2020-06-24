@@ -4,8 +4,10 @@ import { shadow } from 'react-native-paper';
 import styled from '@emotion/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { View, SubText } from 'components/Adaptive';
+import { View, SubText, Icon } from 'components/Adaptive';
 import { navigate } from 'lib/navigation';
+import HomeIcon from 'icons/home.svg';
+import LogoIcon from 'icons/logo-full.svg';
 import BalanceSection from './BalanceSection';
 import Account from './Account';
 
@@ -61,7 +63,7 @@ const Accounts = styled(ScrollView)({
   flex: 1,
 });
 
-export default function HomeScreen() {
+export default function OverviewScreen() {
   return (
     <Container>
       <BalanceSection />
@@ -83,3 +85,13 @@ export default function HomeScreen() {
     </Container>
   );
 }
+
+OverviewScreen.nav = {
+  name: 'Overview',
+  icon: HomeIcon,
+  stackOptions: {
+    title: 'Overview',
+    headerTitle: () => <Icon icon={LogoIcon} width={110} height={25} />,
+    headerTitleAlign: 'center',
+  },
+};

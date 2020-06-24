@@ -5,12 +5,11 @@ import {
   Header,
   HeaderBackground,
 } from '@react-navigation/stack';
-import { shadow, IconButton } from 'react-native-paper';
+import { shadow } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'emotion-theming';
 
 import { backgroundProvider } from 'lib/adaptive';
-import SvgIcon from 'components/SvgIcon';
 import ReceiveScreen from 'screens/ReceiveScreen';
 import SettingsScreen from 'screens/SettingsScreen';
 import AccountsScreen from 'screens/AccountsScreen';
@@ -21,23 +20,27 @@ import AssetsScreen from 'screens/AssetsScreen';
 import TransactionDetailsScreen from 'screens/TransactionDetailsScreen';
 import AccountDetailsScreen from 'screens/AccountDetailsScreen';
 import NewAccountScreen from 'screens/NewAccountScreen';
-import { navigate } from 'lib/navigation';
-import MenuIcon from 'icons/menu.svg';
-import SettingsIcon from 'icons/settings.svg';
 import BottomTabNavigator from './BottomTabNavigator';
-import { screens, defaultScreen } from './bottomTabScreens';
-
-const flatHeader = (theme) => ({
-  backgroundColor: theme.dark ? theme.background : theme.primary,
-  elevation: 0,
-  ...shadow(0),
-});
 
 const BottomNavHeader = backgroundProvider()(Header);
 
 const Stack = createStackNavigator();
 
-export default function StackNavigator({ navigation: drawerNavigation }) {
+const screens = [
+  BottomTabNavigator,
+  ReceiveScreen,
+  SettingsScreen,
+  AccountsScreen,
+  TokensScreen,
+  NamesScreen,
+  NamespacesScreen,
+  AssetsScreen,
+  TransactionDetailsScreen,
+  AccountDetailsScreen,
+  NewAccountScreen,
+];
+
+export default function StackNavigator({ navigation }) {
   const theme = useTheme();
   const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
   return (
@@ -82,104 +85,23 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
                   }}
                 />
               ),
-          // headerBackImage: ({ tintColor }) => (
-          //   <IconButton
-          //     icon="arrow-left"
-          //     color={tintColor}
-          //     rippleColor={tintColor}
-          //     size={25}
-          //   />
-          // ),
         }}
       >
-        <Stack.Screen
-          name="BottomNav"
-          component={BottomTabNavigator}
-          options={({ route }) => {
-            const routeName =
-              route.state?.routes[route.state.index]?.name ?? defaultScreen;
-            const screen = screens.find((screen) => screen.name === routeName);
-            const customOptions =
-              typeof screen.stackOptions === 'function'
-                ? screen.stackOptions({ theme })
-                : screen.stackOptions;
+        {screens.map((Screen) => {
+          const { name, options } =
+            typeof Screen.nav === 'function'
+              ? Screen.nav({ theme, navigation, txFilterOpen })
+              : Screen.nav;
 
-            return {
-              headerLeft: ({ tintColor }) => (
-                <IconButton
-                  icon={({ size }) => (
-                    <SvgIcon icon={MenuIcon} size={size} color={tintColor} />
-                  )}
-                  color={tintColor}
-                  size={25}
-                  onPress={() => {
-                    drawerNavigation.openDrawer();
-                  }}
-                />
-              ),
-              headerRight: ({ tintColor }) => (
-                <IconButton
-                  icon={({ size }) => (
-                    <SvgIcon
-                      icon={SettingsIcon}
-                      size={size}
-                      color={tintColor}
-                    />
-                  )}
-                  color={tintColor}
-                  size={25}
-                  onPress={() => {
-                    navigate('Settings');
-                  }}
-                />
-              ),
-              headerStyle:
-                routeName === 'Overview' ||
-                (routeName === 'Transactions' && txFilterOpen)
-                  ? flatHeader(theme)
-                  : undefined,
-              ...customOptions,
-            };
-          }}
-        />
-        <Stack.Screen
-          name="Receive"
-          component={ReceiveScreen}
-          options={({ route }) => ({
-            headerTitleAlign: 'center',
-            headerTitle: route.params?.account?.name,
-            headerStyle: flatHeader(theme),
-            // headerTintColor: theme.foreground,
-            // headerBackTitleVisible: false,
-          })}
-        />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen name="Accounts" component={AccountsScreen} />
-        <Stack.Screen name="Tokens" component={TokensScreen} />
-        <Stack.Screen name="Names" component={NamesScreen} />
-        <Stack.Screen name="Namespaces" component={NamespacesScreen} />
-        <Stack.Screen name="Assets" component={AssetsScreen} />
-        <Stack.Screen
-          name="TransactionDetails"
-          component={TransactionDetailsScreen}
-          options={{
-            title: Platform.OS === 'ios' ? 'Details' : 'Transaction Details',
-          }}
-        />
-        <Stack.Screen
-          name="AccountDetails"
-          component={AccountDetailsScreen}
-          options={{
-            title: Platform.OS === 'ios' ? 'Details' : 'Account Details',
-          }}
-        />
-        <Stack.Screen
-          name="NewAccount"
-          component={NewAccountScreen}
-          options={{
-            title: 'New account',
-          }}
-        />
+          return (
+            <Stack.Screen
+              key={name}
+              name={name}
+              component={Screen}
+              options={options}
+            />
+          );
+        })}
       </Stack.Navigator>
     </KeyboardAvoidingView>
   );

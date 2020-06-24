@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clipboard } from 'react-native';
+import { Platform, Clipboard } from 'react-native';
 import styled from '@emotion/native';
 import moment from 'moment';
 import { Button } from 'react-native-paper';
@@ -155,3 +155,10 @@ export default function AccountDetailsScreen({ route }) {
     </ScreenBody>
   );
 }
+
+AccountDetailsScreen.nav = {
+  name: 'AccountDetails',
+  options: {
+    title: Platform.OS === 'ios' ? 'Details' : 'Account Details',
+  },
+};

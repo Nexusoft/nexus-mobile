@@ -26,7 +26,6 @@ const SendAllButton = styled.Text(({ theme }) => ({
 }));
 
 const SendButton = styled(Button)({
-  alignSelf: 'flex-end',
   marginTop: 50,
 });
 
@@ -83,3 +82,12 @@ export default function SendScreen({ route }) {
     </Wrapper>
   );
 }
+
+SendScreen.nav = {
+  name: 'Send',
+  icon: SendIcon,
+  stackOptions: {
+    title: 'Send',
+    headerTitleAlign: 'left',
+  },
+};

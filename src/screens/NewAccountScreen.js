@@ -5,7 +5,7 @@ import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
 import PinDialog from 'components/PinDialog';
 
-export default function () {
+export default function NewAccountScreen() {
   const [confirmingPin, setConfirmingPin] = React.useState(false);
   return (
     <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
@@ -29,3 +29,10 @@ export default function () {
     </ScreenBody>
   );
 }
+
+NewAccountScreen.nav = {
+  name: 'NewAccount',
+  options: {
+    title: 'New account',
+  },
+};

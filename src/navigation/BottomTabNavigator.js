@@ -1,29 +1,21 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { shadow, TouchableRipple } from 'react-native-paper';
+import { shadow, TouchableRipple, IconButton } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
+import OverviewScreen from 'screens/OverviewScreen';
+import TransactionsScreen from 'screens/TransactionsScreen';
+import SendScreen from 'screens/SendScreen';
 import SvgIcon from 'components/SvgIcon';
+import { navigate } from 'lib/navigation';
 import { fade } from 'utils/color';
-import { defaultScreen, screens } from './bottomTabScreens';
+import { flatHeader } from 'utils/styles';
+import MenuIcon from 'icons/menu.svg';
+import SettingsIcon from 'icons/settings.svg';
 
 const BottomTab = createBottomTabNavigator();
-
-const renderScreen = ({ name, component, icon, listeners }) => (
-  <BottomTab.Screen
-    key={name}
-    name={name}
-    component={component}
-    listeners={listeners}
-    options={{
-      title: name,
-      tabBarIcon: ({ color }) => (
-        <SvgIcon icon={icon} size={24} color={color} />
-      ),
-      tabBarLabel: name,
-    }}
-  />
-);
+const defaultScreen = 'Overview';
+const screens = [OverviewScreen, TransactionsScreen, SendScreen];
 
 export default function BottomTabNavigator() {
   const theme = useTheme();
@@ -44,7 +36,75 @@ export default function BottomTabNavigator() {
         },
       }}
     >
-      {screens.map((screen) => renderScreen(screen))}
+      {screens.map((Screen) => {
+        const {
+          nav: { name, icon, listeners },
+        } = Screen;
+        return (
+          <BottomTab.Screen
+            key={name}
+            name={name}
+            component={Screen}
+            listeners={listeners}
+            options={{
+              title: name,
+              tabBarIcon: ({ color }) => (
+                <SvgIcon icon={icon} size={24} color={color} />
+              ),
+              tabBarLabel: name,
+            }}
+          />
+        );
+      })}
     </BottomTab.Navigator>
   );
 }
+
+BottomTabNavigator.nav = ({ theme, navigation, txFilterOpen }) => ({
+  name: 'BottomNav',
+  options: ({ route }) => {
+    const routeName =
+      route.state?.routes[route.state.index]?.name ?? defaultScreen;
+    const { stackOptions } =
+      screens
+        .map((Screen) =>
+          typeof Screen.nav === 'function'
+            ? Screen.nav({ theme, navigation, txFilterOpen })
+            : Screen.nav
+        )
+        .find((nav) => nav.name === routeName) || {};
+
+    return {
+      headerLeft: ({ tintColor }) => (
+        <IconButton
+          icon={({ size }) => (
+            <SvgIcon icon={MenuIcon} size={size} color={tintColor} />
+          )}
+          color={tintColor}
+          size={25}
+          onPress={() => {
+            navigation.openDrawer();
+          }}
+        />
+      ),
+      headerRight: ({ tintColor }) => (
+        <IconButton
+          icon={({ size }) => (
+            <SvgIcon icon={SettingsIcon} size={size} color={tintColor} />
+          )}
+          color={tintColor}
+          size={25}
+          onPress={() => {
+            navigate('Settings');
+          }}
+        />
+      ),
+      headerStyle:
+        routeName === 'Overview' ||
+        (routeName === 'Transactions' && txFilterOpen)
+          ? flatHeader(theme)
+          : undefined,
+      ...stackOptions,
+    };
+  },
+});

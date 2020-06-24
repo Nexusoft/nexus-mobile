@@ -36,3 +36,7 @@ export default function SettingsScreen() {
     </Wrapper>
   );
 }
+
+SettingsScreen.nav = {
+  name: 'Settings',
+};

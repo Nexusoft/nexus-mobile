@@ -108,3 +108,7 @@ export default function AccountsScreen() {
     </Wrapper>
   );
 }
+
+AccountsScreen.nav = {
+  name: 'Accounts',
+};
