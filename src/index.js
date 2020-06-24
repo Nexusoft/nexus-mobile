@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider as ReduxProvider, useSelector } from 'react-redux';
-import { Platform, UIManager, KeyboardAvoidingView } from 'react-native';
+import { Platform, UIManager } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import styled from '@emotion/native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
-import { AdaptiveBackground } from 'components/Adaptive';
+import { View } from 'components/Adaptive';
 import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
 import { getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
@@ -26,16 +26,10 @@ if (Platform.OS === 'android') {
   }
 }
 
-const KeyboardAvoidingContainer = styled(
-  AdaptiveBackground(KeyboardAvoidingView)
-)(({ theme }) => ({
+const Container = styled(View)(({ theme }) => ({
   flex: 1,
   backgroundColor: theme.background,
 }));
-
-const Container = styled.View({
-  flex: 1,
-});
 
 function PaperContainer({ children }) {
   const theme = useTheme();
@@ -95,18 +89,14 @@ export default function Root(props) {
     return (
       <ReduxProvider store={store}>
         <ThemeController>
-          <KeyboardAvoidingContainer
-            behavior={Platform.OS === 'android' ? undefined : 'padding'}
-          >
-            <Container>
-              <PaperContainer>
-                <DrawerNavigator
-                  initialNavigationState={initialNavigationState}
-                />
-                <Notifications />
-              </PaperContainer>
-            </Container>
-          </KeyboardAvoidingContainer>
+          <Container>
+            <PaperContainer>
+              <DrawerNavigator
+                initialNavigationState={initialNavigationState}
+              />
+              <Notifications />
+            </PaperContainer>
+          </Container>
         </ThemeController>
       </ReduxProvider>
     );

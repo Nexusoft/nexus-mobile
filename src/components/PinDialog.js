@@ -1,16 +1,17 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { Button, Dialog, Portal } from 'react-native-paper';
+import { Button, Dialog } from 'react-native-paper';
 
 import SvgIcon from 'components/SvgIcon';
 import { PaperTextInput } from 'components/Adaptive';
+import Portal from 'components/Portal';
 import LockIcon from 'icons/lock.svg';
 
-export default function PinDialog({ dismissModal, ...rest }) {
+export default function PinDialog({ onDismiss, ...rest }) {
   const [pin, setPin] = React.useState('');
   return (
     <Portal>
-      <Dialog onDismiss={dismissModal} keyboardAware {...rest}>
+      <Dialog onDismiss={onDismiss} keyboardAware {...rest}>
         <Dialog.Content>
           <PaperTextInput
             label="Confirm your PIN"
@@ -31,7 +32,7 @@ export default function PinDialog({ dismissModal, ...rest }) {
               <SvgIcon icon={LockIcon} color={color} size={size} />
             )}
             style={{ marginTop: 30 }}
-            onPress={dismissModal}
+            onPress={onDismiss}
           >
             Proceed
           </Button>

@@ -26,7 +26,7 @@ export default function () {
 
       <PinDialog
         visible={confirmingPin}
-        dismissModal={() => {
+        onDismiss={() => {
           setConfirmingPin(false);
         }}
       />

@@ -5,7 +5,6 @@ import { TouchableRipple, FAB } from 'react-native-paper';
 
 import { Divider, Text, DisabledText } from 'components/Adaptive';
 import ScreenBody from 'components/ScreenBody';
-import Modal from 'components/Modal';
 import { navigate } from 'lib/navigation';
 import { disabledColor } from 'lib/theme';
 import segmentAddress from 'utils/segmentAddress';
@@ -71,11 +70,6 @@ const AddButton = styled(FAB)({
   position: 'absolute',
   right: 30,
   bottom: 30,
-});
-
-const AddModal = styled(Modal)({
-  paddingVertical: 30,
-  paddingHorizontal: 20,
 });
 
 export default function AccountsScreen() {

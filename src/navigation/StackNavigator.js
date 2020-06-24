@@ -1,6 +1,5 @@
 import React from 'react';
-import styled from '@emotion/native';
-import { StatusBar, Platform } from 'react-native';
+import { StatusBar, Platform, KeyboardAvoidingView } from 'react-native';
 import {
   createStackNavigator,
   Header,
@@ -25,15 +24,8 @@ import NewAccountScreen from 'screens/NewAccountScreen';
 import { navigate } from 'lib/navigation';
 import MenuIcon from 'icons/menu.svg';
 import SettingsIcon from 'icons/settings.svg';
-import LogoIcon from 'icons/logo-full.svg';
 import BottomTabNavigator from './BottomTabNavigator';
 import { screens, defaultScreen } from './bottomTabScreens';
-
-const Logo = styled(LogoIcon)(({ theme }) => ({
-  color: theme.dark ? theme.primary : theme.onPrimary,
-  height: 25,
-  width: 110,
-}));
 
 const flatHeader = (theme) => ({
   backgroundColor: theme.dark ? theme.background : theme.primary,
@@ -49,7 +41,10 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
   const theme = useTheme();
   const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
   return (
-    <>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={{ flex: 1 }}
+    >
       <StatusBar
         barStyle="light-content"
         backgroundColor={theme.dark ? '#000' : theme.primaryVariant}
@@ -186,6 +181,6 @@ export default function StackNavigator({ navigation: drawerNavigation }) {
           }}
         />
       </Stack.Navigator>
-    </>
+    </KeyboardAvoidingView>
   );
 }

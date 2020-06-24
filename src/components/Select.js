@@ -1,9 +1,10 @@
 import React from 'react';
-import { RadioButton, Portal, Dialog } from 'react-native-paper';
+import { RadioButton, Dialog } from 'react-native-paper';
 import styled from '@emotion/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'emotion-theming';
 
+import Portal from 'components/Portal';
 import memoize from 'utils/memoize';
 
 // Converts different kinds of options into an array of `{value, display}` objects
@@ -37,25 +38,27 @@ function SelectOptions({ open, setOpen, value, updateValue, options }) {
           setOpen(false);
         }}
       >
-        <ScrollView>
-          <RadioButton.Group
-            value={value}
-            onValueChange={(value) => {
-              updateValue(value);
-              setOpen(false);
-            }}
-          >
-            {normalizeOptions(options).map(({ value, display }) => (
-              <RadioButton.Item
-                key={value}
-                value={value}
-                color={theme.primary}
-                uncheckedColor={theme.foreground}
-                label={display}
-              />
-            ))}
-          </RadioButton.Group>
-        </ScrollView>
+        <Dialog.Content>
+          <ScrollView>
+            <RadioButton.Group
+              value={value}
+              onValueChange={(value) => {
+                updateValue(value);
+                setOpen(false);
+              }}
+            >
+              {normalizeOptions(options).map(({ value, display }) => (
+                <RadioButton.Item
+                  key={value}
+                  value={value}
+                  color={theme.primary}
+                  uncheckedColor={theme.foreground}
+                  label={display}
+                />
+              ))}
+            </RadioButton.Group>
+          </ScrollView>
+        </Dialog.Content>
       </SelectDialog>
     </Portal>
   );
