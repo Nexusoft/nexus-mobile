@@ -7,7 +7,8 @@ import {
 import { TextInput as PaperTextInput } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
-import { Icon, SubIcon } from 'components/Adaptive';
+import { Icon, SubIcon, useAdaptedPaperTheme } from 'components/Adaptive';
+
 import VisibleIcon from 'icons/visible.svg';
 import InvisibleIcon from 'icons/invisible.svg';
 import ClearIcon from 'icons/x-circle.svg';
@@ -74,3 +75,17 @@ export default function TextBox({ mode, secure, clearButton = true, ...rest }) {
     />
   );
 }
+
+function AdaptiveTextBox({ mode, style, ...rest }) {
+  const adaptedPaperTheme = useAdaptedPaperTheme();
+  return (
+    <TextBox
+      mode={mode}
+      theme={adaptedPaperTheme}
+      style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
+      {...rest}
+    />
+  );
+}
+
+TextBox.Adaptive = AdaptiveTextBox;

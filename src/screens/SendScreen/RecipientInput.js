@@ -3,7 +3,8 @@ import { TextInput, Clipboard } from 'react-native';
 import styled from '@emotion/native';
 import { IconButton } from 'react-native-paper';
 
-import { Icon, SubIcon, TextBox } from 'components/Adaptive';
+import { Icon, SubIcon } from 'components/Adaptive';
+import TextBox from 'components/TextBox';
 import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
 import ClearIcon from 'icons/x-circle.svg';
@@ -27,7 +28,7 @@ const InputIconButton = styled(IconButton)({
 
 export default function RecipientInput({ recipient, setRecipient }) {
   return (
-    <TextBox
+    <TextBox.Adaptive
       multiline
       mode="outlined"
       label="Send to"

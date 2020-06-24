@@ -8,7 +8,6 @@ import { subColor, disabledColor, getPaperTheme } from 'lib/theme';
 import ColorContext from 'lib/ColorContext';
 import SvgIcon from 'components/SvgIcon';
 import { default as MyText } from 'components/Text';
-import { default as OrigTextBox } from 'components/TextBox';
 import PlainDivider from 'components/Divider';
 
 const backgroundStringRegex = /^(\w+)(\^(\d))?$/;
@@ -67,6 +66,46 @@ function resolveColor(colorName, modifier, theme) {
       return color;
   }
 }
+
+function restoreBackgroundColor({ bgColorName, elevation }, theme) {
+  const bgColor = theme[bgColorName];
+  return elevation ? overlay(elevation, bgColor) : bgColor;
+}
+
+function adaptTheme(theme, backgroundString) {
+  const { bgColorName, elevation } =
+    resolveBackgroundString(backgroundString) || {};
+  const bgColor = restoreBackgroundColor({ bgColorName, elevation }, theme);
+  switch (bgColorName) {
+    case 'surface':
+      return { background: bgColor };
+    case 'primary':
+    case 'primaryVariant':
+      return {
+        background: bgColor,
+        foreground: theme.onPrimary,
+        primary: theme.onPrimary,
+      };
+    case 'danger':
+      return {
+        background: bgColor,
+        foreground: theme.onDanger,
+        primary: theme.onDanger,
+      };
+    default:
+      return {};
+  }
+}
+
+export const useAdaptedPaperTheme = () => {
+  const theme = useTheme();
+  const backgroundString = React.useContext(ColorContext);
+  const adaptedPaperTheme = getPaperTheme({
+    ...theme,
+    ...adaptTheme(theme, backgroundString),
+  });
+  return adaptedPaperTheme;
+};
 
 export function AdaptiveBackground(
   Component,
@@ -147,50 +186,3 @@ export const DisabledIcon = AdaptiveForeground(SvgIcon, {
 });
 
 export const Divider = AdaptiveForeground(PlainDivider);
-
-function restoreBackgroundColor({ bgColorName, elevation }, theme) {
-  const bgColor = theme[bgColorName];
-  return elevation ? overlay(elevation, bgColor) : bgColor;
-}
-
-const adaptTheme = (theme, backgroundString) => {
-  const { bgColorName, elevation } =
-    resolveBackgroundString(backgroundString) || {};
-  const bgColor = restoreBackgroundColor({ bgColorName, elevation }, theme);
-  switch (bgColorName) {
-    case 'surface':
-      return { background: bgColor };
-    case 'primary':
-    case 'primaryVariant':
-      return {
-        background: bgColor,
-        foreground: theme.onPrimary,
-        primary: theme.onPrimary,
-      };
-    case 'danger':
-      return {
-        background: bgColor,
-        foreground: theme.onDanger,
-        primary: theme.onDanger,
-      };
-    default:
-      return {};
-  }
-};
-
-export function TextBox({ mode, style, ...rest }) {
-  const theme = useTheme();
-  const backgroundString = React.useContext(ColorContext);
-  const adaptedPaperTheme = getPaperTheme({
-    ...theme,
-    ...adaptTheme(theme, backgroundString),
-  });
-  return (
-    <OrigTextBox
-      mode={mode}
-      theme={adaptedPaperTheme}
-      style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
-      {...rest}
-    />
-  );
-}

@@ -4,11 +4,11 @@ import { Platform } from 'react-native';
 import { Button, Dialog } from 'react-native-paper';
 
 import SvgIcon from 'components/SvgIcon';
-import { TextBox } from 'components/Adaptive';
+import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
 import LockIcon from 'icons/lock.svg';
 
-const PinTextBox = styled(TextBox)({
+const PinTextBox = styled(TextBox.Adaptive)({
   fontSize: 18,
 });
 

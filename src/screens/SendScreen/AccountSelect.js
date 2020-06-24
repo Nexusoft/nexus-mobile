@@ -3,10 +3,11 @@ import styled from '@emotion/native';
 import { StyleSheet } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { Text, TextBox } from 'components/Adaptive';
+import { Text } from 'components/Adaptive';
+import TextBox from 'components/TextBox';
 import Select from 'components/Select';
 
-const AccountTextBox = styled(TextBox)({
+const AccountTextBox = styled(TextBox.Adaptive)({
   marginBottom: 15,
 });
 

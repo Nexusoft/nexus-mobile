@@ -4,7 +4,8 @@ import styled from '@emotion/native';
 import { useTheme } from 'emotion-theming';
 import { TouchableRipple, Button, shadow } from 'react-native-paper';
 
-import { View, Text, SubText, TextBox } from 'components/Adaptive';
+import { View, Text, SubText } from 'components/Adaptive';
+import TextBox from 'components/TextBox';
 import Select from 'components/Select';
 import { toggleTransactionsFilter } from 'lib/ui';
 import { fade } from 'utils/color';
@@ -81,7 +82,7 @@ const FilterLabel = styled(SubText)({
 
 const FilterValue = styled(Text)();
 
-const FilterInput = styled(TextBox)({
+const FilterInput = styled(TextBox.Adaptive)({
   marginVertical: 6,
   fontSize: 15,
 });
