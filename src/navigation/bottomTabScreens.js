@@ -47,7 +47,6 @@ export const screens = [
     },
     listeners: {
       blur: () => {
-        console.log('blur');
         const filterOpen = getStore().getState().ui.txFilterOpen;
         if (filterOpen) {
           toggleTransactionsFilter();

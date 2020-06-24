@@ -5,14 +5,14 @@ import { useTheme } from 'emotion-theming';
 
 import { getNavTheme } from 'lib/theme';
 
-import { AdaptiveBackground } from 'components/Adaptive';
+import { backgroundProvider } from 'components/Adaptive';
 import { navContainerRef } from 'lib/navigation';
 import SideMenu from './SideMenu';
 import StackNavigator from './StackNavigator';
 
-const AdaptiveSideMenu = AdaptiveBackground(SideMenu, {
+const AdaptiveSideMenu = backgroundProvider({
   presetBgColorName: 'surface',
-});
+})(SideMenu);
 
 const Drawer = createDrawerNavigator();
 

@@ -5,13 +5,7 @@ import { IconButton, TouchableRipple } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import {
-  View,
-  Text,
-  Icon,
-  Divider,
-  AdaptiveForeground,
-} from 'components/Adaptive';
+import { View, Text, Icon, Divider, adaptive } from 'components/Adaptive';
 import { navigate } from 'lib/navigation';
 import UserIcon from 'icons/user.svg';
 import TokenIcon from 'icons/token.svg';
@@ -35,7 +29,7 @@ const TopArea = styled.View({
   alignItems: 'center',
 });
 
-const BackButton = AdaptiveForeground(IconButton, { colorProp: true });
+const BackButton = adaptive({ colorProp: true })(IconButton);
 
 const UserArea = styled.View({
   paddingTop: 25,

@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
 
-import { Text, SubText, AdaptiveForeground } from 'components/Adaptive';
+import { Text, SubText, adaptive } from 'components/Adaptive';
 
 const Wrapper = styled(TouchableRipple)({
   minHeight: '30%',
@@ -33,7 +33,7 @@ const Value = styled(SubText)({
 });
 
 const ExpandIcon = styled(
-  AdaptiveForeground(Ionicons, { modifier: 'sub', colorProp: true })
+  adaptive({ modifier: 'sub', colorProp: true })(Ionicons)
 )({
   position: 'absolute',
   top: 4,
