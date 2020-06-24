@@ -4,7 +4,8 @@ import styled from '@emotion/native';
 import moment from 'moment';
 import { Button } from 'react-native-paper';
 
-import { Surface, Divider, DisabledText } from 'components/Adaptive';
+import { Surface, DisabledText } from 'components/Adaptive';
+import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import InfoField from 'components/InfoField';

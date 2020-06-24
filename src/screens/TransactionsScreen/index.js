@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList } from 'react-native';
 
 import ScreenBody from 'components/ScreenBody';
-import { Divider } from 'components/Adaptive';
+import Divider from 'components/Divider';
 import Filters from './Filters';
 import Transaction from './Transaction';
 import transactions from './transactions';

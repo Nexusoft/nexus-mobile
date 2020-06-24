@@ -7,12 +7,12 @@ import QRCode from 'react-native-qrcode-svg';
 
 import {
   Surface,
-  Divider,
   Text,
   SubText,
   DisabledText,
   Icon,
 } from 'components/Adaptive';
+import Divider from 'components/Divider';
 import { showNotification } from 'lib/notifications';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';

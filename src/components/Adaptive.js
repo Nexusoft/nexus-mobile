@@ -7,7 +7,6 @@ import { useTheme } from 'emotion-theming';
 import { subColor, disabledColor, getPaperTheme } from 'lib/theme';
 import SvgIcon from 'components/SvgIcon';
 import { default as MyText } from 'components/Text';
-import PlainDivider from 'components/Divider';
 
 const ColorContext = React.createContext('foreground');
 
@@ -188,5 +187,3 @@ export const DisabledIcon = adaptive({
   modifier: 'disabled',
   colorProp: true,
 })(SvgIcon);
-
-export const Divider = adaptive()(PlainDivider);

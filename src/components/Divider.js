@@ -1,7 +1,9 @@
 import styled from '@emotion/native';
+
+import { adaptive } from 'components/Adaptive';
 import { fade } from 'utils/color';
 
-export default styled.View(
+const Divider = styled.View(
   ({ theme, color }) => ({
     backgroundColor: fade(color || theme.foreground, 0.85),
   }),
@@ -22,3 +24,7 @@ export default styled.View(
       marginBottom: Array.isArray(spacing) ? spacing[1] : spacing,
     }
 );
+
+Divider.Adaptive = adaptive()(Divider);
+
+export default Divider;

@@ -3,7 +3,8 @@ import { FlatList } from 'react-native';
 import styled from '@emotion/native';
 import { TouchableRipple, FAB } from 'react-native-paper';
 
-import { Divider, Text, DisabledText } from 'components/Adaptive';
+import { Text, DisabledText } from 'components/Adaptive';
+import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
 import { navigate } from 'lib/navigation';
 import { disabledColor } from 'lib/theme';
