@@ -5,7 +5,7 @@ import { useTheme } from 'emotion-theming';
 
 import { getNavTheme } from 'lib/theme';
 
-import { backgroundProvider } from 'components/Adaptive';
+import { backgroundProvider } from 'lib/adaptive';
 import { navContainerRef } from 'lib/navigation';
 import SideMenu from './SideMenu';
 import StackNavigator from './StackNavigator';

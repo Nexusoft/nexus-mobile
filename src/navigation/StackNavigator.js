@@ -9,7 +9,7 @@ import { shadow, IconButton } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'emotion-theming';
 
-import { backgroundProvider } from 'components/Adaptive';
+import { backgroundProvider } from 'lib/adaptive';
 import SvgIcon from 'components/SvgIcon';
 import ReceiveScreen from 'screens/ReceiveScreen';
 import SettingsScreen from 'screens/SettingsScreen';

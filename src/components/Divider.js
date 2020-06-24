@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
 
-import { adaptive } from 'components/Adaptive';
+import { adaptive } from 'lib/adaptive';
 import { fade } from 'utils/color';
 
 const Divider = styled.View(

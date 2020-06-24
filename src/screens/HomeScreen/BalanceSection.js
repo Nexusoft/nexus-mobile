@@ -4,7 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
 
-import { Text, SubText, adaptive } from 'components/Adaptive';
+import { Text, SubText } from 'components/Adaptive';
+import { adaptive } from 'lib/adaptive';
 
 const Wrapper = styled(TouchableRipple)({
   minHeight: '30%',

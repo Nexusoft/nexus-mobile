@@ -5,8 +5,9 @@ import { IconButton, TouchableRipple } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { View, Text, Icon, adaptive } from 'components/Adaptive';
+import { View, Text, Icon } from 'components/Adaptive';
 import Divider from 'components/Divider';
+import { adaptive } from 'lib/adaptive';
 import { navigate } from 'lib/navigation';
 import UserIcon from 'icons/user.svg';
 import TokenIcon from 'icons/token.svg';
