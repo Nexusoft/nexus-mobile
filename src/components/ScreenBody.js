@@ -25,6 +25,7 @@ export default function ScreenBody({
           { flex: 1 },
           surface ? { backgroundColor: theme.surface } : null,
         ]}
+        keyboardShouldPersistTaps={scroll ? 'handled' : undefined}
       >
         <SafeAreaView style={{ flex: 1 }}>
           <View style={[{ flex: 1 }, style]} {...rest}>
