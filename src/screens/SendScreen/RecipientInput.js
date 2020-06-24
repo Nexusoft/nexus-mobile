@@ -36,7 +36,7 @@ export default function RecipientInput({ recipient, setRecipient }) {
       onChangeText={setRecipient}
       render={(props) => (
         <RecipientWrapper>
-          <RecipientTextInput clearButtonMode="while-editing" {...props} />
+          <RecipientTextInput {...props} />
           {props.value ? (
             <InputIconButton
               icon={({ size }) => <SubIcon icon={ClearIcon} size={size} />}
