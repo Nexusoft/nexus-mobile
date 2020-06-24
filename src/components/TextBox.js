@@ -3,7 +3,6 @@ import styled from '@emotion/native';
 import {
   TextInput as NativeTextInput,
   TouchableWithoutFeedback,
-  View,
 } from 'react-native';
 import { TextInput as PaperTextInput } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
@@ -23,17 +22,18 @@ const TextInput = styled(NativeTextInput)({
   flex: 1,
 });
 
-const InputIconWrapper = styled.View({
-  paddingTop: 24,
-  paddingBottom: 4,
+const InputIconWrapper = styled.View(({ mode }) => ({
+  paddingTop: mode === 'outlined' ? 8 : 24,
+  paddingBottom: mode === 'outlined' ? 8 : 4,
   paddingHorizontal: 8,
-});
+}));
 
-export default function TextBox({ secure, clearButton = true, ...rest }) {
+export default function TextBox({ mode, secure, clearButton = true, ...rest }) {
   const theme = useTheme();
   const [visible, setVisible] = React.useState(false);
   return (
     <PaperTextInput
+      mode={mode}
       autoCorrect={false}
       autoCapitalize="none"
       keyboardAppearance={theme.dark ? 'dark' : 'light'}
@@ -52,7 +52,7 @@ export default function TextBox({ secure, clearButton = true, ...rest }) {
                 setVisible(false);
               }}
             >
-              <InputIconWrapper>
+              <InputIconWrapper mode={mode}>
                 <Icon icon={visible ? VisibleIcon : InvisibleIcon} size={16} />
               </InputIconWrapper>
             </TouchableWithoutFeedback>
@@ -63,7 +63,7 @@ export default function TextBox({ secure, clearButton = true, ...rest }) {
                 onChangeText && onChangeText('');
               }}
             >
-              <InputIconWrapper>
+              <InputIconWrapper mode={mode}>
                 <SubIcon icon={ClearIcon} size={16} />
               </InputIconWrapper>
             </TouchableWithoutFeedback>
