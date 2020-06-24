@@ -4,7 +4,7 @@ import { Button, TouchableRipple } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
-import { PaperTextInput } from 'components/Adaptive';
+import { TextBox } from 'components/Adaptive';
 import SendIcon from 'icons/send.svg';
 import AccountSelect from './AccountSelect';
 import RecipientInput from './RecipientInput';
@@ -50,7 +50,7 @@ export default function SendScreen({ route }) {
       </Field>
 
       <Field>
-        <PaperTextInput
+        <TextBox
           label="Amount (NXS)"
           keyboardType="numeric"
           style={{ marginBottom: 15 }}
@@ -61,7 +61,7 @@ export default function SendScreen({ route }) {
       </Field>
 
       <Field>
-        <PaperTextInput
+        <TextBox
           label="Reference number (Optional)"
           keyboardType="number-pad"
         />

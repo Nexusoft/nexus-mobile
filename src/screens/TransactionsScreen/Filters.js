@@ -4,7 +4,7 @@ import styled from '@emotion/native';
 import { useTheme } from 'emotion-theming';
 import { TouchableRipple, Button, shadow } from 'react-native-paper';
 
-import { View, Text, SubText, PaperTextInput } from 'components/Adaptive';
+import { View, Text, SubText, TextBox } from 'components/Adaptive';
 import Select from 'components/Select';
 import { toggleTransactionsFilter } from 'lib/ui';
 import { fade } from 'utils/color';
@@ -81,7 +81,7 @@ const FilterLabel = styled(SubText)({
 
 const FilterValue = styled(Text)();
 
-const FilterInput = styled(PaperTextInput)({
+const FilterInput = styled(TextBox)({
   marginVertical: 6,
   fontSize: 15,
 });
@@ -127,18 +127,8 @@ export default function Filters() {
         />
       </FilterSelects>
 
-      <FilterInput
-        dense
-        label="Account/token name"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
-      <FilterInput
-        dense
-        label="Account/token address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
+      <FilterInput dense label="Account/token name" />
+      <FilterInput dense label="Account/token address" />
 
       <ApplyButton
         mode={theme.dark ? 'outlined' : 'contained'}

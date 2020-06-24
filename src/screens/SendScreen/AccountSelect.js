@@ -3,10 +3,10 @@ import styled from '@emotion/native';
 import { StyleSheet } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { Text, PaperTextInput } from 'components/Adaptive';
+import { Text, TextBox } from 'components/Adaptive';
 import Select from 'components/Select';
 
-const AccountTextInput = styled(PaperTextInput)({
+const AccountTextBox = styled(TextBox)({
   marginBottom: 15,
 });
 
@@ -17,7 +17,7 @@ export default function AccountSelect({ options, value, updateValue }) {
       value={value}
       updateValue={updateValue}
       render={({ display, openSelect }) => (
-        <AccountTextInput
+        <AccountTextBox
           mode="outlined"
           label="Send from"
           value={display}

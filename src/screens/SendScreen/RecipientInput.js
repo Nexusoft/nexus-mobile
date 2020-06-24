@@ -1,9 +1,9 @@
 import React from 'react';
 import { TextInput, Clipboard } from 'react-native';
 import styled from '@emotion/native';
-import { IconButton, Button } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 
-import { Icon, SubIcon, PaperTextInput } from 'components/Adaptive';
+import { Icon, SubIcon, TextBox } from 'components/Adaptive';
 import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
 import ClearIcon from 'icons/x-circle.svg';
@@ -27,7 +27,7 @@ const InputIconButton = styled(IconButton)({
 
 export default function RecipientInput({ recipient, setRecipient }) {
   return (
-    <PaperTextInput
+    <TextBox
       multiline
       mode="outlined"
       label="Send to"
@@ -36,12 +36,7 @@ export default function RecipientInput({ recipient, setRecipient }) {
       onChangeText={setRecipient}
       render={(props) => (
         <RecipientWrapper>
-          <RecipientTextInput
-            autoCapitalize="none"
-            autoCorrect={false}
-            clearButtonMode="while-editing"
-            {...props}
-          />
+          <RecipientTextInput clearButtonMode="while-editing" {...props} />
           {props.value ? (
             <InputIconButton
               icon={({ size }) => <SubIcon icon={ClearIcon} size={size} />}

@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { Button, Dialog } from 'react-native-paper';
 
 import SvgIcon from 'components/SvgIcon';
-import { PaperTextInput } from 'components/Adaptive';
+import { TextBox } from 'components/Adaptive';
 import Portal from 'components/Portal';
 import LockIcon from 'icons/lock.svg';
 
@@ -13,12 +13,11 @@ export default function PinDialog({ onDismiss, ...rest }) {
     <Portal>
       <Dialog onDismiss={onDismiss} keyboardAware {...rest}>
         <Dialog.Content>
-          <PaperTextInput
+          <TextBox
             label="Confirm your PIN"
             value={pin}
             onChangeText={setPin}
-            autoCorrect={false}
-            autoCapitalize="none"
+            autoFocus
             secureTextEntry={true}
             keyboardType={
               Platform.OS === 'android'

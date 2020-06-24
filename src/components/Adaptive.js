@@ -1,17 +1,14 @@
 import React from 'react';
 import { View as NativeView, StyleSheet } from 'react-native';
 import { ScrollView as NativeScrollView } from 'react-native-gesture-handler';
-import {
-  Surface as PaperSurface,
-  TextInput as OrigPaperTextInput,
-  overlay,
-} from 'react-native-paper';
+import { Surface as PaperSurface, overlay } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
 import { subColor, disabledColor, getPaperTheme } from 'lib/theme';
 import ColorContext from 'lib/ColorContext';
 import SvgIcon from 'components/SvgIcon';
 import { default as MyText } from 'components/Text';
+import { default as OrigTextBox } from 'components/TextBox';
 import PlainDivider from 'components/Divider';
 
 const backgroundStringRegex = /^(\w+)(\^(\d))?$/;
@@ -181,7 +178,7 @@ const adaptTheme = (theme, backgroundString) => {
   }
 };
 
-export function PaperTextInput({ mode, style, ...rest }) {
+export function TextBox({ mode, style, ...rest }) {
   const theme = useTheme();
   const backgroundString = React.useContext(ColorContext);
   const adaptedPaperTheme = getPaperTheme({
@@ -189,7 +186,7 @@ export function PaperTextInput({ mode, style, ...rest }) {
     ...adaptTheme(theme, backgroundString),
   });
   return (
-    <OrigPaperTextInput
+    <OrigTextBox
       mode={mode}
       theme={adaptedPaperTheme}
       style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
