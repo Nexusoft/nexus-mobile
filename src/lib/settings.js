@@ -8,8 +8,6 @@ export const defaultSettings = {
   baseCurrency: 'USD',
 };
 
-AsyncStorage.removeItem('baseCurrency');
-
 export async function loadSettings() {
   const keys = Object.keys(defaultSettings);
   const results = await AsyncStorage.multiGet(keys);
