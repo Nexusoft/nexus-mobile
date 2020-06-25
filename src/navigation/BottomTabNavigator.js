@@ -5,7 +5,7 @@ import { useTheme } from 'emotion-theming';
 
 import OverviewScreen from 'screens/OverviewScreen';
 import TransactionsScreen from 'screens/TransactionsScreen';
-import SendScreen from 'screens/SendScreen';
+import AddressBookScreen from 'screens/AddressBookScreen';
 import SvgIcon from 'components/SvgIcon';
 import { navigate } from 'lib/navigation';
 import { fade } from 'utils/color';
@@ -15,7 +15,7 @@ import SettingsIcon from 'icons/settings.svg';
 
 const BottomTab = createBottomTabNavigator();
 const defaultScreen = 'Overview';
-const screens = [OverviewScreen, TransactionsScreen, SendScreen];
+const screens = [AddressBookScreen, OverviewScreen, TransactionsScreen];
 
 export default function BottomTabNavigator() {
   const theme = useTheme();
@@ -38,7 +38,7 @@ export default function BottomTabNavigator() {
     >
       {screens.map((Screen) => {
         const {
-          nav: { name, icon, listeners },
+          nav: { name, icon, listeners, options },
         } = Screen;
         return (
           <BottomTab.Screen
@@ -52,6 +52,7 @@ export default function BottomTabNavigator() {
                 <SvgIcon icon={icon} size={24} color={color} />
               ),
               tabBarLabel: name,
+              ...options,
             }}
           />
         );

@@ -3,10 +3,8 @@ import styled from '@emotion/native';
 import { Button, TouchableRipple } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
-import SvgIcon from 'components/SvgIcon';
 import TextBox from 'components/TextBox';
 import { navigate } from 'lib/navigation';
-import SendIcon from 'icons/send.svg';
 import AccountSelect from './AccountSelect';
 import RecipientInput from './RecipientInput';
 
@@ -81,9 +79,4 @@ export default function SendScreen({ route }) {
 
 SendScreen.nav = {
   name: 'Send',
-  icon: SendIcon,
-  stackOptions: {
-    title: 'Send',
-    headerTitleAlign: 'left',
-  },
 };

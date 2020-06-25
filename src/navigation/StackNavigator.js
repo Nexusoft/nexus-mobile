@@ -11,6 +11,7 @@ import { useTheme } from 'emotion-theming';
 
 import { backgroundProvider } from 'lib/adaptive';
 import ReceiveScreen from 'screens/ReceiveScreen';
+import SendScreen from 'screens/SendScreen';
 import SettingsScreen from 'screens/SettingsScreen';
 import AccountsScreen from 'screens/AccountsScreen';
 import TokensScreen from 'screens/TokensScreen';
@@ -30,6 +31,7 @@ const Stack = createStackNavigator();
 const screens = [
   BottomTabNavigator,
   ReceiveScreen,
+  SendScreen,
   SettingsScreen,
   AccountsScreen,
   TokensScreen,

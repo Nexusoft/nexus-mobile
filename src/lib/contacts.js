@@ -3,11 +3,6 @@ import { AsyncStorage } from 'react-native';
 import * as TYPE from 'consts/actionTypes';
 import { getStore } from 'store';
 
-export const defaultSettings = {
-  darkMode: false,
-  baseCurrency: 'USD',
-};
-
 export async function loadContacts() {
   const contacts = JSON.parse(await AsyncStorage.getItem('contacts'));
   return contacts;
@@ -15,7 +10,7 @@ export async function loadContacts() {
 
 export async function addContact({ name, address }) {
   const store = getStore();
-  const { contacts } = store.getState();
+  const { contacts = {} } = store.getState();
   const newContacts = { ...contacts, [name]: address };
 
   store.dispatch({
@@ -28,7 +23,7 @@ export async function addContact({ name, address }) {
 
 export async function editContact(oldName, { name, address }) {
   const store = getStore();
-  const { contacts } = store.getState();
+  const { contacts = {} } = store.getState();
   const newContacts = { ...contacts };
   if (oldName !== name) {
     delete newContacts[oldName];
@@ -45,7 +40,7 @@ export async function editContact(oldName, { name, address }) {
 
 export async function deleteContact(name) {
   const store = getStore();
-  const { contacts } = store.getState();
+  const { contacts = {} } = store.getState();
   const newContacts = { ...contacts };
   delete newContacts[name];
 
