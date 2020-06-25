@@ -1,18 +1,14 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
+import { SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useTheme } from 'emotion-theming';
 
-import { ScrollView } from 'components/Adaptive';
+import { ScrollView, View } from 'components/Adaptive';
 
 export default function ScreenBody({
   children,
   scroll = true,
   surface,
+  primary,
   style,
   ...rest
 }) {
@@ -23,7 +19,11 @@ export default function ScreenBody({
       <ScreenWrapper
         style={[
           { flex: 1 },
-          surface ? { backgroundColor: theme.surface } : null,
+          primary
+            ? { backgroundColor: theme.primary }
+            : surface
+            ? { backgroundColor: theme.surface }
+            : null,
         ]}
         keyboardShouldPersistTaps={scroll ? 'handled' : undefined}
       >

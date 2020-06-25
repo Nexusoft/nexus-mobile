@@ -1,5 +1,5 @@
-import React from "react";
-import { StackActions } from "@react-navigation/native";
+import React from 'react';
+import { StackActions } from '@react-navigation/native';
 
 export const navContainerRef = React.createRef();
 
@@ -9,4 +9,8 @@ export function navigate(...args) {
 
 export function push(...args) {
   navContainerRef.current?.dispatch(StackActions.push(...args));
+}
+
+export function goBack(...args) {
+  navContainerRef.current?.goBack(...args);
 }

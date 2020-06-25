@@ -5,6 +5,7 @@ import { Button, TouchableRipple } from 'react-native-paper';
 import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import TextBox from 'components/TextBox';
+import { navigate } from 'lib/navigation';
 import SendIcon from 'icons/send.svg';
 import AccountSelect from './AccountSelect';
 import RecipientInput from './RecipientInput';
@@ -68,13 +69,8 @@ export default function SendScreen({ route }) {
 
       <SendButton
         mode="contained"
-        icon={({ size, color }) => (
-          <SvgIcon icon={SendIcon} {...{ size, color }} />
-        )}
-        onPress={() => {}}
-        contentStyle={{
-          paddingVertical: 5,
-          paddingHorizontal: 10,
+        onPress={() => {
+          navigate('ConfirmSend');
         }}
       >
         Send

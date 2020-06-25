@@ -20,9 +20,10 @@ import AssetsScreen from 'screens/AssetsScreen';
 import TransactionDetailsScreen from 'screens/TransactionDetailsScreen';
 import AccountDetailsScreen from 'screens/AccountDetailsScreen';
 import NewAccountScreen from 'screens/NewAccountScreen';
+import ConfirmSendScreen from 'screens/ConfirmSendScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 
-const BottomNavHeader = backgroundProvider()(Header);
+const AdaptiveHeader = backgroundProvider()(Header);
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,7 @@ const screens = [
   TransactionDetailsScreen,
   AccountDetailsScreen,
   NewAccountScreen,
+  ConfirmSendScreen,
 ];
 
 export default function StackNavigator({ navigation }) {
@@ -65,7 +67,7 @@ export default function StackNavigator({ navigation }) {
           // Fix header background color not changing when theme is changed
           // and populate ColorContext to children
           header: (props) => (
-            <BottomNavHeader
+            <AdaptiveHeader
               {...props}
               style={{
                 backgroundColor: theme.dark ? theme.surface : theme.primary,

@@ -124,15 +124,15 @@ export function backgroundProvider({
             : defaultElevation)
         : '';
       const backgroundString = bgColorName ? bgColorName + elevation : null;
-      const child = <Component ref={ref} {...props} />;
+      const content = <Component ref={ref} {...props} />;
       if (backgroundString) {
         return (
           <ColorContext.Provider value={backgroundString}>
-            {child}
+            {content}
           </ColorContext.Provider>
         );
       } else {
-        return child;
+        return content;
       }
     });
 }
