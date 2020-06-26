@@ -48,7 +48,7 @@ export default function Contact({ contact }) {
   return (
     <TouchableRipple
       onPress={() => {
-        // navigate('ContactDetails', { contact });
+        navigate('ContactDetails', { contact });
       }}
     >
       <ContactWrapper>

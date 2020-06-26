@@ -20,6 +20,7 @@ import NamespacesScreen from 'screens/NamespacesScreen';
 import AssetsScreen from 'screens/AssetsScreen';
 import TransactionDetailsScreen from 'screens/TransactionDetailsScreen';
 import AccountDetailsScreen from 'screens/AccountDetailsScreen';
+import ContactDetailsScreen from 'screens/ContactDetailsScreen';
 import NewAccountScreen from 'screens/NewAccountScreen';
 import NewContactScreen from 'screens/NewContactScreen';
 import ConfirmSendScreen from 'screens/ConfirmSendScreen';
@@ -41,6 +42,7 @@ const screens = [
   AssetsScreen,
   TransactionDetailsScreen,
   AccountDetailsScreen,
+  ContactDetailsScreen,
   NewAccountScreen,
   NewContactScreen,
   ConfirmSendScreen,
