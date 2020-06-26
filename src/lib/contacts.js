@@ -8,7 +8,7 @@ export async function loadContacts() {
   return contacts;
 }
 
-export async function addContact({ name, address }) {
+export async function createContact({ name, address }) {
   const store = getStore();
   const { contacts = {} } = store.getState();
   const newContacts = { ...contacts, [name]: address };
@@ -21,7 +21,7 @@ export async function addContact({ name, address }) {
   return await AsyncStorage.setItem('contacts', JSON.stringify(contacts));
 }
 
-export async function editContact(oldName, { name, address }) {
+export async function updateContact(oldName, { name, address }) {
   const store = getStore();
   const { contacts = {} } = store.getState();
   const newContacts = { ...contacts };

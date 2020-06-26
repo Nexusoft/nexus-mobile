@@ -3,36 +3,29 @@ import { Button } from 'react-native-paper';
 
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
-import PinDialog from 'components/PinDialog';
+import { createContact } from 'lib/contacts';
 
-export default function NewAccountScreen() {
-  const [confirmingPin, setConfirmingPin] = React.useState(false);
+export default function NewContactScreen() {
   return (
     <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
-      <TextBox.Adaptive label="Account name" />
+      <TextBox.Adaptive label="Contact name" />
+      <TextBox.Adaptive label="Contact's Nexus address" />
       <Button
         mode="contained"
         style={{ marginTop: 30 }}
         onPress={() => {
-          setConfirmingPin(true);
+          createContact({});
         }}
       >
         Create account
       </Button>
-
-      <PinDialog
-        visible={confirmingPin}
-        onDismiss={() => {
-          setConfirmingPin(false);
-        }}
-      />
     </ScreenBody>
   );
 }
 
-NewAccountScreen.nav = {
-  name: 'NewAccount',
+NewContactScreen.nav = {
+  name: 'NewContact',
   options: {
-    title: 'New Account',
+    title: 'New Contact',
   },
 };

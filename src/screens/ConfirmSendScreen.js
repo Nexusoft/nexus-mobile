@@ -10,7 +10,7 @@ import { goBack } from 'lib/navigation';
 import NextIcon from 'icons/next.svg';
 import WalletIcon from 'icons/wallet.svg';
 import SendIcon from 'icons/send.svg';
-import AddressBookIcon from 'icons/address-book.svg';
+import ContactsIcon from 'icons/address-book.svg';
 
 const Wrapper = styled(ScreenBody)({
   paddingVertical: 30,
@@ -103,7 +103,7 @@ export default function ConfirmSendScreen() {
         <FromTo>
           <Label>To</Label>
           <Name>
-            <Icon icon={AddressBookIcon} size={20} /> Paul
+            <Icon icon={ContactsIcon} size={20} /> Paul
           </Name>
           <Address mono>
             8C53PdQLuXamTiWw3yXS8fVB4c2eQSwvmssHYzWfLsr5Wtj4jHr

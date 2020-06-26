@@ -5,7 +5,7 @@ import { useTheme } from 'emotion-theming';
 
 import OverviewScreen from 'screens/OverviewScreen';
 import TransactionsScreen from 'screens/TransactionsScreen';
-import AddressBookScreen from 'screens/AddressBookScreen';
+import ContactsScreen from 'screens/ContactsScreen';
 import SvgIcon from 'components/SvgIcon';
 import { navigate } from 'lib/navigation';
 import { fade } from 'utils/color';
@@ -15,7 +15,7 @@ import SettingsIcon from 'icons/settings.svg';
 
 const BottomTab = createBottomTabNavigator();
 const defaultScreen = 'Overview';
-const screens = [AddressBookScreen, OverviewScreen, TransactionsScreen];
+const screens = [ContactsScreen, OverviewScreen, TransactionsScreen];
 
 export default function BottomTabNavigator() {
   const theme = useTheme();

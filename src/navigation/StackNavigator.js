@@ -21,6 +21,7 @@ import AssetsScreen from 'screens/AssetsScreen';
 import TransactionDetailsScreen from 'screens/TransactionDetailsScreen';
 import AccountDetailsScreen from 'screens/AccountDetailsScreen';
 import NewAccountScreen from 'screens/NewAccountScreen';
+import NewContactScreen from 'screens/NewContactScreen';
 import ConfirmSendScreen from 'screens/ConfirmSendScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 
@@ -41,6 +42,7 @@ const screens = [
   TransactionDetailsScreen,
   AccountDetailsScreen,
   NewAccountScreen,
+  NewContactScreen,
   ConfirmSendScreen,
 ];
 
