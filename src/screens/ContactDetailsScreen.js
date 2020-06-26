@@ -1,7 +1,8 @@
 import React from 'react';
 import { Platform, Clipboard } from 'react-native';
 import styled from '@emotion/native';
-import { Button, IconButton } from 'react-native-paper';
+import { Button } from 'react-native-paper';
+import { useTheme } from 'emotion-theming';
 
 import ScreenBody from 'components/ScreenBody';
 import { Surface, Text, SubText } from 'components/Adaptive';
@@ -66,19 +67,22 @@ const Address = styled(Text)({
   textAlign: 'center',
 });
 
-const SendBtn = styled(Button)({
-  marginTop: 30,
+const Buttons = styled.View({
+  marginTop: 40,
+  alignItems: 'center',
 });
 
 const getinitial = (name) => (name && name.length >= 1 ? name.charAt(0) : '');
 
 export default function ContactDetailsScreen({ navigation, route }) {
   const [editing, setEditing] = React.useState(false);
+  const theme = useTheme();
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Button
           mode="text"
+          color={theme.dark ? theme.primary : theme.onPrimary}
           onPress={() => {
             setEditing(!editing);
           }}
@@ -135,17 +139,26 @@ export default function ContactDetailsScreen({ navigation, route }) {
         </>
       )}
 
-      {!editing && (
-        <SendBtn
+      {editing ? (
+        <Button
+          mode="contained"
+          color={theme.danger}
+          style={{ marginTop: 60, alignSelf: 'center' }}
+        >
+          Delete contact
+        </Button>
+      ) : (
+        <Button
           mode="text"
           uppercase={false}
           icon={(props) => <SvgIcon icon={SendIcon} {...props} />}
           onPress={() => {
             navigate('Send');
           }}
+          style={{ marginTop: 30 }}
         >
           Send to {contact.name}
-        </SendBtn>
+        </Button>
       )}
     </Wrapper>
   );
