@@ -39,7 +39,7 @@ export default function TextBox({ mode, secure, clearButton = true, ...rest }) {
       autoCorrect={false}
       autoCapitalize="none"
       keyboardAppearance={theme.dark ? 'dark' : 'light'}
-      secureTextEntry={!visible}
+      secureTextEntry={!!secure && !visible}
       render={({ value, onChangeText, ...rest }) => (
         <InputWrapper>
           <TextInput value={value} onChangeText={onChangeText} {...rest} />

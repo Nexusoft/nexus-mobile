@@ -1,12 +1,14 @@
 import React from 'react';
 import { Platform, Clipboard } from 'react-native';
 import styled from '@emotion/native';
-import { Button } from 'react-native-paper';
+import { Button, IconButton } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
 import { Surface, Text, SubText } from 'components/Adaptive';
+import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
 import { showNotification } from 'lib/notifications';
+import { navigate } from 'lib/navigation';
 import { lighten, darken } from 'utils/color';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';
@@ -43,19 +45,21 @@ const ContactName = styled(Text)({
   marginTop: 20,
 });
 
-const AddressLabel = styled.View({
+const ContactNameInput = styled(TextBox.Adaptive)({
+  alignSelf: 'stretch',
+});
+
+const AddressLabelWrapper = styled.View({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
 });
 
-const AddressBox = styled(Surface)(({ theme }) => ({
-  // borderWidth: 1,
-  // borderColor: disabledColor(theme.foreground),
+const AddressBox = styled(Surface)({
   borderRadius: 4,
   paddingVertical: 12,
   marginTop: 5,
-}));
+});
 
 const Address = styled(Text)({
   fontSize: 15,
@@ -68,7 +72,22 @@ const SendBtn = styled(Button)({
 
 const getinitial = (name) => (name && name.length >= 1 ? name.charAt(0) : '');
 
-export default function ContactDetailsScreen({ route }) {
+export default function ContactDetailsScreen({ navigation, route }) {
+  const [editing, setEditing] = React.useState(false);
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          mode="text"
+          onPress={() => {
+            setEditing(!editing);
+          }}
+        >
+          {editing ? 'Done' : 'Edit'}
+        </Button>
+      ),
+    });
+  }, [editing]);
   const contact = route.params?.contact;
   return (
     <Wrapper>
@@ -76,35 +95,58 @@ export default function ContactDetailsScreen({ route }) {
         <Avatar>
           <AvatarLetter>{getinitial(contact.name)}</AvatarLetter>
         </Avatar>
-        <ContactName>{contact.name}</ContactName>
+        {editing ? (
+          <ContactNameInput
+            style={{ alignSelf: 'stretch' }}
+            mode="underlined"
+            defaultValue={contact.name}
+            label="Contact name"
+          />
+        ) : (
+          <ContactName>{contact.name}</ContactName>
+        )}
       </ContactInfo>
 
-      <AddressLabel>
-        <SubText>Address</SubText>
-        <Button
+      {editing ? (
+        <TextBox.Adaptive
+          mode="underlined"
+          defaultValue={contact.address}
+          label="Address"
+        />
+      ) : (
+        <>
+          <AddressLabelWrapper>
+            <SubText>Address</SubText>
+            <Button
+              mode="text"
+              icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
+              labelStyle={{ fontSize: 12 }}
+              onPress={() => {
+                Clipboard.setString(contact.address);
+                showNotification('Copied to clipboard');
+              }}
+            >
+              Copy
+            </Button>
+          </AddressLabelWrapper>
+          <AddressBox>
+            <Address mono>{segmentAddress(contact.address)}</Address>
+          </AddressBox>
+        </>
+      )}
+
+      {!editing && (
+        <SendBtn
           mode="text"
-          icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
-          labelStyle={{ fontSize: 12 }}
+          uppercase={false}
+          icon={(props) => <SvgIcon icon={SendIcon} {...props} />}
           onPress={() => {
-            Clipboard.setString(contact.address);
-            showNotification('Copied to clipboard');
+            navigate('Send');
           }}
         >
-          Copy
-        </Button>
-      </AddressLabel>
-      <AddressBox>
-        <Address mono>{segmentAddress(contact.address)}</Address>
-      </AddressBox>
-
-      <SendBtn
-        mode="text"
-        uppercase={false}
-        icon={(props) => <SvgIcon icon={SendIcon} {...props} />}
-        onPress={() => {}}
-      >
-        Send to {contact.name}
-      </SendBtn>
+          Send to {contact.name}
+        </SendBtn>
+      )}
     </Wrapper>
   );
 }
