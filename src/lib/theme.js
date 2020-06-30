@@ -82,7 +82,7 @@ export const darkTheme = {
   primary: primaryShades[400],
   primaryVariant: primaryShades[300],
   onPrimary: darkColor,
-  danger: dangerShades[300],
+  danger: dangerShades[400],
   onDanger: darkColor,
 };
 
