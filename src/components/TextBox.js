@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import { TextInput as PaperTextInput } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
+import { useField } from 'formik';
 
 import { Icon, SubIcon } from 'components/Adaptive';
 import { useAdaptedPaperTheme } from 'lib/adaptive';
@@ -89,4 +90,19 @@ function AdaptiveTextBox({ mode, style, ...rest }) {
   );
 }
 
+function FormikTextBox({ name, ...rest }) {
+  const [field, meta, helpers] = useField(name);
+  return (
+    <AdaptiveTextBox
+      value={field.value}
+      onChangeText={helpers.setValue}
+      onBlur={() => {
+        helpers.setTouched(true);
+      }}
+      {...rest}
+    />
+  );
+}
+
 TextBox.Adaptive = AdaptiveTextBox;
+TextBox.Formik = FormikTextBox;

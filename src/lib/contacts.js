@@ -18,7 +18,7 @@ export async function createContact({ name, address }) {
     payload: newContacts,
   });
 
-  return await AsyncStorage.setItem('contacts', JSON.stringify(contacts));
+  return await AsyncStorage.setItem('contacts', JSON.stringify(newContacts));
 }
 
 export async function updateContact(oldName, { name, address }) {
@@ -35,7 +35,7 @@ export async function updateContact(oldName, { name, address }) {
     payload: newContacts,
   });
 
-  return await AsyncStorage.setItem('contacts', JSON.stringify(contacts));
+  return await AsyncStorage.setItem('contacts', JSON.stringify(newContacts));
 }
 
 export async function deleteContact(name) {
@@ -49,5 +49,5 @@ export async function deleteContact(name) {
     payload: newContacts,
   });
 
-  return await AsyncStorage.setItem('contacts', JSON.stringify(contacts));
+  return await AsyncStorage.setItem('contacts', JSON.stringify(newContacts));
 }

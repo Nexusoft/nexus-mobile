@@ -40,6 +40,6 @@ export default function TransactionDetailsScreen({ route }) {
 TransactionDetailsScreen.nav = {
   name: 'TransactionDetails',
   options: {
-    title: Platform.OS === 'ios' ? 'Details' : 'Transaction Details',
+    title: Platform.OS === 'ios' ? 'Transaction' : 'Transaction Details',
   },
 };

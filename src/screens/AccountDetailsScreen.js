@@ -159,6 +159,6 @@ export default function AccountDetailsScreen({ route }) {
 AccountDetailsScreen.nav = {
   name: 'AccountDetails',
   options: {
-    title: Platform.OS === 'ios' ? 'Details' : 'Account Details',
+    title: Platform.OS === 'ios' ? 'Account' : 'Account Details',
   },
 };
