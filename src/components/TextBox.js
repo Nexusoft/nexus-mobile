@@ -4,7 +4,7 @@ import {
   TextInput as NativeTextInput,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { TextInput as PaperTextInput } from 'react-native-paper';
+import { TextInput as PaperTextInput, HelperText } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 import { useField } from 'formik';
 
@@ -92,15 +92,22 @@ function AdaptiveTextBox({ mode, style, ...rest }) {
 
 function FormikTextBox({ name, ...rest }) {
   const [field, meta, helpers] = useField(name);
+  const hasError = !!(meta.touched && meta.error);
   return (
-    <AdaptiveTextBox
-      value={field.value}
-      onChangeText={helpers.setValue}
-      onBlur={() => {
-        helpers.setTouched(true);
-      }}
-      {...rest}
-    />
+    <>
+      <AdaptiveTextBox
+        error={hasError}
+        value={field.value}
+        onChangeText={helpers.setValue}
+        onBlur={() => {
+          helpers.setTouched(true);
+        }}
+        {...rest}
+      />
+      <HelperText type="error" visible={hasError}>
+        {meta.error}
+      </HelperText>
+    </>
   );
 }
 

@@ -200,7 +200,6 @@ export default function ContactDetailsScreen({ navigation, route }) {
           onSubmit={async ({ name, address }) => {
             try {
               await updateContact(contact.name, { name, address });
-              // reload contact
               navigation.setParams({ contact: { name, address } });
               setEditing(false);
             } catch (err) {
