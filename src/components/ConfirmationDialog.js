@@ -31,6 +31,7 @@ export default function ConfirmationDialog({
               onCancel && onCancel();
               onDismiss();
             }}
+            style={{ marginRight: 15 }}
           >
             {cancelLabel || 'Cancel'}
           </Button>

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Clipboard } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Button } from 'react-native-paper';
+import { Button, overlay } from 'react-native-paper';
 import styled from '@emotion/native';
 import QRCode from 'react-native-qrcode-svg';
+import { useTheme } from 'emotion-theming';
 
 import {
   Surface,
@@ -68,6 +69,7 @@ const SeparatorLabel = styled(DisabledText)({
 });
 
 export default function ReceiveScreen({ route }) {
+  const theme = useTheme();
   const address = route.params?.account?.address;
   return (
     <Wrapper
@@ -83,7 +85,14 @@ export default function ReceiveScreen({ route }) {
           <TopInstruction>
             <SubText>Show this QR code to the sender</SubText>
           </TopInstruction>
-          <QRCode value={address} size={200} />
+          <QRCode
+            value={address}
+            size={200}
+            color={theme.foreground}
+            backgroundColor={
+              theme.dark ? overlay(5, theme.surface) : theme.surface
+            }
+          />
           <AccountAddress mono>{segmentAddress(address)}</AccountAddress>
           <Separator>
             <SeparatorLine />
