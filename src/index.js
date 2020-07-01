@@ -15,6 +15,7 @@ import { getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
 
 import Notifications from './Notifications';
+import Dialogs from './Dialogs';
 import DrawerNavigator from './navigation/DrawerNavigator';
 import { navContainerRef } from './lib/navigation';
 import useLinking from './navigation/useLinking';
@@ -94,6 +95,7 @@ export default function Root(props) {
               <DrawerNavigator
                 initialNavigationState={initialNavigationState}
               />
+              <Dialogs />
               <Notifications />
             </PaperContainer>
           </Container>

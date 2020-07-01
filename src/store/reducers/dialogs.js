@@ -4,11 +4,11 @@ const initialState = [];
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SHOW_NOTIFICATION:
+    case TYPE.OPEN_DIALOG:
       return [...state, action.payload];
 
-    case TYPE.DISMISS_NOTIFICATION:
-      return state.filter((notif) => notif && notif.id !== action.payload);
+    case TYPE.CLOSE_DIALOG:
+      return state.filter((dialog) => dialog && dialog.id !== action.payload);
 
     default:
       return state;

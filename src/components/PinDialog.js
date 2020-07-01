@@ -20,7 +20,7 @@ export default function PinDialog({ onDismiss, ...rest }) {
   const [pin, setPin] = React.useState('');
   return (
     <Portal>
-      <Dialog onDismiss={onDismiss} keyboardAware {...rest}>
+      <Dialog onDismiss={onDismiss} {...rest}>
         <Dialog.Content>
           <PinTextBox
             label="Confirm your PIN"

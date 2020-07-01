@@ -12,7 +12,7 @@ export function toggleTransactionsFilter() {
   });
 }
 
-export const showNotification = (content, options) => {
+export function showNotification(content, options) {
   const store = getStore();
   const id = newUID();
   store.dispatch({
@@ -23,12 +23,33 @@ export const showNotification = (content, options) => {
       options,
     },
   });
-};
+}
 
-export const dismissNotification = (id) => {
+export function dismissNotification(id) {
   const store = getStore();
   store.dispatch({
     type: TYPE.DISMISS_NOTIFICATION,
     payload: id,
   });
-};
+}
+
+export function showError(message) {
+  const store = getStore();
+  const id = newUID();
+  store.dispatch({
+    type: TYPE.OPEN_DIALOG,
+    payload: {
+      id,
+      type: 'error',
+      message,
+    },
+  });
+}
+
+export function closeDialog(id) {
+  const store = getStore();
+  store.dispatch({
+    type: TYPE.CLOSE_DIALOG,
+    payload: id,
+  });
+}
