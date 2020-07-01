@@ -46,6 +46,27 @@ export function showError(message) {
   });
 }
 
+export function confirm(options) {
+  return new Promise((resolve) => {
+    const store = getStore();
+    const id = newUID();
+    store.dispatch({
+      type: TYPE.OPEN_DIALOG,
+      payload: {
+        id,
+        type: 'confirmation',
+        onConfirm: () => {
+          resolve(true);
+        },
+        onCancel: () => {
+          resolve(false);
+        },
+        ...options,
+      },
+    });
+  });
+}
+
 export function closeDialog(id) {
   const store = getStore();
   store.dispatch({

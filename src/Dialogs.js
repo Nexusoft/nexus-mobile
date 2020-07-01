@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import ErrorDialog from 'components/ErrorDialog';
+import ConfirmationDialog from 'components/ConfirmationDialog';
 import { closeDialog } from 'lib/ui';
 
 // https://github.com/callstack/react-native-paper/blob/master/src/components/Modal.tsx#L48
@@ -9,6 +10,7 @@ const closeAnimationDuration = 220;
 
 const dialogTypes = {
   error: ErrorDialog,
+  confirmation: ConfirmationDialog,
 };
 
 function Dialog({ id, type, ...rest }) {
