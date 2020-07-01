@@ -13,7 +13,7 @@ import {
   Icon,
 } from 'components/Adaptive';
 import Divider from 'components/Divider';
-import { showNotification } from 'lib/notifications';
+import { showNotification } from 'lib/ui';
 import segmentAddress from 'utils/segmentAddress';
 import { flatHeader } from 'utils/styles';
 import CopyIcon from 'icons/copy.svg';

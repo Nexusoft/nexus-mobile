@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Snackbar } from 'react-native-paper';
 
-import { dismissNotification } from 'lib/notifications';
+import { dismissNotification } from 'lib/ui';
 
 function Notification({ notification }) {
   const [closing, setClosing] = React.useState(false);

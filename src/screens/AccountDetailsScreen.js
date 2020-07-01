@@ -9,7 +9,7 @@ import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import InfoField from 'components/InfoField';
-import { showNotification } from 'lib/notifications';
+import { showNotification } from 'lib/ui';
 import { navigate } from 'lib/navigation';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';

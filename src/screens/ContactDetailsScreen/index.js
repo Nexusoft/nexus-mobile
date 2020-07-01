@@ -11,7 +11,7 @@ import ScreenBody from 'components/ScreenBody';
 import { Surface, Text, SubText } from 'components/Adaptive';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
-import { showNotification } from 'lib/notifications';
+import { showNotification } from 'lib/ui';
 import { navigate } from 'lib/navigation';
 import { updateContact } from 'lib/contacts';
 import { lighten, darken } from 'utils/color';

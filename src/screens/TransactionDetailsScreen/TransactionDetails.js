@@ -8,7 +8,7 @@ import { Surface } from 'components/Adaptive';
 import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import InfoField from 'components/InfoField';
-import { showNotification } from 'lib/notifications';
+import { showNotification } from 'lib/ui';
 import CopyIcon from 'icons/copy.svg';
 
 const TxDetails = styled(Surface)({
