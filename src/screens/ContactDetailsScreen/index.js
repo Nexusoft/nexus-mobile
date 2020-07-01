@@ -11,9 +11,9 @@ import ScreenBody from 'components/ScreenBody';
 import { Surface, Text, SubText } from 'components/Adaptive';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
-import { showNotification, showError } from 'lib/ui';
-import { navigate } from 'lib/navigation';
-import { updateContact } from 'lib/contacts';
+import { showNotification, showError, confirm } from 'lib/ui';
+import { navigate, goBack } from 'lib/navigation';
+import { updateContact, deleteContact } from 'lib/contacts';
 import { lighten, darken } from 'utils/color';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';
@@ -187,6 +187,17 @@ function EditMode({ isSubmitting, endEditing, handleSubmit }) {
         mode="contained"
         color={theme.danger}
         style={{ marginTop: 60, alignSelf: 'center' }}
+        onPress={async () => {
+          const confirmed = await confirm({
+            message: 'Delete contact?',
+            confirmLabel: 'Delete',
+            danger: true,
+          });
+          if (confirmed) {
+            await deleteContact(contact.name);
+            goBack();
+          }
+        }}
       >
         Delete contact
       </Button>
