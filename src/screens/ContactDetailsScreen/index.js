@@ -11,7 +11,7 @@ import ScreenBody from 'components/ScreenBody';
 import { Surface, Text, SubText } from 'components/Adaptive';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
-import { showNotification } from 'lib/ui';
+import { showNotification, showError } from 'lib/ui';
 import { navigate } from 'lib/navigation';
 import { updateContact } from 'lib/contacts';
 import { lighten, darken } from 'utils/color';
@@ -131,7 +131,7 @@ function NormalMode({ startEditing }) {
   );
 }
 
-function EditMode({ endEditing, isEditing, handleSubmit }) {
+function EditMode({ isEditing, handleSubmit }) {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
@@ -203,18 +203,11 @@ export default function ContactDetailsScreen({ navigation, route }) {
               navigation.setParams({ contact: { name, address } });
               setEditing(false);
             } catch (err) {
-              // Show error modal
+              showError(err && err.message);
             }
           }}
         >
-          {(props) => (
-            <EditMode
-              {...props}
-              endEditing={() => {
-                setEditing(false);
-              }}
-            />
-          )}
+          {(props) => <EditMode {...props} />}
         </Formik>
       ) : (
         <NormalMode
