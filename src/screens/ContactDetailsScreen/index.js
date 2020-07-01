@@ -1,10 +1,10 @@
 import React from 'react';
 import { Platform, Clipboard } from 'react-native';
 import styled from '@emotion/native';
-import { Button } from 'react-native-paper';
+import { Button, IconButton } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import * as yup from 'yup';
 
 import ScreenBody from 'components/ScreenBody';
@@ -67,6 +67,14 @@ const Address = styled(Text)({
   textAlign: 'center',
 });
 
+const HeaderIcons = styled.View({
+  flexDirection: 'row',
+});
+
+const HeaderIcon = styled(IconButton)({
+  marginRight: 10,
+});
+
 const getinitial = (name) => (name && name.length >= 1 ? name.charAt(0) : '');
 
 function NormalMode({ startEditing }) {
@@ -77,15 +85,14 @@ function NormalMode({ startEditing }) {
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button
-          mode="text"
+        <HeaderIcon
+          icon="pencil"
           color={theme.dark ? theme.primary : theme.onPrimary}
           onPress={() => {
             startEditing();
           }}
-        >
-          Edit
-        </Button>
+          size={20}
+        />
       ),
     });
   }, []);
@@ -131,7 +138,7 @@ function NormalMode({ startEditing }) {
   );
 }
 
-function EditMode({ isEditing, handleSubmit }) {
+function EditMode({ isSubmitting, endEditing, handleSubmit }) {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
@@ -139,16 +146,20 @@ function EditMode({ isEditing, handleSubmit }) {
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button
-          mode="text"
-          disabled={isEditing}
-          color={theme.dark ? theme.primary : theme.onPrimary}
-          onPress={() => {
-            handleSubmit();
-          }}
-        >
-          Done
-        </Button>
+        <HeaderIcons>
+          <HeaderIcon
+            disabled={isSubmitting}
+            color={theme.dark ? theme.primary : theme.onPrimary}
+            icon="close"
+            onPress={endEditing}
+          />
+          <HeaderIcon
+            disabled={isSubmitting}
+            color={theme.dark ? theme.primary : theme.onPrimary}
+            icon="check"
+            onPress={handleSubmit}
+          />
+        </HeaderIcons>
       ),
     });
   }, []);
@@ -207,7 +218,14 @@ export default function ContactDetailsScreen({ navigation, route }) {
             }
           }}
         >
-          {(props) => <EditMode {...props} />}
+          {(props) => (
+            <EditMode
+              {...props}
+              endEditing={() => {
+                setEditing(false);
+              }}
+            />
+          )}
         </Formik>
       ) : (
         <NormalMode
