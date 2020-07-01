@@ -207,6 +207,7 @@ export default function ContactDetailsScreen({ navigation, route }) {
           }}
           validationSchema={yup.object().shape({
             name: yup.string().required('Required!'),
+            address: yup.string().required('Required!'),
           })}
           onSubmit={async ({ name, address }) => {
             try {
