@@ -88,9 +88,7 @@ function NormalMode({ startEditing }) {
         <HeaderIcon
           icon="pencil"
           color={theme.dark ? theme.primary : theme.onPrimary}
-          onPress={() => {
-            startEditing();
-          }}
+          onPress={startEditing}
           size={20}
         />
       ),
@@ -172,17 +170,10 @@ function EditMode({ isSubmitting, endEditing, handleSubmit }) {
       </ContactInfo>
       <TextBox.Formik
         name="name"
-        mode="underlined"
-        defaultValue={contact.name}
         label="Contact name"
         style={{ alignSelf: 'stretch' }}
       />
-      <TextBox.Formik
-        name="address"
-        mode="underlined"
-        defaultValue={contact.address}
-        label="Address"
-      />
+      <TextBox.Formik name="address" label="Address" />
       <Button
         mode="contained"
         color={theme.danger}
