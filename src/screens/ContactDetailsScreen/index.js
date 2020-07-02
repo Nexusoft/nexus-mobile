@@ -141,7 +141,7 @@ function EditMode({ isSubmitting, endEditing, handleSubmit }) {
   const navigation = useNavigation();
   const route = useRoute();
   const contact = route.params?.contact;
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <HeaderIcons>

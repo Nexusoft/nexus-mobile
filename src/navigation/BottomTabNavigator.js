@@ -17,7 +17,7 @@ const BottomTab = createBottomTabNavigator();
 const defaultScreen = 'Overview';
 const screens = [ContactsScreen, OverviewScreen, TransactionsScreen];
 
-export default function BottomTabNavigator() {
+export default function BottomTabNavigator({ navigation: stackNavigation }) {
   const theme = useTheme();
   return (
     <BottomTab.Navigator
@@ -44,7 +44,6 @@ export default function BottomTabNavigator() {
           <BottomTab.Screen
             key={name}
             name={name}
-            component={Screen}
             listeners={listeners}
             options={{
               title: name,
@@ -54,7 +53,9 @@ export default function BottomTabNavigator() {
               tabBarLabel: name,
               ...options,
             }}
-          />
+          >
+            {(props) => <Screen {...props} stackNavigation={stackNavigation} />}
+          </BottomTab.Screen>
         );
       })}
     </BottomTab.Navigator>

@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 
 import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
+import TextBox from 'components/TextBox';
 import { navigate } from 'lib/navigation';
 import memoize from 'utils/memoize';
 import ContactsIcon from 'icons/address-book.svg';
@@ -29,12 +30,61 @@ const selectContacts = memoize((state) =>
     : []
 );
 
-export default function ContactsScreen() {
+const filterContacts = memoize((contacts, keyword) => {
+  const kw = keyword.toLowerCase();
+  return contacts.filter((contact) => contact.name.toLowerCase().includes(kw));
+});
+
+export default function ContactsScreen({ stackNavigation }) {
+  const [searching, setSearching] = React.useState(false);
+  const [keyword, setKeyword] = React.useState('');
+  React.useLayoutEffect(() => {
+    stackNavigation.setOptions({
+      headerTitle: searching
+        ? () => (
+            <TextBox.Adaptive
+              value={keyword}
+              onChangeText={setKeyword}
+              autoFocus
+              autoCapitalize
+              dense
+              placeholder="Search contact"
+              style={{ top: 0 }}
+            />
+          )
+        : 'Contacts',
+      headerRight: searching
+        ? ({ tintColor }) => (
+            <IconButton
+              icon="close"
+              color={tintColor}
+              size={25}
+              onPress={() => {
+                setKeyword('');
+                setSearching(false);
+              }}
+            />
+          )
+        : ({ tintColor }) => (
+            <IconButton
+              icon="magnify"
+              color={tintColor}
+              size={25}
+              onPress={() => {
+                setSearching(true);
+              }}
+            />
+          ),
+    });
+  }, [searching, keyword]);
   const contacts = useSelector(selectContacts);
+  const filteredContacts =
+    searching && keyword ? filterContacts(contacts, keyword) : contacts;
+
   return (
     <Wrapper scroll={false} style={{ paddingVertical: 10 }}>
       <FlatList
-        data={contacts}
+        data={filteredContacts}
         ItemSeparatorComponent={Divider}
         keyExtractor={(contact) => contact.name}
         renderItem={({ item }) => <Contact contact={item} />}
@@ -58,13 +108,5 @@ ContactsScreen.nav = {
   stackOptions: {
     title: 'Contacts',
     headerTitleAlign: 'left',
-    headerRight: ({ tintColor }) => (
-      <IconButton
-        icon="magnify"
-        color={tintColor}
-        size={25}
-        onPress={() => {}}
-      />
-    ),
   },
 };

@@ -25,18 +25,25 @@ const TextInput = styled(NativeTextInput)({
   flex: 1,
 });
 
-const InputIconWrapper = styled.View(({ mode }) => ({
-  paddingTop: mode === 'outlined' ? 8 : 24,
-  paddingBottom: mode === 'outlined' ? 8 : 4,
+const InputIconWrapper = styled.View(({ mode, dense }) => ({
+  paddingTop: mode === 'outlined' || dense ? 8 : 24,
+  paddingBottom: mode === 'outlined' || dense ? 8 : 4,
   paddingHorizontal: 8,
 }));
 
-export default function TextBox({ mode, secure, clearButton = true, ...rest }) {
+export default function TextBox({
+  mode,
+  secure,
+  dense,
+  clearButton = true,
+  ...rest
+}) {
   const theme = useTheme();
   const [visible, setVisible] = React.useState(false);
   return (
     <PaperTextInput
       mode={mode}
+      dense={dense}
       autoCorrect={false}
       autoCapitalize="none"
       keyboardAppearance={theme.dark ? 'dark' : 'light'}
@@ -55,7 +62,7 @@ export default function TextBox({ mode, secure, clearButton = true, ...rest }) {
                 setVisible(false);
               }}
             >
-              <InputIconWrapper mode={mode}>
+              <InputIconWrapper mode={mode} dense={dense}>
                 <Icon icon={visible ? VisibleIcon : InvisibleIcon} size={16} />
               </InputIconWrapper>
             </TouchableWithoutFeedback>
@@ -66,7 +73,7 @@ export default function TextBox({ mode, secure, clearButton = true, ...rest }) {
                 onChangeText && onChangeText('');
               }}
             >
-              <InputIconWrapper mode={mode}>
+              <InputIconWrapper mode={mode} dense={dense}>
                 <SubIcon icon={ClearIcon} size={16} />
               </InputIconWrapper>
             </TouchableWithoutFeedback>
