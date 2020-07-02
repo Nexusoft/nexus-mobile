@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { shadow, TouchableRipple, IconButton } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
+import { useSelector } from 'react-redux';
 
 import OverviewScreen from 'screens/OverviewScreen';
 import TransactionsScreen from 'screens/TransactionsScreen';
@@ -17,8 +18,10 @@ const BottomTab = createBottomTabNavigator();
 const defaultScreen = 'Overview';
 const screens = [ContactsScreen, OverviewScreen, TransactionsScreen];
 
-export default function BottomTabNavigator({ navigation: stackNavigation }) {
+export default function BottomTabNavigator({ navigation }) {
   const theme = useTheme();
+  const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
+  const contactSearch = useSelector((state) => state.ui.contactSearch);
   return (
     <BottomTab.Navigator
       initialRouteName={defaultScreen}
@@ -37,13 +40,15 @@ export default function BottomTabNavigator({ navigation: stackNavigation }) {
       }}
     >
       {screens.map((Screen) => {
-        const {
-          nav: { name, icon, listeners, options },
-        } = Screen;
+        const { name, icon, listeners, options } =
+          typeof Screen.nav === 'function'
+            ? Screen.nav({ theme, navigation, txFilterOpen, contactSearch })
+            : Screen.nav;
         return (
           <BottomTab.Screen
             key={name}
             name={name}
+            component={Screen}
             listeners={listeners}
             options={{
               title: name,
@@ -53,16 +58,19 @@ export default function BottomTabNavigator({ navigation: stackNavigation }) {
               tabBarLabel: name,
               ...options,
             }}
-          >
-            {(props) => <Screen {...props} stackNavigation={stackNavigation} />}
-          </BottomTab.Screen>
+          />
         );
       })}
     </BottomTab.Navigator>
   );
 }
 
-BottomTabNavigator.nav = ({ theme, navigation, txFilterOpen }) => ({
+BottomTabNavigator.nav = ({
+  theme,
+  navigation,
+  txFilterOpen,
+  contactSearch,
+}) => ({
   name: 'BottomNav',
   options: ({ route }) => {
     const routeName =
@@ -71,7 +79,7 @@ BottomTabNavigator.nav = ({ theme, navigation, txFilterOpen }) => ({
       screens
         .map((Screen) =>
           typeof Screen.nav === 'function'
-            ? Screen.nav({ theme, navigation, txFilterOpen })
+            ? Screen.nav({ theme, navigation, txFilterOpen, contactSearch })
             : Screen.nav
         )
         .find((nav) => nav.name === routeName) || {};

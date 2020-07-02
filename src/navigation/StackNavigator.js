@@ -51,6 +51,7 @@ const screens = [
 export default function StackNavigator({ navigation }) {
   const theme = useTheme();
   const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
+  const contactSearch = useSelector((state) => state.ui.contactSearch);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -98,7 +99,7 @@ export default function StackNavigator({ navigation }) {
         {screens.map((Screen) => {
           const { name, options } =
             typeof Screen.nav === 'function'
-              ? Screen.nav({ theme, navigation, txFilterOpen })
+              ? Screen.nav({ theme, navigation, txFilterOpen, contactSearch })
               : Screen.nav;
 
           return (

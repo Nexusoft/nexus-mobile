@@ -7,7 +7,9 @@ import { useSelector } from 'react-redux';
 import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
 import TextBox from 'components/TextBox';
+import { Text } from 'components/Adaptive';
 import { navigate } from 'lib/navigation';
+import { setContactSearch } from 'lib/ui';
 import memoize from 'utils/memoize';
 import ContactsIcon from 'icons/address-book.svg';
 import Contact from './Contact';
@@ -35,51 +37,13 @@ const filterContacts = memoize((contacts, keyword) => {
   return contacts.filter((contact) => contact.name.toLowerCase().includes(kw));
 });
 
-export default function ContactsScreen({ stackNavigation }) {
-  const [searching, setSearching] = React.useState(false);
-  const [keyword, setKeyword] = React.useState('');
-  React.useLayoutEffect(() => {
-    stackNavigation.setOptions({
-      headerTitle: searching
-        ? () => (
-            <TextBox.Adaptive
-              value={keyword}
-              onChangeText={setKeyword}
-              autoFocus
-              autoCapitalize
-              dense
-              placeholder="Search contact"
-              style={{ top: 0 }}
-            />
-          )
-        : 'Contacts',
-      headerRight: searching
-        ? ({ tintColor }) => (
-            <IconButton
-              icon="close"
-              color={tintColor}
-              size={25}
-              onPress={() => {
-                setKeyword('');
-                setSearching(false);
-              }}
-            />
-          )
-        : ({ tintColor }) => (
-            <IconButton
-              icon="magnify"
-              color={tintColor}
-              size={25}
-              onPress={() => {
-                setSearching(true);
-              }}
-            />
-          ),
-    });
-  }, [searching, keyword]);
+export default function ContactsScreen() {
   const contacts = useSelector(selectContacts);
+  const search = useSelector((state) => state.ui.contactSearch);
   const filteredContacts =
-    searching && keyword ? filterContacts(contacts, keyword) : contacts;
+    search && typeof search === 'string'
+      ? filterContacts(contacts, search)
+      : contacts;
 
   return (
     <Wrapper scroll={false} style={{ paddingVertical: 10 }}>
@@ -99,7 +63,7 @@ export default function ContactsScreen({ stackNavigation }) {
   );
 }
 
-ContactsScreen.nav = {
+ContactsScreen.nav = ({ contactSearch }) => ({
   name: 'Contacts',
   icon: ContactsIcon,
   options: {
@@ -107,6 +71,42 @@ ContactsScreen.nav = {
   },
   stackOptions: {
     title: 'Contacts',
+    headerTitle:
+      typeof contactSearch === 'string'
+        ? () => (
+            <TextBox.Adaptive
+              value={contactSearch}
+              onChangeText={setContactSearch}
+              autoFocus
+              autoCapitalize="words"
+              dense
+              placeholder="Search contact"
+              style={{ top: 0 }}
+            />
+          )
+        : 'Contacts',
     headerTitleAlign: 'left',
+    headerRight:
+      typeof contactSearch === 'string'
+        ? ({ tintColor }) => (
+            <IconButton
+              icon="close"
+              color={tintColor}
+              size={25}
+              onPress={() => {
+                setContactSearch(null);
+              }}
+            />
+          )
+        : ({ tintColor }) => (
+            <IconButton
+              icon="magnify"
+              color={tintColor}
+              size={25}
+              onPress={() => {
+                setContactSearch('');
+              }}
+            />
+          ),
   },
-};
+});

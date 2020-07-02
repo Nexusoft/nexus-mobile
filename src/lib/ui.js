@@ -4,14 +4,6 @@ import * as TYPE from 'consts/actionTypes';
 import { getStore } from 'store';
 import newUID from 'utils/newUID';
 
-export function toggleTransactionsFilter() {
-  LayoutAnimation.easeInEaseOut();
-  Keyboard.dismiss();
-  getStore().dispatch({
-    type: TYPE.TOGGLE_TRANSACTIONS_FILTER,
-  });
-}
-
 export function showNotification(content, options) {
   const store = getStore();
   const id = newUID();
@@ -72,5 +64,20 @@ export function closeDialog(id) {
   store.dispatch({
     type: TYPE.CLOSE_DIALOG,
     payload: id,
+  });
+}
+
+export function toggleTransactionsFilter() {
+  LayoutAnimation.easeInEaseOut();
+  Keyboard.dismiss();
+  getStore().dispatch({
+    type: TYPE.TOGGLE_TRANSACTIONS_FILTER,
+  });
+}
+
+export function setContactSearch(text) {
+  getStore().dispatch({
+    type: TYPE.SEARCH_CONTACTS,
+    payload: text,
   });
 }
