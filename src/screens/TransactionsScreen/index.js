@@ -5,7 +5,6 @@ import { IconButton } from 'react-native-paper';
 import ScreenBody from 'components/ScreenBody';
 import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
-import { getStore } from 'store';
 import { toggleTransactionsFilter } from 'lib/ui';
 import TransactionIcon from 'icons/transaction.svg';
 import AdjustIcon from 'icons/adjust.svg';
@@ -27,7 +26,7 @@ export default function TransactionsScreen() {
   );
 }
 
-TransactionsScreen.nav = {
+TransactionsScreen.nav = ({ txFilterOpen }) => ({
   name: 'Transactions',
   icon: TransactionIcon,
   stackOptions: {
@@ -48,10 +47,9 @@ TransactionsScreen.nav = {
   },
   listeners: {
     blur: () => {
-      const filterOpen = getStore().getState().ui.txFilterOpen;
-      if (filterOpen) {
+      if (txFilterOpen) {
         toggleTransactionsFilter();
       }
     },
   },
-};
+});

@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
 import TextBox from 'components/TextBox';
-import { Text } from 'components/Adaptive';
 import { navigate } from 'lib/navigation';
 import { setContactSearch } from 'lib/ui';
 import memoize from 'utils/memoize';
@@ -108,5 +107,12 @@ ContactsScreen.nav = ({ contactSearch }) => ({
               }}
             />
           ),
+  },
+  listeners: {
+    blur: () => {
+      if (typeof contactSearch === 'string') {
+        setContactSearch(null);
+      }
+    },
   },
 });
