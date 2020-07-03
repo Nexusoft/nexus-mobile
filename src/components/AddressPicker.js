@@ -18,7 +18,7 @@ const styles = {
   },
   button: {
     marginVertical: 0,
-    top: -20,
+    marginTop: -20,
   },
 };
 

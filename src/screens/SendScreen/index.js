@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from '@emotion/native';
 import { Button, TouchableRipple } from 'react-native-paper';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 import ScreenBody from 'components/ScreenBody';
 import TextBox from 'components/TextBox';
@@ -17,70 +19,81 @@ const Field = styled.View({
   marginTop: 20,
 });
 
-const SendAllButton = styled.Text(({ theme }) => ({
+const SendAllButton = styled(Button)({
   alignSelf: 'flex-end',
-  paddingVertical: 8,
-  paddingHorizontal: 12,
-  color: theme.primary,
-}));
+  marginTop: -20,
+});
 
 const SendButton = styled(Button)({
   marginTop: 50,
 });
 
 export default function SendScreen({ route }) {
-  const [account, setAccount] = React.useState(
-    route.params?.accountName || 'default'
-  );
-  const [recipient, setRecipient] = React.useState('');
   return (
-    <Wrapper surface>
-      <Field>
-        <AccountSelect
-          options={['default', 'trust']}
-          value={account}
-          updateValue={setAccount}
-        />
-      </Field>
+    <Formik
+      initialValues={{
+        accountName: route.params?.accountName || 'default',
+        recipientAddress: '',
+        amount: '',
+        reference: '',
+      }}
+      validateSchema={yup.object().shape({
+        recipientAddress: yup.string().required('Required!'),
+        amount: yup.number().min(0, 'Invalid!'),
+      })}
+      onSubmit={async () => {
+        navigate('ConfirmSend');
+      }}
+    >
+      {({ handleSubmit, setFieldValue }) => (
+        <Wrapper surface>
+          <Field>
+            <AccountSelect name="accountName" options={['default', 'trust']} />
+          </Field>
 
-      <Field>
-        <TextBox.Adaptive
-          multiline
-          label="Send to"
-          placeholder="Recipient address"
-          value={recipient}
-          onChangeText={setRecipient}
-        />
-        <AddressPicker setAddress={setRecipient} />
-      </Field>
+          <Field>
+            <TextBox.Formik
+              name="recipientAddress"
+              multiline
+              label="Send to"
+              placeholder="Recipient address"
+            />
+            <AddressPicker
+              setAddress={(address) => {
+                setFieldValue(recipientAddress);
+              }}
+            />
+          </Field>
 
-      <Field>
-        <TextBox.Adaptive
-          label="Amount (NXS)"
-          keyboardType="numeric"
-          style={{ marginBottom: 15 }}
-        />
-        <TouchableRipple onPress={() => {}}>
-          <SendAllButton>Send All</SendAllButton>
-        </TouchableRipple>
-      </Field>
+          <Field>
+            <TextBox.Formik
+              name="amount"
+              label="Amount (NXS)"
+              keyboardType="numeric"
+            />
+            <SendAllButton
+              mode="text"
+              onPress={() => {}}
+              labelStyle={{ fontSize: 13 }}
+            >
+              Send All
+            </SendAllButton>
+          </Field>
 
-      <Field>
-        <TextBox.Adaptive
-          label="Reference number (Optional)"
-          keyboardType="number-pad"
-        />
-      </Field>
+          <Field>
+            <TextBox.Formik
+              name="reference"
+              label="Reference number (Optional)"
+              keyboardType="number-pad"
+            />
+          </Field>
 
-      <SendButton
-        mode="contained"
-        onPress={() => {
-          navigate('ConfirmSend');
-        }}
-      >
-        Send
-      </SendButton>
-    </Wrapper>
+          <SendButton mode="contained" onPress={handleSubmit}>
+            Send
+          </SendButton>
+        </Wrapper>
+      )}
+    </Formik>
   );
 }
 
