@@ -84,7 +84,7 @@ export default function BalanceSection() {
             <Text>24,464.345474 NXS</Text>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Stake</Text>
+            <Text>Stake (locked)</Text>
             <Text>35,378.343457 NXS</Text>
           </DetailedBalance>
           <DetailedBalance>

@@ -112,7 +112,7 @@ export default function AccountDetailsScreen({ route }) {
             <InfoField
               compact
               inline
-              label="Stake balance"
+              label="Stake balance (locked)"
               value={`${account.stake} ${account.token_name}`}
             />
             <Divider />
