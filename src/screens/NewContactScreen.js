@@ -39,7 +39,7 @@ export default function NewContactScreen() {
         {({ isSubmitting, handleSubmit, setFieldValue }) => (
           <>
             <TextBox.Formik name="name" label="Contact name" />
-            <TextBox.Formik name="address" label="Contact's Nexus address" />
+            <TextBox.Formik name="address" label="Nexus address" multiline />
             <AddressPicker
               pickContacts={false}
               setAddress={(address) => {

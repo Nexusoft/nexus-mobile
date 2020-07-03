@@ -175,7 +175,7 @@ function EditMode({ isSubmitting, endEditing, handleSubmit, setFieldValue }) {
         autoCapitalize="words"
         style={{ alignSelf: 'stretch', marginBottom: 10 }}
       />
-      <TextBox.Formik name="address" label="Address" />
+      <TextBox.Formik name="address" label="Address" multiline />
       <AddressPicker
         pickContacts={false}
         setAddress={(address) => {
