@@ -25,6 +25,7 @@
     "emotion-theming": "^10.0.27",
     "expo": "~37.0.8",
     "expo-asset": "~8.1.4",
+    "expo-barcode-scanner": "^8.2.1",
     "expo-constants": "~9.0.0",
     "expo-font": "~8.1.1",
     "expo-web-browser": "~8.2.0",

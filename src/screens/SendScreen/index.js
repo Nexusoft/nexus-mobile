@@ -60,7 +60,7 @@ export default function SendScreen({ route }) {
             />
             <AddressPicker
               setAddress={(address) => {
-                setFieldValue(recipientAddress);
+                setFieldValue('recipientAddress', address);
               }}
             />
           </Field>

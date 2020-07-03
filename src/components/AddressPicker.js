@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Clipboard } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { View, Clipboard, StyleSheet, Vibration } from 'react-native';
+import { BarCodeScanner } from 'expo-barcode-scanner';
+import { IconButton, Portal } from 'react-native-paper';
 
 import { Icon } from 'components/Adaptive';
 import QRIcon from 'icons/qr.svg';
@@ -20,6 +21,7 @@ const styles = {
 };
 
 export default function AddressPicker({ pickContacts = true, setAddress }) {
+  const [scanning, setScanning] = React.useState(false);
   return (
     <View style={styles.wrapper}>
       <IconButton
@@ -42,8 +44,26 @@ export default function AddressPicker({ pickContacts = true, setAddress }) {
       <IconButton
         style={styles.button}
         icon={() => <Icon icon={QRIcon} size={16} />}
-        onPress={async () => {}}
+        onPress={async () => {
+          const { status } = await BarCodeScanner.requestPermissionsAsync();
+          if (status === 'granted') {
+            setScanning(true);
+          }
+        }}
       />
+      {scanning && (
+        <Portal>
+          <BarCodeScanner
+            style={StyleSheet.absoluteFill}
+            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+            onBarCodeScanned={({ data }) => {
+              Vibration.vibrate();
+              setAddress(data);
+              setScanning(false);
+            }}
+          />
+        </Portal>
+      )}
     </View>
   );
 }
