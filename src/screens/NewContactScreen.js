@@ -6,6 +6,7 @@ import * as yup from 'yup';
 
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
+import AddressPicker from 'components/AddressPicker';
 import { createContact } from 'lib/contacts';
 import { goBack } from 'lib/navigation';
 import { showError } from 'lib/ui';
@@ -35,10 +36,16 @@ export default function NewContactScreen() {
           }
         }}
       >
-        {({ isSubmitting, handleSubmit }) => (
+        {({ isSubmitting, handleSubmit, setFieldValue }) => (
           <>
             <TextBox.Formik name="name" label="Contact name" />
             <TextBox.Formik name="address" label="Contact's Nexus address" />
+            <AddressPicker
+              pickContacts={false}
+              setAddress={(address) => {
+                setFieldValue('address', address);
+              }}
+            />
             <Button
               mode="contained"
               disabled={isSubmitting}

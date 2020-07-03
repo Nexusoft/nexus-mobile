@@ -4,9 +4,9 @@ import { Button, TouchableRipple } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
 import TextBox from 'components/TextBox';
+import AddressPicker from 'components/AddressPicker';
 import { navigate } from 'lib/navigation';
 import AccountSelect from './AccountSelect';
-import RecipientInput from './RecipientInput';
 
 const Wrapper = styled(ScreenBody)({
   paddingVertical: 30,
@@ -18,7 +18,7 @@ const Field = styled.View({
 });
 
 const SendAllButton = styled.Text(({ theme }) => ({
-  alignSelf: 'flex-start',
+  alignSelf: 'flex-end',
   paddingVertical: 8,
   paddingHorizontal: 12,
   color: theme.primary,
@@ -44,7 +44,14 @@ export default function SendScreen({ route }) {
       </Field>
 
       <Field>
-        <RecipientInput recipient={recipient} setRecipient={setRecipient} />
+        <TextBox.Adaptive
+          multiline
+          label="Send to"
+          placeholder="Recipient address"
+          value={recipient}
+          onChangeText={setRecipient}
+        />
+        <AddressPicker setAddress={setRecipient} />
       </Field>
 
       <Field>

@@ -11,6 +11,7 @@ import ScreenBody from 'components/ScreenBody';
 import { Surface, Text, SubText } from 'components/Adaptive';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
+import AddressPicker from 'components/AddressPicker';
 import { showNotification, showError, confirm } from 'lib/ui';
 import { navigate, goBack } from 'lib/navigation';
 import { updateContact, deleteContact } from 'lib/contacts';
@@ -136,7 +137,7 @@ function NormalMode({ startEditing }) {
   );
 }
 
-function EditMode({ isSubmitting, endEditing, handleSubmit }) {
+function EditMode({ isSubmitting, endEditing, handleSubmit, setFieldValue }) {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
@@ -171,9 +172,16 @@ function EditMode({ isSubmitting, endEditing, handleSubmit }) {
       <TextBox.Formik
         name="name"
         label="Contact name"
-        style={{ alignSelf: 'stretch' }}
+        autoCapitalize="words"
+        style={{ alignSelf: 'stretch', marginBottom: 10 }}
       />
       <TextBox.Formik name="address" label="Address" />
+      <AddressPicker
+        pickContacts={false}
+        setAddress={(address) => {
+          setFieldValue('address', address);
+        }}
+      />
       <Button
         mode="contained"
         color={theme.danger}
