@@ -16,15 +16,11 @@ const AdaptiveSideMenu = backgroundProvider({
 
 const Drawer = createDrawerNavigator();
 
-export default function DrawerNavigator({ initialNavigationState }) {
+export default function DrawerNavigator() {
   const theme = useTheme();
   const navTheme = getNavTheme(theme);
   return (
-    <NavigationContainer
-      ref={navContainerRef}
-      initialState={initialNavigationState}
-      theme={navTheme}
-    >
+    <NavigationContainer ref={navContainerRef} theme={navTheme}>
       <Drawer.Navigator
         hideStatusBar={false}
         drawerContent={(props) => <AdaptiveSideMenu {...props} />}

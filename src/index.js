@@ -17,8 +17,6 @@ import loadInitialState from 'store/loadInitialState';
 import Notifications from './Notifications';
 import Dialogs from './Dialogs';
 import DrawerNavigator from './navigation/DrawerNavigator';
-import { navContainerRef } from './lib/navigation';
-import useLinking from './navigation/useLinking';
 
 // For using LayoutAnimation
 if (Platform.OS === 'android') {
@@ -42,49 +40,50 @@ function ThemeController(props) {
   return <ThemeProvider theme={darkMode ? darkTheme : lightTheme} {...props} />;
 }
 
+async function loadResourcesAndDataAsync() {
+  try {
+    // Load fonts
+    await Font.loadAsync({
+      ...Ionicons.font,
+      ...MaterialIcons.font,
+      'noto-sans': require('./fonts/NotoSans-Regular.ttf'),
+      'noto-sans-bold': require('./fonts/NotoSans-Bold.ttf'),
+      robotomono: require('./fonts/RobotoMono-Regular.ttf'),
+    });
+  } catch (e) {
+    // We might want to provide this error information to an error reporting service
+    console.warn(e);
+  }
+}
+
+async function initializeStore(setStore) {
+  const initialState = await loadInitialState();
+  const store = getStore(initialState);
+  return store;
+}
+
 export default function Root(props) {
   const [store, setStore] = React.useState(null);
-  const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-  const [initialNavigationState, setInitialNavigationState] = React.useState();
-  const { getInitialState } = useLinking(navContainerRef);
+  const [loadingComplete, setLoadingComplete] = React.useState(false);
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
-    async function loadResourcesAndDataAsync() {
+    (async () => {
       try {
         SplashScreen.preventAutoHide();
-
-        // Load our initial navigation state
-        setInitialNavigationState(await getInitialState());
-
-        // Load fonts
-        await Font.loadAsync({
-          ...Ionicons.font,
-          ...MaterialIcons.font,
-          'noto-sans': require('./fonts/NotoSans-Regular.ttf'),
-          'noto-sans-bold': require('./fonts/NotoSans-Bold.ttf'),
-          robotomono: require('./fonts/RobotoMono-Regular.ttf'),
-        });
-      } catch (e) {
-        // We might want to provide this error information to an error reporting service
-        console.warn(e);
-      } finally {
+        const [_, store] = await Promise.all([
+          loadResourcesAndDataAsync(),
+          initializeStore(),
+        ]);
+        setStore(store);
         setLoadingComplete(true);
+      } finally {
         SplashScreen.hide();
       }
-    }
-
-    async function initializeStore() {
-      const initialState = await loadInitialState();
-      const store = getStore(initialState);
-      setStore(store);
-    }
-
-    loadResourcesAndDataAsync();
-    initializeStore();
+    })();
   }, []);
 
-  if ((!isLoadingComplete && !props.skipLoadingScreen) || !store) {
+  if ((!loadingComplete && !props.skipLoadingScreen) || !store) {
     return null;
   } else {
     return (
@@ -92,9 +91,7 @@ export default function Root(props) {
         <ThemeController>
           <Container>
             <PaperContainer>
-              <DrawerNavigator
-                initialNavigationState={initialNavigationState}
-              />
+              <DrawerNavigator />
               <Dialogs />
               <Notifications />
             </PaperContainer>
