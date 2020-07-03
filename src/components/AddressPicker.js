@@ -1,14 +1,11 @@
 import React from 'react';
 import { View, Clipboard } from 'react-native';
-import styled from '@emotion/native';
 import { IconButton } from 'react-native-paper';
 
 import { Icon } from 'components/Adaptive';
 import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
 import AddressBookIcon from 'icons/address-book.svg';
-
-const Wrapper = styled.View({});
 
 const styles = {
   wrapper: {
@@ -30,7 +27,9 @@ export default function AddressPicker({ pickContacts = true, setAddress }) {
         icon={() => <Icon icon={PasteIcon} size={16} />}
         onPress={async () => {
           const clipboard = await Clipboard.getString();
-          setAddress(clipboard);
+          if (clipboard) {
+            setAddress(clipboard);
+          }
         }}
       />
       {pickContacts && (
