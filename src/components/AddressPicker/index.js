@@ -6,7 +6,7 @@ import { IconButton, Portal } from 'react-native-paper';
 import { Icon } from 'components/Adaptive';
 import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
-import AddressBookIcon from 'icons/address-book.svg';
+import ContactsSelector from './ContactsSelector';
 
 const styles = {
   wrapper: {
@@ -34,13 +34,7 @@ export default function AddressPicker({ pickContacts = true, setAddress }) {
           }
         }}
       />
-      {pickContacts && (
-        <IconButton
-          style={styles.button}
-          icon={() => <Icon icon={AddressBookIcon} size={16} />}
-          onPress={async () => {}}
-        />
-      )}
+      {pickContacts && <ContactsSelector setAddress={setAddress} />}
       <IconButton
         style={styles.button}
         icon={() => <Icon icon={QRIcon} size={16} />}
