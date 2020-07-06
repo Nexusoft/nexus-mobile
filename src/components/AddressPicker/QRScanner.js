@@ -46,7 +46,7 @@ export default function QRScanner({ setAddress, style }) {
       {scanning && (
         <Portal>
           <BarCodeScanner
-            style={StyleSheet.absoluteFill}
+            style={[StyleSheet.absoluteFill, { backgroundColor: '#000' }]}
             barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
             onBarCodeScanned={({ data }) => {
               Vibration.vibrate();
