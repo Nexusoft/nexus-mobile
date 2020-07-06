@@ -9,29 +9,17 @@ import memoize from 'utils/memoize';
 import AddressBookIcon from 'icons/address-book.svg';
 import Contact from './Contact';
 
-const styles = {
-  wrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  button: {
-    marginVertical: 0,
-    marginTop: -20,
-  },
-};
-
 const selectContacts = memoize((state) =>
   Object.entries(state.contacts).map(([name, address]) => ({ name, address }))
 );
 
-export default function ContactsSelector({ setAddress }) {
+export default function ContactsSelector({ setAddress, style }) {
   const [contactsOpen, setContactsOpen] = React.useState(false);
   const contacts = useSelector(selectContacts);
   return (
     <>
       <IconButton
-        style={styles.button}
+        style={style}
         icon={() => <Icon icon={AddressBookIcon} size={16} />}
         onPress={async () => {
           setContactsOpen(true);
@@ -45,7 +33,7 @@ export default function ContactsSelector({ setAddress }) {
           }}
         >
           <Dialog.Title>
-            <Text>Choose from contacts</Text>
+            <Text>Choose from Contacts</Text>
           </Dialog.Title>
           <Dialog.ScrollArea>
             <FlatList

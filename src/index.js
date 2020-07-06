@@ -8,6 +8,7 @@ import { ThemeProvider } from 'emotion-theming';
 import styled from '@emotion/native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { View } from 'components/Adaptive';
 import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
@@ -90,11 +91,13 @@ export default function Root(props) {
       <ReduxProvider store={store}>
         <ThemeController>
           <Container>
-            <PaperContainer>
-              <DrawerNavigator />
-              <Dialogs />
-              <Notifications />
-            </PaperContainer>
+            <SafeAreaProvider>
+              <PaperContainer>
+                <DrawerNavigator />
+                <Dialogs />
+                <Notifications />
+              </PaperContainer>
+            </SafeAreaProvider>
           </Container>
         </ThemeController>
       </ReduxProvider>
