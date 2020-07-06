@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Vibration } from 'react-native';
+import { View, StyleSheet, Keyboard, Vibration } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { IconButton, Portal } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
@@ -40,6 +40,7 @@ export default function QRScanner({ setAddress, style }) {
           const { status } = await BarCodeScanner.requestPermissionsAsync();
           if (status === 'granted') {
             setScanning(true);
+            Keyboard.dismiss();
           }
         }}
       />
