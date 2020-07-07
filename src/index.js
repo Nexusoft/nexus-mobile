@@ -1,15 +1,14 @@
 import React from 'react';
-import { Provider as ReduxProvider, useSelector } from 'react-redux';
+import { Provider as ReduxProvider } from 'react-redux';
 import { Platform, UIManager, View } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { ThemeProvider } from 'emotion-theming';
 import { Provider as PaperProvider } from 'react-native-paper';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
+import { getPaperTheme } from 'lib/theme';
 import { getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
 
@@ -36,11 +35,6 @@ function PaperContainer({ children }) {
   return <PaperProvider theme={getPaperTheme(theme)}>{children}</PaperProvider>;
 }
 
-function ThemeController(props) {
-  const darkMode = useSelector((state) => state.settings.darkMode);
-  return <ThemeProvider theme={darkMode ? darkTheme : lightTheme} {...props} />;
-}
-
 async function loadResourcesAndDataAsync() {
   try {
     // Load fonts
@@ -63,8 +57,18 @@ async function initializeStore(setStore) {
   return store;
 }
 
-export default function Root(props) {
+function App() {
   const theme = useTheme();
+  return (
+    <View style={styles.container({ theme })}>
+      <DrawerNavigator />
+      <Dialogs />
+      <Notifications />
+    </View>
+  );
+}
+
+export default function Root(props) {
   const [store, setStore] = React.useState(null);
   const [loadingComplete, setLoadingComplete] = React.useState(false);
 
@@ -90,17 +94,11 @@ export default function Root(props) {
   } else {
     return (
       <ReduxProvider store={store}>
-        <ThemeController>
-          <View style={styles.container({ theme })}>
-            <SafeAreaProvider>
-              <PaperContainer>
-                <DrawerNavigator />
-                <Dialogs />
-                <Notifications />
-              </PaperContainer>
-            </SafeAreaProvider>
-          </View>
-        </ThemeController>
+        <SafeAreaProvider>
+          <PaperContainer>
+            <App />
+          </PaperContainer>
+        </SafeAreaProvider>
       </ReduxProvider>
     );
   }

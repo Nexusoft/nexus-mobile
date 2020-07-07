@@ -1,20 +1,19 @@
 import React from 'react';
 import { Platform, SafeAreaView } from 'react-native';
-import styled from '@emotion/native';
 
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import TransactionDetails from './TransactionDetails';
 import ContractDetails from './ContractDetails';
 
-const Wrapper = styled(ScreenBody)({});
-
-const SubHeader = styled(Text)({
-  marginLeft: 30,
-  marginTop: 30,
-  marginBottom: 10,
-  textTransform: 'uppercase',
-});
+const styles = {
+  subHeader: {
+    marginLeft: 30,
+    marginTop: 30,
+    marginBottom: 10,
+    textTransform: 'uppercase',
+  },
+};
 
 export default function TransactionDetailsScreen({ route }) {
   const {
@@ -22,17 +21,19 @@ export default function TransactionDetailsScreen({ route }) {
   } = route;
   return (
     !!transaction && (
-      <Wrapper>
+      <ScreenBody>
         <SafeAreaView>
           <TransactionDetails transaction={transaction} />
 
-          <SubHeader sub>Contracts</SubHeader>
+          <Text sub style={styles.subHeader}>
+            Contracts
+          </Text>
           {!!transaction.contracts &&
             transaction.contracts.map((contract) => (
               <ContractDetails key={contract.id} contract={contract} />
             ))}
         </SafeAreaView>
-      </Wrapper>
+      </ScreenBody>
     )
   );
 }

@@ -1,80 +1,77 @@
 import React from 'react';
-import styled from '@emotion/native';
+import { View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
 import Text from 'components/Text';
 import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
 
-const AccountWrapper = styled.View({
-  marginVertical: 10,
-});
-
-const AccountInfo = styled.View({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  paddingVertical: 15,
-});
-
-const AccountName = styled(Text)(({ theme }) => ({
-  fontSize: 15,
-  color: theme.dark ? theme.primary : undefined,
-}));
-
-const AccountBalance = styled(Text)({
-  fontSize: 15,
-});
-
-const AccountButtons = styled.View({
-  flexDirection: 'row',
-});
-
-const AccountButton = styled(TouchableRipple)({
-  flex: 1,
-  alignItems: 'center',
-  paddingVertical: 10,
-});
-
-const AccountButtonLabel = styled(Text)({
-  fontSize: 11,
-});
+const styles = {
+  wrapper: {
+    marginVertical: 10,
+  },
+  accInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15,
+  },
+  accName: ({ theme }) => ({
+    fontSize: 15,
+    color: theme.dark ? theme.primary : undefined,
+  }),
+  accBalance: {
+    fontSize: 15,
+  },
+  accActions: {
+    flexDirection: 'row',
+  },
+  accAction: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+};
 
 export default function Account({ account }) {
   return (
     <>
-      <AccountWrapper>
+      <View style={styles.wrapper}>
         <TouchableRipple
           onPress={() => {
             navigate('AccountDetails', { account });
           }}
         >
-          <AccountInfo>
-            <AccountName bold>{account.name}</AccountName>
-            <AccountBalance>{account.balance} NXS</AccountBalance>
-          </AccountInfo>
+          <View style={styles.accInfo}>
+            <Text style={styles.accName} bold>
+              {account.name}
+            </Text>
+            <Text style={styles.accBalance}>{account.balance} NXS</Text>
+          </View>
         </TouchableRipple>
 
-        <AccountButtons>
-          <AccountButton
+        <View style={styles.accActions}>
+          <TouchableRipple
+            style={styles.accAction}
             onPress={() => {
               navigate('Receive', { account });
             }}
           >
-            <AccountButtonLabel>RECEIVE</AccountButtonLabel>
-          </AccountButton>
+            <Text size={11}>RECEIVE</Text>
+          </TouchableRipple>
 
           <Divider vertical inset={10} />
 
-          <AccountButton
+          <TouchableRipple
+            style={styles.accAction}
             onPress={() => {
               navigate('Send', { accountName: account.name });
             }}
           >
-            <AccountButtonLabel>SEND</AccountButtonLabel>
-          </AccountButton>
-        </AccountButtons>
-      </AccountWrapper>
+            <Text size={11}>SEND</Text>
+          </TouchableRipple>
+        </View>
+      </View>
       <Divider />
     </>
   );

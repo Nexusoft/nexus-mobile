@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '@emotion/native';
+import { View } from 'react-native';
 import moment from 'moment';
 import { TouchableRipple } from 'react-native-paper';
 
@@ -8,33 +8,27 @@ import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
 import Contract from './Contract';
 
-const TransactionWrapper = styled.View({
-  flexDirection: 'row',
-  alignItems: 'center',
-});
-
-const TxDate = styled.View({
-  paddingVertical: 20,
-  width: 80,
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
-const Day = styled(Text)({
-  fontSize: 21,
-});
-
-const Month = styled(Text)({
-  fontSize: 14,
-});
-
-const Year = styled(Text)({
-  fontSize: 12,
-});
-
-const Contracts = styled.View({
-  flex: 1,
-});
+const styles = {
+  wrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  date: {
+    paddingVertical: 20,
+    width: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  day: {
+    fontSize: 21,
+  },
+  month: {
+    fontSize: 14,
+  },
+  contracts: {
+    flex: 1,
+  },
+};
 
 export default function Transaction({ transaction }) {
   const txTime = moment.unix(transaction.timestamp);
@@ -44,21 +38,21 @@ export default function Transaction({ transaction }) {
         navigate('TransactionDetails', { transaction });
       }}
     >
-      <TransactionWrapper>
-        <TxDate>
-          <Day>{txTime.format('DD')}</Day>
-          <Month>{txTime.format('MMM')}</Month>
-        </TxDate>
+      <View style={styles.wrapper}>
+        <View style={styles.date}>
+          <Text style={styles.day}>{txTime.format('DD')}</Text>
+          <Text style={styles.month}>{txTime.format('MMM')}</Text>
+        </View>
 
-        <Contracts>
+        <View style={styles.contracts}>
           {transaction.contracts.map((contract, i) => (
             <React.Fragment key={i}>
               {i !== 0 && <Divider />}
               <Contract contract={contract} />
             </React.Fragment>
           ))}
-        </Contracts>
-      </TransactionWrapper>
+        </View>
+      </View>
     </TouchableRipple>
   );
 }

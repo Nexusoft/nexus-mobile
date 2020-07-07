@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Dialog } from 'react-native-paper';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 
 import Portal from 'components/Portal';
 import Text from 'components/Text';

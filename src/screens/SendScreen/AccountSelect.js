@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from '@emotion/native';
 import { StyleSheet } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useField } from 'formik';
@@ -7,10 +6,6 @@ import { useField } from 'formik';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Select from 'components/Select';
-
-const AccountTextBox = styled(TextBox)({
-  marginBottom: 15,
-});
 
 export default function AccountSelect({ name, options }) {
   const [field, meta, helpers] = useField(name);
@@ -20,7 +15,8 @@ export default function AccountSelect({ name, options }) {
       value={field.value}
       updateValue={helpers.setValue}
       render={({ display, openSelect }) => (
-        <AccountTextBox
+        <TextBox
+          style={{ marginBottom: 15 }}
           background={['surface', 0]}
           mode="outlined"
           label="Send from"

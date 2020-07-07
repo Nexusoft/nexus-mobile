@@ -1,7 +1,8 @@
 import React from 'react';
-import styled from '@emotion/native';
+import { View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
+import { useTheme } from 'lib/theme';
 
 import Text from 'components/Text';
 import Divider from 'components/Divider';
@@ -10,56 +11,54 @@ import Select from 'components/Select';
 import { updateSettings } from 'lib/settings';
 import baseCurrencies from 'consts/baseCurrencies';
 
-const Wrapper = styled.View({
-  // flex: 1,
-  // paddingVertical: 20,
-});
+const styles = {
+  setting: {
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  settingInfo: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  label: {
+    fontSize: 18,
+  },
+  description: {
+    fontSize: 14,
+    marginTop: 3,
+  },
+  switch: {
+    paddingHorizontal: 10,
+  },
+};
 
-const Setting = styled.View({
-  paddingVertical: 20,
-  paddingHorizontal: 20,
-  flexDirection: 'row',
-  alignItems: 'center',
-});
-
-const SettingText = styled.View({
-  flex: 1,
-  paddingRight: 10,
-});
-
-const SettingLabel = styled(Text)({
-  fontSize: 18,
-});
-
-const SettingDescription = styled(Text)(({ theme, primary }) => ({
-  color: primary ? theme.primary : undefined,
-  fontSize: 14,
-  marginTop: 3,
-}));
-
-const SettingSwitch = styled.View({
-  paddingHorizontal: 10,
-});
-
-const SettingSelect = ({ title, options, value, updateValue }) => (
-  <Select
-    options={options}
-    value={value}
-    updateValue={updateValue}
-    render={({ value, openSelect }) => (
-      <TouchableRipple borderless={false} onPress={openSelect}>
-        <Setting>
-          <SettingText>
-            <SettingLabel>{title}</SettingLabel>
-            <SettingDescription primary>{options[value]}</SettingDescription>
-          </SettingText>
-        </Setting>
-      </TouchableRipple>
-    )}
-  />
-);
+function SettingSelect({ title, options, value, updateValue }) {
+  const theme = useTheme();
+  return (
+    <Select
+      options={options}
+      value={value}
+      updateValue={updateValue}
+      render={({ value, openSelect }) => (
+        <TouchableRipple borderless={false} onPress={openSelect}>
+          <View style={styles.setting}>
+            <View style={styles.settingInfo}>
+              <Text style={styles.label}>{title}</Text>
+              <Text style={[styles.description, { color: theme.primary }]}>
+                {options[value]}
+              </Text>
+            </View>
+          </View>
+        </TouchableRipple>
+      )}
+    />
+  );
+}
 
 export default function ApplicationSettings() {
+  const theme = useTheme();
   const settings = useSelector((state) => state.settings);
   const toggleDarkMode = React.useCallback(() => {
     updateSettings({ darkMode: !settings.darkMode });
@@ -72,17 +71,19 @@ export default function ApplicationSettings() {
   );
 
   return (
-    <Wrapper>
+    <View>
       <TouchableRipple borderless={false} onPress={toggleDarkMode}>
-        <Setting>
-          <SettingText>
-            <SettingLabel>Dark mode</SettingLabel>
-            <SettingDescription primary>On</SettingDescription>
-          </SettingText>
-          <SettingSwitch>
+        <View style={styles.setting}>
+          <View style={styles.settingInfo}>
+            <Text style={styles.label}>Dark mode</Text>
+            <Text style={[styles.description, { color: theme.primary }]}>
+              On
+            </Text>
+          </View>
+          <View style={styles.switch}>
             <Switch value={settings.darkMode} onValueChange={toggleDarkMode} />
-          </SettingSwitch>
-        </Setting>
+          </View>
+        </View>
       </TouchableRipple>
       <Divider inset={20} />
       <SettingSelect
@@ -91,6 +92,6 @@ export default function ApplicationSettings() {
         value={settings.baseCurrency}
         updateValue={setBaseCurrency}
       />
-    </Wrapper>
+    </View>
   );
 }

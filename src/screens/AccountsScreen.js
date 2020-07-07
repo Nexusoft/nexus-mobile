@@ -1,7 +1,7 @@
 import React from 'react';
-import { FlatList } from 'react-native';
-import styled from '@emotion/native';
+import { View, FlatList } from 'react-native';
 import { TouchableRipple, FAB } from 'react-native-paper';
+import { useTheme } from 'lib/theme';
 
 import Text from 'components/Text';
 import Divider from 'components/Divider';
@@ -36,42 +36,40 @@ const accounts = [
   },
 ];
 
-const Wrapper = styled(ScreenBody)({
-  paddingBottom: 106,
-});
-
-const Account = styled.View({
-  paddingVertical: 20,
-  paddingHorizontal: 30,
-});
-
-const AccountName = styled(Text)({
-  fontSize: 16,
-});
-
-const AddressBox = styled.View(({ theme }) => ({
-  borderWidth: 1,
-  borderColor: disabledColor(theme.foreground),
-  borderRadius: 4,
-  paddingVertical: 5,
-  paddingHorizontal: 8,
-  marginTop: 12,
-}));
-
-const Address = styled(Text)({
-  fontSize: 15,
-  textAlign: 'center',
-});
-
-const AddButton = styled(FAB)({
-  position: 'absolute',
-  right: 30,
-  bottom: 30,
-});
+const styles = {
+  wrapper: {
+    paddingBottom: 106,
+  },
+  account: {
+    paddingVertical: 20,
+    paddingHorizontal: 30,
+  },
+  accName: {
+    fontSize: 16,
+  },
+  addressBox: ({ theme }) => ({
+    borderWidth: 1,
+    borderColor: disabledColor(theme.foreground),
+    borderRadius: 4,
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    marginTop: 12,
+  }),
+  address: {
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  add: {
+    position: 'absolute',
+    right: 30,
+    bottom: 30,
+  },
+};
 
 export default function AccountsScreen() {
+  const theme = useTheme();
   return (
-    <Wrapper scroll={false} surface>
+    <ScreenBody scroll={false} surface style={styles.wrapper}>
       <FlatList
         data={accounts}
         ItemSeparatorComponent={Divider}
@@ -82,24 +80,27 @@ export default function AccountsScreen() {
               navigate('AccountDetails', { account });
             }}
           >
-            <Account>
-              <AccountName bold disabled={!account.name}>
+            <View style={styles.account}>
+              <Text style={styles.accName} bold disabled={!account.name}>
                 {account.name || 'No name'}
-              </AccountName>
-              <AddressBox>
-                <Address mono>{segmentAddress(account.address)}</Address>
-              </AddressBox>
-            </Account>
+              </Text>
+              <View style={styles.addressBox({ theme })}>
+                <Text style={styles.address} mono>
+                  {segmentAddress(account.address)}
+                </Text>
+              </View>
+            </View>
           </TouchableRipple>
         )}
       />
-      <AddButton
+      <FAB
+        style={styles.add}
         icon="plus"
         onPress={() => {
           navigate('NewAccount');
         }}
       />
-    </Wrapper>
+    </ScreenBody>
   );
 }
 

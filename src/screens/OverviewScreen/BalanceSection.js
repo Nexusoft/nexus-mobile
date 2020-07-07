@@ -1,113 +1,117 @@
 import React from 'react';
-import { LayoutAnimation } from 'react-native';
+import { LayoutAnimation, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
-import styled from '@emotion/native';
+import { useTheme } from 'lib/theme';
 
 import Text from 'components/Text';
 import { subColor } from 'lib/theme';
 
-const Wrapper = styled(TouchableRipple)({
-  minHeight: '30%',
-  paddingVertical: 25,
-  paddingHorizontal: 20,
-  justifyContent: 'center',
-});
+const styles = {
+  wrapper: {
+    minHeight: '30%',
+    paddingVertical: 25,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+  },
+  brief: {
+    alignItems: 'center',
+  },
+  balanceLabel: {
+    fontSize: 12,
+    textTransform: 'uppercase',
+  },
+  balance: {
+    fontSize: 34,
+  },
+  fiatValue: {
+    marginTop: 5,
+    fontSize: 18,
+  },
+  expandIcon: ({ theme }) => ({
+    position: 'absolute',
+    top: 4,
+    right: 10,
+    fontSize: 15,
+    alignSelf: 'flex-end',
+    color: subColor(theme.dark ? theme.foreground : theme.onPrimary),
+  }),
+  subBalances: ({ expanded }) => ({
+    // setting height to 0 makes text have the stretch effect
+    // setting height to > 0 makes text have the revealing effect
+    height: expanded ? undefined : 0.01,
+    overflow: 'hidden',
+    alignSelf: 'stretch',
+    paddingTop: expanded ? 30 : 0,
+    paddingHorizontal: '10%',
+  }),
+  subBalance: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 4,
+  },
+};
 
-const BalanceBrief = styled.View({
-  alignItems: 'center',
-  // paddingBottom: 20,
-});
-
-const BalanceText = styled(Text)(({ theme }) => ({
-  color: theme.dark ? theme.foreground : theme.onPrimary,
-}));
-
-const BalanceLabel = styled(BalanceText)({
-  fontSize: 12,
-  textTransform: 'uppercase',
-});
-
-const Balance = styled(BalanceText)({
-  fontSize: 34,
-});
-
-const Value = styled(BalanceText)({
-  marginTop: 5,
-  fontSize: 18,
-});
-
-const ExpandIcon = styled(Ionicons)(({ theme }) => ({
-  position: 'absolute',
-  top: 4,
-  right: 10,
-  fontSize: 15,
-  alignSelf: 'flex-end',
-  color: subColor(theme.dark ? theme.foreground : theme.onPrimary),
-}));
-
-const DetailedBalances = styled.View(({ expanded }) => ({
-  // setting height to 0 makes text have the stretch effect
-  // setting height to > 0 makes text have the revealing effect
-  height: expanded ? undefined : 0.01,
-  overflow: 'hidden',
-  alignSelf: 'stretch',
-  paddingTop: expanded ? 30 : 0,
-  paddingHorizontal: '10%',
-}));
-
-const DetailedBalance = styled.View({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginVertical: 4,
-});
+function BalanceText(props) {
+  const theme = useTheme();
+  return (
+    <Text colorName={theme.dark ? 'foreground' : 'onPrimary'} {...props} />
+  );
+}
 
 export default function BalanceSection() {
+  const theme = useTheme();
   const [expanded, setExpanded] = React.useState(false);
 
   return (
-    <Wrapper
+    <TouchableRipple
+      style={styles.wrapper}
       onPress={() => {
         LayoutAnimation.easeInEaseOut();
         setExpanded(!expanded);
       }}
     >
       <>
-        <BalanceBrief>
-          <BalanceLabel>Balance</BalanceLabel>
-          <Balance>10,435.643 NXS</Balance>
-          <Value sub>≈ 1,931.32 USD</Value>
-          <ExpandIcon name={expanded ? 'ios-arrow-up' : 'ios-arrow-down'} />
-        </BalanceBrief>
+        <View style={styles.brief}>
+          <BalanceText style={styles.balanceLabel}>Balance</BalanceText>
+          <BalanceText style={styles.balance}>10,435.643 NXS</BalanceText>
+          <BalanceText style={styles.fiatValue} sub>
+            ≈ 1,931.32 USD
+          </BalanceText>
+          <Ionicons
+            style={styles.expandIcon({ theme })}
+            name={expanded ? 'ios-arrow-up' : 'ios-arrow-down'}
+          />
+        </View>
 
-        <DetailedBalances expanded={expanded}>
-          <DetailedBalance>
+        <View style={styles.subBalances({ expanded })}>
+          <View style={styles.subBalance}>
             <BalanceText>Available</BalanceText>
             <BalanceText>24,464.345474 NXS</BalanceText>
-          </DetailedBalance>
-          <DetailedBalance>
+          </View>
+          <View style={styles.subBalance}>
             <BalanceText>Stake (locked)</BalanceText>
             <BalanceText>35,378.343457 NXS</BalanceText>
-          </DetailedBalance>
-          <DetailedBalance>
+          </View>
+          <View style={styles.subBalance}>
             <BalanceText>Pending</BalanceText>
             <BalanceText>0 NXS</BalanceText>
-          </DetailedBalance>
-          <DetailedBalance>
+          </View>
+          <View style={styles.subBalance}>
             <BalanceText>Unconfirmed</BalanceText>
             <BalanceText>0 NXS</BalanceText>
-          </DetailedBalance>
-          <DetailedBalance>
+          </View>
+          <View style={styles.subBalance}>
             <BalanceText>Immature</BalanceText>
             <BalanceText>0 NXS</BalanceText>
-          </DetailedBalance>
-          <DetailedBalance>
+          </View>
+          <View style={styles.subBalance}>
             <BalanceText>Total</BalanceText>
             <BalanceText>64,324.565803 NXS</BalanceText>
-          </DetailedBalance>
-        </DetailedBalances>
+          </View>
+        </View>
       </>
-    </Wrapper>
+    </TouchableRipple>
   );
 }

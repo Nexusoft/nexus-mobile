@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '@emotion/native';
+import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
@@ -12,122 +12,119 @@ import WalletIcon from 'icons/wallet.svg';
 import SendIcon from 'icons/send.svg';
 import ContactsIcon from 'icons/address-book.svg';
 
-const Wrapper = styled(ScreenBody)({
-  paddingVertical: 30,
-  paddingHorizontal: 20,
-});
-
-const AmountSection = styled.View({
-  alignItems: 'center',
-  marginBottom: 50,
-});
-
-const FromToSection = styled.View({
-  flexDirection: 'row',
-  alignItems: 'flex-start',
-  marginBottom: 50,
-});
-
-const ReferenceSection = styled.View({
-  alignItems: 'center',
-});
-
-const ButtonSection = styled.View({
-  flexDirection: 'row',
-  alignItems: 'center',
-  marginTop: 70,
-});
-
-const FromTo = styled.View({
-  flex: 1,
-  alignItems: 'center',
-});
-
-const Amount = styled(Text)({
-  fontSize: 36,
-});
-
-const Label = styled(Text)({
-  fontSize: 18,
-  marginBottom: 5,
-});
-
-const Name = styled(Text)({
-  fontSize: 20,
-  marginBottom: 10,
-});
-
-const Address = styled(Text)({
-  textAlign: 'center',
-});
-
-const Arrow = styled.View({
-  paddingTop: 38,
-  paddingHorizontal: 5,
-});
-
-const ReferenceNo = styled(Text)({
-  fontSize: 20,
-});
-
-const CancelBtn = styled(Button)({
-  marginRight: 15,
-});
-
-const ConfirmBtn = styled(Button)({
-  flex: 1,
-});
+const styles = {
+  wrapper: {
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+  },
+  amountSection: {
+    alignItems: 'center',
+    marginBottom: 50,
+  },
+  fromToSection: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 50,
+  },
+  referenceSection: {
+    alignItems: 'center',
+  },
+  buttonSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 70,
+  },
+  fromTo: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  amount: {
+    fontSize: 36,
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  name: {
+    fontSize: 20,
+    marginBottom: 10,
+  },
+  address: {
+    textAlign: 'center',
+  },
+  arrow: {
+    paddingTop: 38,
+    paddingHorizontal: 5,
+  },
+  referenceNo: {
+    fontSize: 20,
+  },
+  cancel: {
+    marginRight: 15,
+  },
+  confirm: {
+    flex: 1,
+  },
+};
 
 export default function ConfirmSendScreen() {
   const [confirmingPin, setConfirmingPin] = React.useState(false);
   return (
-    <Wrapper surface>
-      <AmountSection>
-        <Label sub>You're sending</Label>
-        <Amount>3,525 NXS</Amount>
-      </AmountSection>
+    <ScreenBody style={styles.wrapper} surface>
+      <View style={styles.amountSection}>
+        <Text style={styles.label} sub>
+          You're sending
+        </Text>
+        <Text style={styles.amount}>3,525 NXS</Text>
+      </View>
 
-      <FromToSection>
-        <FromTo>
-          <Label sub>From</Label>
-          <Name>
+      <View style={styles.fromToSection}>
+        <View style={styles.fromTo}>
+          <Text style={styles.label} sub>
+            From
+          </Text>
+          <Text style={styles.name}>
             <SvgIcon icon={WalletIcon} size={20} /> default
-          </Name>
-          <Address mono>
+          </Text>
+          <Text style={styles.address} mono>
             8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW
-          </Address>
-        </FromTo>
-        <Arrow>
+          </Text>
+        </View>
+        <View style={styles.arrow}>
           <SvgIcon icon={NextIcon} size={16} />
-        </Arrow>
-        <FromTo>
-          <Label sub>To</Label>
-          <Name>
+        </View>
+        <View style={styles.fromTo}>
+          <Text style={styles.label} sub>
+            To
+          </Text>
+          <Text style={styles.name}>
             <SvgIcon icon={ContactsIcon} size={20} /> Paul
-          </Name>
-          <Address mono>
+          </Text>
+          <Text style={styles.address} mono>
             8C53PdQLuXamTiWw3yXS8fVB4c2eQSwvmssHYzWfLsr5Wtj4jHr
-          </Address>
-        </FromTo>
-      </FromToSection>
+          </Text>
+        </View>
+      </View>
 
-      <ReferenceSection>
-        <Label sub style={{ fontSize: 16 }}>
+      <View style={styles.referenceSection}>
+        <Text style={styles.label} sub size={16}>
           Reference number
-        </Label>
-        <ReferenceNo>942189</ReferenceNo>
-      </ReferenceSection>
+        </Text>
+        <Text style={styles.referenceNo}>942189</Text>
+      </View>
 
-      <ButtonSection>
-        <CancelBtn
+      <View style={styles.buttonSection}>
+        <Button
+          style={styles.cancel}
           mode="outlined"
           onPress={() => {
             goBack();
           }}
         >
           Cancel
-        </CancelBtn>
-        <ConfirmBtn
+        </Button>
+        <Button
+          style={styles.confirm}
           mode="contained"
           icon={({ size, color }) => (
             <SvgIcon icon={SendIcon} {...{ size, color }} />
@@ -137,8 +134,8 @@ export default function ConfirmSendScreen() {
           }}
         >
           Send transaction
-        </ConfirmBtn>
-      </ButtonSection>
+        </Button>
+      </View>
 
       <PinDialog
         visible={confirmingPin}
@@ -146,7 +143,7 @@ export default function ConfirmSendScreen() {
           setConfirmingPin(false);
         }}
       />
-    </Wrapper>
+    </ScreenBody>
   );
 }
 
@@ -154,6 +151,5 @@ ConfirmSendScreen.nav = {
   name: 'ConfirmSend',
   options: {
     title: 'Confirm Send',
-    // headerShown: false,
   },
 };

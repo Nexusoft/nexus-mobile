@@ -1,4 +1,5 @@
 import { DefaultTheme, DarkTheme } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 
 import { mix, fade, darken } from 'utils/color';
 import memoize from 'utils/memoize';
@@ -97,6 +98,11 @@ export const lightTheme = {
   danger: dangerShades[800],
   onDanger: lightColor,
 };
+
+export function useTheme() {
+  const darkMode = useSelector((state) => state.settings.darkMode);
+  return darkMode ? darkTheme : lightTheme;
+}
 
 export const getNavTheme = memoize((theme) => ({
   dark: theme.dark,

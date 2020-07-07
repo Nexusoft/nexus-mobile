@@ -1,6 +1,5 @@
 import React from 'react';
 import { Clipboard } from 'react-native';
-import styled from '@emotion/native';
 import moment from 'moment';
 import { Button, Surface } from 'react-native-paper';
 
@@ -10,14 +9,16 @@ import InfoField from 'components/InfoField';
 import { showNotification } from 'lib/ui';
 import CopyIcon from 'icons/copy.svg';
 
-const TxDetails = styled(Surface)({
-  elevation: 3,
-  paddingHorizontal: 30,
-});
+const styles = {
+  wrapper: {
+    elevation: 3,
+    paddingHorizontal: 30,
+  },
+};
 
 export default function TransactionDetails({ transaction }) {
   return (
-    <TxDetails>
+    <Surface style={styles.wrapper}>
       <InfoField
         label="Transaction ID"
         control={
@@ -53,6 +54,6 @@ export default function TransactionDetails({ transaction }) {
         label="Confirmations"
         value={transaction.confirmations}
       />
-    </TxDetails>
+    </Surface>
   );
 }

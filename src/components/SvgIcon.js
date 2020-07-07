@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 
 import { disabledColor, subColor } from 'lib/theme';
 

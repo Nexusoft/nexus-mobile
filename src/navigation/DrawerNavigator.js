@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 
 import { getNavTheme } from 'lib/theme';
 

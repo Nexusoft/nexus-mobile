@@ -1,40 +1,35 @@
 import React from 'react';
-import styled from '@emotion/native';
+import { View } from 'react-native';
 
 import Text from 'components/Text';
 import { getDeltaSign } from 'lib/contracts';
 
-const ContractWrapper = styled.View({
-  padding: 20,
-  paddingLeft: 0,
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-});
+const styles = {
+  contract: {
+    padding: 20,
+    paddingLeft: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  contractContent: {
+    flex: 1,
+  },
+  operation: {
+    textTransform: 'uppercase',
+    fontFamily: 'noto-sans-bold',
+    fontWeight: 'bold',
+  },
+  registerType: {
+    textTransform: 'lowercase',
+  },
+};
 
-const ContractContent = styled.View({
-  flex: 1,
-});
+function Delta({ negative }) {
+  return <Text colorName={negative ? 'danger' : 'primary'} size={14} />;
+}
 
-const Operation = styled.Text({
-  textTransform: 'uppercase',
-  fontFamily: 'noto-sans-bold',
-  fontWeight: 'bold',
-});
-
-const AccountName = styled.Text({});
-
-const RegisterType = styled.Text({
-  textTransform: 'lowercase',
-});
-
-const Delta = styled(Text)(({ theme, negative }) => ({
-  color: negative ? theme.danger : theme.primary,
-  // opacity: sign === '-' ? 0.6 : 1,
-  fontSize: 14,
-}));
-
-const Hash = ({ children, ...rest }) => {
+function Hash({ children, ...rest }) {
   if (!children || typeof children !== 'string' || children.length <= 11) {
     return <Text {...rest}>{children}</Text>;
   } else {
@@ -44,10 +39,10 @@ const Hash = ({ children, ...rest }) => {
       </Text>
     );
   }
-};
+}
 
 const Account = ({ name, address }) =>
-  name ? <AccountName>{name}</AccountName> : <Hash>{address}</Hash>;
+  name ? <Text>{name}</Text> : <Hash>{address}</Hash>;
 
 const creditFrom = (contract) => {
   switch (contract.for) {
@@ -70,7 +65,7 @@ const contractContent = (contract) => {
     case 'WRITE': {
       return (
         <Text>
-          <Operation>Write</Operation>
+          <Text style={styles.operation}>Write</Text>
           <Text sub> data to </Text>
           <Account address={contract.address} />
         </Text>
@@ -80,7 +75,7 @@ const contractContent = (contract) => {
     case 'APPEND': {
       return (
         <Text>
-          <Operation>Append</Operation>
+          <Text style={styles.operation}>Append</Text>
           <Text sub> data to </Text>
           <Account address={contract.address} />
         </Text>
@@ -90,12 +85,12 @@ const contractContent = (contract) => {
     case 'CREATE': {
       return (
         <Text>
-          <Operation>Create</Operation>
+          <Text style={styles.operation}>Create</Text>
           <Text sub> new </Text>
-          <RegisterType>
+          <Text style={styles.registerType}>
             {contract.type === 'OBJECT' && contract.object_type + ' '}
             {contract.type}
-          </RegisterType>
+          </Text>
           <Text sub> register</Text>
           {'\n'}
           <Text sub>at address </Text>
@@ -107,7 +102,7 @@ const contractContent = (contract) => {
     case 'TRANSFER': {
       return (
         <Text>
-          <Operation>Transfer</Operation>
+          <Text style={styles.operation}>Transfer</Text>
           <Text sub> ownership of </Text>
           <Account address={contract.address} /> to{' '}
           <Account address={contract.destination} />
@@ -118,7 +113,7 @@ const contractContent = (contract) => {
     case 'CLAIM': {
       return (
         <Text>
-          <Operation>Claim</Operation>
+          <Text style={styles.operation}>Claim</Text>
           <Text sub> ownership of </Text>
           <Account address={contract.address} />
         </Text>
@@ -128,7 +123,7 @@ const contractContent = (contract) => {
     case 'COINBASE': {
       return (
         <Text>
-          <Operation>Coinbase</Operation>
+          <Text style={styles.operation}>Coinbase</Text>
         </Text>
       );
     }
@@ -136,7 +131,7 @@ const contractContent = (contract) => {
     case 'TRUST': {
       return (
         <Text>
-          <Operation>Trust</Operation>
+          <Text style={styles.operation}>Trust</Text>
         </Text>
       );
     }
@@ -144,7 +139,8 @@ const contractContent = (contract) => {
     case 'GENESIS': {
       return (
         <Text>
-          <Operation>Genesis</Operation> <Hash>{contract.address}</Hash>
+          <Text style={styles.operation}>Genesis</Text>{' '}
+          <Hash>{contract.address}</Hash>
         </Text>
       );
     }
@@ -152,7 +148,7 @@ const contractContent = (contract) => {
     case 'DEBIT': {
       return (
         <Text>
-          <Operation>Debit</Operation>
+          <Text style={styles.operation}>Debit</Text>
           <Text sub> from </Text>
           <Account name={contract.from_name} address={contract.from} />
           {'\n'}
@@ -165,7 +161,7 @@ const contractContent = (contract) => {
     case 'CREDIT': {
       return (
         <Text>
-          <Operation>Credit</Operation>
+          <Text style={styles.operation}>Credit</Text>
           <Text sub> to </Text>
           <Account name={contract.to_name} address={contract.to} />
           {'\n'}
@@ -178,7 +174,7 @@ const contractContent = (contract) => {
     case 'MIGRATE': {
       return (
         <Text>
-          <Operation>Migrate</Operation>
+          <Text style={styles.operation}>Migrate</Text>
           <Text sub> trust key to </Text>
           <Account name={contract.account_name} address={contract.account} />
           {'\n'}
@@ -191,7 +187,7 @@ const contractContent = (contract) => {
     case 'AUTHORIZE': {
       return (
         <Text>
-          <Operation>Authorize</Operation>
+          <Text style={styles.operation}>Authorize</Text>
           <Text sub> transaction </Text>
           <Hash>{contract.txid}</Hash>
           {'\n'}
@@ -204,7 +200,7 @@ const contractContent = (contract) => {
     case 'FEE': {
       return (
         <Text>
-          <Operation>Fee</Operation>
+          <Text style={styles.operation}>Fee</Text>
           <Text sub> from </Text>
           <Account name={contract.from_name} address={contract.from} />
         </Text>
@@ -214,7 +210,7 @@ const contractContent = (contract) => {
     case 'LEGACY': {
       return (
         <Text>
-          <Operation>Legacy</Operation>
+          <Text style={styles.operation}>Legacy</Text>
           <Text sub> debit from </Text>
           <Account name={contract.from_name} address={contract.from} />
           {'\n'}
@@ -225,7 +221,7 @@ const contractContent = (contract) => {
     }
 
     default: {
-      return <Operation>{contract.OP}</Operation>;
+      return <Text style={styles.operation}>{contract.OP}</Text>;
     }
   }
 };
@@ -233,8 +229,8 @@ const contractContent = (contract) => {
 export default function Contract({ contract }) {
   const sign = getDeltaSign(contract);
   return (
-    <ContractWrapper>
-      <ContractContent>{contractContent(contract)}</ContractContent>
+    <View style={styles.contract}>
+      <View style={styles.contractContent}>{contractContent(contract)}</View>
 
       {!!contract.amount && (
         <Delta negative={sign === '-'}>
@@ -242,6 +238,6 @@ export default function Contract({ contract }) {
           {contract.amount} {contract.token_name || 'NXS'}
         </Delta>
       )}
-    </ContractWrapper>
+    </View>
   );
 }

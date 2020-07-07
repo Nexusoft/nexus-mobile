@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 
 import { fade } from 'utils/color';
 

@@ -1,67 +1,68 @@
 import React from 'react';
-import styled from '@emotion/native';
+import { View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
+import { useTheme } from 'lib/theme';
 
 import Text from 'components/Text';
 import { lighten, darken } from 'utils/color';
 import { navigate } from 'lib/navigation';
 
-const ContactWrapper = styled.View({
-  flexDirection: 'row',
-  alignItems: 'center',
-});
-
-const AvatarWrapper = styled.View({
-  paddingVertical: 20,
-  width: 90,
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
-const Avatar = styled.View(({ theme }) => ({
-  backgroundColor: theme.dark
-    ? lighten(theme.surface, 0.6)
-    : darken(theme.surface, 0.15),
-  width: 50,
-  height: 50,
-  borderRadius: 25,
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const AvatarLetter = styled(Text)({
-  textTransform: 'uppercase',
-  fontSize: 21,
-});
-
-const NameWrapper = styled.View({
-  flex: 1,
-});
-
-const ContactName = styled(Text)({
-  fontSize: 18,
-});
+const styles = {
+  wrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  leftPart: {
+    paddingVertical: 20,
+    width: 90,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatar: ({ theme }) => ({
+    backgroundColor: theme.dark
+      ? lighten(theme.surface, 0.6)
+      : darken(theme.surface, 0.15),
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }),
+  initLetter: {
+    textTransform: 'uppercase',
+    fontSize: 21,
+  },
+  contactName: {
+    fontSize: 18,
+  },
+  rightPart: {
+    flex: 1,
+  },
+};
 
 const getinitial = (name) => (name && name.length >= 1 ? name.charAt(0) : '');
 
 export default function Contact({ contact }) {
+  const theme = useTheme();
   return (
     <TouchableRipple
       onPress={() => {
         navigate('ContactDetails', { contact });
       }}
     >
-      <ContactWrapper>
-        <AvatarWrapper>
-          <Avatar>
-            <AvatarLetter sub>{getinitial(contact.name)}</AvatarLetter>
-          </Avatar>
-        </AvatarWrapper>
+      <View style={styles.wrapper}>
+        <View style={styles.leftPart}>
+          <View style={styles.avatar({ theme })}>
+            <Text style={styles.initLetter} sub>
+              {getinitial(contact.name)}
+            </Text>
+          </View>
+        </View>
 
-        <NameWrapper>
-          <ContactName>{contact.name}</ContactName>
-        </NameWrapper>
-      </ContactWrapper>
+        <View style={styles.rightPart}>
+          <Text style={styles.contactName}>{contact.name}</Text>
+        </View>
+      </View>
     </TouchableRipple>
   );
 }

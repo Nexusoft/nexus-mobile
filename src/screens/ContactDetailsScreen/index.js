@@ -1,8 +1,7 @@
 import React from 'react';
-import { Platform, Clipboard } from 'react-native';
-import styled from '@emotion/native';
+import { Platform, Clipboard, View } from 'react-native';
 import { Surface, Button, IconButton } from 'react-native-paper';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -20,61 +19,59 @@ import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';
 import SendIcon from 'icons/send.svg';
 
-const Wrapper = styled(ScreenBody)({
-  paddingVertical: 30,
-  paddingHorizontal: 30,
-});
-
-const ContactInfo = styled.View({
-  alignItems: 'center',
-  marginBottom: 50,
-});
-
-const Avatar = styled.View(({ theme }) => ({
-  backgroundColor: theme.dark
-    ? lighten(theme.surface, 0.6)
-    : darken(theme.surface, 0.15),
-  width: 120,
-  height: 120,
-  borderRadius: 60,
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const AvatarLetter = styled(Text)({
-  textTransform: 'uppercase',
-  fontSize: 63,
-});
-
-const ContactName = styled(Text)({
-  fontSize: 30,
-  marginTop: 20,
-});
-
-const AddressLabelWrapper = styled.View({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-});
-
-const AddressBox = styled(Surface)({
-  borderRadius: 4,
-  paddingVertical: 12,
-  marginTop: 5,
-});
-
-const Address = styled(Text)({
-  fontSize: 15,
-  textAlign: 'center',
-});
-
-const HeaderIcons = styled.View({
-  flexDirection: 'row',
-});
-
-const HeaderIcon = styled(IconButton)({
-  marginRight: 10,
-});
+const styles = {
+  wrapper: {
+    paddingVertical: 30,
+    paddingHorizontal: 30,
+  },
+  mainInfo: {
+    alignItems: 'center',
+    marginBottom: 50,
+  },
+  avatar: ({ theme }) => ({
+    backgroundColor: theme.dark
+      ? lighten(theme.surface, 0.6)
+      : darken(theme.surface, 0.15),
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }),
+  initLetter: {
+    textTransform: 'uppercase',
+    fontSize: 63,
+  },
+  contactName: {
+    fontSize: 30,
+    marginTop: 20,
+  },
+  labelLine: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  addressBox: {
+    borderRadius: 4,
+    paddingVertical: 12,
+    marginTop: 5,
+    elevation: 2,
+  },
+  address: {
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  deleteBtn: {
+    marginTop: 60,
+    alignSelf: 'center',
+  },
+  headerIcons: {
+    flexDirection: 'row',
+  },
+  headerIcon: {
+    marginRight: 10,
+  },
+};
 
 const getinitial = (name) => (name && name.length >= 1 ? name.charAt(0) : '');
 
@@ -86,7 +83,8 @@ function NormalMode({ startEditing }) {
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <HeaderIcon
+        <IconButton
+          style={styles.headerIcon}
           icon="pencil"
           color={theme.dark ? theme.primary : theme.onPrimary}
           onPress={startEditing}
@@ -97,14 +95,16 @@ function NormalMode({ startEditing }) {
   }, []);
   return (
     <>
-      <ContactInfo>
-        <Avatar>
-          <AvatarLetter sub>{getinitial(contact.name)}</AvatarLetter>
-        </Avatar>
-        <ContactName>{contact.name}</ContactName>
-      </ContactInfo>
+      <View style={styles.mainInfo}>
+        <View style={styles.avatar({ theme })}>
+          <Text style={styles.initLetter} sub>
+            {getinitial(contact.name)}
+          </Text>
+        </View>
+        <Text style={styles.contactName}>{contact.name}</Text>
+      </View>
 
-      <AddressLabelWrapper>
+      <View style={styles.labelLine}>
         <Text sub>Address</Text>
         <Button
           mode="text"
@@ -117,10 +117,12 @@ function NormalMode({ startEditing }) {
         >
           Copy
         </Button>
-      </AddressLabelWrapper>
-      <AddressBox>
-        <Address mono>{segmentAddress(contact.address)}</Address>
-      </AddressBox>
+      </View>
+      <Surface style={styles.addressBox}>
+        <Text style={styles.address} mono>
+          {segmentAddress(contact.address)}
+        </Text>
+      </Surface>
 
       <Button
         mode="text"
@@ -145,30 +147,34 @@ function EditMode({ isSubmitting, endEditing, handleSubmit, setFieldValue }) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <HeaderIcons>
-          <HeaderIcon
+        <View style={styles.headerIcons}>
+          <IconButton
+            style={styles.headerIcon}
             disabled={isSubmitting}
             color={theme.dark ? theme.primary : theme.onPrimary}
             icon="close"
             onPress={endEditing}
           />
-          <HeaderIcon
+          <IconButton
+            style={styles.headerIcon}
             disabled={isSubmitting}
             color={theme.dark ? theme.primary : theme.onPrimary}
             icon="check"
             onPress={handleSubmit}
           />
-        </HeaderIcons>
+        </View>
       ),
     });
   }, []);
   return (
     <>
-      <ContactInfo>
-        <Avatar>
-          <AvatarLetter sub>{getinitial(contact.name)}</AvatarLetter>
-        </Avatar>
-      </ContactInfo>
+      <View style={styles.mainInfo}>
+        <View style={styles.avatar({ theme })}>
+          <Text style={styles.initLetter} sub>
+            {getinitial(contact.name)}
+          </Text>
+        </View>
+      </View>
       <TextBox.Formik
         name="name"
         label="Contact name"
@@ -183,9 +189,9 @@ function EditMode({ isSubmitting, endEditing, handleSubmit, setFieldValue }) {
         }}
       />
       <Button
+        style={styles.deleteBtn}
         mode="contained"
         color={theme.danger}
-        style={{ marginTop: 60, alignSelf: 'center' }}
         onPress={async () => {
           const confirmed = await confirm({
             message: 'Delete contact?',
@@ -208,7 +214,7 @@ export default function ContactDetailsScreen({ navigation, route }) {
   const [editing, setEditing] = React.useState(false);
   const contact = route.params?.contact;
   return (
-    <Wrapper>
+    <ScreenBody style={styles.wrapper}>
       {editing ? (
         <Formik
           initialValues={{
@@ -245,7 +251,7 @@ export default function ContactDetailsScreen({ navigation, route }) {
           }}
         />
       )}
-    </Wrapper>
+    </ScreenBody>
   );
 }
 

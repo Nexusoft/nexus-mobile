@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from '@emotion/native';
 import { FlatList } from 'react-native';
 import { IconButton, FAB } from 'react-native-paper';
 import { useSelector } from 'react-redux';
@@ -13,15 +12,16 @@ import memoize from 'utils/memoize';
 import ContactsIcon from 'icons/address-book.svg';
 import Contact from './Contact';
 
-const Wrapper = styled(ScreenBody)({
-  paddingBottom: 106,
-});
-
-const AddButton = styled(FAB)({
-  position: 'absolute',
-  right: 30,
-  bottom: 30,
-});
+const styles = {
+  wrapper: {
+    paddingBottom: 106,
+  },
+  addBtn: {
+    position: 'absolute',
+    right: 30,
+    bottom: 30,
+  },
+};
 
 const selectContacts = memoize((state) =>
   state.contacts
@@ -45,20 +45,25 @@ export default function ContactsScreen() {
       : contacts;
 
   return (
-    <Wrapper scroll={false} style={{ paddingVertical: 10 }}>
+    <ScreenBody
+      style={styles.wrapper}
+      scroll={false}
+      style={{ paddingVertical: 10 }}
+    >
       <FlatList
         data={filteredContacts}
         ItemSeparatorComponent={Divider}
         keyExtractor={(contact) => contact.name}
         renderItem={({ item }) => <Contact contact={item} />}
       />
-      <AddButton
+      <FAB
+        style={styles.addBtn}
         icon="plus"
         onPress={() => {
           navigate('NewContact');
         }}
       />
-    </Wrapper>
+    </ScreenBody>
   );
 }
 
@@ -81,7 +86,6 @@ ContactsScreen.nav = ({ contactSearch }) => ({
               autoCapitalize="words"
               dense
               placeholder="Search contact"
-              style={{ top: 0 }}
             />
           )
         : 'Contacts',

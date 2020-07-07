@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text as NativeText } from 'react-native';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 
 import { disabledColor, subColor } from 'lib/theme';
 

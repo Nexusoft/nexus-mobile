@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, TouchableWithoutFeedback } from 'react-native';
 import { shadow } from 'react-native-paper';
-import styled from '@emotion/native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useTheme } from 'lib/theme';
 
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
@@ -38,52 +38,54 @@ const accounts = [
   },
 ];
 
-const Container = styled(View)(({ theme }) => ({
-  flex: 1,
-  backgroundColor: theme.dark ? theme.background : theme.primary,
-}));
-
-const AccountsPane = styled(View)(({ theme }) => ({
-  flex: 1,
-  borderTopLeftRadius: 30,
-  borderTopRightRadius: 30,
-  paddingHorizontal: 40,
-  backgroundColor: theme.surface,
-  elevation: 8,
-  ...shadow(8),
-}));
-
-const SubHeader = styled(Text)({
-  paddingVertical: 15,
-  textTransform: 'uppercase',
-  fontSize: 12,
-  textAlign: 'center',
-});
-
-const Accounts = styled(ScrollView)({
-  flex: 1,
-});
+const styles = {
+  wrapper: ({ theme }) => ({
+    flex: 1,
+    backgroundColor: theme.dark ? theme.background : theme.primary,
+  }),
+  accountsPane: ({ theme }) => ({
+    flex: 1,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 40,
+    backgroundColor: theme.surface,
+    elevation: 8,
+    ...shadow(8),
+  }),
+  accountsHeader: {
+    paddingVertical: 15,
+    textTransform: 'uppercase',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  accounts: {
+    flex: 1,
+  },
+};
 
 export default function OverviewScreen() {
+  const theme = useTheme();
   return (
-    <Container>
+    <View style={styles.wrapper({ theme })}>
       <BalanceSection />
 
-      <AccountsPane>
+      <View style={styles.accountsPane({ theme })}>
         <TouchableWithoutFeedback
           onPress={() => {
             navigate('Accounts');
           }}
         >
-          <SubHeader sub>Accounts</SubHeader>
+          <Text style={styles.accountsHeader} sub>
+            Accounts
+          </Text>
         </TouchableWithoutFeedback>
-        <Accounts>
+        <ScrollView style={styles.accounts}>
           {accounts.map((account) => (
             <Account key={account.address} account={account} />
           ))}
-        </Accounts>
-      </AccountsPane>
-    </Container>
+        </ScrollView>
+      </View>
+    </View>
   );
 }
 

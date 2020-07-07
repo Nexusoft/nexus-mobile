@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from '@emotion/native';
 import { Surface } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
@@ -7,34 +6,37 @@ import Text from 'components/Text';
 import ApplicationSettings from './ApplicationSettings';
 import CoreSettings from './CoreSettings';
 
-const Wrapper = styled(ScreenBody)({});
-
-const Section = styled(Surface)({
-  elevation: 2,
-  marginBottom: 20,
-});
-
-const SectionTitle = styled(Text)({
-  fontSize: 14,
-  marginTop: 30,
-  marginBottom: 15,
-  marginHorizontal: 20,
-  textTransform: 'uppercase',
-});
+const styles = {
+  section: {
+    elevation: 2,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 14,
+    marginTop: 30,
+    marginBottom: 15,
+    marginHorizontal: 20,
+    textTransform: 'uppercase',
+  },
+};
 
 export default function SettingsScreen() {
   return (
-    <Wrapper>
-      <SectionTitle sub>Application</SectionTitle>
-      <Section>
+    <ScreenBody>
+      <Text style={styles.title} sub>
+        Application
+      </Text>
+      <Surface style={styles.section}>
         <ApplicationSettings />
-      </Section>
+      </Surface>
 
-      <SectionTitle sub>Core</SectionTitle>
-      <Section>
+      <Text style={styles.title} sub>
+        Core
+      </Text>
+      <Surface style={styles.section}>
         <ApplicationSettings />
-      </Section>
-    </Wrapper>
+      </Surface>
+    </ScreenBody>
   );
 }
 

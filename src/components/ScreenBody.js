@@ -5,7 +5,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ScreenBody({

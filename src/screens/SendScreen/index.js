@@ -1,6 +1,6 @@
 import React from 'react';
-import styled from '@emotion/native';
-import { Button, TouchableRipple } from 'react-native-paper';
+import { View } from 'react-native';
+import { Button } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -10,23 +10,22 @@ import AddressPicker from 'components/AddressPicker';
 import { navigate } from 'lib/navigation';
 import AccountSelect from './AccountSelect';
 
-const Wrapper = styled(ScreenBody)({
-  paddingVertical: 30,
-  paddingHorizontal: 20,
-});
-
-const Field = styled.View({
-  marginTop: 20,
-});
-
-const SendAllButton = styled(Button)({
-  alignSelf: 'flex-end',
-  marginTop: -20,
-});
-
-const SendButton = styled(Button)({
-  marginTop: 50,
-});
+const styles = {
+  wrapper: {
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+  },
+  field: {
+    marginTop: 20,
+  },
+  sendAll: {
+    alignSelf: 'flex-end',
+    marginTop: -20,
+  },
+  send: {
+    marginTop: 50,
+  },
+};
 
 export default function SendScreen({ route }) {
   return (
@@ -46,12 +45,12 @@ export default function SendScreen({ route }) {
       }}
     >
       {({ handleSubmit, setFieldValue }) => (
-        <Wrapper surface>
-          <Field>
+        <ScreenBody surface style={styles.wrapper}>
+          <View style={styles.field}>
             <AccountSelect name="accountName" options={['default', 'trust']} />
-          </Field>
+          </View>
 
-          <Field>
+          <View style={styles.field}>
             <TextBox.Formik
               background={['surface', 0]}
               name="recipientAddress"
@@ -64,37 +63,38 @@ export default function SendScreen({ route }) {
                 setFieldValue('recipientAddress', address);
               }}
             />
-          </Field>
+          </View>
 
-          <Field>
+          <View style={styles.field}>
             <TextBox.Formik
               background={['surface', 0]}
               name="amount"
               label="Amount (NXS)"
               keyboardType="numeric"
             />
-            <SendAllButton
+            <Button
+              style={styles.sendAll}
               mode="text"
               onPress={() => {}}
               labelStyle={{ fontSize: 13 }}
             >
               Send All
-            </SendAllButton>
-          </Field>
+            </Button>
+          </View>
 
-          <Field>
+          <View style={styles.field}>
             <TextBox.Formik
               background={['surface', 0]}
               name="reference"
               label="Reference number (Optional)"
               keyboardType="number-pad"
             />
-          </Field>
+          </View>
 
-          <SendButton mode="contained" onPress={handleSubmit}>
+          <Button style={styles.send} mode="contained" onPress={handleSubmit}>
             Send
-          </SendButton>
-        </Wrapper>
+          </Button>
+        </ScreenBody>
       )}
     </Formik>
   );

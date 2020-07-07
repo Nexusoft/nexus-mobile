@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { shadow, TouchableRipple, IconButton } from 'react-native-paper';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 import { useSelector } from 'react-redux';
 
 import OverviewScreen from 'screens/OverviewScreen';

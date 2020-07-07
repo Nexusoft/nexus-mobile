@@ -1,8 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
-import styled from '@emotion/native';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 import { TouchableRipple, Button, shadow } from 'react-native-paper';
 
 import Text from 'components/Text';
@@ -65,47 +64,45 @@ const timeOptions = [
   },
 ];
 
-const FiltersWrapper = styled(View)(({ theme, expanded }) => ({
-  backgroundColor: theme.dark ? theme.background : theme.primary,
-  overflow: 'hidden',
-  height: expanded ? undefined : 0.1,
-  paddingTop: expanded ? 10 : 0,
-  paddingBottom: expanded ? 20 : 0,
-  paddingHorizontal: 20,
-  elevation: 4,
-  ...shadow(4),
-}));
+const styles = {
+  wrapper: ({ theme, expanded }) => ({
+    backgroundColor: theme.dark ? theme.background : theme.primary,
+    overflow: 'hidden',
+    height: expanded ? undefined : 0.1,
+    paddingTop: expanded ? 10 : 0,
+    paddingBottom: expanded ? 20 : 0,
+    paddingHorizontal: 20,
+    elevation: 4,
+    ...shadow(4),
+  }),
+  selectLine: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  filterSelect: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+  },
+  filterLabel: {
+    textTransform: 'uppercase',
+    marginRight: 5,
+  },
+  filterInput: {
+    marginVertical: 6,
+    fontSize: 15,
+  },
+  apply: {
+    marginTop: 15,
+  },
+};
 
-const FilterSelects = styled.View({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-});
-
-const FilterSelect = styled.View({
-  paddingVertical: 10,
-  paddingHorizontal: 12,
-  flexDirection: 'row',
-});
-
-const FilterText = styled(Text)(({ theme }) => ({
-  color: theme.dark ? theme.foreground : theme.onPrimary,
-}));
-
-const FilterLabel = styled(FilterText)({
-  textTransform: 'uppercase',
-  marginRight: 5,
-});
-
-const FilterValue = styled(FilterText)();
-
-const FilterInput = styled(TextBox)({
-  marginVertical: 6,
-  fontSize: 15,
-});
-
-const ApplyButton = styled(Button)({
-  marginTop: 15,
-});
+function FilterText(props) {
+  const theme = useTheme();
+  return (
+    <Text colorName={theme.dark ? 'foreground' : 'onPrimary'} {...props} />
+  );
+}
 
 export default function Filters() {
   const filterOpen = useSelector((state) => state.ui.txFilterOpen);
@@ -114,18 +111,20 @@ export default function Filters() {
   const theme = useTheme();
 
   return (
-    <FiltersWrapper expanded={filterOpen}>
-      <FilterSelects>
+    <View style={styles.wrapper({ theme, expanded: filterOpen })}>
+      <View style={styles.selectLine}>
         <Select
           options={opOptions}
           value={op}
           updateValue={setOp}
           render={({ display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
-              <FilterSelect>
-                <FilterLabel sub>Operation:</FilterLabel>
-                <FilterValue>{display}</FilterValue>
-              </FilterSelect>
+              <View style={styles.filterSelect}>
+                <FilterText style={styles.filterLabel} sub>
+                  Operation:
+                </FilterText>
+                <FilterText>{display}</FilterText>
+              </View>
             </TouchableRipple>
           )}
         />
@@ -135,27 +134,32 @@ export default function Filters() {
           updateValue={setTime}
           render={({ display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
-              <FilterSelect>
-                <FilterLabel sub>Time:</FilterLabel>
-                <FilterValue>{display}</FilterValue>
-              </FilterSelect>
+              <View style={styles.filterSelect}>
+                <FilterText style={styles.filterLabel} sub>
+                  Time:
+                </FilterText>
+                <FilterText>{display}</FilterText>
+              </View>
             </TouchableRipple>
           )}
         />
-      </FilterSelects>
+      </View>
 
-      <FilterInput
+      <TextBox
+        style={styles.filterInput}
         background={theme.dark ? 'background' : 'primary'}
         dense
         label="Account/token name"
       />
-      <FilterInput
+      <TextBox
+        style={styles.filterInput}
         background={theme.dark ? 'background' : 'primary'}
         dense
         label="Account/token address"
       />
 
-      <ApplyButton
+      <Button
+        style={styles.apply}
         mode={theme.dark ? 'outlined' : 'contained'}
         color={theme.dark ? undefined : fade(theme.onPrimary, 0.2)}
         onPress={() => {
@@ -164,7 +168,7 @@ export default function Filters() {
         labelStyle={{ fontSize: 12 }}
       >
         Apply filter
-      </ApplyButton>
-    </FiltersWrapper>
+      </Button>
+    </View>
   );
 }

@@ -5,7 +5,7 @@ import {
   HelperText,
   overlay,
 } from 'react-native-paper';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 import { useField } from 'formik';
 
 import SvgIcon from 'components/SvgIcon';

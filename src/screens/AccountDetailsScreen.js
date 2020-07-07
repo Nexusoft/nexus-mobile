@@ -1,6 +1,5 @@
 import React from 'react';
-import { Platform, Clipboard } from 'react-native';
-import styled from '@emotion/native';
+import { Platform, Clipboard, View } from 'react-native';
 import moment from 'moment';
 import { Button, Surface } from 'react-native-paper';
 
@@ -14,30 +13,29 @@ import { navigate } from 'lib/navigation';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';
 
-const AccountSurface = styled(Surface)({
-  elevation: 3,
-  paddingHorizontal: 30,
-  marginVertical: 15,
-});
-
-const Address = styled.Text({
-  textAlign: 'center',
-});
-
-const Buttons = styled.View({
-  flexDirection: 'row',
-  paddingVertical: 8,
-});
-
-const AccountBtn = styled(Button)({
-  flex: 1,
-});
+const styles = {
+  account: {
+    elevation: 3,
+    paddingHorizontal: 30,
+    marginVertical: 15,
+  },
+  address: {
+    textAlign: 'center',
+  },
+  actions: {
+    flexDirection: 'row',
+    paddingVertical: 8,
+  },
+  action: {
+    flex: 1,
+  },
+};
 
 export default function AccountDetailsScreen({ route }) {
   const account = route.params?.account;
   return (
     <ScreenBody>
-      <AccountSurface>
+      <Surface style={styles.account}>
         <InfoField
           compact
           inline
@@ -61,8 +59,11 @@ export default function AccountDetailsScreen({ route }) {
               Copy
             </Button>
           }
-          value={<Address>{segmentAddress(account.address)}</Address>}
-          mono
+          value={
+            <Text mono style={styles.address}>
+              {segmentAddress(account.address)}
+            </Text>
+          }
         />
         <Divider />
         <InfoField
@@ -130,28 +131,30 @@ export default function AccountDetailsScreen({ route }) {
           </>
         )}
 
-        <Buttons>
+        <View style={styles.actions}>
           {/* <AccountBtn mode="text">History</AccountBtn>
         <Divider vertical inset={10} /> */}
-          <AccountBtn
+          <Button
+            style={styles.action}
             mode="text"
             onPress={() => {
               navigate('Receive', { account });
             }}
           >
             Receive
-          </AccountBtn>
+          </Button>
           <Divider vertical inset={10} />
-          <AccountBtn
+          <Button
+            style={styles.action}
             mode="text"
             onPress={() => {
               navigate('Send');
             }}
           >
             Send
-          </AccountBtn>
-        </Buttons>
-      </AccountSurface>
+          </Button>
+        </View>
+      </Surface>
     </ScreenBody>
   );
 }

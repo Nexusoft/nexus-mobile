@@ -1,7 +1,7 @@
 import React from 'react';
 import { RadioButton, Dialog } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 
 import Portal from 'components/Portal';
 import memoize from 'utils/memoize';

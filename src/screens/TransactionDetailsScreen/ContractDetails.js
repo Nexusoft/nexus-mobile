@@ -1,27 +1,28 @@
 import React from 'react';
-import styled from '@emotion/native';
 import { Surface } from 'react-native-paper';
 
 import Divider from 'components/Divider';
 import InfoField from 'components/InfoField';
 
-const ContractWrapper = styled(Surface)({
-  elevation: 3,
-  marginBottom: 20,
-  paddingHorizontal: 30,
-});
+const styles = {
+  wrapper: {
+    elevation: 3,
+    marginBottom: 20,
+    paddingHorizontal: 30,
+  },
+};
 
 export default function ContractDetails({ contract }) {
   return (
     !!contract && (
-      <ContractWrapper>
+      <Surface style={styles.wrapper}>
         {Object.entries(contract).map(([key, value], i) => (
           <React.Fragment key={key}>
             {i !== 0 && <Divider />}
             <InfoField compact label={key} value={value} />
           </React.Fragment>
         ))}
-      </ContractWrapper>
+      </Surface>
     )
   );
 }

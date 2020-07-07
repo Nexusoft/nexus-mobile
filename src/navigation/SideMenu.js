@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, Platform } from 'react-native';
-import styled from '@emotion/native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
@@ -17,73 +16,50 @@ import NamespaceIcon from 'icons/abc-cube.svg';
 import AssetIcon from 'icons/asset.svg';
 import WalletIcon from 'icons/wallet.svg';
 
-const StyledSideMenu = styled.View({
-  flex: 1,
-});
-
-const MenuHeader = styled(View)(({ theme }) => ({
-  backgroundColor: theme.dark ? theme.background : theme.primary,
-}));
-
-const TopArea = styled.View({
-  marginTop: Platform.OS === 'ios' ? getStatusBarHeight() : 0,
-  height: 56,
-  flexDirection: 'row',
-  alignItems: 'center',
-});
-
-function BackButton(props) {
-  const theme = useTheme();
-  return (
-    <IconButton
-      icon="arrow-left"
-      size={25}
-      color={theme.dark ? theme.foreground : theme.onPrimary}
-      {...props}
-    />
-  );
-}
-
-const UserArea = styled.View({
-  paddingTop: 25,
-  paddingBottom: 50,
-  paddingHorizontal: 20,
-});
-
-const UserInfo = styled.View({
-  flexDirection: 'row',
-  alignItems: 'center',
-});
-
-const UserAvatar = styled(SvgIcon)(({ theme }) => ({
-  marginRight: 15,
-  color: theme.dark ? theme.foreground : theme.onPrimary,
-}));
-
-const UserName = styled(Text)(({ theme }) => ({
-  fontSize: 24,
-  color: theme.dark ? theme.foreground : theme.onPrimary,
-}));
-
-const MenuItems = styled(ScrollView)({
-  flex: 1,
-  paddingTop: 10,
-});
-
-const MenuItemWrapper = styled.View({
-  paddingVertical: 15,
-  paddingHorizontal: 20,
-  flexDirection: 'row',
-  alignItems: 'center',
-});
-
-const MenuItemIcon = styled(SvgIcon)({
-  marginRight: 10,
-});
-
-const MenuItemLabel = styled(Text)({
-  fontSize: 15,
-});
+const styles = {
+  wrapper: {
+    flex: 1,
+  },
+  header: ({ theme }) => ({
+    backgroundColor: theme.dark ? theme.background : theme.primary,
+  }),
+  topArea: {
+    marginTop: Platform.OS === 'ios' ? getStatusBarHeight() : 0,
+    height: 56,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userArea: {
+    paddingTop: 25,
+    paddingBottom: 50,
+    paddingHorizontal: 20,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatar: ({ theme }) => ({
+    marginRight: 15,
+    color: theme.dark ? theme.foreground : theme.onPrimary,
+  }),
+  userName: ({ theme }) => ({
+    fontSize: 24,
+    color: theme.dark ? theme.foreground : theme.onPrimary,
+  }),
+  items: {
+    flex: 1,
+    paddingTop: 10,
+  },
+  item: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  itemIcon: {
+    marginRight: 10,
+  },
+};
 
 const MenuItem = ({ linkTo, icon, label }) => (
   <TouchableRipple
@@ -94,34 +70,44 @@ const MenuItem = ({ linkTo, icon, label }) => (
       }
     }}
   >
-    <MenuItemWrapper>
-      {!!icon && <MenuItemIcon icon={icon} size={15} />}
-      <MenuItemLabel emphasis>{label}</MenuItemLabel>
-    </MenuItemWrapper>
+    <View style={styles.item}>
+      {!!icon && <SvgIcon style={styles.itemIcon} icon={icon} size={15} />}
+      <Text emphasis size={15}>
+        {label}
+      </Text>
+    </View>
   </TouchableRipple>
 );
 
 export default function SideMenu({ navigation }) {
+  const theme = useTheme();
   return (
-    <StyledSideMenu>
-      <MenuHeader>
-        <TopArea>
-          <BackButton
+    <View style={styles.wrapper}>
+      <View style={styles.header({ theme })}>
+        <View style={styles.topArea}>
+          <IconButton
+            icon="arrow-left"
+            size={25}
+            color={theme.dark ? theme.foreground : theme.onPrimary}
             onPress={() => {
               navigation.closeDrawer();
             }}
           />
-        </TopArea>
+        </View>
 
-        <UserArea>
-          <UserInfo>
-            <UserAvatar icon={UserIcon} size={25} />
-            <UserName>krysto</UserName>
-          </UserInfo>
-        </UserArea>
-      </MenuHeader>
+        <View style={styles.userArea}>
+          <View style={styles.userInfo}>
+            <SvgIcon
+              style={styles.avatar({ theme })}
+              icon={UserIcon}
+              size={25}
+            />
+            <Text style={styles.userName({ theme })}>krysto</Text>
+          </View>
+        </View>
+      </View>
 
-      <MenuItems>
+      <ScrollView style={styles.items}>
         <MenuItem linkTo="Accounts" icon={WalletIcon} label="Accounts" />
         <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" />
         <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" />
@@ -136,7 +122,7 @@ export default function SideMenu({ navigation }) {
         <Divider spacing={5} />
 
         <MenuItem label="About Nexus Wallet" />
-      </MenuItems>
-    </StyledSideMenu>
+      </ScrollView>
+    </View>
   );
 }

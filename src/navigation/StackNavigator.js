@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/stack';
 import { shadow } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from 'lib/theme';
 
 import ReceiveScreen from 'screens/ReceiveScreen';
 import SendScreen from 'screens/SendScreen';
