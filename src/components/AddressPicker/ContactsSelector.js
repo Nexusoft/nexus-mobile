@@ -3,7 +3,8 @@ import { FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 import { IconButton, Portal, Dialog } from 'react-native-paper';
 
-import { Icon, Text } from 'components/Adaptive';
+import SvgIcon from 'components/SvgIcon';
+import Text from 'components/Text';
 import Divider from 'components/Divider';
 import memoize from 'utils/memoize';
 import AddressBookIcon from 'icons/address-book.svg';
@@ -20,7 +21,7 @@ export default function ContactsSelector({ setAddress, style }) {
     <>
       <IconButton
         style={style}
-        icon={() => <Icon icon={AddressBookIcon} size={16} />}
+        icon={() => <SvgIcon icon={AddressBookIcon} size={16} />}
         onPress={async () => {
           setContactsOpen(true);
         }}

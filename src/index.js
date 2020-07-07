@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider as ReduxProvider, useSelector } from 'react-redux';
-import { Platform, UIManager } from 'react-native';
+import { Platform, UIManager, View } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -10,7 +10,6 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { View } from 'components/Adaptive';
 import { darkTheme, lightTheme, getPaperTheme } from 'lib/theme';
 import { getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';

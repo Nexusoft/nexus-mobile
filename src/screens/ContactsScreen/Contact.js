@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { Text, SubText } from 'components/Adaptive';
+import Text from 'components/Text';
 import { lighten, darken } from 'utils/color';
 import { navigate } from 'lib/navigation';
 
@@ -29,7 +29,7 @@ const Avatar = styled.View(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-const AvatarLetter = styled(SubText)({
+const AvatarLetter = styled(Text)({
   textTransform: 'uppercase',
   fontSize: 21,
 });
@@ -54,7 +54,7 @@ export default function Contact({ contact }) {
       <ContactWrapper>
         <AvatarWrapper>
           <Avatar>
-            <AvatarLetter>{getinitial(contact.name)}</AvatarLetter>
+            <AvatarLetter sub>{getinitial(contact.name)}</AvatarLetter>
           </Avatar>
         </AvatarWrapper>
 

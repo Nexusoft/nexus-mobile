@@ -1,6 +1,5 @@
 import styled from '@emotion/native';
 
-import { adaptive } from 'lib/adaptive';
 import { fade } from 'utils/color';
 
 const Divider = styled.View(
@@ -24,7 +23,5 @@ const Divider = styled.View(
       marginBottom: Array.isArray(spacing) ? spacing[1] : spacing,
     }
 );
-
-Divider.Adaptive = adaptive()(Divider);
 
 export default Divider;

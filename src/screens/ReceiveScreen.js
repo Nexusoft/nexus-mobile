@@ -1,18 +1,13 @@
 import React from 'react';
 import { Clipboard } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Button, overlay } from 'react-native-paper';
+import { Button, overlay, Surface } from 'react-native-paper';
 import styled from '@emotion/native';
 import QRCode from 'react-native-qrcode-svg';
 import { useTheme } from 'emotion-theming';
 
-import {
-  Surface,
-  Text,
-  SubText,
-  DisabledText,
-  Icon,
-} from 'components/Adaptive';
+import SvgIcon from 'components/SvgIcon';
+import Text from 'components/Text';
 import Divider from 'components/Divider';
 import { showNotification } from 'lib/ui';
 import segmentAddress from 'utils/segmentAddress';
@@ -64,7 +59,7 @@ const SeparatorLine = styled(Divider)({
   top: 2,
 });
 
-const SeparatorLabel = styled(DisabledText)({
+const SeparatorLabel = styled(Text)({
   paddingHorizontal: 15,
 });
 
@@ -83,7 +78,7 @@ export default function ReceiveScreen({ route }) {
       <TopContainer>
         <Main>
           <TopInstruction>
-            <SubText>Show this QR code to the sender</SubText>
+            <Text sub>Show this QR code to the sender</Text>
           </TopInstruction>
           <QRCode
             value={address}
@@ -96,14 +91,14 @@ export default function ReceiveScreen({ route }) {
           <AccountAddress mono>{segmentAddress(address)}</AccountAddress>
           <Separator>
             <SeparatorLine />
-            <SeparatorLabel>or</SeparatorLabel>
+            <SeparatorLabel disabled>or</SeparatorLabel>
             <SeparatorLine />
           </Separator>
           <Button
             style={{ alignSelf: 'stretch' }}
             mode="outlined"
             uppercase={false}
-            icon={({ size }) => <Icon icon={CopyIcon} size={size} />}
+            icon={({ size }) => <SvgIcon icon={CopyIcon} size={size} />}
             onPress={() => {
               Clipboard.setString(address);
               showNotification('Copied to clipboard');

@@ -73,7 +73,8 @@ ContactsScreen.nav = ({ contactSearch }) => ({
     headerTitle:
       typeof contactSearch === 'string'
         ? () => (
-            <TextBox.Adaptive
+            <TextBox
+              background="primary"
               value={contactSearch}
               onChangeText={setContactSearch}
               autoFocus

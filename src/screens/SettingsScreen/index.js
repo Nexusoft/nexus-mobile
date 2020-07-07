@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from '@emotion/native';
+import { Surface } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
-import { Surface, SubText } from 'components/Adaptive';
+import Text from 'components/Text';
 import ApplicationSettings from './ApplicationSettings';
 import CoreSettings from './CoreSettings';
 
@@ -13,7 +14,7 @@ const Section = styled(Surface)({
   marginBottom: 20,
 });
 
-const SectionTitle = styled(SubText)({
+const SectionTitle = styled(Text)({
   fontSize: 14,
   marginTop: 30,
   marginBottom: 15,
@@ -24,12 +25,12 @@ const SectionTitle = styled(SubText)({
 export default function SettingsScreen() {
   return (
     <Wrapper>
-      <SectionTitle>Application</SectionTitle>
+      <SectionTitle sub>Application</SectionTitle>
       <Section>
         <ApplicationSettings />
       </Section>
 
-      <SectionTitle>Core</SectionTitle>
+      <SectionTitle sub>Core</SectionTitle>
       <Section>
         <ApplicationSettings />
       </Section>

@@ -4,8 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import styled from '@emotion/native';
 
-import { Text, SubText } from 'components/Adaptive';
-import { adaptive } from 'lib/adaptive';
+import Text from 'components/Text';
+import { subColor } from 'lib/theme';
 
 const Wrapper = styled(TouchableRipple)({
   minHeight: '30%',
@@ -19,29 +19,32 @@ const BalanceBrief = styled.View({
   // paddingBottom: 20,
 });
 
-const BalanceLabel = styled(Text)({
+const BalanceText = styled(Text)(({ theme }) => ({
+  color: theme.dark ? theme.foreground : theme.onPrimary,
+}));
+
+const BalanceLabel = styled(BalanceText)({
   fontSize: 12,
   textTransform: 'uppercase',
 });
 
-const Balance = styled(Text)({
+const Balance = styled(BalanceText)({
   fontSize: 34,
 });
 
-const Value = styled(SubText)({
+const Value = styled(BalanceText)({
   marginTop: 5,
   fontSize: 18,
 });
 
-const ExpandIcon = styled(
-  adaptive({ modifier: 'sub', colorProp: true })(Ionicons)
-)({
+const ExpandIcon = styled(Ionicons)(({ theme }) => ({
   position: 'absolute',
   top: 4,
   right: 10,
   fontSize: 15,
   alignSelf: 'flex-end',
-});
+  color: subColor(theme.dark ? theme.foreground : theme.onPrimary),
+}));
 
 const DetailedBalances = styled.View(({ expanded }) => ({
   // setting height to 0 makes text have the stretch effect
@@ -74,34 +77,34 @@ export default function BalanceSection() {
         <BalanceBrief>
           <BalanceLabel>Balance</BalanceLabel>
           <Balance>10,435.643 NXS</Balance>
-          <Value>≈ 1,931.32 USD</Value>
+          <Value sub>≈ 1,931.32 USD</Value>
           <ExpandIcon name={expanded ? 'ios-arrow-up' : 'ios-arrow-down'} />
         </BalanceBrief>
 
         <DetailedBalances expanded={expanded}>
           <DetailedBalance>
-            <Text>Available</Text>
-            <Text>24,464.345474 NXS</Text>
+            <BalanceText>Available</BalanceText>
+            <BalanceText>24,464.345474 NXS</BalanceText>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Stake (locked)</Text>
-            <Text>35,378.343457 NXS</Text>
+            <BalanceText>Stake (locked)</BalanceText>
+            <BalanceText>35,378.343457 NXS</BalanceText>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Pending</Text>
-            <Text>0 NXS</Text>
+            <BalanceText>Pending</BalanceText>
+            <BalanceText>0 NXS</BalanceText>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Unconfirmed</Text>
-            <Text>0 NXS</Text>
+            <BalanceText>Unconfirmed</BalanceText>
+            <BalanceText>0 NXS</BalanceText>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Immature</Text>
-            <Text>0 NXS</Text>
+            <BalanceText>Immature</BalanceText>
+            <BalanceText>0 NXS</BalanceText>
           </DetailedBalance>
           <DetailedBalance>
-            <Text>Total</Text>
-            <Text>64,324.565803 NXS</Text>
+            <BalanceText>Total</BalanceText>
+            <BalanceText>64,324.565803 NXS</BalanceText>
           </DetailedBalance>
         </DetailedBalances>
       </>

@@ -4,11 +4,11 @@ import { StyleSheet } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useField } from 'formik';
 
-import { Text } from 'components/Adaptive';
+import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Select from 'components/Select';
 
-const AccountTextBox = styled(TextBox.Adaptive)({
+const AccountTextBox = styled(TextBox)({
   marginBottom: 15,
 });
 
@@ -21,6 +21,7 @@ export default function AccountSelect({ name, options }) {
       updateValue={helpers.setValue}
       render={({ display, openSelect }) => (
         <AccountTextBox
+          background={['surface', 0]}
           mode="outlined"
           label="Send from"
           value={display}

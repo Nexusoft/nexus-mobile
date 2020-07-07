@@ -1,14 +1,14 @@
 import React from 'react';
 import { Platform, Clipboard } from 'react-native';
 import styled from '@emotion/native';
-import { Button, IconButton } from 'react-native-paper';
+import { Surface, Button, IconButton } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
 import ScreenBody from 'components/ScreenBody';
-import { Surface, Text, SubText } from 'components/Adaptive';
+import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
 import AddressPicker from 'components/AddressPicker';
@@ -41,7 +41,7 @@ const Avatar = styled.View(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-const AvatarLetter = styled(SubText)({
+const AvatarLetter = styled(Text)({
   textTransform: 'uppercase',
   fontSize: 63,
 });
@@ -99,13 +99,13 @@ function NormalMode({ startEditing }) {
     <>
       <ContactInfo>
         <Avatar>
-          <AvatarLetter>{getinitial(contact.name)}</AvatarLetter>
+          <AvatarLetter sub>{getinitial(contact.name)}</AvatarLetter>
         </Avatar>
         <ContactName>{contact.name}</ContactName>
       </ContactInfo>
 
       <AddressLabelWrapper>
-        <SubText>Address</SubText>
+        <Text sub>Address</Text>
         <Button
           mode="text"
           icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
@@ -166,7 +166,7 @@ function EditMode({ isSubmitting, endEditing, handleSubmit, setFieldValue }) {
     <>
       <ContactInfo>
         <Avatar>
-          <AvatarLetter>{getinitial(contact.name)}</AvatarLetter>
+          <AvatarLetter sub>{getinitial(contact.name)}</AvatarLetter>
         </Avatar>
       </ContactInfo>
       <TextBox.Formik

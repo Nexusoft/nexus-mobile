@@ -1,13 +1,14 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { View, Platform } from 'react-native';
 import styled from '@emotion/native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useTheme } from 'emotion-theming';
 
-import { View, Text, Icon } from 'components/Adaptive';
+import SvgIcon from 'components/SvgIcon';
+import Text from 'components/Text';
 import Divider from 'components/Divider';
-import { adaptive } from 'lib/adaptive';
 import { navigate } from 'lib/navigation';
 import UserIcon from 'icons/user.svg';
 import TokenIcon from 'icons/token.svg';
@@ -31,7 +32,17 @@ const TopArea = styled.View({
   alignItems: 'center',
 });
 
-const BackButton = adaptive({ colorProp: true })(IconButton);
+function BackButton(props) {
+  const theme = useTheme();
+  return (
+    <IconButton
+      icon="arrow-left"
+      size={25}
+      color={theme.dark ? theme.foreground : theme.onPrimary}
+      {...props}
+    />
+  );
+}
 
 const UserArea = styled.View({
   paddingTop: 25,
@@ -44,13 +55,15 @@ const UserInfo = styled.View({
   alignItems: 'center',
 });
 
-const UserAvatar = styled(Icon)({
+const UserAvatar = styled(SvgIcon)(({ theme }) => ({
   marginRight: 15,
-});
+  color: theme.dark ? theme.foreground : theme.onPrimary,
+}));
 
-const UserName = styled(Text)({
+const UserName = styled(Text)(({ theme }) => ({
   fontSize: 24,
-});
+  color: theme.dark ? theme.foreground : theme.onPrimary,
+}));
 
 const MenuItems = styled(ScrollView)({
   flex: 1,
@@ -64,7 +77,7 @@ const MenuItemWrapper = styled.View({
   alignItems: 'center',
 });
 
-const MenuItemIcon = styled(Icon)({
+const MenuItemIcon = styled(SvgIcon)({
   marginRight: 10,
 });
 
@@ -94,8 +107,6 @@ export default function SideMenu({ navigation }) {
       <MenuHeader>
         <TopArea>
           <BackButton
-            icon="arrow-left"
-            size={25}
             onPress={() => {
               navigation.closeDrawer();
             }}

@@ -3,8 +3,8 @@ import styled from '@emotion/native';
 import { Button } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
-import { Text, SubText, Icon } from 'components/Adaptive';
 import SvgIcon from 'components/SvgIcon';
+import Text from 'components/Text';
 import PinDialog from 'components/PinDialog';
 import { goBack } from 'lib/navigation';
 import NextIcon from 'icons/next.svg';
@@ -47,7 +47,7 @@ const Amount = styled(Text)({
   fontSize: 36,
 });
 
-const Label = styled(SubText)({
+const Label = styled(Text)({
   fontSize: 18,
   marginBottom: 5,
 });
@@ -83,27 +83,27 @@ export default function ConfirmSendScreen() {
   return (
     <Wrapper surface>
       <AmountSection>
-        <Label>You're sending</Label>
+        <Label sub>You're sending</Label>
         <Amount>3,525 NXS</Amount>
       </AmountSection>
 
       <FromToSection>
         <FromTo>
-          <Label>From</Label>
+          <Label sub>From</Label>
           <Name>
-            <Icon icon={WalletIcon} size={20} /> default
+            <SvgIcon icon={WalletIcon} size={20} /> default
           </Name>
           <Address mono>
             8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW
           </Address>
         </FromTo>
         <Arrow>
-          <Icon icon={NextIcon} size={16} />
+          <SvgIcon icon={NextIcon} size={16} />
         </Arrow>
         <FromTo>
-          <Label>To</Label>
+          <Label sub>To</Label>
           <Name>
-            <Icon icon={ContactsIcon} size={20} /> Paul
+            <SvgIcon icon={ContactsIcon} size={20} /> Paul
           </Name>
           <Address mono>
             8C53PdQLuXamTiWw3yXS8fVB4c2eQSwvmssHYzWfLsr5Wtj4jHr
@@ -112,7 +112,9 @@ export default function ConfirmSendScreen() {
       </FromToSection>
 
       <ReferenceSection>
-        <Label style={{ fontSize: 16 }}>Reference number</Label>
+        <Label sub style={{ fontSize: 16 }}>
+          Reference number
+        </Label>
         <ReferenceNo>942189</ReferenceNo>
       </ReferenceSection>
 

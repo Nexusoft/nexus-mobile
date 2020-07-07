@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Clipboard } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
-import { Icon } from 'components/Adaptive';
+import SvgIcon from 'components/SvgIcon';
 import PasteIcon from 'icons/paste.svg';
 import ContactsSelector from './ContactsSelector';
 import QRScanner from './QRScanner';
@@ -24,7 +24,7 @@ export default function AddressPicker({ pickContacts = true, setAddress }) {
     <View style={styles.wrapper}>
       <IconButton
         style={styles.button}
-        icon={() => <Icon icon={PasteIcon} size={16} />}
+        icon={() => <SvgIcon icon={PasteIcon} size={16} />}
         onPress={async () => {
           const clipboard = await Clipboard.getString();
           if (clipboard) {

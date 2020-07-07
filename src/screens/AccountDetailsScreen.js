@@ -2,9 +2,9 @@ import React from 'react';
 import { Platform, Clipboard } from 'react-native';
 import styled from '@emotion/native';
 import moment from 'moment';
-import { Button } from 'react-native-paper';
+import { Button, Surface } from 'react-native-paper';
 
-import { Surface, DisabledText } from 'components/Adaptive';
+import Text from 'components/Text';
 import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
@@ -42,7 +42,7 @@ export default function AccountDetailsScreen({ route }) {
           compact
           inline
           label="Account name"
-          value={account.name || <DisabledText>No name</DisabledText>}
+          value={account.name || <Text disabled>No name</Text>}
         />
         <Divider />
         <InfoField

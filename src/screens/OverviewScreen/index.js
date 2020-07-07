@@ -1,10 +1,11 @@
 import React from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
+import { View, TouchableWithoutFeedback } from 'react-native';
 import { shadow } from 'react-native-paper';
 import styled from '@emotion/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { View, SubText, Icon } from 'components/Adaptive';
+import SvgIcon from 'components/SvgIcon';
+import Text from 'components/Text';
 import { navigate } from 'lib/navigation';
 import HomeIcon from 'icons/home.svg';
 import LogoIcon from 'icons/logo-full.svg';
@@ -52,7 +53,7 @@ const AccountsPane = styled(View)(({ theme }) => ({
   ...shadow(8),
 }));
 
-const SubHeader = styled(SubText)({
+const SubHeader = styled(Text)({
   paddingVertical: 15,
   textTransform: 'uppercase',
   fontSize: 12,
@@ -74,7 +75,7 @@ export default function OverviewScreen() {
             navigate('Accounts');
           }}
         >
-          <SubHeader>Accounts</SubHeader>
+          <SubHeader sub>Accounts</SubHeader>
         </TouchableWithoutFeedback>
         <Accounts>
           {accounts.map((account) => (
@@ -86,12 +87,19 @@ export default function OverviewScreen() {
   );
 }
 
-OverviewScreen.nav = {
+OverviewScreen.nav = ({ theme }) => ({
   name: 'Overview',
   icon: HomeIcon,
   stackOptions: {
     title: 'Overview',
-    headerTitle: () => <Icon icon={LogoIcon} width={110} height={25} />,
+    headerTitle: () => (
+      <SvgIcon
+        icon={LogoIcon}
+        width={110}
+        height={25}
+        color={theme.dark ? theme.foreground : theme.onPrimary}
+      />
+    ),
     headerTitleAlign: 'center',
   },
-};
+});

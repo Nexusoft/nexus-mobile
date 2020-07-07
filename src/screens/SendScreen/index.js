@@ -53,6 +53,7 @@ export default function SendScreen({ route }) {
 
           <Field>
             <TextBox.Formik
+              background={['surface', 0]}
               name="recipientAddress"
               multiline
               label="Send to"
@@ -67,6 +68,7 @@ export default function SendScreen({ route }) {
 
           <Field>
             <TextBox.Formik
+              background={['surface', 0]}
               name="amount"
               label="Amount (NXS)"
               keyboardType="numeric"
@@ -82,6 +84,7 @@ export default function SendScreen({ route }) {
 
           <Field>
             <TextBox.Formik
+              background={['surface', 0]}
               name="reference"
               label="Reference number (Optional)"
               keyboardType="number-pad"

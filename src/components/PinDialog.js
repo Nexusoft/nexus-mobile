@@ -8,7 +8,7 @@ import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
 import LockIcon from 'icons/lock.svg';
 
-const PinTextBox = styled(TextBox.Adaptive)({
+const PinTextBox = styled(TextBox)({
   fontSize: 18,
 });
 
@@ -23,6 +23,7 @@ export default function PinDialog({ onDismiss, ...rest }) {
       <Dialog onDismiss={onDismiss} {...rest}>
         <Dialog.Content>
           <PinTextBox
+            background="surface"
             label="Confirm your PIN"
             value={pin}
             onChangeText={setPin}

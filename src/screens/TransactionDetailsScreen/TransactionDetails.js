@@ -2,9 +2,8 @@ import React from 'react';
 import { Clipboard } from 'react-native';
 import styled from '@emotion/native';
 import moment from 'moment';
-import { Button } from 'react-native-paper';
+import { Button, Surface } from 'react-native-paper';
 
-import { Surface } from 'components/Adaptive';
 import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import InfoField from 'components/InfoField';

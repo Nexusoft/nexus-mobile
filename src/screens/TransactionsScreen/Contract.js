@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/native';
 
-import { Text, SubText } from 'components/Adaptive';
+import Text from 'components/Text';
 import { getDeltaSign } from 'lib/contracts';
 
 const ContractWrapper = styled.View({
@@ -71,7 +71,7 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Write</Operation>
-          <SubText> data to </SubText>
+          <Text sub> data to </Text>
           <Account address={contract.address} />
         </Text>
       );
@@ -81,7 +81,7 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Append</Operation>
-          <SubText> data to </SubText>
+          <Text sub> data to </Text>
           <Account address={contract.address} />
         </Text>
       );
@@ -91,14 +91,14 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Create</Operation>
-          <SubText> new </SubText>
+          <Text sub> new </Text>
           <RegisterType>
             {contract.type === 'OBJECT' && contract.object_type + ' '}
             {contract.type}
           </RegisterType>
-          <SubText> register</SubText>
+          <Text sub> register</Text>
           {'\n'}
-          <SubText>at address </SubText>
+          <Text sub>at address </Text>
           <Hash>{contract.address}</Hash>
         </Text>
       );
@@ -108,7 +108,7 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Transfer</Operation>
-          <SubText> ownership of </SubText>
+          <Text sub> ownership of </Text>
           <Account address={contract.address} /> to{' '}
           <Account address={contract.destination} />
         </Text>
@@ -119,7 +119,7 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Claim</Operation>
-          <SubText> ownership of </SubText>
+          <Text sub> ownership of </Text>
           <Account address={contract.address} />
         </Text>
       );
@@ -153,10 +153,10 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Debit</Operation>
-          <SubText> from </SubText>
+          <Text sub> from </Text>
           <Account name={contract.from_name} address={contract.from} />
           {'\n'}
-          <SubText>to </SubText>
+          <Text sub>to </Text>
           <Account name={contract.to_name} address={contract.to} />
         </Text>
       );
@@ -166,10 +166,10 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Credit</Operation>
-          <SubText> to </SubText>
+          <Text sub> to </Text>
           <Account name={contract.to_name} address={contract.to} />
           {'\n'}
-          <SubText>from </SubText>
+          <Text sub>from </Text>
           {creditFrom(contract)}
         </Text>
       );
@@ -179,10 +179,10 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Migrate</Operation>
-          <SubText> trust key to </SubText>
+          <Text sub> trust key to </Text>
           <Account name={contract.account_name} address={contract.account} />
           {'\n'}
-          <SubText>from </SubText>
+          <Text sub>from </Text>
           <Hash>{contract.trustkey}</Hash>
         </Text>
       );
@@ -192,10 +192,10 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Authorize</Operation>
-          <SubText> transaction </SubText>
+          <Text sub> transaction </Text>
           <Hash>{contract.txid}</Hash>
           {'\n'}
-          <SubText>with a temporal proof </SubText>
+          <Text sub>with a temporal proof </Text>
           <Hash>{contract.proof}</Hash>
         </Text>
       );
@@ -205,7 +205,7 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Fee</Operation>
-          <SubText> from </SubText>
+          <Text sub> from </Text>
           <Account name={contract.from_name} address={contract.from} />
         </Text>
       );
@@ -215,10 +215,10 @@ const contractContent = (contract) => {
       return (
         <Text>
           <Operation>Legacy</Operation>
-          <SubText> debit from </SubText>
+          <Text sub> debit from </Text>
           <Account name={contract.from_name} address={contract.from} />
           {'\n'}
-          <SubText>to </SubText>
+          <Text sub>to </Text>
           <Account address={contract.to} />
         </Text>
       );

@@ -3,7 +3,7 @@ import { FlatList } from 'react-native';
 import styled from '@emotion/native';
 import { TouchableRipple, FAB } from 'react-native-paper';
 
-import { Text, DisabledText } from 'components/Adaptive';
+import Text from 'components/Text';
 import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
 import { navigate } from 'lib/navigation';
@@ -49,10 +49,6 @@ const AccountName = styled(Text)({
   fontSize: 16,
 });
 
-const NoName = styled(DisabledText)({
-  fontSize: 16,
-});
-
 const AddressBox = styled.View(({ theme }) => ({
   borderWidth: 1,
   borderColor: disabledColor(theme.foreground),
@@ -87,11 +83,9 @@ export default function AccountsScreen() {
             }}
           >
             <Account>
-              {account.name ? (
-                <AccountName bold>{account.name}</AccountName>
-              ) : (
-                <NoName>No name</NoName>
-              )}
+              <AccountName bold disabled={!account.name}>
+                {account.name || 'No name'}
+              </AccountName>
               <AddressBox>
                 <Address mono>{segmentAddress(account.address)}</Address>
               </AddressBox>

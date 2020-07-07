@@ -9,7 +9,6 @@ import { shadow } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'emotion-theming';
 
-import { backgroundProvider } from 'lib/adaptive';
 import ReceiveScreen from 'screens/ReceiveScreen';
 import SendScreen from 'screens/SendScreen';
 import SettingsScreen from 'screens/SettingsScreen';
@@ -25,8 +24,6 @@ import NewAccountScreen from 'screens/NewAccountScreen';
 import NewContactScreen from 'screens/NewContactScreen';
 import ConfirmSendScreen from 'screens/ConfirmSendScreen';
 import BottomTabNavigator from './BottomTabNavigator';
-
-const AdaptiveHeader = backgroundProvider()(Header);
 
 const Stack = createStackNavigator();
 
@@ -72,15 +69,7 @@ export default function StackNavigator({ navigation }) {
           },
           headerTintColor: theme.dark ? theme.foreground : theme.onPrimary,
           // Fix header background color not changing when theme is changed
-          // and populate ColorContext to children
-          header: (props) => (
-            <AdaptiveHeader
-              {...props}
-              style={{
-                backgroundColor: theme.dark ? theme.surface : theme.primary,
-              }}
-            />
-          ),
+          header: (props) => <Header {...props} />,
           // Fix the white line at the header bottom
           headerBackground: theme.dark
             ? undefined

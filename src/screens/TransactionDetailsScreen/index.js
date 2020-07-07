@@ -3,13 +3,13 @@ import { Platform, SafeAreaView } from 'react-native';
 import styled from '@emotion/native';
 
 import ScreenBody from 'components/ScreenBody';
-import { SubText } from 'components/Adaptive';
+import Text from 'components/Text';
 import TransactionDetails from './TransactionDetails';
 import ContractDetails from './ContractDetails';
 
 const Wrapper = styled(ScreenBody)({});
 
-const SubHeader = styled(SubText)({
+const SubHeader = styled(Text)({
   marginLeft: 30,
   marginTop: 30,
   marginBottom: 10,
@@ -26,7 +26,7 @@ export default function TransactionDetailsScreen({ route }) {
         <SafeAreaView>
           <TransactionDetails transaction={transaction} />
 
-          <SubHeader>Contracts</SubHeader>
+          <SubHeader sub>Contracts</SubHeader>
           {!!transaction.contracts &&
             transaction.contracts.map((contract) => (
               <ContractDetails key={contract.id} contract={contract} />

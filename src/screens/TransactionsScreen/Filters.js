@@ -1,10 +1,11 @@
 import React from 'react';
+import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/native';
 import { useTheme } from 'emotion-theming';
 import { TouchableRipple, Button, shadow } from 'react-native-paper';
 
-import { View, Text, SubText } from 'components/Adaptive';
+import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Select from 'components/Select';
 import { toggleTransactionsFilter } from 'lib/ui';
@@ -27,7 +28,14 @@ const operations = [
 ];
 
 const opOptions = [
-  { value: 'all', display: <Text bold>All</Text> },
+  {
+    value: 'all',
+    display: (
+      <Text bold colorName="">
+        All
+      </Text>
+    ),
+  },
   ...operations.map((op) => ({
     value: op,
     display: op,
@@ -37,7 +45,11 @@ const opOptions = [
 const timeOptions = [
   {
     value: 'all',
-    display: <Text bold>All</Text>,
+    display: (
+      <Text bold colorName="">
+        All
+      </Text>
+    ),
   },
   {
     value: 'year',
@@ -75,14 +87,18 @@ const FilterSelect = styled.View({
   flexDirection: 'row',
 });
 
-const FilterLabel = styled(SubText)({
+const FilterText = styled(Text)(({ theme }) => ({
+  color: theme.dark ? theme.foreground : theme.onPrimary,
+}));
+
+const FilterLabel = styled(FilterText)({
   textTransform: 'uppercase',
   marginRight: 5,
 });
 
-const FilterValue = styled(Text)();
+const FilterValue = styled(FilterText)();
 
-const FilterInput = styled(TextBox.Adaptive)({
+const FilterInput = styled(TextBox)({
   marginVertical: 6,
   fontSize: 15,
 });
@@ -107,7 +123,7 @@ export default function Filters() {
           render={({ display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
               <FilterSelect>
-                <FilterLabel>Operation:</FilterLabel>
+                <FilterLabel sub>Operation:</FilterLabel>
                 <FilterValue>{display}</FilterValue>
               </FilterSelect>
             </TouchableRipple>
@@ -120,7 +136,7 @@ export default function Filters() {
           render={({ display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
               <FilterSelect>
-                <FilterLabel>Time:</FilterLabel>
+                <FilterLabel sub>Time:</FilterLabel>
                 <FilterValue>{display}</FilterValue>
               </FilterSelect>
             </TouchableRipple>
@@ -128,8 +144,16 @@ export default function Filters() {
         />
       </FilterSelects>
 
-      <FilterInput dense label="Account/token name" />
-      <FilterInput dense label="Account/token address" />
+      <FilterInput
+        background={theme.dark ? 'background' : 'primary'}
+        dense
+        label="Account/token name"
+      />
+      <FilterInput
+        background={theme.dark ? 'background' : 'primary'}
+        dense
+        label="Account/token address"
+      />
 
       <ApplyButton
         mode={theme.dark ? 'outlined' : 'contained'}

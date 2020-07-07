@@ -5,10 +5,11 @@ import { IconButton, Portal } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useAndroidBackHandler } from 'react-navigation-backhandler/BackHandler';
 
-const useBackHandler = useAndroidBackHandler || (() => {});
-
-import { Icon, Text } from 'components/Adaptive';
+import SvgIcon from 'components/SvgIcon';
+import Text from 'components/Text';
 import QRIcon from 'icons/qr.svg';
+
+const useBackHandler = useAndroidBackHandler || (() => {});
 
 const styles = {
   header: {
@@ -45,7 +46,7 @@ export default function QRScanner({ setAddress, style }) {
     <>
       <IconButton
         style={style}
-        icon={() => <Icon icon={QRIcon} size={16} />}
+        icon={() => <SvgIcon icon={QRIcon} size={16} />}
         onPress={async () => {
           const { status } = await BarCodeScanner.requestPermissionsAsync();
           if (status === 'granted') {

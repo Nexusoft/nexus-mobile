@@ -9,7 +9,7 @@ export default function NewAccountScreen() {
   const [confirmingPin, setConfirmingPin] = React.useState(false);
   return (
     <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
-      <TextBox.Adaptive label="Account name" />
+      <TextBox label="Account name" />
       <Button
         mode="contained"
         style={{ marginTop: 30 }}

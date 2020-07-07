@@ -3,7 +3,7 @@ import { Button, Dialog } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 
 import Portal from 'components/Portal';
-import { Text } from 'components/Adaptive';
+import Text from 'components/Text';
 
 export default function ConfirmationDialog({
   title,

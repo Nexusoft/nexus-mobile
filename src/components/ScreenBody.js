@@ -1,8 +1,12 @@
 import React from 'react';
-import { SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { useTheme } from 'emotion-theming';
-
-import { ScrollView, View } from 'components/Adaptive';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ScreenBody({
   children,

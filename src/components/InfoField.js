@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/native';
 
-import { SubText, Text } from 'components/Adaptive';
+import Text from 'components/Text';
 import { disabledColor } from 'lib/theme';
 
 const Line = styled.View(
@@ -16,7 +16,7 @@ const Line = styled.View(
   })
 );
 
-const Label = styled(SubText)({
+const Label = styled(Text)({
   fontSize: 14,
 });
 
@@ -61,7 +61,7 @@ export default function InfoField({
   return (
     <Line inline={inline} compact={compact}>
       <LabelWrapper expanded={!inline && !!control}>
-        <Label>{label}</Label>
+        <Label sub>{label}</Label>
         {!inline && control}
       </LabelWrapper>
       <ValueWrapper inline={inline} bordered={bordered}>
