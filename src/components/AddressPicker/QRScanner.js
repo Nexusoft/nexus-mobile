@@ -3,6 +3,9 @@ import { View, StyleSheet, Keyboard, Vibration } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { IconButton, Portal } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
+import { useAndroidBackHandler } from 'react-navigation-backhandler/BackHandler';
+
+const useBackHandler = useAndroidBackHandler || (() => {});
 
 import { Icon, Text } from 'components/Adaptive';
 import QRIcon from 'icons/qr.svg';
@@ -31,6 +34,13 @@ const styles = {
 export default function QRScanner({ setAddress, style }) {
   const [scanning, setScanning] = React.useState(false);
   const insets = useSafeArea();
+  useBackHandler(() => {
+    if (scanning) {
+      setScanning(false);
+      return true;
+    }
+    return false;
+  });
   return (
     <>
       <IconButton

@@ -1,10 +1,8 @@
 import React from 'react';
-import { View, Clipboard, StyleSheet, Vibration } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
-import { IconButton, Portal } from 'react-native-paper';
+import { View, Clipboard } from 'react-native';
+import { IconButton } from 'react-native-paper';
 
 import { Icon } from 'components/Adaptive';
-import QRIcon from 'icons/qr.svg';
 import PasteIcon from 'icons/paste.svg';
 import ContactsSelector from './ContactsSelector';
 import QRScanner from './QRScanner';
@@ -22,7 +20,6 @@ const styles = {
 };
 
 export default function AddressPicker({ pickContacts = true, setAddress }) {
-  const [scanning, setScanning] = React.useState(false);
   return (
     <View style={styles.wrapper}>
       <IconButton
