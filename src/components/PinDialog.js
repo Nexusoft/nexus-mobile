@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from '@emotion/native';
 import { Platform } from 'react-native';
 import { Button, Dialog } from 'react-native-paper';
 
@@ -8,21 +7,14 @@ import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
 import LockIcon from 'icons/lock.svg';
 
-const PinTextBox = styled(TextBox)({
-  fontSize: 18,
-});
-
-const SubmitBtn = styled(Button)({
-  marginTop: 30,
-});
-
 export default function PinDialog({ onDismiss, ...rest }) {
   const [pin, setPin] = React.useState('');
   return (
     <Portal>
       <Dialog onDismiss={onDismiss} {...rest}>
         <Dialog.Content>
-          <PinTextBox
+          <TextBox
+            style={{ fontSize: 18 }}
             background="surface"
             label="Confirm your PIN"
             value={pin}
@@ -35,7 +27,8 @@ export default function PinDialog({ onDismiss, ...rest }) {
                 : 'numbers-and-punctuation'
             }
           />
-          <SubmitBtn
+          <Button
+            style={{ marginTop: 30 }}
             mode="contained"
             icon={({ color, size }) => (
               <SvgIcon icon={LockIcon} color={color} size={size} />
@@ -43,7 +36,7 @@ export default function PinDialog({ onDismiss, ...rest }) {
             onPress={onDismiss}
           >
             Proceed
-          </SubmitBtn>
+          </Button>
         </Dialog.Content>
       </Dialog>
     </Portal>

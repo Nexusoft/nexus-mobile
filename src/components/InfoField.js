@@ -1,40 +1,29 @@
 import React from 'react';
-import styled from '@emotion/native';
+import { View } from 'react-native';
+import { useTheme } from 'emotion-theming';
 
 import Text from 'components/Text';
 import { disabledColor } from 'lib/theme';
 
-const Line = styled.View(
-  ({ inline }) =>
+const styles = {
+  line: ({ inline, compact }) => [
+    { paddingVertical: compact ? 12 : 20 },
     inline && {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-  ({ compact }) => ({
-    paddingVertical: compact ? 12 : 20,
-  })
-);
-
-const Label = styled(Text)({
-  fontSize: 14,
-});
-
-const LabelWrapper = styled.View(
-  ({ expanded }) =>
+  ],
+  label: ({ expanded }) =>
     expanded && {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-    }
-);
-
-const ValueWrapper = styled.View(
-  ({ inline }) =>
+    },
+  value: ({ inline, bordered, theme }) => [
     !inline && {
       marginTop: 7,
     },
-  ({ bordered, theme }) =>
     bordered && {
       borderWidth: 1,
       borderColor: disabledColor(theme.foreground),
@@ -42,12 +31,9 @@ const ValueWrapper = styled.View(
       paddingVertical: 5,
       paddingHorizontal: 8,
       marginTop: 5,
-    }
-);
-
-const Value = styled(Text)({
-  fontSize: 15,
-});
+    },
+  ],
+};
 
 export default function InfoField({
   inline,
@@ -58,17 +44,20 @@ export default function InfoField({
   mono,
   bordered,
 }) {
+  const theme = useTheme();
   return (
-    <Line inline={inline} compact={compact}>
-      <LabelWrapper expanded={!inline && !!control}>
-        <Label sub>{label}</Label>
+    <View style={styles.line({ inline, compact })}>
+      <View style={styles.label({ expanded: !inline && !!control })}>
+        <Text sub size={14}>
+          {label}
+        </Text>
         {!inline && control}
-      </LabelWrapper>
-      <ValueWrapper inline={inline} bordered={bordered}>
-        <Value inline={inline} selectable mono={mono}>
+      </View>
+      <View style={styles.value({ inline, bordered, theme })}>
+        <Text size={15} inline={inline} selectable mono={mono}>
           {value}
-        </Value>
-      </ValueWrapper>
-    </Line>
+        </Text>
+      </View>
+    </View>
   );
 }

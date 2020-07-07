@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, Keyboard, Vibration } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { IconButton, Portal } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useAndroidBackHandler } from 'react-navigation-backhandler/BackHandler';
 
+import Portal from 'components/Portal';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import QRIcon from 'icons/qr.svg';

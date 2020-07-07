@@ -5,7 +5,6 @@ import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { ThemeProvider } from 'emotion-theming';
-import styled from '@emotion/native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { useTheme } from 'emotion-theming';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -25,10 +24,12 @@ if (Platform.OS === 'android') {
   }
 }
 
-const Container = styled(View)(({ theme }) => ({
-  flex: 1,
-  backgroundColor: theme.background,
-}));
+const styles = {
+  container: ({ theme }) => ({
+    flex: 1,
+    backgroundColor: theme.background,
+  }),
+};
 
 function PaperContainer({ children }) {
   const theme = useTheme();
@@ -63,6 +64,7 @@ async function initializeStore(setStore) {
 }
 
 export default function Root(props) {
+  const theme = useTheme();
   const [store, setStore] = React.useState(null);
   const [loadingComplete, setLoadingComplete] = React.useState(false);
 
@@ -89,7 +91,7 @@ export default function Root(props) {
     return (
       <ReduxProvider store={store}>
         <ThemeController>
-          <Container>
+          <View style={styles.container({ theme })}>
             <SafeAreaProvider>
               <PaperContainer>
                 <DrawerNavigator />
@@ -97,7 +99,7 @@ export default function Root(props) {
                 <Notifications />
               </PaperContainer>
             </SafeAreaProvider>
-          </Container>
+          </View>
         </ThemeController>
       </ReduxProvider>
     );

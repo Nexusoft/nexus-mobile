@@ -1,6 +1,5 @@
 import React from 'react';
 import { RadioButton, Dialog } from 'react-native-paper';
-import styled from '@emotion/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'emotion-theming';
 
@@ -23,16 +22,12 @@ const normalizeOptions = memoize((options) => {
   return options;
 });
 
-const SelectDialog = styled(Dialog)({
-  marginVertical: 50,
-});
-
 function SelectOptions({ open, setOpen, value, updateValue, options }) {
   const theme = useTheme();
 
   return (
     <Portal>
-      <SelectDialog
+      <Dialog
         visible={open}
         onDismiss={() => {
           setOpen(false);
@@ -59,7 +54,7 @@ function SelectOptions({ open, setOpen, value, updateValue, options }) {
             </RadioButton.Group>
           </ScrollView>
         </Dialog.Content>
-      </SelectDialog>
+      </Dialog>
     </Portal>
   );
 }

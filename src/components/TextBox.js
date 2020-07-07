@@ -1,9 +1,5 @@
 import React from 'react';
-import styled from '@emotion/native';
-import {
-  TextInput as NativeTextInput,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { View, TextInput, TouchableWithoutFeedback } from 'react-native';
 import {
   TextInput as PaperTextInput,
   HelperText,
@@ -19,21 +15,21 @@ import VisibleIcon from 'icons/visible.svg';
 import InvisibleIcon from 'icons/invisible.svg';
 import ClearIcon from 'icons/x-circle.svg';
 
-const InputWrapper = styled.View({
-  flex: 1,
-  flexDirection: 'row',
-  alignItems: 'center',
-});
-
-const TextInput = styled(NativeTextInput)({
-  flex: 1,
-});
-
-const InputIconWrapper = styled.View(({ mode, dense }) => ({
-  paddingTop: mode === 'outlined' || dense ? 8 : 24,
-  paddingBottom: mode === 'outlined' || dense ? 8 : 4,
-  paddingHorizontal: 8,
-}));
+const styles = {
+  wrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+  },
+  icon: ({ mode, dense }) => ({
+    paddingTop: mode === 'outlined' || dense ? 8 : 24,
+    paddingBottom: mode === 'outlined' || dense ? 8 : 4,
+    paddingHorizontal: 8,
+  }),
+};
 
 function adaptTheme({ theme, backgroundName, elevation }) {
   const bgColor =
@@ -93,8 +89,13 @@ export default function TextBox({
       secureTextEntry={!!secure && !visible}
       style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
       render={({ value, onChangeText, ...rest }) => (
-        <InputWrapper>
-          <TextInput value={value} onChangeText={onChangeText} {...rest} />
+        <View style={styles.wrapper}>
+          <TextInput
+            value={value}
+            onChangeText={onChangeText}
+            style={styles.input}
+            {...rest}
+          />
           {!!value && !!secure && (
             <TouchableWithoutFeedback
               delayPressIn={0}
@@ -106,13 +107,13 @@ export default function TextBox({
                 setVisible(false);
               }}
             >
-              <InputIconWrapper mode={mode} dense={dense}>
+              <View style={styles.icon({ mode, dense })}>
                 <SvgIcon
                   icon={visible ? VisibleIcon : InvisibleIcon}
                   size={16}
                   color={adaptedTheme.foreground}
                 />
-              </InputIconWrapper>
+              </View>
             </TouchableWithoutFeedback>
           )}
           {!!value && !!clearButton && (
@@ -121,17 +122,17 @@ export default function TextBox({
                 onChangeText && onChangeText('');
               }}
             >
-              <InputIconWrapper mode={mode} dense={dense}>
+              <View style={styles.icon({ mode, dense })}>
                 <SvgIcon
                   sub
                   icon={ClearIcon}
                   size={16}
                   color={adaptedTheme.foreground}
                 />
-              </InputIconWrapper>
+              </View>
             </TouchableWithoutFeedback>
           )}
-        </InputWrapper>
+        </View>
       )}
       {...rest}
     />
