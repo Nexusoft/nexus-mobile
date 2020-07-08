@@ -4,9 +4,9 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import { useTheme } from 'lib/theme';
-import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ScreenBody({
   children,

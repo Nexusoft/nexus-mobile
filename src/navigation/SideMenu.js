@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View, Platform, ScrollView } from 'react-native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'lib/theme';
 
 import SvgIcon from 'components/SvgIcon';

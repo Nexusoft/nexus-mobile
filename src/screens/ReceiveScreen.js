@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Clipboard } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { View, ScrollView, Clipboard } from 'react-native';
 import { Button, overlay, Surface } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
 import { useTheme } from 'lib/theme';

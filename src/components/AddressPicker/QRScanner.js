@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Keyboard, Vibration } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { IconButton } from 'react-native-paper';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAndroidBackHandler } from 'react-navigation-backhandler/BackHandler';
 
 import Portal from 'components/Portal';
@@ -35,7 +35,7 @@ const styles = {
 
 export default function QRScanner({ setAddress, style }) {
   const [scanning, setScanning] = React.useState(false);
-  const insets = useSafeArea();
+  const insets = useSafeAreaInsets();
   useBackHandler(() => {
     if (scanning) {
       setScanning(false);

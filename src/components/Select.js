@@ -1,6 +1,6 @@
 import React from 'react';
+import { ScrollView } from 'react-native';
 import { RadioButton, Dialog } from 'react-native-paper';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'lib/theme';
 
 import Portal from 'components/Portal';

@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, TouchableWithoutFeedback } from 'react-native';
+import { View, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { shadow } from 'react-native-paper';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'lib/theme';
 
 import SvgIcon from 'components/SvgIcon';
