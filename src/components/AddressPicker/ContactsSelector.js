@@ -11,8 +11,10 @@ import memoize from 'utils/memoize';
 import AddressBookIcon from 'icons/address-book.svg';
 import Contact from './Contact';
 
-const selectContacts = memoize((state) =>
-  Object.entries(state.contacts).map(([name, address]) => ({ name, address }))
+const selectContacts = memoize(
+  (state) =>
+    state.contacts &&
+    Object.entries(state.contacts).map(([name, address]) => ({ name, address }))
 );
 
 export default function ContactsSelector({ setAddress, style }) {
