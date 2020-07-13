@@ -42,15 +42,22 @@ function SelectOptions({ open, setOpen, value, updateValue, options }) {
                 setOpen(false);
               }}
             >
-              {normalizeOptions(options).map(({ value, display }) => (
-                <RadioButton.Item
-                  key={value}
-                  value={value}
-                  color={theme.primary}
-                  uncheckedColor={theme.foreground}
-                  label={display}
-                />
-              ))}
+              {normalizeOptions(options).map(
+                ({ value: optionVal, display }, i) => (
+                  <RadioButton.Item
+                    key={i}
+                    value={optionVal}
+                    color={theme.primary}
+                    uncheckedColor={theme.foreground}
+                    label={display}
+                    labelStyle={{
+                      color:
+                        optionVal === value ? theme.primary : theme.foreground,
+                    }}
+                    status={optionVal === value ? 'checked' : 'unchecked'}
+                  />
+                )
+              )}
             </RadioButton.Group>
           </ScrollView>
         </Dialog.Content>
