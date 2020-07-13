@@ -6,6 +6,7 @@ import { getStore } from 'store';
 export const defaultSettings = {
   darkMode: false,
   baseCurrency: 'USD',
+  coreMode: 'embedded',
 };
 
 export async function loadSettings() {

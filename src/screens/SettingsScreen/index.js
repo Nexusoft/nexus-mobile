@@ -34,7 +34,7 @@ export default function SettingsScreen() {
         Core
       </Text>
       <Surface style={styles.section}>
-        <ApplicationSettings />
+        <CoreSettings />
       </Surface>
     </ScreenBody>
   );
