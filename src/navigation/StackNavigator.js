@@ -23,6 +23,7 @@ import ContactDetailsScreen from 'screens/ContactDetailsScreen';
 import NewAccountScreen from 'screens/NewAccountScreen';
 import NewContactScreen from 'screens/NewContactScreen';
 import ConfirmSendScreen from 'screens/ConfirmSendScreen';
+import ExternalCoreConfigScreen from 'screens/ExternalCoreConfigScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 
 const Stack = createStackNavigator();
@@ -43,6 +44,7 @@ const screens = [
   NewAccountScreen,
   NewContactScreen,
   ConfirmSendScreen,
+  ExternalCoreConfigScreen,
 ];
 
 export default function StackNavigator({ navigation }) {

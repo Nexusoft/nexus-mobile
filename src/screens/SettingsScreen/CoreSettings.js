@@ -1,11 +1,10 @@
 import React from 'react';
-import { View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Ionicons } from '@expo/vector-icons';
 
 import Divider from 'components/Divider';
 import Select from 'components/Select';
 import { updateSettings } from 'lib/settings';
+import { navigate } from 'lib/navigation';
 import SettingItem from './SettingItem';
 
 const coreOptions = [
@@ -23,7 +22,7 @@ export default function CoreSettings() {
   );
 
   return (
-    <View>
+    <>
       <Select
         options={coreOptions}
         value={settings.coreMode}
@@ -40,9 +39,15 @@ export default function CoreSettings() {
       {settings.coreMode === 'external' && (
         <>
           <Divider inset={20} />
-          <SettingItem title="External Core configuration" right="arrow" />
+          <SettingItem
+            title="External Core configuration"
+            right="arrow"
+            onPress={() => {
+              navigate('ExternalCoreConfig');
+            }}
+          />
         </>
       )}
-    </View>
+    </>
   );
 }

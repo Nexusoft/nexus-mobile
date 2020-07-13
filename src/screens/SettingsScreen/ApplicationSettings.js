@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import Divider from 'components/Divider';
@@ -28,7 +27,7 @@ export default function ApplicationSettings() {
   );
 
   return (
-    <View>
+    <>
       <SettingItem
         title="Dark mode"
         description={settings.darkMode ? 'On' : 'Off'}
@@ -56,6 +55,6 @@ export default function ApplicationSettings() {
           />
         )}
       />
-    </View>
+    </>
   );
 }
