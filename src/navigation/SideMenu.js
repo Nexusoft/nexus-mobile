@@ -14,6 +14,8 @@ import NameIcon from 'icons/abc.svg';
 import NamespaceIcon from 'icons/abc-cube.svg';
 import AssetIcon from 'icons/asset.svg';
 import WalletIcon from 'icons/wallet.svg';
+import CopyIcon from 'icons/copy.svg';
+import LogoutIcon from 'icons/logout.svg';
 
 const styles = {
   wrapper: {
@@ -114,8 +116,8 @@ export default function SideMenu({ navigation }) {
         <MenuItem linkTo="Namespaces" icon={NamespaceIcon} label="Namespaces" />
         <Divider spacing={5} />
 
-        <MenuItem label="Copy User ID to clipboard" />
-        <MenuItem label="Log out" />
+        <MenuItem icon={CopyIcon} label="Copy User ID to clipboard" />
+        <MenuItem icon={LogoutIcon} label="Log out" />
         <Divider spacing={5} />
 
         <MenuItem label="About Nexus Wallet" />
