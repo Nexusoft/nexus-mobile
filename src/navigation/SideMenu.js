@@ -115,8 +115,6 @@ export default function SideMenu({ navigation }) {
         <Divider spacing={5} />
 
         <MenuItem label="Copy User ID to clipboard" />
-        <MenuItem label="Change password & PIN" />
-        <MenuItem label="Change recovery phrase" />
         <MenuItem label="Log out" />
         <Divider spacing={5} />
 

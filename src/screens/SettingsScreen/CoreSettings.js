@@ -81,6 +81,7 @@ export default function CoreSettings() {
         {settings.coreMode === 'external' && (
           <>
             <SettingItem
+              small
               title="External Core configuration"
               right="arrow"
               onPress={() => {

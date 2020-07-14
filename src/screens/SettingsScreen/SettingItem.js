@@ -17,9 +17,6 @@ const styles = {
     flex: 1,
     paddingRight: 10,
   },
-  label: {
-    fontSize: 18,
-  },
   description: {
     fontSize: 14,
     marginTop: 3,
@@ -28,17 +25,19 @@ const styles = {
 
 export default function SettingItem({
   title,
+  small,
   description,
   primary,
   onPress,
   right,
 }) {
   const theme = useTheme();
+  const fontSize = small ? 16 : 18;
   return (
     <TouchableRipple borderless={false} onPress={onPress}>
       <View style={styles.setting}>
         <View style={styles.settingInfo}>
-          <Text style={styles.label}>{title}</Text>
+          <Text style={{ fontSize }}>{title}</Text>
           {!!description && (
             <Text
               style={[
@@ -53,7 +52,7 @@ export default function SettingItem({
         {right === 'arrow' ? (
           <Ionicons
             name="ios-arrow-forward"
-            style={{ fontSize: 18, color: theme.foreground }}
+            style={{ fontSize, color: theme.foreground }}
           />
         ) : (
           right
