@@ -7,6 +7,13 @@ export const defaultSettings = {
   darkMode: false,
   baseCurrency: 'USD',
   coreMode: 'embedded',
+  externalCoreIP: '127.0.0.1',
+  externalCoreRPCPort: '9336',
+  externalCoreRPCUser: 'rpcserver',
+  externalCoreRPCPassword: 'password',
+  externalCoreAPIPort: '8080',
+  externalCoreAPIUser: 'apiserver',
+  externalCoreAPIPassword: 'password',
 };
 
 export async function loadSettings() {
