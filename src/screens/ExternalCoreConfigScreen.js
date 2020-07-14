@@ -1,12 +1,16 @@
 import React from 'react';
 import { View, TextInput } from 'react-native';
-import { Surface } from 'react-native-paper';
+import { Surface, Button } from 'react-native-paper';
+import { Formik, useField } from 'formik';
+import { useSelector } from 'react-redux';
 
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
 import { useTheme, disabledColor } from 'lib/theme';
-import { defaultSettings } from 'lib/settings';
+import { defaultSettings, updateSettings } from 'lib/settings';
+import { goBack } from 'lib/navigation';
+import { showError } from 'lib/ui';
 
 const styles = {
   screen: {
@@ -39,8 +43,9 @@ const styles = {
   },
 };
 
-function TextBox({ style, ...rest }) {
+function TextBox({ name, style, ...rest }) {
   const theme = useTheme();
+  const [field, meta, helpers] = useField(name);
   return (
     <TextInput
       autoCorrect={false}
@@ -48,18 +53,37 @@ function TextBox({ style, ...rest }) {
       keyboardAppearance={theme.dark ? 'dark' : 'light'}
       placeholderTextColor={disabledColor(theme.foreground)}
       style={[styles.textbox, { color: theme.foreground }, style]}
+      value={field.value}
+      onChangeText={helpers.setValue}
+      onBlur={() => {
+        helpers.setTouched(true);
+      }}
       {...rest}
     />
   );
 }
 
-export default function ExternalCoreConfigScreen() {
+function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button mode="text" disabled={isSubmitting} onPress={handleSubmit}>
+          Done
+        </Button>
+      ),
+    });
+  }, []);
+
   return (
-    <ScreenBody style={styles.screen}>
+    <>
       <Surface style={styles.section}>
         <View style={styles.field}>
           <Text style={styles.label}>IP address</Text>
-          <TextBox placeholder={defaultSettings.externalCoreIP} />
+          <TextBox
+            name="externalCoreIP"
+            placeholder={defaultSettings.externalCoreIP}
+            keyboardType="decimal-pad"
+          />
         </View>
       </Surface>
 
@@ -69,17 +93,28 @@ export default function ExternalCoreConfigScreen() {
       <Surface style={styles.section}>
         <View style={styles.field}>
           <Text style={styles.label}>API port</Text>
-          <TextBox placeholder={defaultSettings.externalCoreRPCPort} />
+          <TextBox
+            name="externalCoreRPCPort"
+            placeholder={defaultSettings.externalCoreRPCPort}
+            keyboardType="number-pad"
+          />
         </View>
         <Divider inset={20} />
         <View style={styles.field}>
           <Text style={styles.label}>API username</Text>
-          <TextBox placeholder={defaultSettings.externalCoreRPCUser} />
+          <TextBox
+            name="externalCoreRPCUser"
+            placeholder={defaultSettings.externalCoreRPCUser}
+          />
         </View>
         <Divider inset={20} />
         <View style={styles.field}>
           <Text style={styles.label}>API password</Text>
-          <TextBox placeholder={defaultSettings.externalCoreRPCPassword} />
+          <TextBox
+            name="externalCoreRPCPassword"
+            placeholder={defaultSettings.externalCoreRPCPassword}
+            secureTextEntry
+          />
         </View>
       </Surface>
 
@@ -89,19 +124,73 @@ export default function ExternalCoreConfigScreen() {
       <Surface style={styles.section}>
         <View style={styles.field}>
           <Text style={styles.label}>RPC port</Text>
-          <TextBox placeholder={defaultSettings.externalCoreAPIPort} />
+          <TextBox
+            name="externalCoreAPIPort"
+            placeholder={defaultSettings.externalCoreAPIPort}
+            keyboardType="number-pad"
+          />
         </View>
         <Divider inset={20} />
         <View style={styles.field}>
           <Text style={styles.label}>RPC username</Text>
-          <TextBox placeholder={defaultSettings.externalCoreAPIUser} />
+          <TextBox
+            name="externalCoreAPIUser"
+            placeholder={defaultSettings.externalCoreAPIUser}
+          />
         </View>
         <Divider inset={20} />
         <View style={styles.field}>
           <Text style={styles.label}>RPC password</Text>
-          <TextBox placeholder={defaultSettings.externalCoreAPIPassword} />
+          <TextBox
+            name="externalCoreAPIPassword"
+            placeholder={defaultSettings.externalCoreAPIPassword}
+            secureTextEntry
+          />
         </View>
       </Surface>
+    </>
+  );
+}
+
+export default function ExternalCoreConfigScreen({ navigation }) {
+  const {
+    externalCoreIP,
+    externalCoreRPCPort,
+    externalCoreRPCUser,
+    externalCoreRPCPassword,
+    externalCoreAPIPort,
+    externalCoreAPIUser,
+    externalCoreAPIPassword,
+  } = useSelector((state) => state.settings);
+  return (
+    <ScreenBody style={styles.screen}>
+      <Formik
+        initialValues={{
+          externalCoreIP,
+          externalCoreRPCPort,
+          externalCoreRPCUser,
+          externalCoreRPCPassword,
+          externalCoreAPIPort,
+          externalCoreAPIUser,
+          externalCoreAPIPassword,
+        }}
+        onSubmit={async (updates) => {
+          try {
+            for (const key of Object.keys(updates)) {
+              if (updates[key] === '') updates[key] = null;
+            }
+            await updateSettings(updates);
+            // TODO: resend get/info
+            goBack();
+          } catch (err) {
+            showError(err && err.message);
+          }
+        }}
+      >
+        {(props) => (
+          <ExternalCoreConfigForm {...props} navigation={navigation} />
+        )}
+      </Formik>
     </ScreenBody>
   );
 }

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { mix, fade, darken } from 'utils/color';
 import memoize from 'utils/memoize';
+import { selectSettings } from 'lib/settings';
 
 const darkColor = '#060606';
 const lightColor = '#ffffff';
@@ -100,7 +101,7 @@ export const lightTheme = {
 };
 
 export function useTheme() {
-  const darkMode = useSelector((state) => state.settings.darkMode);
+  const { darkMode } = useSelector(selectSettings);
   return darkMode ? darkTheme : lightTheme;
 }
 

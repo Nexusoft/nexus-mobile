@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import Divider from 'components/Divider';
 import Select from 'components/Select';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, selectSettings } from 'lib/settings';
 import { navigate } from 'lib/navigation';
 import SettingItem from './SettingItem';
 
@@ -13,7 +13,7 @@ const coreOptions = [
 ];
 
 export default function CoreSettings() {
-  const settings = useSelector((state) => state.settings);
+  const settings = useSelector(selectSettings);
   const setCoreMode = React.useCallback(
     (coreMode) => {
       updateSettings({ coreMode });

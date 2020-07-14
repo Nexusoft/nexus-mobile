@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Divider from 'components/Divider';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, selectSettings } from 'lib/settings';
 import baseCurrencies from 'consts/baseCurrencies';
 import SettingItem from './SettingItem';
 
@@ -15,7 +15,7 @@ const styles = {
 };
 
 export default function ApplicationSettings() {
-  const settings = useSelector((state) => state.settings);
+  const settings = useSelector(selectSettings);
   const toggleDarkMode = React.useCallback(() => {
     updateSettings({ darkMode: !settings.darkMode });
   }, [settings.darkMode]);

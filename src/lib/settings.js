@@ -2,6 +2,7 @@ import { AsyncStorage } from 'react-native';
 
 import * as TYPE from 'consts/actionTypes';
 import { getStore } from 'store';
+import memoize from 'utils/memoize';
 
 export const defaultSettings = {
   darkMode: false,
@@ -20,10 +21,7 @@ export async function loadSettings() {
   const keys = Object.keys(defaultSettings);
   const results = await AsyncStorage.multiGet(keys);
   const settings = results.reduce((settings, [key, value]) => {
-    settings[key] =
-      value === null || value === undefined
-        ? defaultSettings[key]
-        : JSON.parse(value);
+    settings[key] = value && JSON.parse(value);
     return settings;
   }, {});
   return settings;
@@ -48,3 +46,11 @@ export async function updateSettings(updates) {
     }
   }
 }
+
+export const selectSettings = memoize((state) =>
+  Object.entries(state.settings).reduce((settings, [key, value]) => {
+    settings[key] =
+      value === null || value === undefined ? defaultSettings[key] : value;
+    return settings;
+  }, {})
+);
