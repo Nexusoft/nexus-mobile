@@ -1,10 +1,12 @@
 import configureStore from './configureStore';
+import createObserver from './createObserver';
 
 let store = null;
 
 export function getStore(initialState) {
   if (!store) {
     store = configureStore(initialState);
+    store.observe = createObserver(store);
   }
   return store;
 }
