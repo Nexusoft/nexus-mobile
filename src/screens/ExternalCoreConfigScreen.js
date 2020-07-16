@@ -11,6 +11,7 @@ import { useTheme, disabledColor } from 'lib/theme';
 import { defaultSettings, updateSettings } from 'lib/settings';
 import { goBack } from 'lib/navigation';
 import { showError } from 'lib/ui';
+import { sendAPI } from 'lib/api';
 
 const styles = {
   screen: {
@@ -34,12 +35,13 @@ const styles = {
     alignItems: 'center',
   },
   label: {
-    width: 110,
+    width: 120,
+    fontSize: 14,
   },
   textbox: {
     paddingVertical: 5,
     flex: 1,
-    fontSize: 15,
+    fontSize: 14,
   },
 };
 
@@ -94,8 +96,8 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
         <View style={styles.field}>
           <Text style={styles.label}>API port</Text>
           <TextBox
-            name="externalCoreRPCPort"
-            placeholder={defaultSettings.externalCoreRPCPort}
+            name="externalCoreAPIPort"
+            placeholder={defaultSettings.externalCoreAPIPort}
             keyboardType="number-pad"
           />
         </View>
@@ -103,16 +105,16 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
         <View style={styles.field}>
           <Text style={styles.label}>API username</Text>
           <TextBox
-            name="externalCoreRPCUser"
-            placeholder={defaultSettings.externalCoreRPCUser}
+            name="externalCoreAPIUser"
+            placeholder={defaultSettings.externalCoreAPIUser}
           />
         </View>
         <Divider inset={20} />
         <View style={styles.field}>
           <Text style={styles.label}>API password</Text>
           <TextBox
-            name="externalCoreRPCPassword"
-            placeholder={defaultSettings.externalCoreRPCPassword}
+            name="externalCoreAPIPassword"
+            placeholder={defaultSettings.externalCoreAPIPassword}
             secureTextEntry
           />
         </View>
@@ -125,8 +127,8 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
         <View style={styles.field}>
           <Text style={styles.label}>RPC port</Text>
           <TextBox
-            name="externalCoreAPIPort"
-            placeholder={defaultSettings.externalCoreAPIPort}
+            name="externalCoreRPCPort"
+            placeholder={defaultSettings.externalCoreRPCPort}
             keyboardType="number-pad"
           />
         </View>
@@ -134,16 +136,16 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
         <View style={styles.field}>
           <Text style={styles.label}>RPC username</Text>
           <TextBox
-            name="externalCoreAPIUser"
-            placeholder={defaultSettings.externalCoreAPIUser}
+            name="externalCoreRPCUser"
+            placeholder={defaultSettings.externalCoreRPCUser}
           />
         </View>
         <Divider inset={20} />
         <View style={styles.field}>
           <Text style={styles.label}>RPC password</Text>
           <TextBox
-            name="externalCoreAPIPassword"
-            placeholder={defaultSettings.externalCoreAPIPassword}
+            name="externalCoreRPCPassword"
+            placeholder={defaultSettings.externalCoreRPCPassword}
             secureTextEntry
           />
         </View>
