@@ -6,6 +6,7 @@ import dialogs from './dialogs';
 import settings from './settings';
 import contacts from './contacts';
 import core from './core';
+import user from './user';
 
 export default function createRootReducer() {
   return combineReducers({
@@ -15,5 +16,6 @@ export default function createRootReducer() {
     settings,
     contacts,
     core,
+    user,
   });
 }

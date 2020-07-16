@@ -4,10 +4,11 @@ const initialState = null;
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SET_CORE_INFO:
+    case TYPE.SET_USER_STATUS:
       return action.payload;
 
-    case TYPE.CLEAR_CORE:
+    case TYPE.CLEAR_CORE_INFO:
+    case TYPE.CLEAR_USER_STATUS:
       return initialState;
 
     default:

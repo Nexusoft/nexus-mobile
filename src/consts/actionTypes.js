@@ -1,5 +1,8 @@
 export const SET_CORE_INFO = 'SET_CORE_INFO';
-export const CLEAR_CORE_INFO = 'CLEAR_CORE_INFO';
+export const CLEAR_CORE = 'CLEAR_CORE';
+
+export const SET_USER_STATUS = 'SET_USER_STATUS';
+export const CLEAR_USER = 'CLEAR_USER';
 
 export const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
 export const SET_CONTACTS = 'SET_CONTACTS';
