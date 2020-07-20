@@ -24,12 +24,12 @@ import NewAccountScreen from 'screens/NewAccountScreen';
 import NewContactScreen from 'screens/NewContactScreen';
 import ConfirmSendScreen from 'screens/ConfirmSendScreen';
 import ExternalCoreConfigScreen from 'screens/ExternalCoreConfigScreen';
-import BottomTabNavigator from './BottomTabNavigator';
+import BaseScreen from './BaseScreen';
 
 const Stack = createStackNavigator();
 
 const screens = [
-  BottomTabNavigator,
+  BaseScreen,
   ReceiveScreen,
   SendScreen,
   SettingsScreen,
@@ -61,7 +61,7 @@ export default function StackNavigator({ navigation }) {
         backgroundColor={theme.dark ? '#000' : theme.primaryVariant}
       />
       <Stack.Navigator
-        initialRouteName="BottomNav"
+        initialRouteName="Base"
         headerMode="screen"
         screenOptions={{
           headerStyle: {

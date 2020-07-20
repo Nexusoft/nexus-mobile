@@ -9,7 +9,9 @@ import { useTheme } from 'lib/theme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { getPaperTheme } from 'lib/theme';
-import { getStore } from 'store';
+import { setupUser } from 'lib/user';
+import { refreshCoreInfo } from 'lib/coreInfo';
+import { createStore, getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
 
 import Notifications from './Notifications';
@@ -35,7 +37,7 @@ function PaperContainer({ children }) {
   return <PaperProvider theme={getPaperTheme(theme)}>{children}</PaperProvider>;
 }
 
-async function loadResourcesAndDataAsync() {
+async function loadResourcesAndData() {
   try {
     // Load fonts
     await Font.loadAsync({
@@ -51,9 +53,16 @@ async function loadResourcesAndDataAsync() {
   }
 }
 
-async function initializeStore(setStore) {
+function setupSubscribers(store) {
+  setupUser(store);
+}
+
+async function initializeStore() {
+  // Load initialState here to avoid circular dependencies
   const initialState = await loadInitialState();
-  const store = getStore(initialState);
+  const store = await createStore(initialState);
+  setupSubscribers(store);
+  refreshCoreInfo();
   return store;
 }
 
@@ -69,7 +78,6 @@ function App() {
 }
 
 export default function Root(props) {
-  const [store, setStore] = React.useState(null);
   const [loadingComplete, setLoadingComplete] = React.useState(false);
 
   // Load any resources or data that we need prior to rendering the app
@@ -77,11 +85,7 @@ export default function Root(props) {
     (async () => {
       try {
         SplashScreen.preventAutoHide();
-        const [_, store] = await Promise.all([
-          loadResourcesAndDataAsync(),
-          initializeStore(),
-        ]);
-        setStore(store);
+        await Promise.all([initializeStore(), loadResourcesAndData()]);
         setLoadingComplete(true);
       } finally {
         SplashScreen.hide();
@@ -89,11 +93,11 @@ export default function Root(props) {
     })();
   }, []);
 
-  if ((!loadingComplete && !props.skipLoadingScreen) || !store) {
+  if (!loadingComplete && !props.skipLoadingScreen) {
     return null;
   } else {
     return (
-      <ReduxProvider store={store}>
+      <ReduxProvider store={getStore()}>
         <SafeAreaProvider>
           <PaperContainer>
             <App />

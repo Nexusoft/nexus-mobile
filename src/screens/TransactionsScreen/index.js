@@ -31,6 +31,7 @@ TransactionsScreen.nav = ({ txFilterOpen }) => ({
   icon: TransactionIcon,
   stackOptions: {
     title: 'Transactions',
+    headerTitle: 'Transactions',
     headerTitleAlign: 'left',
     headerRight: ({ tintColor }) => (
       <IconButton

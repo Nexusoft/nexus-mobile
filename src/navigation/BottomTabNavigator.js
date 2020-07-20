@@ -1,25 +1,25 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import { shadow, TouchableRipple, IconButton } from 'react-native-paper';
-import { useTheme } from 'lib/theme';
 import { useSelector } from 'react-redux';
 
+import { useTheme } from 'lib/theme';
 import OverviewScreen from 'screens/OverviewScreen';
 import TransactionsScreen from 'screens/TransactionsScreen';
 import ContactsScreen from 'screens/ContactsScreen';
 import SvgIcon from 'components/SvgIcon';
-import { navigate } from 'lib/navigation';
 import { fade } from 'utils/color';
 import { flatHeader } from 'utils/styles';
 import MenuIcon from 'icons/menu.svg';
-import SettingsIcon from 'icons/settings.svg';
 
 const BottomTab = createBottomTabNavigator();
 const defaultScreen = 'Overview';
 const screens = [ContactsScreen, OverviewScreen, TransactionsScreen];
 
-export default function BottomTabNavigator({ navigation }) {
+export default function BottomTabNavigator() {
   const theme = useTheme();
+  const navigation = useNavigation();
   const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
   const contactSearch = useSelector((state) => state.ui.contactSearch);
   return (
@@ -94,18 +94,6 @@ BottomTabNavigator.nav = ({
           size={25}
           onPress={() => {
             navigation.openDrawer();
-          }}
-        />
-      ),
-      headerRight: ({ tintColor }) => (
-        <IconButton
-          icon={({ size }) => (
-            <SvgIcon icon={SettingsIcon} size={size} color={tintColor} />
-          )}
-          color={tintColor}
-          size={25}
-          onPress={() => {
-            navigate('Settings');
           }}
         />
       ),

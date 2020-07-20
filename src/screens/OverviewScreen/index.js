@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, TouchableWithoutFeedback } from 'react-native';
-import { shadow } from 'react-native-paper';
+import { shadow, IconButton } from 'react-native-paper';
 import { useTheme } from 'lib/theme';
 
 import SvgIcon from 'components/SvgIcon';
@@ -8,6 +8,7 @@ import Text from 'components/Text';
 import { navigate } from 'lib/navigation';
 import HomeIcon from 'icons/home.svg';
 import LogoIcon from 'icons/logo-full.svg';
+import SettingsIcon from 'icons/settings.svg';
 import BalanceSection from './BalanceSection';
 import Account from './Account';
 
@@ -102,5 +103,17 @@ OverviewScreen.nav = ({ theme }) => ({
       />
     ),
     headerTitleAlign: 'center',
+    headerRight: ({ tintColor }) => (
+      <IconButton
+        icon={({ size }) => (
+          <SvgIcon icon={SettingsIcon} size={size} color={tintColor} />
+        )}
+        color={tintColor}
+        size={25}
+        onPress={() => {
+          navigate('Settings');
+        }}
+      />
+    ),
   },
 });

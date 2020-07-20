@@ -23,12 +23,14 @@ export async function refreshCoreInfo() {
   const connected = selectConnected(getStore().getState());
   try {
     clearTimeout(timerId);
-    await getInfo();
+    const result = await getInfo();
     waitTime = maxTime;
+    return result;
   } catch (err) {
     if (connected) waitTime = incStep;
     else if (waitTime < maxTime) waitTime += incStep;
     else waitTime = maxTime;
+    return null;
   } finally {
     timerId = setTimeout(refreshCoreInfo, waitTime);
   }

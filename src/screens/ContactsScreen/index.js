@@ -67,7 +67,7 @@ export default function ContactsScreen() {
   );
 }
 
-ContactsScreen.nav = ({ contactSearch }) => ({
+ContactsScreen.nav = ({ contactSearch, theme }) => ({
   name: 'Contacts',
   icon: ContactsIcon,
   options: {
@@ -79,7 +79,7 @@ ContactsScreen.nav = ({ contactSearch }) => ({
       typeof contactSearch === 'string'
         ? () => (
             <TextBox
-              background="primary"
+              background={theme.dark ? 'surface' : 'primary'}
               value={contactSearch}
               onChangeText={setContactSearch}
               autoFocus

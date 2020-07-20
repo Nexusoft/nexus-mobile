@@ -8,6 +8,7 @@ import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
+import { logout } from 'lib/user';
 import UserIcon from 'icons/user.svg';
 import TokenIcon from 'icons/token.svg';
 import NameIcon from 'icons/abc.svg';
@@ -62,12 +63,14 @@ const styles = {
   },
 };
 
-const MenuItem = ({ linkTo, icon, label }) => (
+const MenuItem = ({ linkTo, icon, label, action }) => (
   <TouchableRipple
     borderless={false}
     onPress={() => {
       if (linkTo) {
         navigate(linkTo);
+      } else if (action) {
+        action();
       }
     }}
   >
@@ -117,7 +120,7 @@ export default function SideMenu({ navigation }) {
         <Divider spacing={5} />
 
         <MenuItem icon={CopyIcon} label="Copy User ID to clipboard" />
-        <MenuItem icon={LogoutIcon} label="Log out" />
+        <MenuItem icon={LogoutIcon} label="Log out" action={logout} />
         <Divider spacing={5} />
 
         <MenuItem label="About Nexus Wallet" />
