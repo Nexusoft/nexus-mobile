@@ -9,6 +9,7 @@ import Text from 'components/Text';
 import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
 import { logout } from 'lib/user';
+import { confirm } from 'lib/ui';
 import UserIcon from 'icons/user.svg';
 import TokenIcon from 'icons/token.svg';
 import NameIcon from 'icons/abc.svg';
@@ -62,6 +63,18 @@ const styles = {
     marginRight: 10,
   },
 };
+
+async function confirmLogout({ closeDrawer }) {
+  const confirmed = await confirm({
+    title: 'Are you sure you want to log out?',
+    confirmLabel: 'Log out',
+    danger: true,
+  });
+  if (confirmed) {
+    await logout();
+    closeDrawer();
+  }
+}
 
 const MenuItem = ({ linkTo, icon, label, action }) => (
   <TouchableRipple
@@ -120,7 +133,13 @@ export default function SideMenu({ navigation }) {
         <Divider spacing={5} />
 
         <MenuItem icon={CopyIcon} label="Copy User ID to clipboard" />
-        <MenuItem icon={LogoutIcon} label="Log out" action={logout} />
+        <MenuItem
+          icon={LogoutIcon}
+          label="Log out"
+          action={() => {
+            confirmLogout({ closeDrawer: navigation.closeDrawer });
+          }}
+        />
         <Divider spacing={5} />
 
         <MenuItem label="About Nexus Wallet" />

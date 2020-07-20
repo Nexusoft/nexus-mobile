@@ -32,8 +32,6 @@ export async function login({ username, password, pin }) {
 }
 
 export async function logout() {
-  const result = await sendAPI('users/logout/user');
-  if (result?.success) {
-    store.dispatch({ type: TYPE.CLEAR_USER_STATUS });
-  }
+  await sendAPI('users/logout/user');
+  await refreshUserStatus();
 }

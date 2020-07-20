@@ -20,10 +20,16 @@ export default function ConfirmationDialog({
   return (
     <Portal>
       <Dialog onDismiss={onDismiss} {...rest}>
-        {title && <Dialog.Title>{title}</Dialog.Title>}
-        <Dialog.Content>
-          <Text>{message || ''}</Text>
-        </Dialog.Content>
+        {title && (
+          <Dialog.Title>
+            <Text>{title}</Text>
+          </Dialog.Title>
+        )}
+        {!!message && (
+          <Dialog.Content>
+            <Text>{message}</Text>
+          </Dialog.Content>
+        )}
         <Dialog.Actions>
           <Button
             mode="text"
