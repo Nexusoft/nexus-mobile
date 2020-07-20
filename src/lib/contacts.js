@@ -5,7 +5,7 @@ import { getStore } from 'store';
 
 export async function loadContacts() {
   const contacts = JSON.parse(await AsyncStorage.getItem('contacts'));
-  return contacts;
+  return contacts || {};
 }
 
 export async function createContact({ name, address }) {
