@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Platform, ScrollView } from 'react-native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { useTheme } from 'lib/theme';
+import { useSelector } from 'react-redux';
 
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
+import { useTheme } from 'lib/theme';
 import { navigate } from 'lib/navigation';
 import { logout } from 'lib/user';
 import { confirm } from 'lib/ui';
@@ -98,6 +99,7 @@ const MenuItem = ({ linkTo, icon, label, action }) => (
 
 export default function SideMenu({ navigation }) {
   const theme = useTheme();
+  const username = useSelector((state) => state.user?.status?.username);
   return (
     <View style={styles.wrapper}>
       <View style={styles.header({ theme })}>
@@ -119,7 +121,7 @@ export default function SideMenu({ navigation }) {
               icon={UserIcon}
               size={25}
             />
-            <Text style={styles.userName({ theme })}>krysto</Text>
+            <Text style={styles.userName({ theme })}>{username}</Text>
           </View>
         </View>
       </View>
