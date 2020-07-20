@@ -21,9 +21,10 @@ export async function sendAPI(endpoint, params) {
     },
     body: params && JSON.stringify(params),
   });
+  const content = await response.json();
   if (response.ok) {
-    return response.json();
+    return content?.result;
   } else {
-    throw response.json()?.error;
+    throw content?.error;
   }
 }

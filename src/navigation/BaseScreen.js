@@ -91,14 +91,14 @@ export default function BaseScreen({ route }) {
   const navigation = useNavigation();
   React.useLayoutEffect(() => {
     if (loggedIn) {
-      navigation.setOptions(
-        BottomTabNavigator.nav({
-          theme,
-          navigation,
-          txFilterOpen,
-          contactSearch,
-        }).options({ route })
-      );
+      const navConfig = BottomTabNavigator.nav({
+        theme,
+        navigation,
+        txFilterOpen,
+        contactSearch,
+      });
+      const options = navConfig.options({ route });
+      navigation.setOptions(options);
     } else {
       navigation.setOptions({
         headerLeft: () => null,
