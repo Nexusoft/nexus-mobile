@@ -17,7 +17,7 @@ const BottomTab = createBottomTabNavigator();
 const defaultScreen = 'Overview';
 const screens = [ContactsScreen, OverviewScreen, TransactionsScreen];
 
-export default function BottomTabNavigator() {
+export default function LoggedInScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
   const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
@@ -32,6 +32,7 @@ export default function BottomTabNavigator() {
         inactiveTintColor: fade(theme.foreground, 0.5),
         style: { paddingTop: 5, elevation: 4, ...shadow(4) },
         labelStyle: { marginBottom: 5 },
+        keyboardHidesTabBar: true,
       }}
       screenOptions={{
         tabBarButton: (props) => {
@@ -40,7 +41,7 @@ export default function BottomTabNavigator() {
       }}
     >
       {screens.map((Screen) => {
-        const { name, icon, listeners, options } =
+        const { name, title, icon, listeners, options } =
           typeof Screen.nav === 'function'
             ? Screen.nav({ theme, navigation, txFilterOpen, contactSearch })
             : Screen.nav;
@@ -51,11 +52,11 @@ export default function BottomTabNavigator() {
             component={Screen}
             listeners={listeners}
             options={{
-              title: name,
+              title: title || name,
               tabBarIcon: ({ color }) => (
                 <SvgIcon icon={icon} size={24} color={color} />
               ),
-              tabBarLabel: name,
+              tabBarLabel: title || name,
               ...options,
             }}
           />
@@ -65,44 +66,40 @@ export default function BottomTabNavigator() {
   );
 }
 
-BottomTabNavigator.nav = ({
+LoggedInScreen.stackOptions = ({
   theme,
   navigation,
   txFilterOpen,
   contactSearch,
-}) => ({
-  name: 'BottomNav',
-  options: ({ route }) => {
-    const routeName =
-      route.state?.routes[route.state.index]?.name ?? defaultScreen;
-    const { stackOptions } =
-      screens
-        .map((Screen) =>
-          typeof Screen.nav === 'function'
-            ? Screen.nav({ theme, navigation, txFilterOpen, contactSearch })
-            : Screen.nav
-        )
-        .find((nav) => nav.name === routeName) || {};
+  route,
+}) => {
+  const routeName = route.state?.routes[route.state.index]?.name;
+  const { stackOptions } =
+    screens
+      .map((Screen) =>
+        typeof Screen.nav === 'function'
+          ? Screen.nav({ theme, navigation, txFilterOpen, contactSearch })
+          : Screen.nav
+      )
+      .find((nav) => nav.name === routeName) || {};
 
-    return {
-      headerLeft: ({ tintColor }) => (
-        <IconButton
-          icon={({ size }) => (
-            <SvgIcon icon={MenuIcon} size={size} color={tintColor} />
-          )}
-          color={tintColor}
-          size={25}
-          onPress={() => {
-            navigation.openDrawer();
-          }}
-        />
-      ),
-      headerStyle:
-        routeName === 'Overview' ||
-        (routeName === 'Transactions' && txFilterOpen)
-          ? flatHeader(theme)
-          : undefined,
-      ...stackOptions,
-    };
-  },
-});
+  return {
+    headerLeft: ({ tintColor }) => (
+      <IconButton
+        icon={({ size }) => (
+          <SvgIcon icon={MenuIcon} size={size} color={tintColor} />
+        )}
+        color={tintColor}
+        size={25}
+        onPress={() => {
+          navigation.openDrawer();
+        }}
+      />
+    ),
+    headerStyle:
+      routeName === 'Overview' || (routeName === 'Transactions' && txFilterOpen)
+        ? flatHeader(theme)
+        : undefined,
+    ...stackOptions,
+  };
+};

@@ -5,8 +5,11 @@ import { getStore } from 'store';
 import memoize from 'utils/memoize';
 
 export const defaultSettings = {
+  // Application
   darkMode: false,
   baseCurrency: 'USD',
+
+  // Core
   coreMode: 'embedded',
   externalCoreIP: '127.0.0.1',
   externalCoreRPCPort: '9336',
