@@ -5,9 +5,9 @@ import { shadow, TouchableRipple, IconButton } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import { useTheme } from 'lib/theme';
-import OverviewScreen from 'screens/OverviewScreen';
-import TransactionsScreen from 'screens/TransactionsScreen';
-import ContactsScreen from 'screens/ContactsScreen';
+import OverviewScreen from './OverviewScreen';
+import TransactionsScreen from './TransactionsScreen';
+import ContactsScreen from './ContactsScreen';
 import SvgIcon from 'components/SvgIcon';
 import { fade } from 'utils/color';
 import { flatHeader } from 'utils/styles';
@@ -73,7 +73,8 @@ LoggedInScreen.stackOptions = ({
   contactSearch,
   route,
 }) => {
-  const routeName = route.state?.routes[route.state.index]?.name;
+  const routeName =
+    route.state?.routes[route.state.index]?.name || defaultScreen;
   const { stackOptions } =
     screens
       .map((Screen) =>

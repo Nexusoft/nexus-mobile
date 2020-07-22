@@ -19,12 +19,11 @@ import { flatHeader } from 'utils/styles';
 import SettingsIcon from 'icons/settings.svg';
 import AuthenticationScren from './AuthenticationScreen';
 
-export default function BaseScreen({ route }) {
+export default function BaseScreen({ route, navigation }) {
   const theme = useTheme();
   const loggedIn = useSelector(selectLoggedIn);
   const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
   const contactSearch = useSelector((state) => state.ui.contactSearch);
-  const navigation = useNavigation();
   React.useLayoutEffect(() => {
     if (loggedIn) {
       const options = LoggedInScreen.stackOptions({
