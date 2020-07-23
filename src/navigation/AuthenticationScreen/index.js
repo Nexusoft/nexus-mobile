@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { FAB, IconButton, shadow } from 'react-native-paper';
+import { FAB, IconButton, shadow, overlay } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 import LoggedInScreen from 'navigation/LoggedInScreen';
@@ -71,7 +71,12 @@ export default function AuthenticationScreen() {
           tabBarOptions={{
             activeTintColor: theme.foreground,
             inactiveTintColor: fade(theme.foreground, 0.5),
-            style: { paddingTop: 5, elevation: 4, ...shadow(4) },
+            style: {
+              paddingTop: 5,
+              elevation: 4,
+              ...shadow(4),
+              backgroundColor: overlay(2, theme.surface),
+            },
             labelStyle: { marginBottom: 5, textTransform: 'uppercase' },
             labelPosition: 'beside-icon',
           }}

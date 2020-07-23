@@ -5,6 +5,7 @@ import { TouchableRipple } from 'react-native-paper';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
+import { useTheme } from 'lib/theme';
 
 const styles = {
   wrapper: {
@@ -18,11 +19,12 @@ const styles = {
   },
   accName: ({ theme }) => ({
     fontSize: 15,
-    color: theme.dark ? theme.primary : undefined,
+    // color: theme.dark ? theme.primary : undefined,
   }),
-  accBalance: {
+  accBalance: ({ theme }) => ({
     fontSize: 15,
-  },
+    // color: theme.dark ? theme.primary : undefined,
+  }),
   accActions: {
     flexDirection: 'row',
   },
@@ -31,9 +33,14 @@ const styles = {
     alignItems: 'center',
     paddingVertical: 10,
   },
+  accActionLabel: ({ theme }) => ({
+    fontSize: 11,
+    color: theme.dark ? theme.primary : undefined,
+  }),
 };
 
 export default function Account({ account }) {
+  const theme = useTheme();
   return (
     <>
       <View style={styles.wrapper}>
@@ -43,10 +50,12 @@ export default function Account({ account }) {
           }}
         >
           <View style={styles.accInfo}>
-            <Text style={styles.accName} bold>
+            <Text style={styles.accName({ theme })} bold>
               {account.name}
             </Text>
-            <Text style={styles.accBalance}>{account.balance} NXS</Text>
+            <Text style={styles.accBalance({ theme })}>
+              {account.balance} NXS
+            </Text>
           </View>
         </TouchableRipple>
 
@@ -57,7 +66,7 @@ export default function Account({ account }) {
               navigate('Receive', { account });
             }}
           >
-            <Text size={11}>RECEIVE</Text>
+            <Text style={styles.accActionLabel({ theme })}>RECEIVE</Text>
           </TouchableRipple>
 
           <Divider vertical inset={10} />
@@ -68,7 +77,7 @@ export default function Account({ account }) {
               navigate('Send', { accountName: account.name });
             }}
           >
-            <Text size={11}>SEND</Text>
+            <Text style={styles.accActionLabel({ theme })}>SEND</Text>
           </TouchableRipple>
         </View>
       </View>

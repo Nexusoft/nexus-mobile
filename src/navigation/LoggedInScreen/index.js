@@ -1,7 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
-import { shadow, TouchableRipple, IconButton } from 'react-native-paper';
+import {
+  shadow,
+  TouchableRipple,
+  IconButton,
+  overlay,
+} from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import { useTheme } from 'lib/theme';
@@ -30,7 +35,12 @@ export default function LoggedInScreen() {
       tabBarOptions={{
         activeTintColor: theme.foreground,
         inactiveTintColor: fade(theme.foreground, 0.5),
-        style: { paddingTop: 5, elevation: 4, ...shadow(4) },
+        style: {
+          paddingTop: 5,
+          elevation: 4,
+          ...shadow(4),
+          backgroundColor: overlay(2, theme.surface),
+        },
         labelStyle: { marginBottom: 5 },
         keyboardHidesTabBar: true,
       }}
@@ -54,7 +64,7 @@ export default function LoggedInScreen() {
             options={{
               title: title || name,
               tabBarIcon: ({ color }) => (
-                <SvgIcon icon={icon} size={24} color={color} />
+                <SvgIcon icon={icon} size={20} color={color} />
               ),
               tabBarLabel: title || name,
               ...options,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
-import { shadow } from 'react-native-paper';
+import { shadow, overlay } from 'react-native-paper';
 
 import SvgIcon from 'components/SvgIcon';
 import { useTheme } from 'lib/theme';
@@ -24,7 +24,7 @@ const styles = {
     borderTopRightRadius: 30,
     paddingHorizontal: 50,
     paddingTop: 20,
-    backgroundColor: theme.surface,
+    backgroundColor: overlay(2, theme.surface),
     elevation: 8,
     ...shadow(8),
   }),

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, TouchableWithoutFeedback } from 'react-native';
-import { shadow, IconButton } from 'react-native-paper';
+import { shadow, IconButton, overlay } from 'react-native-paper';
 import { useTheme } from 'lib/theme';
 
 import SvgIcon from 'components/SvgIcon';
@@ -48,7 +48,7 @@ const styles = {
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 40,
-    backgroundColor: theme.surface,
+    backgroundColor: overlay(2, theme.surface),
     elevation: 8,
     ...shadow(8),
   }),
