@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { FAB, IconButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-import LoggedInScreen from 'navigation/LoggedInScreen';
+import AuthenticatedBase from 'navigation/AuthenticatedBase';
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
@@ -17,47 +17,39 @@ import { selectLoggedIn, refreshUserStatus } from 'lib/user';
 import { sendAPI } from 'lib/api';
 import { showError } from 'lib/user';
 import { flatHeader } from 'utils/styles';
-import LogoIcon from 'icons/logo-full.svg';
 import SettingsIcon from 'icons/settings.svg';
 import Backdrop from './Backdrop';
 
 const styles = {
   field: {
-    marginBottom: 0,
+    marginBottom: 10,
   },
   loginBtn: {
-    marginTop: 20,
-  },
-  heading: ({ theme }) => ({
-    fontSize: 19,
-    marginBottom: 12,
-    color: theme.dark ? theme.foreground : theme.onPrimary,
-  }),
-  logo: {
-    marginBottom: 30,
+    marginTop: 10,
   },
 };
 
 function LoginForm({ handleSubmit, isSubmitting }) {
+  const theme = useTheme();
   return (
     <View>
       <TextBox.Formik
         name="username"
         label="Username"
-        background={['surface', 2]}
+        background={theme.dark ? 'surface' : 'primary'}
         style={styles.field}
       />
       <TextBox.Formik
         name="password"
         label="Password"
-        background={['surface', 2]}
+        background={theme.dark ? 'surface' : 'primary'}
         secure
         style={styles.field}
       />
       <TextBox.Formik
         name="pin"
         label="PIN"
-        background={['surface', 2]}
+        background={theme.dark ? 'surface' : 'primary'}
         secure
         style={styles.field}
       />
@@ -71,23 +63,9 @@ function LoginForm({ handleSubmit, isSubmitting }) {
   );
 }
 
-export default function LoginScreen() {
-  const theme = useTheme();
+export default function CreateUserScreen() {
   return (
-    <Backdrop
-      backdropContent={
-        <>
-          <Text style={styles.heading({ theme })}>Log in to</Text>
-          <SvgIcon
-            icon={LogoIcon}
-            width={180}
-            height={41}
-            color={theme.dark ? theme.foreground : theme.onPrimary}
-            style={styles.logo}
-          />
-        </>
-      }
-    >
+    <Backdrop>
       <Formik
         initialValues={{ username: '', password: '', pin: '' }}
         onSubmit={async ({ username, password, pin }) => {
@@ -104,7 +82,7 @@ export default function LoginScreen() {
   );
 }
 
-LoginScreen.nav = {
-  name: 'Login',
-  title: 'Login',
+CreateUserScreen.nav = {
+  name: 'CreateUser',
+  title: 'Register',
 };

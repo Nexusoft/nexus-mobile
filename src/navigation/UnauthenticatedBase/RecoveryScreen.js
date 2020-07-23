@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { FAB, IconButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-import LoggedInScreen from 'navigation/LoggedInScreen';
+import AuthenticatedBase from 'navigation/AuthenticatedBase';
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';

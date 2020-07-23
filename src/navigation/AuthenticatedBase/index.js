@@ -22,7 +22,7 @@ const BottomTab = createBottomTabNavigator();
 const defaultScreen = 'Overview';
 const screens = [ContactsScreen, OverviewScreen, TransactionsScreen];
 
-export default function LoggedInScreen() {
+export default function AuthenticatedBase() {
   const theme = useTheme();
   const navigation = useNavigation();
   const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
@@ -76,7 +76,7 @@ export default function LoggedInScreen() {
   );
 }
 
-LoggedInScreen.stackOptions = ({
+AuthenticatedBase.stackOptions = ({
   theme,
   navigation,
   txFilterOpen,

@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FAB, IconButton, shadow, overlay } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-import LoggedInScreen from 'navigation/LoggedInScreen';
+import AuthenticatedBase from 'navigation/AuthenticatedBase';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
@@ -58,7 +58,7 @@ function ColoredText({ style, ...rest }) {
   );
 }
 
-export default function AuthenticationScreen() {
+export default function UnuthenticatedBase() {
   const theme = useTheme();
   const connected = useSelector(selectConnected);
 
@@ -125,7 +125,7 @@ export default function AuthenticationScreen() {
   // </View>
 }
 
-AuthenticationScreen.stackOptions = ({ theme }) => ({
+UnuthenticatedBase.stackOptions = ({ theme }) => ({
   headerLeft: () => null,
   headerRight: ({ tintColor }) => (
     <IconButton

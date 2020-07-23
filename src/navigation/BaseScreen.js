@@ -5,7 +5,6 @@ import { Formik } from 'formik';
 import { FAB, IconButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-import LoggedInScreen from 'navigation/LoggedInScreen';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
@@ -17,7 +16,8 @@ import { sendAPI } from 'lib/api';
 import { showError } from 'lib/user';
 import { flatHeader } from 'utils/styles';
 import SettingsIcon from 'icons/settings.svg';
-import AuthenticationScren from './AuthenticationScreen';
+import UnuthenticatedBase from './UnuthenticatedBase';
+import AuthenticatedBase from './AuthenticatedBase';
 
 export default function BaseScreen({ route, navigation }) {
   const theme = useTheme();
@@ -26,7 +26,7 @@ export default function BaseScreen({ route, navigation }) {
   const contactSearch = useSelector((state) => state.ui.contactSearch);
   React.useLayoutEffect(() => {
     if (loggedIn) {
-      const options = LoggedInScreen.stackOptions({
+      const options = AuthenticatedBase.stackOptions({
         theme,
         navigation,
         txFilterOpen,
@@ -35,14 +35,14 @@ export default function BaseScreen({ route, navigation }) {
       });
       navigation.setOptions(options);
     } else {
-      const options = AuthenticationScren.stackOptions({
+      const options = UnuthenticatedBase.stackOptions({
         theme,
       });
       navigation.setOptions(options);
     }
   }, [route, theme, loggedIn, txFilterOpen, contactSearch, navigation]);
 
-  return loggedIn ? <LoggedInScreen /> : <AuthenticationScren />;
+  return loggedIn ? <AuthenticatedBase /> : <UnuthenticatedBase />;
 }
 
 BaseScreen.nav = {
