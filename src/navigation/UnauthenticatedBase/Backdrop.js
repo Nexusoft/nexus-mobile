@@ -12,7 +12,7 @@ const styles = {
     backgroundColor: theme.dark ? theme.background : theme.primary,
   }),
   backPane: {
-    minHeight: '30%',
+    height: '30%',
     paddingVertical: 25,
     paddingHorizontal: 20,
     justifyContent: 'center',

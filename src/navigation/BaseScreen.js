@@ -16,7 +16,7 @@ import { sendAPI } from 'lib/api';
 import { showError } from 'lib/user';
 import { flatHeader } from 'utils/styles';
 import SettingsIcon from 'icons/settings.svg';
-import UnuthenticatedBase from './UnuthenticatedBase';
+import UnauthenticatedBase from './UnauthenticatedBase';
 import AuthenticatedBase from './AuthenticatedBase';
 
 export default function BaseScreen({ route, navigation }) {
@@ -35,14 +35,14 @@ export default function BaseScreen({ route, navigation }) {
       });
       navigation.setOptions(options);
     } else {
-      const options = UnuthenticatedBase.stackOptions({
+      const options = UnauthenticatedBase.stackOptions({
         theme,
       });
       navigation.setOptions(options);
     }
   }, [route, theme, loggedIn, txFilterOpen, contactSearch, navigation]);
 
-  return loggedIn ? <AuthenticatedBase /> : <UnuthenticatedBase />;
+  return loggedIn ? <AuthenticatedBase /> : <UnauthenticatedBase />;
 }
 
 BaseScreen.nav = {
