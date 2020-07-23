@@ -6,7 +6,6 @@ import {
   HeaderBackground,
 } from '@react-navigation/stack';
 import { shadow } from 'react-native-paper';
-import { useTheme } from 'lib/theme';
 
 import ReceiveScreen from 'screens/ReceiveScreen';
 import SendScreen from 'screens/SendScreen';
@@ -23,6 +22,9 @@ import NewAccountScreen from 'screens/NewAccountScreen';
 import NewContactScreen from 'screens/NewContactScreen';
 import ConfirmSendScreen from 'screens/ConfirmSendScreen';
 import ExternalCoreConfigScreen from 'screens/ExternalCoreConfigScreen';
+import { useTheme } from 'lib/theme';
+import { selectLoggedIn } from 'lib/user';
+import { getStore } from 'store';
 import BaseScreen from './BaseScreen';
 
 const Stack = createStackNavigator();
@@ -48,6 +50,15 @@ const screens = [
 
 export default function StackNavigator({ navigation }) {
   const theme = useTheme();
+  React.useEffect(() => {
+    const store = getStore();
+    store.observe(selectLoggedIn, (loggedIn) => {
+      if (!loggedIn) {
+        navigation.closeDrawer();
+      }
+    });
+  }, []);
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}

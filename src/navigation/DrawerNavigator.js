@@ -1,11 +1,11 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { useTheme } from 'lib/theme';
+import { useSelector } from 'react-redux';
 
-import { getNavTheme } from 'lib/theme';
-
+import { useTheme, getNavTheme } from 'lib/theme';
 import { navContainerRef } from 'lib/navigation';
+import { selectLoggedIn } from 'lib/user';
 import SideMenu from './SideMenu';
 import StackNavigator from './StackNavigator';
 
@@ -14,6 +14,8 @@ const Drawer = createDrawerNavigator();
 export default function DrawerNavigator() {
   const theme = useTheme();
   const navTheme = getNavTheme(theme);
+  const loggedIn = useSelector(selectLoggedIn);
+
   return (
     <NavigationContainer ref={navContainerRef} theme={navTheme}>
       <Drawer.Navigator
@@ -22,6 +24,7 @@ export default function DrawerNavigator() {
         sceneContainerStyle={{
           backgroundColor: theme.dark ? undefined : theme.primary,
         }}
+        edgeWidth={loggedIn ? undefined : 0}
       >
         <Drawer.Screen name="StackNav" component={StackNavigator} />
       </Drawer.Navigator>
