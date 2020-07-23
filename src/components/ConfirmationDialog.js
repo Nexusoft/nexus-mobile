@@ -19,7 +19,7 @@ export default function ConfirmationDialog({
   const theme = useTheme();
   return (
     <Portal>
-      <Dialog onDismiss={onDismiss} {...rest}>
+      <Dialog dismissable={false} {...rest}>
         {title && (
           <Dialog.Title>
             <Text>{title}</Text>
