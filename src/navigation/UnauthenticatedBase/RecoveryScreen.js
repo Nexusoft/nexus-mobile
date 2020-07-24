@@ -1,87 +1,120 @@
 import React from 'react';
 import { View } from 'react-native';
-import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
-import { FAB, IconButton } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { FAB } from 'react-native-paper';
 
-import AuthenticatedBase from 'navigation/AuthenticatedBase';
-import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
-import { refreshCoreInfo, selectConnected } from 'lib/coreInfo';
 import { useTheme } from 'lib/theme';
-import { navigate } from 'lib/navigation';
-import { selectLoggedIn, refreshUserStatus } from 'lib/user';
+import { refreshUserStatus } from 'lib/user';
 import { sendAPI } from 'lib/api';
 import { showError } from 'lib/user';
-import { flatHeader } from 'utils/styles';
-import SettingsIcon from 'icons/settings.svg';
+import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 
 const styles = {
   field: {
-    marginBottom: 10,
+    marginBottom: 0,
   },
   loginBtn: {
-    marginTop: 10,
+    marginTop: 20,
+  },
+  heading: ({ theme }) => ({
+    fontSize: 19,
+    marginBottom: 12,
+    color: theme.dark ? theme.foreground : theme.onPrimary,
+  }),
+  logo: {
+    marginBottom: 30,
   },
 };
 
-function LoginForm({ handleSubmit, isSubmitting }) {
+function RecoveryForm({ handleSubmit, isSubmitting }) {
   return (
     <View>
       <TextBox.Formik
         name="username"
         label="Username"
-        background="surface"
+        background={['surface', 2]}
+        style={styles.field}
+      />
+      <TextBox.Formik
+        name="recovery"
+        label="Recovery phrase"
+        background={['surface', 2]}
+        multiline
         style={styles.field}
       />
       <TextBox.Formik
         name="password"
-        label="Password"
-        background="surface"
+        label="New password"
+        background={['surface', 2]}
         secure
         style={styles.field}
       />
       <TextBox.Formik
         name="pin"
-        label="PIN"
-        background="surface"
+        label="New PIN"
+        background={['surface', 2]}
         secure
         style={styles.field}
       />
       <FAB
         style={styles.loginBtn}
         disabled={isSubmitting}
+        loading={isSubmitting}
         onPress={handleSubmit}
-        label="Log in"
+        label={isSubmitting ? 'Recovering' : 'Recover'}
       />
     </View>
   );
 }
 
 export default function RecoveryScreen() {
+  const theme = useTheme();
   return (
-    <Backdrop>
+    <Backdrop
+      backdropContent={
+        <>
+          <Text style={styles.heading({ theme })}>Recover user</Text>
+          <SvgIcon
+            icon={LogoIcon}
+            width={180}
+            height={41}
+            color={theme.dark ? theme.foreground : theme.onPrimary}
+            style={styles.logo}
+          />
+        </>
+      }
+    >
       <Formik
-        initialValues={{ username: '', password: '', pin: '' }}
-        onSubmit={async ({ username, password, pin }) => {
+        initialValues={{
+          username: '',
+          recovery: '',
+          password: '',
+          pin: '',
+        }}
+        onSubmit={async ({ username, recovery, password, pin }) => {
           try {
-            await sendAPI('users/login/user', { username, password, pin });
+            await sendAPI('users/recover/user', {
+              username,
+              recovery,
+              password,
+              pin,
+            });
             await refreshUserStatus();
           } catch (err) {
             showError(err && err.message);
           }
         }}
-        component={LoginForm}
+        component={RecoveryForm}
       />
     </Backdrop>
   );
 }
 
 RecoveryScreen.nav = {
-  name: 'RecoverPassword',
+  name: 'Recovery',
   title: 'Recover',
 };
