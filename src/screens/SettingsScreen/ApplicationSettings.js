@@ -7,6 +7,7 @@ import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Text from 'components/Text';
 import { updateSettings, selectSettings } from 'lib/settings';
+import { selectLoggedIn } from 'lib/user';
 import baseCurrencies from 'consts/baseCurrencies';
 import SettingItem from './SettingItem';
 import commonStyles from './styles';
@@ -19,6 +20,7 @@ const styles = {
 };
 
 export default function ApplicationSettings() {
+  const loggedIn = useSelector(selectLoggedIn);
   const settings = useSelector(selectSettings);
   const toggleDarkMode = React.useCallback(() => {
     updateSettings({ darkMode: !settings.darkMode });
@@ -49,20 +51,24 @@ export default function ApplicationSettings() {
             />
           }
         />
-        <Divider inset={20} />
-        <Select
-          options={baseCurrencies}
-          value={settings.baseCurrency}
-          updateValue={setBaseCurrency}
-          render={({ display, openSelect }) => (
-            <SettingItem
-              title="Base currency"
-              description={display}
-              primary
-              onPress={openSelect}
+        {loggedIn && (
+          <>
+            <Divider inset={20} />
+            <Select
+              options={baseCurrencies}
+              value={settings.baseCurrency}
+              updateValue={setBaseCurrency}
+              render={({ display, openSelect }) => (
+                <SettingItem
+                  title="Base currency"
+                  description={display}
+                  primary
+                  onPress={openSelect}
+                />
+              )}
             />
-          )}
-        />
+          </>
+        )}
       </Surface>
     </>
   );
