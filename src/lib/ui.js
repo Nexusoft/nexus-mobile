@@ -38,6 +38,32 @@ export function showError(message) {
   });
 }
 
+export function showSuccess(message) {
+  const store = getStore();
+  const id = newUID();
+  store.dispatch({
+    type: TYPE.OPEN_DIALOG,
+    payload: {
+      id,
+      type: 'success',
+      message,
+    },
+  });
+}
+
+export function showInfo(message) {
+  const store = getStore();
+  const id = newUID();
+  store.dispatch({
+    type: TYPE.OPEN_DIALOG,
+    payload: {
+      id,
+      type: 'info',
+      message,
+    },
+  });
+}
+
 export function confirm(options) {
   return new Promise((resolve) => {
     const store = getStore();

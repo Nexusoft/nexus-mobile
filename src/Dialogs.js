@@ -2,6 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import ErrorDialog from 'components/ErrorDialog';
+import SuccessDialog from 'components/SuccessDialog';
+import InfoDialog from 'components/InfoDialog';
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import { closeDialog } from 'lib/ui';
 
@@ -10,6 +12,8 @@ const closeAnimationDuration = 220;
 
 const dialogTypes = {
   error: ErrorDialog,
+  success: SuccessDialog,
+  info: InfoDialog,
   confirmation: ConfirmationDialog,
 };
 
