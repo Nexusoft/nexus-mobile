@@ -1,21 +1,14 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Formik } from 'formik';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { FAB, IconButton, shadow, overlay } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { IconButton, shadow, overlay } from 'react-native-paper';
 
-import AuthenticatedBase from 'navigation/AuthenticatedBase';
 import Text from 'components/Text';
-import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
-import { refreshCoreInfo, selectConnected } from 'lib/coreInfo';
+import { selectConnected } from 'lib/coreInfo';
 import { useTheme, subColor } from 'lib/theme';
 import { navigate } from 'lib/navigation';
-import { selectLoggedIn, refreshUserStatus } from 'lib/user';
-import { sendAPI } from 'lib/api';
-import { showError } from 'lib/ui';
 import { flatHeader } from 'utils/styles';
 import { fade } from 'utils/color';
 import SettingsIcon from 'icons/settings.svg';
