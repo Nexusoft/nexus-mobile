@@ -15,7 +15,7 @@ import { useTheme, subColor } from 'lib/theme';
 import { navigate } from 'lib/navigation';
 import { selectLoggedIn, refreshUserStatus } from 'lib/user';
 import { sendAPI } from 'lib/api';
-import { showError } from 'lib/user';
+import { showError } from 'lib/ui';
 import { flatHeader } from 'utils/styles';
 import { fade } from 'utils/color';
 import SettingsIcon from 'icons/settings.svg';
@@ -58,7 +58,7 @@ function ColoredText({ style, ...rest }) {
   );
 }
 
-export default function UnuthenticatedBase() {
+export default function UnauthenticatedBase() {
   const theme = useTheme();
   const connected = useSelector(selectConnected);
 
@@ -125,7 +125,7 @@ export default function UnuthenticatedBase() {
   // </View>
 }
 
-UnuthenticatedBase.stackOptions = ({ theme }) => ({
+UnauthenticatedBase.stackOptions = ({ theme }) => ({
   headerLeft: () => null,
   headerRight: ({ tintColor }) => (
     <IconButton

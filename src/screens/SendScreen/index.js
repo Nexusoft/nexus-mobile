@@ -36,7 +36,7 @@ export default function SendScreen({ route }) {
         amount: '',
         reference: '',
       }}
-      validateSchema={yup.object().shape({
+      validationSchema={yup.object().shape({
         recipientAddress: yup.string().required('Required!'),
         amount: yup.number().min(0, 'Invalid!'),
       })}
