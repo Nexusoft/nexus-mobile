@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Formik } from 'formik';
-import { FAB, Dialog } from 'react-native-paper';
+import { FAB, Dialog, ActivityIndicator } from 'react-native-paper';
 import * as yup from 'yup';
 
 import Text from 'components/Text';
@@ -9,9 +9,9 @@ import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
 import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
-import { refreshUserStatus } from 'lib/user';
 import { sendAPI } from 'lib/api';
-import { showError } from 'lib/ui';
+import { showError, showSuccess } from 'lib/ui';
+import { getStore } from 'store';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 
@@ -29,6 +29,9 @@ const styles = {
   }),
   logo: {
     marginBottom: 30,
+  },
+  creatingText: {
+    marginTop: 50,
   },
 };
 
@@ -123,6 +126,34 @@ function CreateUserForm({ values, handleSubmit, isSubmitting }) {
 
 export default function CreateUserScreen() {
   const theme = useTheme();
+  const [creatingUsername, setCreatingUsername] = React.useState(false);
+  const watchUserRegistration = (username) => {
+    setCreatingUsername(username);
+    const store = getStore();
+    const unobserve = store.observe(
+      (state) => state.core?.info?.blocks,
+      async (blocks) => {
+        if (blocks) {
+          const txs = await apiPost('users/list/transactions', {
+            username,
+            order: 'asc',
+            limit: 1,
+            verbose: 'summary',
+          });
+          if (txs && txs[0]?.confirmations) {
+            unobserve();
+            showSuccess(
+              <Text>
+                User registration for <Text bold>{username}</Text> has been
+                confirmed!
+              </Text>
+            );
+            setCreatingUsername(null);
+          }
+        }
+      }
+    );
+  };
 
   return (
     <Backdrop
@@ -139,18 +170,27 @@ export default function CreateUserScreen() {
         </>
       }
     >
-      <Formik
-        initialValues={{ username: '', password: '', pin: '' }}
-        onSubmit={async ({ username, password, pin }) => {
-          try {
-            await sendAPI('users/create/user', { username, password, pin });
-            await refreshUserStatus();
-          } catch (err) {
-            showError(err && err.message);
-          }
-        }}
-        component={CreateUserForm}
-      />
+      {!!creatingUsername ? (
+        <Text style={styles.creatingText}>
+          <ActivityIndicator animating color={theme.foreground} /> User
+          registration for <Text bold>{creatingUsername}</Text> is waiting to be
+          confirmed on Nexus blockchain...
+        </Text>
+      ) : (
+        <Formik
+          initialValues={{ username: '', password: '', pin: '' }}
+          onSubmit={async ({ username, password, pin }) => {
+            try {
+              await sendAPI('users/create/user', { username, password, pin });
+            } catch (err) {
+              showError(err && err.message);
+              return;
+            }
+            watchUserRegistration(username);
+          }}
+          component={CreateUserForm}
+        />
+      )}
     </Backdrop>
   );
 }
