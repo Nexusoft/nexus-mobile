@@ -134,7 +134,7 @@ export default function CreateUserScreen() {
       (state) => state.core?.info?.blocks,
       async (blocks) => {
         if (blocks) {
-          const txs = await apiPost('users/list/transactions', {
+          const txs = await sendAPI('users/list/transactions', {
             username,
             order: 'asc',
             limit: 1,
