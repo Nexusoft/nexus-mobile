@@ -7,7 +7,12 @@ import Text from 'components/Text';
 import SvgIcon from 'components/SvgIcon';
 import SuccessIcon from 'icons/check-circle.svg';
 
-export default function SuccessDialog({ message, onDismiss, ...rest }) {
+export default function SuccessDialog({
+  message,
+  onDismiss,
+  getButtons,
+  ...rest
+}) {
   const theme = useTheme();
   return (
     <Portal>
@@ -29,9 +34,13 @@ export default function SuccessDialog({ message, onDismiss, ...rest }) {
           <Text>{message}</Text>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button mode="text" onPress={onDismiss}>
-            Dismiss
-          </Button>
+          {getButtons ? (
+            getButtons({ onDismiss })
+          ) : (
+            <Button mode="text" onPress={onDismiss}>
+              Dismiss
+            </Button>
+          )}
         </Dialog.Actions>
       </Dialog>
     </Portal>

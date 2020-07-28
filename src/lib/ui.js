@@ -38,7 +38,7 @@ export function showError(message) {
   });
 }
 
-export function showSuccess(message) {
+export function showSuccess(message, options) {
   const store = getStore();
   const id = newUID();
   store.dispatch({
@@ -47,6 +47,7 @@ export function showSuccess(message) {
       id,
       type: 'success',
       message,
+      ...options,
     },
   });
 }

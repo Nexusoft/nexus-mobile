@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Formik } from 'formik';
-import { FAB, Dialog, ActivityIndicator } from 'react-native-paper';
+import { FAB, Dialog, ActivityIndicator, Button } from 'react-native-paper';
 import * as yup from 'yup';
 
 import Text from 'components/Text';
@@ -11,6 +11,8 @@ import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { sendAPI } from 'lib/api';
 import { showError, showSuccess } from 'lib/ui';
+import { navigate } from 'lib/navigation';
+import { selectLoggedIn } from 'lib/user';
 import { getStore } from 'store';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
@@ -147,11 +149,33 @@ export default function CreateUserScreen() {
           });
           if (txs && txs[0]?.confirmations) {
             unobserve();
+            const store = getStore();
+            const loggedIn = selectLoggedIn(store.getState());
             showSuccess(
               <Text>
                 User <Text bold>{username}</Text> has been registered on Nexus
                 blockchain!
-              </Text>
+              </Text>,
+              {
+                getButtons: ({ onDismiss }) => (
+                  <>
+                    <Button mode="text" onPress={onDismiss}>
+                      Dismiss
+                    </Button>
+                    {!loggedIn && (
+                      <Button
+                        mode="text"
+                        onPress={() => {
+                          onDismiss();
+                          navigate('Login');
+                        }}
+                      >
+                        Log in
+                      </Button>
+                    )}
+                  </>
+                ),
+              }
             );
             setCreatingUsername(null);
           }
