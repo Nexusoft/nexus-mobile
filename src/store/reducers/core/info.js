@@ -7,7 +7,7 @@ export default (state = initialState, action) => {
     case TYPE.SET_CORE_INFO:
       return action.payload;
 
-    case TYPE.CLEAR_CORE:
+    case TYPE.CLEAR_CORE_INFO:
       return initialState;
 
     default:

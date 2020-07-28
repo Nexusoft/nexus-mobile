@@ -1,12 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
-import { useSelector } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { IconButton, shadow, overlay } from 'react-native-paper';
 
 import Text from 'components/Text';
 import SvgIcon from 'components/SvgIcon';
-import { selectConnected } from 'lib/coreInfo';
 import { useTheme, subColor } from 'lib/theme';
 import { navigate } from 'lib/navigation';
 import { flatHeader } from 'utils/styles';
@@ -53,52 +51,45 @@ function ColoredText({ style, ...rest }) {
 
 export default function UnauthenticatedBase() {
   const theme = useTheme();
-  const connected = useSelector(selectConnected);
 
   return (
     <View style={styles.wrapper({ theme })}>
-      {connected ? (
-        <BottomTab.Navigator
-          initialRouteName="Login"
-          shifting={false}
-          tabBarOptions={{
-            activeTintColor: theme.foreground,
-            inactiveTintColor: fade(theme.foreground, 0.5),
-            style: {
-              paddingTop: 5,
-              elevation: 4,
-              ...shadow(4),
-              backgroundColor: overlay(2, theme.surface),
-            },
-            labelStyle: { marginBottom: 5, textTransform: 'uppercase' },
-            labelPosition: 'beside-icon',
-          }}
-        >
-          {screens.map((Screen) => {
-            const { name, title, listeners, options } =
-              typeof Screen.nav === 'function'
-                ? Screen.nav({ theme })
-                : Screen.nav;
-            return (
-              <BottomTab.Screen
-                key={name}
-                name={name}
-                component={Screen}
-                listeners={listeners}
-                options={{
-                  title: title || name,
-                  tabBarLabel: title || name,
-                  ...options,
-                }}
-              />
-            );
-          })}
-        </BottomTab.Navigator>
-      ) : (
-        <ColoredText style={styles.connectingMsg}>
-          Connecting to the Core...
-        </ColoredText>
-      )}
+      <BottomTab.Navigator
+        initialRouteName="Login"
+        shifting={false}
+        tabBarOptions={{
+          activeTintColor: theme.foreground,
+          inactiveTintColor: fade(theme.foreground, 0.5),
+          style: {
+            paddingTop: 5,
+            elevation: 4,
+            ...shadow(4),
+            backgroundColor: overlay(2, theme.surface),
+          },
+          labelStyle: { marginBottom: 5, textTransform: 'uppercase' },
+          labelPosition: 'beside-icon',
+        }}
+      >
+        {screens.map((Screen) => {
+          const { name, title, listeners, options } =
+            typeof Screen.nav === 'function'
+              ? Screen.nav({ theme })
+              : Screen.nav;
+          return (
+            <BottomTab.Screen
+              key={name}
+              name={name}
+              component={Screen}
+              listeners={listeners}
+              options={{
+                title: title || name,
+                tabBarLabel: title || name,
+                ...options,
+              }}
+            />
+          );
+        })}
+      </BottomTab.Navigator>
     </View>
   );
   //
