@@ -3,6 +3,8 @@ import { StackActions } from '@react-navigation/native';
 
 export const navContainerRef = React.createRef();
 
+export const navReadyRef = React.createRef();
+
 export function navigate(...args) {
   navContainerRef.current?.navigate(...args);
 }

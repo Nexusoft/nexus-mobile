@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { useTheme } from 'lib/theme';
 import { selectLoggedIn } from 'lib/user';
+import { navigate, navReadyRef } from 'lib/navigation';
+import { getStore } from 'store';
 import UnauthenticatedBase from './UnauthenticatedBase';
 import AuthenticatedBase from './AuthenticatedBase';
 
@@ -11,6 +13,18 @@ export default function BaseScreen({ route, navigation }) {
   const loggedIn = useSelector(selectLoggedIn);
   const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
   const contactSearch = useSelector((state) => state.ui.contactSearch);
+  // Fix default BottomTab screen being the first tab when login state changes
+  React.useEffect(() => {
+    const store = getStore();
+    store.observe(selectLoggedIn, (loggedIn) => {
+      if (!navReadyRef.current) return;
+      if (loggedIn) {
+        navigate('Overview');
+      } else {
+        navigate('Login');
+      }
+    });
+  }, []);
   React.useLayoutEffect(() => {
     if (loggedIn) {
       const options = AuthenticatedBase.stackOptions({

@@ -4,7 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useSelector } from 'react-redux';
 
 import { useTheme, getNavTheme } from 'lib/theme';
-import { navContainerRef } from 'lib/navigation';
+import { navContainerRef, navReadyRef } from 'lib/navigation';
 import { selectLoggedIn } from 'lib/user';
 import SideMenu from './SideMenu';
 import StackNavigator from './StackNavigator';
@@ -17,7 +17,13 @@ export default function DrawerNavigator() {
   const loggedIn = useSelector(selectLoggedIn);
 
   return (
-    <NavigationContainer ref={navContainerRef} theme={navTheme}>
+    <NavigationContainer
+      ref={navContainerRef}
+      onReady={() => {
+        navReadyRef.current = true;
+      }}
+      theme={navTheme}
+    >
       <Drawer.Navigator
         hideStatusBar={false}
         drawerContent={(props) => <SideMenu {...props} />}
