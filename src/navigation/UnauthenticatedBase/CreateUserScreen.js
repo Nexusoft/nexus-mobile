@@ -131,11 +131,17 @@ function CreateUserForm({ values, handleSubmit, isSubmitting }) {
   );
 }
 
-export default function CreateUserScreen() {
-  const theme = useTheme();
-  const [creatingUsername, setCreatingUsername] = React.useState(false);
+function useRegistrationWatcher() {
+  const [registering, setRegistering] = React.useState(false);
+  const mounted = React.useRef(false);
+  React.useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const watchUserRegistration = (username) => {
-    setCreatingUsername(username);
+    setRegistering(username);
     const store = getStore();
     const unobserve = store.observe(
       (state) => state.core?.info?.blocks,
@@ -177,12 +183,18 @@ export default function CreateUserScreen() {
                 ),
               }
             );
-            setCreatingUsername(null);
+            setRegistering(null);
           }
         }
       }
     );
   };
+  return [registering, watchUserRegistration];
+}
+
+export default function CreateUserScreen() {
+  const theme = useTheme();
+  const [registering, watchUserRegistration] = useRegistrationWatcher();
 
   return (
     <Backdrop
@@ -199,12 +211,12 @@ export default function CreateUserScreen() {
         </>
       }
     >
-      {!!creatingUsername ? (
+      {!!registering ? (
         <View style={styles.creating}>
           <ActivityIndicator animating color={theme.foreground} size="small" />
           <Text style={styles.creatingText}>
-            User registration for <Text bold>{creatingUsername}</Text> is
-            waiting to be confirmed on Nexus blockchain...
+            User registration for <Text bold>{registering}</Text> is waiting to
+            be confirmed on Nexus blockchain...
           </Text>
         </View>
       ) : (
