@@ -14,6 +14,7 @@ import { showError, showSuccess } from 'lib/ui';
 import { navigate } from 'lib/navigation';
 import { selectLoggedIn } from 'lib/user';
 import { getStore } from 'store';
+import useMounted from 'utils/useMounted';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 
@@ -133,13 +134,7 @@ function CreateUserForm({ values, handleSubmit, isSubmitting }) {
 
 function useRegistrationWatcher() {
   const [registering, setRegistering] = React.useState(false);
-  const mounted = React.useRef(false);
-  React.useEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-    };
-  }, []);
+  const mounted = useMounted();
   const watchUserRegistration = (username) => {
     setRegistering(username);
     const store = getStore();
