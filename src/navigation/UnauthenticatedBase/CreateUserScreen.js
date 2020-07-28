@@ -183,7 +183,9 @@ function useRegistrationWatcher() {
                 ),
               }
             );
-            setRegistering(null);
+            if (mounted.current) {
+              setRegistering(null);
+            }
           }
         }
       }
