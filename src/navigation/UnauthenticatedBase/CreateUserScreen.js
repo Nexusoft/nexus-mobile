@@ -30,8 +30,13 @@ const styles = {
   logo: {
     marginBottom: 30,
   },
-  creatingText: {
+  creating: {
     marginTop: 50,
+    verticalAlign: 'center',
+  },
+  creatingText: {
+    marginTop: 40,
+    textAlign: 'center',
   },
 };
 
@@ -144,8 +149,8 @@ export default function CreateUserScreen() {
             unobserve();
             showSuccess(
               <Text>
-                User registration for <Text bold>{username}</Text> has been
-                confirmed!
+                User <Text bold>{username}</Text> has been registered on Nexus
+                blockchain!
               </Text>
             );
             setCreatingUsername(null);
@@ -171,11 +176,13 @@ export default function CreateUserScreen() {
       }
     >
       {!!creatingUsername ? (
-        <Text style={styles.creatingText}>
-          <ActivityIndicator animating color={theme.foreground} /> User
-          registration for <Text bold>{creatingUsername}</Text> is waiting to be
-          confirmed on Nexus blockchain...
-        </Text>
+        <View style={styles.creating}>
+          <ActivityIndicator animating color={theme.foreground} size="small" />
+          <Text style={styles.creatingText}>
+            User registration for <Text bold>{creatingUsername}</Text> is
+            waiting to be confirmed on Nexus blockchain...
+          </Text>
+        </View>
       ) : (
         <Formik
           initialValues={{ username: '', password: '', pin: '' }}
