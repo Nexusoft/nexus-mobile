@@ -4,7 +4,14 @@ import { useTheme } from 'lib/theme';
 
 import { fade } from 'utils/color';
 
-export default function Divider({ color, vertical, inset, spacing }) {
+export default function Divider({
+  color,
+  vertical,
+  inset,
+  spacing,
+  style,
+  ...rest
+}) {
   const theme = useTheme();
   return (
     <View
@@ -25,7 +32,9 @@ export default function Divider({ color, vertical, inset, spacing }) {
               marginTop: Array.isArray(spacing) ? spacing[0] : spacing,
               marginBottom: Array.isArray(spacing) ? spacing[1] : spacing,
             },
+        style,
       ]}
+      {...rest}
     />
   );
 }
