@@ -22,7 +22,7 @@ const styles = {
   },
   heading: ({ theme }) => ({
     fontSize: 19,
-    marginBottom: 12,
+    marginBottom: 15,
     color: theme.dark ? theme.foreground : theme.onPrimary,
   }),
   logo: {
