@@ -4,7 +4,7 @@ const nonZeroDigit = /[^0]/;
 export default function formatNumber(
   number,
   { maximumFractionDigits } = {
-    maximumFractionDigits: 3,
+    maximumFractionDigits: 2,
   }
 ) {
   number = Number(number);

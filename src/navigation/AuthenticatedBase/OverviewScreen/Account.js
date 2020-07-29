@@ -4,8 +4,10 @@ import { TouchableRipple } from 'react-native-paper';
 
 import Text from 'components/Text';
 import Divider from 'components/Divider';
+import SvgIcon from 'components/SvgIcon';
 import { navigate } from 'lib/navigation';
 import { useTheme } from 'lib/theme';
+import WalletIcon from 'icons/wallet.svg';
 
 const styles = {
   wrapper: {
@@ -17,14 +19,19 @@ const styles = {
     alignItems: 'center',
     paddingVertical: 15,
   },
-  accName: ({ theme }) => ({
+  accNameIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  accIcon: {
+    marginRight: 8,
+  },
+  accName: {
     fontSize: 15,
-    // color: theme.dark ? theme.primary : undefined,
-  }),
-  accBalance: ({ theme }) => ({
+  },
+  accBalance: {
     fontSize: 15,
-    // color: theme.dark ? theme.primary : undefined,
-  }),
+  },
   accActions: {
     flexDirection: 'row',
   },
@@ -50,12 +57,13 @@ export default function Account({ account }) {
           }}
         >
           <View style={styles.accInfo}>
-            <Text style={styles.accName({ theme })} bold>
-              {account.name}
-            </Text>
-            <Text style={styles.accBalance({ theme })}>
-              {account.balance} NXS
-            </Text>
+            <View style={styles.accNameIcon}>
+              <SvgIcon icon={WalletIcon} size={14} style={styles.accIcon} />
+              <Text style={styles.accName} bold>
+                {account.name}
+              </Text>
+            </View>
+            <Text style={styles.accBalance}>{account.balance} NXS</Text>
           </View>
         </TouchableRipple>
 

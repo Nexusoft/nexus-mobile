@@ -4,7 +4,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
-import { getStore } from 'store';
 import Text from 'components/Text';
 import { useTheme, subColor } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
@@ -123,7 +122,7 @@ export default function BalanceSection() {
             <BalanceText>
               {balances
                 ? formatNumber(unconfirmed, { maximumFractionDigits: 6 }) +
-                  'NXS'
+                  ' NXS'
                 : 'N/A'}
             </BalanceText>
           </View>
