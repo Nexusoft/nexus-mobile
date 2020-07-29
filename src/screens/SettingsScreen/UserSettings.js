@@ -1,5 +1,6 @@
 import React from 'react';
 import { Surface } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 
 import Divider from 'components/Divider';
 import Text from 'components/Text';
@@ -14,6 +15,9 @@ const styles = {
 };
 
 export default function UserSettings() {
+  const hasRecoveryPhrase = useSelector(
+    (state) => !!state.user?.status?.recovery
+  );
   return (
     <>
       <Text style={styles.title} sub>
@@ -27,12 +31,21 @@ export default function UserSettings() {
           right="arrow"
         />
         <Divider inset={20} />
-        <SettingItem
-          small
-          title="Change recovery phrase"
-          onPress={() => {}}
-          right="arrow"
-        />
+        {hasRecoveryPhrase ? (
+          <SettingItem
+            small
+            title="Change recovery phrase"
+            onPress={() => {}}
+            right="arrow"
+          />
+        ) : (
+          <SettingItem
+            small
+            title="Set recovery phrase"
+            onPress={() => {}}
+            right="arrow"
+          />
+        )}
       </Surface>
     </>
   );
