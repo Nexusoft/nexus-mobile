@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, FAB } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -91,9 +91,12 @@ export default function SendScreen({ route }) {
             />
           </View>
 
-          <Button style={styles.send} mode="contained" onPress={handleSubmit}>
-            Send
-          </Button>
+          <FAB
+            style={styles.send}
+            mode="contained"
+            onPress={handleSubmit}
+            label="Send"
+          />
         </ScreenBody>
       )}
     </Formik>

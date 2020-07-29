@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
 
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
@@ -10,15 +10,14 @@ export default function NewAccountScreen() {
   return (
     <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
       <TextBox label="Account name" />
-      <Button
+      <FAB
         mode="contained"
         style={{ marginTop: 30 }}
         onPress={() => {
           setConfirmingPin(true);
         }}
-      >
-        Create account
-      </Button>
+        label="Create account"
+      />
 
       <PinDialog
         visible={confirmingPin}

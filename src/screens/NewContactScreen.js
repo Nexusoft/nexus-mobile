@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
@@ -46,14 +46,13 @@ export default function NewContactScreen() {
                 setFieldValue('address', address);
               }}
             />
-            <Button
+            <FAB
               mode="contained"
               disabled={isSubmitting}
               style={{ marginTop: 30 }}
               onPress={handleSubmit}
-            >
-              Create contact
-            </Button>
+              label="Create contact"
+            />
           </>
         )}
       </Formik>
