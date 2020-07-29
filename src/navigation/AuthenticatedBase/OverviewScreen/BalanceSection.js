@@ -26,6 +26,7 @@ const styles = {
   balance: {
     fontSize: 34,
     textAlign: 'center',
+    marginBottom: 10,
   },
   fiatValue: {
     marginTop: 5,
@@ -45,7 +46,7 @@ const styles = {
     height: expanded ? undefined : 0.01,
     overflow: 'hidden',
     alignSelf: 'stretch',
-    paddingTop: expanded ? 30 : 0,
+    paddingTop: expanded ? 20 : 0,
     paddingHorizontal: '10%',
   }),
   subBalance: {
@@ -81,7 +82,7 @@ export default function BalanceSection() {
         <View style={styles.brief}>
           <BalanceText style={styles.balanceLabel}>Balance</BalanceText>
           <BalanceText style={styles.balance}>
-            {formatNumber(available + stake)} NXS
+            {balances ? formatNumber(available + stake) + ' NXS' : 'N/A'}
           </BalanceText>
           {/* <BalanceText style={styles.fiatValue} sub>
             ≈1,931.32 USD
@@ -96,41 +97,53 @@ export default function BalanceSection() {
           <View style={styles.subBalance}>
             <BalanceText>Available</BalanceText>
             <BalanceText>
-              {formatNumber(available, { maximumFractionDigits: 6 })} NXS
+              {balances
+                ? formatNumber(available, { maximumFractionDigits: 6 }) + ' NXS'
+                : 'N/A'}
             </BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Stake (locked)</BalanceText>
             <BalanceText>
-              {formatNumber(stake, { maximumFractionDigits: 6 })} NXS
+              {balances
+                ? formatNumber(stake, { maximumFractionDigits: 6 }) + ' NXS'
+                : 'N/A'}
             </BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Pending</BalanceText>
             <BalanceText>
-              {formatNumber(pending, { maximumFractionDigits: 6 })} NXS
+              {balances
+                ? formatNumber(pending, { maximumFractionDigits: 6 }) + ' NXS'
+                : 'N/A'}
             </BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Unconfirmed</BalanceText>
             <BalanceText>
-              {formatNumber(unconfirmed, { maximumFractionDigits: 6 })} NXS
+              {balances
+                ? formatNumber(unconfirmed, { maximumFractionDigits: 6 }) +
+                  'NXS'
+                : 'N/A'}
             </BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Immature</BalanceText>
             <BalanceText>
-              {formatNumber(immature, { maximumFractionDigits: 6 })} NXS
+              {balances
+                ? formatNumber(immature, { maximumFractionDigits: 6 }) + ' NXS'
+                : 'N/A'}
             </BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Total</BalanceText>
             <BalanceText>
-              {formatNumber(
-                available + stake + pending + unconfirmed + immature,
-                { maximumFractionDigits: 6 }
-              )}{' '}
-              NXS
+              {balances
+                ? formatNumber(
+                    available + stake + pending + unconfirmed + immature,
+                    { maximumFractionDigits: 6 }
+                  ) + ' NXS'
+                : 'N/A'}
             </BalanceText>
           </View>
         </View>
