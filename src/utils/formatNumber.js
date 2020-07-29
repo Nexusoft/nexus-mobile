@@ -4,7 +4,7 @@ const nonZeroDigit = /[^0]/;
 export default function formatNumber(
   number,
   { maximumFractionDigits } = {
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 3,
   }
 ) {
   number = Number(number);
@@ -22,13 +22,13 @@ export default function formatNumber(
       if (firstNonZeroDigitIndex >= maximumFractionDigits) {
         maximumFractionDigits = firstNonZeroDigitIndex + 1;
       }
+    }
 
-      const cutOffDigits = fraction.length - maximumFractionDigits;
-      if (cutOffDigits) {
-        const tempFraction = Number(fraction) / 10 ** cutOffDigits;
-        fraction = Math.round(tempFraction).toString();
-        approximate = true;
-      }
+    const cutOffDigits = fraction.length - maximumFractionDigits;
+    if (cutOffDigits) {
+      const tempFraction = Number(fraction) / 10 ** cutOffDigits;
+      fraction = Math.round(tempFraction).toString();
+      approximate = true;
     }
   }
 

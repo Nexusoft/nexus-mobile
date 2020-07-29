@@ -15,12 +15,24 @@ export async function refreshUserStatus() {
   }
 }
 
+export async function refreshUserBalances() {
+  const store = getStore();
+  try {
+    const balances = await sendAPI('finance/get/balances');
+    store.dispatch({ type: TYPE.SET_USER_BALANCES, payload: balances });
+    return balances;
+  } catch (err) {
+    store.dispatch({ type: TYPE.CLEAR_USER_BALANCES });
+  }
+}
+
 export function setupUser(store) {
   store.observe(
     (state) => state.core.info,
     (coreInfo) => {
       if (coreInfo) {
         refreshUserStatus();
+        refreshUserBalances();
       }
     }
   );

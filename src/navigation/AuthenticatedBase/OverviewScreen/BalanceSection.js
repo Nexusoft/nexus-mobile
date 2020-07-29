@@ -2,10 +2,12 @@ import React from 'react';
 import { LayoutAnimation, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
-import { useTheme } from 'lib/theme';
+import { useSelector } from 'react-redux';
 
+import { getStore } from 'store';
 import Text from 'components/Text';
-import { subColor } from 'lib/theme';
+import { useTheme, subColor } from 'lib/theme';
+import formatNumber from 'utils/formatNumber';
 
 const styles = {
   wrapper: {
@@ -23,6 +25,7 @@ const styles = {
   },
   balance: {
     fontSize: 34,
+    textAlign: 'center',
   },
   fiatValue: {
     marginTop: 5,
@@ -63,6 +66,8 @@ function BalanceText(props) {
 export default function BalanceSection() {
   const theme = useTheme();
   const [expanded, setExpanded] = React.useState(false);
+  const balances = useSelector((state) => state.user?.balances);
+  const { available, pending, unconfirmed, stake, immature } = balances || {};
 
   return (
     <TouchableRipple
@@ -75,10 +80,12 @@ export default function BalanceSection() {
       <>
         <View style={styles.brief}>
           <BalanceText style={styles.balanceLabel}>Balance</BalanceText>
-          <BalanceText style={styles.balance}>10,435.643 NXS</BalanceText>
-          <BalanceText style={styles.fiatValue} sub>
-            ≈ 1,931.32 USD
+          <BalanceText style={styles.balance}>
+            {formatNumber(available + stake)} NXS
           </BalanceText>
+          {/* <BalanceText style={styles.fiatValue} sub>
+            ≈1,931.32 USD
+          </BalanceText> */}
           <Ionicons
             style={styles.expandIcon({ theme })}
             name={expanded ? 'ios-arrow-up' : 'ios-arrow-down'}
@@ -88,27 +95,43 @@ export default function BalanceSection() {
         <View style={styles.subBalances({ expanded })}>
           <View style={styles.subBalance}>
             <BalanceText>Available</BalanceText>
-            <BalanceText>24,464.345474 NXS</BalanceText>
+            <BalanceText>
+              {formatNumber(available, { maximumFractionDigits: 6 })} NXS
+            </BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Stake (locked)</BalanceText>
-            <BalanceText>35,378.343457 NXS</BalanceText>
+            <BalanceText>
+              {formatNumber(stake, { maximumFractionDigits: 6 })} NXS
+            </BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Pending</BalanceText>
-            <BalanceText>0 NXS</BalanceText>
+            <BalanceText>
+              {formatNumber(pending, { maximumFractionDigits: 6 })} NXS
+            </BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Unconfirmed</BalanceText>
-            <BalanceText>0 NXS</BalanceText>
+            <BalanceText>
+              {formatNumber(unconfirmed, { maximumFractionDigits: 6 })} NXS
+            </BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Immature</BalanceText>
-            <BalanceText>0 NXS</BalanceText>
+            <BalanceText>
+              {formatNumber(immature, { maximumFractionDigits: 6 })} NXS
+            </BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Total</BalanceText>
-            <BalanceText>64,324.565803 NXS</BalanceText>
+            <BalanceText>
+              {formatNumber(
+                available + stake + pending + unconfirmed + immature,
+                { maximumFractionDigits: 6 }
+              )}{' '}
+              NXS
+            </BalanceText>
           </View>
         </View>
       </>
