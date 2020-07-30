@@ -22,6 +22,7 @@ import NewAccountScreen from 'screens/NewAccountScreen';
 import NewContactScreen from 'screens/NewContactScreen';
 import ConfirmSendScreen from 'screens/ConfirmSendScreen';
 import ExternalCoreConfigScreen from 'screens/ExternalCoreConfigScreen';
+import SetRecoveryScreen from 'screens/SetRecoveryScreen';
 import { useTheme } from 'lib/theme';
 import { selectLoggedIn } from 'lib/user';
 import { getStore } from 'store';
@@ -46,6 +47,7 @@ const screens = [
   NewContactScreen,
   ConfirmSendScreen,
   ExternalCoreConfigScreen,
+  SetRecoveryScreen,
 ];
 
 export default function StackNavigator({ navigation }) {

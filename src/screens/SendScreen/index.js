@@ -40,7 +40,7 @@ export default function SendScreen({ route }) {
         recipientAddress: yup.string().required('Required!'),
         amount: yup.number().min(0, 'Invalid!'),
       })}
-      onSubmit={async () => {
+      onSubmit={() => {
         navigate('ConfirmSend');
       }}
     >

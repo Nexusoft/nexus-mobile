@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import Divider from 'components/Divider';
 import Text from 'components/Text';
+import { navigate } from 'lib/navigation';
 import SettingItem from './SettingItem';
 import commonStyles from './styles';
 
@@ -31,21 +32,16 @@ export default function UserSettings() {
           right="arrow"
         />
         <Divider inset={20} />
-        {hasRecoveryPhrase ? (
-          <SettingItem
-            small
-            title="Change recovery phrase"
-            onPress={() => {}}
-            right="arrow"
-          />
-        ) : (
-          <SettingItem
-            small
-            title="Set recovery phrase"
-            onPress={() => {}}
-            right="arrow"
-          />
-        )}
+        <SettingItem
+          small
+          title={
+            hasRecoveryPhrase ? 'Change recovery phrase' : 'Set recovery phrase'
+          }
+          onPress={() => {
+            navigate('SetRecovery');
+          }}
+          right="arrow"
+        />
       </Surface>
     </>
   );

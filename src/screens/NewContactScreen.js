@@ -48,6 +48,7 @@ export default function NewContactScreen() {
             />
             <FAB
               mode="contained"
+              loading={isSubmitting}
               disabled={isSubmitting}
               style={{ marginTop: 30 }}
               onPress={handleSubmit}
