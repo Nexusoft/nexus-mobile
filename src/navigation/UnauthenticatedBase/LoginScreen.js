@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Formik } from 'formik';
 import { FAB } from 'react-native-paper';
+import * as yup from 'yup';
 
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
@@ -83,6 +84,11 @@ export default function LoginScreen() {
     >
       <Formik
         initialValues={{ username: '', password: '', pin: '' }}
+        validationSchema={yup.object().shape({
+          username: yup.string().required('Required!'),
+          password: yup.string().required('Required!'),
+          pin: yup.string().required('Required!'),
+        })}
         onSubmit={async ({ username, password, pin }) => {
           try {
             await sendAPI('users/login/user', { username, password, pin });

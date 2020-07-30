@@ -155,6 +155,18 @@ export default function RecoveryScreen() {
           password: '',
           pin: '',
         }}
+        validationSchema={yup.object().shape({
+          username: yup.string().required('Required!'),
+          recovery: yup.string().required('Required'),
+          password: yup
+            .string()
+            .required('Required!')
+            .min(8, 'Must be at least 8 characters!'),
+          pin: yup
+            .string()
+            .required('Required!')
+            .min(4, 'Must be at least 4 characters!'),
+        })}
         onSubmit={async ({ username, recovery, password, pin }) => {
           try {
             await sendAPI('users/recover/user', {

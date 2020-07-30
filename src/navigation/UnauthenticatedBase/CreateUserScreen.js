@@ -219,6 +219,20 @@ export default function CreateUserScreen() {
       ) : (
         <Formik
           initialValues={{ username: '', password: '', pin: '' }}
+          validationSchema={yup.object().shape({
+            username: yup
+              .string()
+              .required('Required!')
+              .min(3, 'Must be at least 3 characters!'),
+            password: yup
+              .string()
+              .required('Required!')
+              .min(8, 'Must be at least 8 characters!'),
+            pin: yup
+              .string()
+              .required('Required!')
+              .min(4, 'Must be at least 4 characters!'),
+          })}
           onSubmit={async ({ username, password, pin }) => {
             try {
               await sendAPI('users/create/user', { username, password, pin });
