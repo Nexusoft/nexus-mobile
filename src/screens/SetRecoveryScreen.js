@@ -1,10 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import { FAB, Button } from 'react-native-paper';
+import { FAB, Button, Dialog } from 'react-native-paper';
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 
+import Portal from 'components/Portal';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
@@ -12,8 +13,17 @@ import { refreshUserStatus } from 'lib/user';
 import { sendAPI } from 'lib/api';
 import { goBack } from 'lib/navigation';
 import { showError, showNotification } from 'lib/ui';
+import { disabledColor, useTheme } from 'lib/theme';
 
 const styles = {
+  msgBox: ({ theme }) => ({
+    borderWidth: 1,
+    borderColor: disabledColor(theme.foreground),
+    borderRadius: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+  }),
   generation: {
     marginTop: 20,
     marginBottom: 10,
@@ -30,6 +40,47 @@ const styles = {
   },
 };
 
+function ConfirmRecoveryDialog({ newRecovery, visible, onDismiss, onConfirm }) {
+  const theme = useTheme();
+  return (
+    <Portal>
+      <Formik
+        initialValues={{
+          recovery: '',
+        }}
+        validationSchema={yup.object().shape({
+          recovery: yup.string().oneOf([newRecovery], 'Mismatch!'),
+        })}
+        onSubmit={onConfirm}
+      >
+        {({ handleSubmit }) => (
+          <Dialog visible={visible} onDismiss={onDismiss}>
+            <Dialog.Content>
+              <View style={styles.msgBox({ theme })}>
+                <Text sub>
+                  Re-enter your recovery phrase to make sure you have saved your
+                  recovery phrase
+                </Text>
+              </View>
+              <TextBox.Formik
+                multiline
+                name="recovery"
+                label="Re-enter new recovery phrase"
+              />
+              <FAB
+                mode="contained"
+                style={{ marginTop: 10 }}
+                onPress={handleSubmit}
+                label="Confirm"
+              />
+            </Dialog.Content>
+          </Dialog>
+        )}
+      </Formik>
+    </Portal>
+  );
+}
+
 function useLoadWordList() {
   const [wordList, setWordList] = React.useState(null);
   React.useEffect(() => {
@@ -43,13 +94,15 @@ function useLoadWordList() {
 }
 
 export default function SetRecoveryScreen() {
+  const theme = useTheme();
   const hasRecoveryPhrase = useSelector(
     (state) => !!state.user?.status?.recovery
   );
   const wordList = useLoadWordList();
+  const [confirming, setConfirming] = React.useState(false);
 
   return (
-    <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
+    <ScreenBody style={{ paddingVertical: 20, paddingHorizontal: 30 }}>
       <Formik
         initialValues={{
           password: '',
@@ -63,7 +116,10 @@ export default function SetRecoveryScreen() {
           recovery: hasRecoveryPhrase
             ? yup.string().required('Required!')
             : undefined,
-          newRecovery: yup.string().required('Required!'),
+          newRecovery: yup
+            .string()
+            .required('Required!')
+            .min(40, 'Must be at least 40 characters'),
         })}
         onSubmit={async ({ password, pin, recovery, newRecovery }) => {
           try {
@@ -82,7 +138,7 @@ export default function SetRecoveryScreen() {
           goBack();
         }}
       >
-        {({ isSubmitting, handleSubmit, setFieldValue }) => {
+        {({ isSubmitting, handleSubmit, setFieldValue, values }) => {
           const generate = (wordCount) => {
             if (!wordList) return;
             const words = [];
@@ -96,6 +152,19 @@ export default function SetRecoveryScreen() {
 
           return (
             <>
+              <View style={styles.msgBox({ theme })}>
+                <Text>
+                  Recovery phrase can be used to recover your account and set
+                  new password and PIN in the event that you lose or forget
+                  them.{' '}
+                  <Text bold>
+                    Save this new recovery phrase in a safe place
+                  </Text>
+                  , because if you lose your recovery phrase, there will be{' '}
+                  <Text bold>no way</Text> to recover it.
+                </Text>
+              </View>
+
               <TextBox.Formik secure name="password" label="Password" />
               <TextBox.Formik secure name="pin" label="PIN" />
               {hasRecoveryPhrase && (
@@ -159,8 +228,21 @@ export default function SetRecoveryScreen() {
                 loading={isSubmitting}
                 disabled={isSubmitting}
                 style={{ marginTop: 30 }}
-                onPress={handleSubmit}
+                onPress={() => {
+                  setConfirming(true);
+                }}
                 label="Update recovery phrase"
+              />
+              <ConfirmRecoveryDialog
+                visible={confirming}
+                onDismiss={() => {
+                  setConfirming(false);
+                }}
+                newRecovery={values.newRecovery}
+                onConfirm={() => {
+                  setConfirming(false);
+                  handleSubmit();
+                }}
               />
             </>
           );
