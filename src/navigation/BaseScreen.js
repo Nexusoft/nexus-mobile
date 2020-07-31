@@ -1,11 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { ActivityIndicator, Button } from 'react-native-paper';
 
 import Text from 'components/Text';
 import { useTheme } from 'lib/theme';
 import { selectLoggedIn } from 'lib/user';
-import { selectConnected } from 'lib/coreInfo';
+import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef } from 'lib/navigation';
 import { getStore } from 'store';
 import UnauthenticatedBase from './UnauthenticatedBase';
@@ -13,6 +14,7 @@ import AuthenticatedBase from './AuthenticatedBase';
 
 function DisconnectedBase() {
   const theme = useTheme();
+  const [refreshing, setRefreshing] = React.useState(false);
   return (
     <View
       style={{
@@ -22,14 +24,31 @@ function DisconnectedBase() {
         backgroundColor: theme.dark ? theme.background : theme.primary,
       }}
     >
+      <ActivityIndicator animating color={theme.foreground} />
       <Text
         sub
         colorName={theme.dark ? 'foreground' : 'onPrimary'}
         size={18}
-        style={{ textAlign: 'center' }}
+        style={{ textAlign: 'center', marginTop: 20 }}
       >
         Connecting to Nexus Core...
       </Text>
+      <Button
+        mode="outlined"
+        loading={refreshing}
+        disabled={refreshing}
+        onPress={async () => {
+          setRefreshing(true);
+          try {
+            await refreshCoreInfo();
+          } finally {
+            setRefreshing(false);
+          }
+        }}
+        style={{ marginTop: 20 }}
+      >
+        {refreshing ? 'Refreshing' : 'Refresh'}
+      </Button>
     </View>
   );
 }
