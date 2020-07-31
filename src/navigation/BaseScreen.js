@@ -19,7 +19,7 @@ function DisconnectedBase() {
     <View
       style={{
         flex: 1,
-        alignItems: 'stretch',
+        alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: theme.dark ? theme.background : theme.primary,
       }}
@@ -35,7 +35,6 @@ function DisconnectedBase() {
       </Text>
       <Button
         mode="outlined"
-        loading={refreshing}
         disabled={refreshing}
         onPress={async () => {
           setRefreshing(true);
@@ -45,9 +44,9 @@ function DisconnectedBase() {
             setRefreshing(false);
           }
         }}
-        style={{ marginTop: 20 }}
+        style={{ marginTop: 50 }}
       >
-        {refreshing ? 'Refreshing' : 'Refresh'}
+        {refreshing ? 'Refreshing...' : 'Refresh'}
       </Button>
     </View>
   );
