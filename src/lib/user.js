@@ -26,6 +26,17 @@ export async function refreshUserBalances() {
   }
 }
 
+export async function refreshUserAccounts() {
+  const store = getStore();
+  try {
+    const accounts = await sendAPI('users/list/accounts');
+    store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: accounts });
+    return accounts;
+  } catch (err) {
+    store.dispatch({ type: TYPE.CLEAR_USER_ACCOUNTS });
+  }
+}
+
 export function setupUser(store) {
   store.observe(
     (state) => state.core.info,
@@ -33,6 +44,7 @@ export function setupUser(store) {
       if (coreInfo) {
         refreshUserStatus();
         refreshUserBalances();
+        refreshUserAccounts();
       }
     }
   );

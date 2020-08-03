@@ -1,6 +1,7 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 
 import Text from 'components/Text';
 import Divider from 'components/Divider';
@@ -10,7 +11,16 @@ import { useTheme } from 'lib/theme';
 import WalletIcon from 'icons/wallet.svg';
 
 const styles = {
-  wrapper: {
+  accountsHeader: {
+    paddingVertical: 15,
+    textTransform: 'uppercase',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  accounts: {
+    flex: 1,
+  },
+  account: {
     marginVertical: 10,
   },
   accInfo: {
@@ -46,11 +56,11 @@ const styles = {
   }),
 };
 
-export default function Account({ account }) {
+function Account({ account }) {
   const theme = useTheme();
   return (
     <>
-      <View style={styles.wrapper}>
+      <View style={styles.account}>
         <TouchableRipple
           onPress={() => {
             navigate('AccountDetails', { account });
@@ -90,6 +100,29 @@ export default function Account({ account }) {
         </View>
       </View>
       <Divider />
+    </>
+  );
+}
+
+export default function Accounts() {
+  const accounts = useSelector((state) => state.user.accounts);
+  return (
+    <>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          navigate('Accounts');
+        }}
+      >
+        <Text style={styles.accountsHeader} sub>
+          Accounts
+        </Text>
+      </TouchableWithoutFeedback>
+      <ScrollView style={styles.accounts}>
+        {accounts &&
+          accounts.map((account) => (
+            <Account key={account.address} account={account} />
+          ))}
+      </ScrollView>
     </>
   );
 }
