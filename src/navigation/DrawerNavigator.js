@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useTheme, getNavTheme } from 'lib/theme';
 import { navContainerRef, navReadyRef } from 'lib/navigation';
 import { selectLoggedIn } from 'lib/user';
-import SideMenu from './SideMenu';
+import SideBar from './SideBar';
 import StackNavigator from './StackNavigator';
 
 const Drawer = createDrawerNavigator();
@@ -26,7 +26,7 @@ export default function DrawerNavigator() {
     >
       <Drawer.Navigator
         hideStatusBar={false}
-        drawerContent={(props) => <SideMenu {...props} />}
+        drawerContent={(props) => <SideBar {...props} />}
         sceneContainerStyle={{
           backgroundColor: theme.dark ? undefined : theme.primary,
         }}

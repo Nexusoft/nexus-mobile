@@ -16,3 +16,7 @@ export function push(...args) {
 export function goBack(...args) {
   navContainerRef.current?.goBack(...args);
 }
+
+// export function addNavListener(...args) {
+//   navContainerRef.current?.addListener(...args);
+// }
