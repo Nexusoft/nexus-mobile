@@ -21,13 +21,14 @@ const styles = {
     flex: 1,
   },
   account: {
-    marginVertical: 10,
+    paddingVertical: 10,
   },
   accInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 15,
+    paddingHorizontal: 20,
   },
   accNameIcon: {
     flexDirection: 'row',
@@ -99,7 +100,7 @@ function Account({ account }) {
           </TouchableRipple>
         </View>
       </View>
-      <Divider />
+      <Divider inset={20} />
     </>
   );
 }

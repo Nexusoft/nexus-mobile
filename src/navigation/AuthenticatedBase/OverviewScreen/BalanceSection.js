@@ -44,7 +44,7 @@ const styles = {
   }),
   subBalances: ({ expanded }) => ({
     // setting height to 0 makes text have the stretch effect
-    // setting height to > 0 makes text have the revealing effect
+    // setting height to > 0 makes text have the revealing effect (on Android)
     height: expanded ? undefined : 0.01,
     overflow: 'hidden',
     alignSelf: 'stretch',

@@ -20,7 +20,7 @@ const styles = {
     flex: 1,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     backgroundColor: overlay(2, theme.surface),
     elevation: 8,
     ...shadow(8),
