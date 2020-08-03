@@ -3,9 +3,12 @@ import { LayoutAnimation, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 
 import Text from 'components/Text';
 import { useTheme, subColor } from 'lib/theme';
+import { refreshUserBalances } from 'lib/user';
+import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
 
 const styles = {
@@ -68,6 +71,19 @@ export default function BalanceSection() {
   const [expanded, setExpanded] = React.useState(false);
   const balances = useSelector((state) => state.user?.balances);
   const { available, pending, unconfirmed, stake, immature } = balances || {};
+  useFocusEffect(
+    React.useCallback(() => {
+      const store = getStore();
+      const unobserve = store.observe(
+        (state) => state.core.info,
+        (coreInfo) => {
+          if (coreInfo) refreshUserBalances();
+        }
+      );
+
+      return unobserve;
+    }, [])
+  );
 
   return (
     <TouchableRipple

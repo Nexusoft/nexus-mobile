@@ -43,7 +43,6 @@ export function setupUser(store) {
     (coreInfo) => {
       if (coreInfo) {
         refreshUserStatus();
-        refreshUserBalances();
         refreshUserAccounts();
       }
     }
