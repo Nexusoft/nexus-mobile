@@ -16,6 +16,10 @@ import { showError, showNotification } from 'lib/ui';
 import { disabledColor, useTheme } from 'lib/theme';
 
 const styles = {
+  screen: {
+    paddingVertical: 20,
+    paddingHorizontal: 30,
+  },
   msgBox: ({ theme }) => ({
     borderWidth: 1,
     borderColor: disabledColor(theme.foreground),
@@ -32,6 +36,7 @@ const styles = {
     textAlign: 'center',
     marginBottom: 15,
   },
+  submit: { marginTop: 30 },
   btns: {
     flexDirection: 'row',
   },
@@ -102,7 +107,7 @@ export default function SetRecoveryScreen() {
   const [confirming, setConfirming] = React.useState(false);
 
   return (
-    <ScreenBody style={{ paddingVertical: 20, paddingHorizontal: 30 }}>
+    <ScreenBody style={styles.screen}>
       <Formik
         initialValues={{
           password: '',
@@ -227,7 +232,7 @@ export default function SetRecoveryScreen() {
                 mode="contained"
                 loading={isSubmitting}
                 disabled={isSubmitting}
-                style={{ marginTop: 30 }}
+                style={styles.submit}
                 onPress={() => {
                   setConfirming(true);
                 }}

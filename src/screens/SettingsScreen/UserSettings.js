@@ -28,7 +28,9 @@ export default function UserSettings() {
         <SettingItem
           small
           title="Change password & PIN"
-          onPress={() => {}}
+          onPress={() => {
+            navigate('ChangePassword');
+          }}
           right="arrow"
         />
         <Divider inset={20} />
