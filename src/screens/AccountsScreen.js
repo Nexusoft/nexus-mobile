@@ -2,6 +2,7 @@ import React from 'react';
 import { View, FlatList } from 'react-native';
 import { TouchableRipple, FAB } from 'react-native-paper';
 import { useTheme } from 'lib/theme';
+import { useSelector } from 'react-redux';
 
 import Text from 'components/Text';
 import Divider from 'components/Divider';
@@ -9,32 +10,6 @@ import ScreenBody from 'components/ScreenBody';
 import { navigate } from 'lib/navigation';
 import { disabledColor } from 'lib/theme';
 import segmentAddress from 'utils/segmentAddress';
-
-const accounts = [
-  {
-    created: 1573539403,
-    modified: 1589688048,
-    name: 'default',
-    address: '8BJhfDBEhs73RYmUeM6YRvamRHWP6zjoaSjPRkGbxsFAuiXTuGW',
-    token_name: 'NXS',
-    token: '0',
-    balance: 0,
-    pending: 0,
-    unconfirmed: 0,
-  },
-  {
-    created: 1573539403,
-    modified: 1591674440,
-    name: 'trust',
-    address: '8Gbwm4sH9VttWNLpyuXe4zjH1wf5UFxkjjnuGjihPqsdodVBcwk',
-    token_name: 'NXS',
-    token: '0',
-    balance: 44.745334,
-    pending: 0,
-    unconfirmed: 0,
-    stake: 40397,
-  },
-];
 
 const styles = {
   wrapper: {
@@ -68,31 +43,34 @@ const styles = {
 
 export default function AccountsScreen() {
   const theme = useTheme();
+  const accounts = useSelector((state) => state.user.accounts);
   return (
     <ScreenBody scroll={false} surface style={styles.wrapper}>
-      <FlatList
-        data={accounts}
-        ItemSeparatorComponent={Divider}
-        keyExtractor={(acc) => acc.address}
-        renderItem={({ item: account }) => (
-          <TouchableRipple
-            onPress={() => {
-              navigate('AccountDetails', { account });
-            }}
-          >
-            <View style={styles.account}>
-              <Text style={styles.accName} bold disabled={!account.name}>
-                {account.name || 'No name'}
-              </Text>
-              <View style={styles.addressBox({ theme })}>
-                <Text style={styles.address} mono>
-                  {segmentAddress(account.address)}
+      {accounts && (
+        <FlatList
+          data={accounts}
+          ItemSeparatorComponent={Divider}
+          keyExtractor={(acc) => acc.address}
+          renderItem={({ item: account }) => (
+            <TouchableRipple
+              onPress={() => {
+                navigate('AccountDetails', { account });
+              }}
+            >
+              <View style={styles.account}>
+                <Text style={styles.accName} bold disabled={!account.name}>
+                  {account.name || 'No name'}
                 </Text>
+                <View style={styles.addressBox({ theme })}>
+                  <Text style={styles.address} mono>
+                    {segmentAddress(account.address)}
+                  </Text>
+                </View>
               </View>
-            </View>
-          </TouchableRipple>
-        )}
-      />
+            </TouchableRipple>
+          )}
+        />
+      )}
       <FAB
         style={styles.add}
         icon="plus"
