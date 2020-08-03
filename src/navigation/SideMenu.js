@@ -100,6 +100,9 @@ const MenuItem = ({ linkTo, icon, label, action }) => (
 export default function SideMenu({ navigation }) {
   const theme = useTheme();
   const username = useSelector((state) => state.user?.status?.username);
+  const hasRecoveryPhrase = useSelector(
+    (state) => !!state.user?.status?.recovery
+  );
   return (
     <View style={styles.wrapper}>
       <View style={styles.header({ theme })}>
@@ -134,9 +137,24 @@ export default function SideMenu({ navigation }) {
         <MenuItem linkTo="Namespaces" icon={NamespaceIcon} label="Namespaces" />
         <Divider spacing={5} />
 
-        <MenuItem icon={CopyIcon} label="Copy User ID to clipboard" />
+        <MenuItem label="Copy User ID to clipboard" />
         <MenuItem
-          icon={LogoutIcon}
+          label="Change password & PIN"
+          action={() => {
+            navigation.closeDrawer();
+            navigate('ChangePassword');
+          }}
+        />
+        <MenuItem
+          label={
+            hasRecoveryPhrase ? 'Change recovery phrase' : 'Set recovery phrase'
+          }
+          action={() => {
+            navigation.closeDrawer();
+            navigate('SetRecovery');
+          }}
+        />
+        <MenuItem
           label="Log out"
           action={() => {
             confirmLogout({ closeDrawer: navigation.closeDrawer });
