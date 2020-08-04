@@ -16,7 +16,7 @@ import loadInitialState from 'store/loadInitialState';
 
 import Notifications from './Notifications';
 import Dialogs from './Dialogs';
-import DrawerNavigator from './navigation/DrawerNavigator';
+import DrawerNavigator from './DrawerNavigator';
 
 // For using LayoutAnimation
 if (Platform.OS === 'android') {
@@ -43,9 +43,9 @@ async function loadResourcesAndData() {
     await Font.loadAsync({
       ...Ionicons.font,
       ...MaterialIcons.font,
-      'noto-sans': require('./fonts/NotoSans-Regular.ttf'),
-      'noto-sans-bold': require('./fonts/NotoSans-Bold.ttf'),
-      robotomono: require('./fonts/RobotoMono-Regular.ttf'),
+      'noto-sans': require('fonts/NotoSans-Regular.ttf'),
+      'noto-sans-bold': require('fonts/NotoSans-Bold.ttf'),
+      robotomono: require('fonts/RobotoMono-Regular.ttf'),
     });
   } catch (e) {
     // We might want to provide this error information to an error reporting service
