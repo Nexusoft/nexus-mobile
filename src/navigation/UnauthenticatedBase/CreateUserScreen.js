@@ -50,8 +50,14 @@ function ConfirmUserDialog({ visible, onDismiss, newUser, onConfirm }) {
         <Formik
           initialValues={{ password: '', pin: '' }}
           validationSchema={yup.object().shape({
-            password: yup.string().oneOf([newUser.password], 'Mismatch!'),
-            pin: yup.string().oneOf([newUser.pin], 'Mismatch!'),
+            password: yup
+              .string()
+              .required('Required!')
+              .oneOf([newUser.password], 'Mismatch!'),
+            pin: yup
+              .string()
+              .required('Required!')
+              .oneOf([newUser.pin], 'Mismatch!'),
           })}
           onSubmit={onConfirm}
         >

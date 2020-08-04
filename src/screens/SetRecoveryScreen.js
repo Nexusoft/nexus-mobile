@@ -54,7 +54,10 @@ function ConfirmRecoveryDialog({ newRecovery, visible, onDismiss, onConfirm }) {
           recovery: '',
         }}
         validationSchema={yup.object().shape({
-          recovery: yup.string().oneOf([newRecovery], 'Mismatch!'),
+          recovery: yup
+            .string()
+            .required('Required!')
+            .oneOf([newRecovery], 'Mismatch!'),
         })}
         onSubmit={onConfirm}
       >

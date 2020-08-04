@@ -44,8 +44,14 @@ function ConfirmCredentialsDialog({
         <Formik
           initialValues={{ password: '', pin: '' }}
           validationSchema={yup.object().shape({
-            password: yup.string().oneOf([credentials.password], 'Mismatch!'),
-            pin: yup.string().oneOf([credentials.pin], 'Mismatch!'),
+            password: yup
+              .string()
+              .required('Required!')
+              .oneOf([credentials.password], 'Mismatch!'),
+            pin: yup
+              .string()
+              .required('Required!')
+              .oneOf([credentials.pin], 'Mismatch!'),
           })}
           onSubmit={onConfirm}
         >

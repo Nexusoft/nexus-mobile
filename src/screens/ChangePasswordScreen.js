@@ -39,8 +39,11 @@ function ConfirmPasswordPinDialog({
           pin: '',
         }}
         validationSchema={yup.object().shape({
-          password: yup.string().oneOf([newPassword], 'Mismatch!'),
-          pin: yup.string().oneOf([newPin], 'Mismatch!'),
+          password: yup
+            .string()
+            .required('Required!')
+            .oneOf([newPassword], 'Mismatch!'),
+          pin: yup.string().required('Required!').oneOf([newPin], 'Mismatch!'),
         })}
         onSubmit={onConfirm}
       >
