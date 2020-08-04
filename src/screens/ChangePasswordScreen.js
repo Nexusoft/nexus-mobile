@@ -136,7 +136,8 @@ export default function ChangePasswordScreen() {
               onDismiss={() => {
                 setConfirming(false);
               }}
-              newRecovery={values.newRecovery}
+              newPassword={values.newPassword}
+              newPin={values.newPin}
               onConfirm={() => {
                 setConfirming(false);
                 handleSubmit();
