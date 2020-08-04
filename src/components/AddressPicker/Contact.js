@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
 import Text from 'components/Text';
+import { useTheme } from 'lib/theme';
 import { lighten, darken } from 'utils/color';
 
 const styles = {
@@ -41,6 +42,7 @@ const styles = {
 const getinitial = (name) => (name && name.length >= 1 ? name.charAt(0) : '');
 
 export default function Contact({ contact, onSelect }) {
+  const theme = useTheme();
   return (
     <TouchableRipple
       onPress={() => {
