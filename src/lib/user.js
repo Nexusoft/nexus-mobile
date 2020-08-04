@@ -11,7 +11,7 @@ export async function refreshUserStatus() {
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     return status;
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_USER_STATUS });
+    store.dispatch({ type: TYPE.LOGOUT });
   }
 }
 
