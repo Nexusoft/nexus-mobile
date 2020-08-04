@@ -120,7 +120,6 @@ function UserIdDialog({ visible, onDismiss }) {
             mode="text"
             icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
             onPress={() => {
-              onDismiss();
               Clipboard.setString(userID);
               showNotification('Copied to clipboard');
             }}
