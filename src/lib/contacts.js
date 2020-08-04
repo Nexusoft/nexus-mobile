@@ -11,7 +11,7 @@ export async function loadContacts() {
 export async function createContact({ name, address }) {
   const store = getStore();
   const { contacts = {} } = store.getState();
-  const newContacts = { ...contacts, [name]: address };
+  const newContacts = { ...contacts, [name]: { address } };
 
   store.dispatch({
     type: TYPE.SET_CONTACTS,
@@ -28,7 +28,7 @@ export async function updateContact(oldName, { name, address }) {
   if (oldName !== name) {
     delete newContacts[oldName];
   }
-  newContacts[name] = address;
+  newContacts[name] = { address };
 
   store.dispatch({
     type: TYPE.SET_CONTACTS,

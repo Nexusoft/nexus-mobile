@@ -23,10 +23,10 @@ const styles = {
   },
 };
 
-const selectContacts = memoize((state) =>
-  state.contacts
-    ? Object.entries(state.contacts)
-        .map(([name, address]) => ({ name, address }))
+const selectContacts = memoize((contacts) =>
+  contacts
+    ? Object.entries(contacts)
+        .map(([name, contact]) => ({ name, ...contact }))
         .sort((a, b) => a.name.localeCompare(b.name))
     : []
 );
@@ -37,7 +37,7 @@ const filterContacts = memoize((contacts, keyword) => {
 });
 
 export default function ContactsScreen() {
-  const contacts = useSelector(selectContacts);
+  const contacts = useSelector((state) => selectContacts(state.contacts));
   const search = useSelector((state) => state.ui.contactSearch);
   const filteredContacts =
     search && typeof search === 'string'
@@ -83,7 +83,6 @@ ContactsScreen.nav = ({ contactSearch, theme }) => ({
               value={contactSearch}
               onChangeText={setContactSearch}
               autoFocus
-              autoCapitalize="words"
               dense
               placeholder="Search contact"
             />

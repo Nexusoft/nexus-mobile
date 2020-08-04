@@ -10,9 +10,20 @@ import AddressPicker from 'components/AddressPicker';
 import { createContact } from 'lib/contacts';
 import { goBack } from 'lib/navigation';
 import { showError } from 'lib/ui';
+import memoize from 'utils/memoize';
+
+const selectContactNames = memoize((contacts) => Object.keys(contacts));
+const selectContactAddresses = memoize((contacts) =>
+  Object.values(contacts).map((contact) => contact.address)
+);
 
 export default function NewContactScreen() {
-  const contactNames = useSelector((state) => Object.keys(state.contacts));
+  const contactNames = useSelector((state) =>
+    selectContactNames(state.contacts)
+  );
+  const contactAddresses = useSelector((state) =>
+    selectContactAddresses(state.contacts)
+  );
   return (
     <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
       <Formik
@@ -25,7 +36,10 @@ export default function NewContactScreen() {
             .string()
             .required('Required!')
             .notOneOf(contactNames, 'Existed!'),
-          address: yup.string().required('Required!'),
+          address: yup
+            .string()
+            .required('Required!')
+            .notOneOf(contactAddresses, 'Existed!'),
         })}
         onSubmit={async ({ name, address }) => {
           try {
@@ -38,7 +52,11 @@ export default function NewContactScreen() {
       >
         {({ isSubmitting, handleSubmit, setFieldValue }) => (
           <>
-            <TextBox.Formik name="name" label="Contact name" />
+            <TextBox.Formik
+              name="name"
+              label="Contact name"
+              autoCapitalize="words"
+            />
             <TextBox.Formik name="address" label="Nexus address" multiline />
             <AddressPicker
               pickContacts={false}

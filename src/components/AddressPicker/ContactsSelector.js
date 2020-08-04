@@ -12,14 +12,14 @@ import AddressBookIcon from 'icons/address-book.svg';
 import Contact from './Contact';
 
 const selectContacts = memoize(
-  (state) =>
-    state.contacts &&
-    Object.entries(state.contacts).map(([name, address]) => ({ name, address }))
+  (contacts) =>
+    contacts &&
+    Object.entries(contacts).map(([name, contact]) => ({ name, ...contact }))
 );
 
 export default function ContactsSelector({ setAddress, style }) {
   const [contactsOpen, setContactsOpen] = React.useState(false);
-  const contacts = useSelector(selectContacts);
+  const contacts = useSelector((state) => selectContacts(state.contacts));
   return (
     <>
       <IconButton
