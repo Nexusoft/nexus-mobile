@@ -6,6 +6,8 @@ import NameIcon from 'icons/abc.svg';
 import NamespaceIcon from 'icons/abc-cube.svg';
 import AssetIcon from 'icons/asset.svg';
 import WalletIcon from 'icons/wallet.svg';
+import CoreIcon from 'icons/core.svg';
+import NexusIcon from 'icons/nexus.svg';
 import MenuItem from './MenuItem';
 
 export default function SideMenu() {
@@ -18,7 +20,8 @@ export default function SideMenu() {
       <MenuItem linkTo="Namespaces" icon={NamespaceIcon} label="Namespaces" />
       <Divider spacing={5} />
 
-      <MenuItem label="About Nexus Wallet" />
+      <MenuItem icon={CoreIcon} label="Core information" />
+      <MenuItem icon={NexusIcon} label="About Nexus Wallet" />
     </>
   );
 }
