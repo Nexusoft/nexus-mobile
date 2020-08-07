@@ -20,7 +20,7 @@ export default function SideMenu() {
       <MenuItem linkTo="Namespaces" icon={NamespaceIcon} label="Namespaces" />
       <Divider spacing={5} />
 
-      <MenuItem icon={CoreIcon} label="Core information" />
+      <MenuItem linkTo="CoreInfo" icon={CoreIcon} label="Core information" />
       <MenuItem icon={NexusIcon} label="About Nexus Wallet" />
     </>
   );

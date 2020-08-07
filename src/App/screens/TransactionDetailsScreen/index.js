@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, SafeAreaView } from 'react-native';
+import { Platform } from 'react-native';
 
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
@@ -22,17 +22,15 @@ export default function TransactionDetailsScreen({ route }) {
   return (
     !!transaction && (
       <ScreenBody>
-        <SafeAreaView>
-          <TransactionDetails transaction={transaction} />
+        <TransactionDetails transaction={transaction} />
 
-          <Text sub style={styles.subHeader}>
-            Contracts
-          </Text>
-          {!!transaction.contracts &&
-            transaction.contracts.map((contract) => (
-              <ContractDetails key={contract.id} contract={contract} />
-            ))}
-        </SafeAreaView>
+        <Text sub style={styles.subHeader}>
+          Contracts
+        </Text>
+        {!!transaction.contracts &&
+          transaction.contracts.map((contract) => (
+            <ContractDetails key={contract.id} contract={contract} />
+          ))}
       </ScreenBody>
     )
   );
