@@ -6,7 +6,7 @@ import memoize from 'utils/memoize';
 
 export const defaultSettings = {
   // Application
-  darkMode: false,
+  colorScheme: 'auto', // auto | light | dark
   baseCurrency: 'USD',
 
   // Core
@@ -50,10 +50,12 @@ export async function updateSettings(updates) {
   }
 }
 
-export const selectSettings = memoize((state) =>
-  Object.entries(state.settings).reduce((settings, [key, value]) => {
-    settings[key] =
-      value === null || value === undefined ? defaultSettings[key] : value;
-    return settings;
-  }, {})
+export const selectSettings = memoize(
+  (state) =>
+    state &&
+    Object.entries(state.settings).reduce((settings, [key, value]) => {
+      settings[key] =
+        value === null || value === undefined ? defaultSettings[key] : value;
+      return settings;
+    }, {})
 );

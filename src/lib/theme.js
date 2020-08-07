@@ -1,4 +1,5 @@
 import { DefaultTheme, DarkTheme } from 'react-native-paper';
+import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { mix, fade, darken } from 'utils/color';
@@ -100,9 +101,30 @@ export const lightTheme = {
   onDanger: lightColor,
 };
 
+const ThemeContext = React.createContext(darkTheme);
+
+export const ThemeProvider = ThemeContext.Provider;
+
+export function useDerivedTheme() {
+  const { colorScheme } = useSelector(selectSettings);
+  const systemColorScheme = useColorScheme();
+  if (
+    colorScheme === 'dark' ||
+    (colorScheme === 'auto' && systemColorScheme === 'dark')
+  ) {
+    return darkTheme;
+  }
+  if (
+    colorScheme === 'light' ||
+    (colorScheme === 'auto' && systemColorScheme === 'light')
+  ) {
+    return lightTheme;
+  }
+  return darkTheme;
+}
+
 export function useTheme() {
-  const { darkMode } = useSelector(selectSettings);
-  return darkMode ? darkTheme : lightTheme;
+  return React.useContext(ThemeContext);
 }
 
 export const getNavTheme = memoize((theme) => ({

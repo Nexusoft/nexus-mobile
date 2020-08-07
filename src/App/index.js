@@ -1,14 +1,24 @@
 import React from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
-import { Platform, UIManager, View } from 'react-native';
+import {
+  Platform,
+  UIManager,
+  View,
+  Appearance,
+  useColorScheme,
+} from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Provider as PaperProvider } from 'react-native-paper';
-import { useTheme } from 'lib/theme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { getPaperTheme } from 'lib/theme';
+import {
+  ThemeProvider,
+  useDerivedTheme,
+  useTheme,
+  getPaperTheme,
+} from 'lib/theme';
 import { setupUser } from 'lib/user';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import { createStore, getStore } from 'store';
@@ -20,9 +30,7 @@ import DrawerNavigator from './DrawerNavigator';
 
 // For using LayoutAnimation
 if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-  }
+  UIManager?.setLayoutAnimationEnabledExperimental(true);
 }
 
 const styles = {
@@ -32,9 +40,13 @@ const styles = {
   }),
 };
 
-function PaperContainer({ children }) {
-  const theme = useTheme();
-  return <PaperProvider theme={getPaperTheme(theme)}>{children}</PaperProvider>;
+function ThemeContainer({ children }) {
+  const theme = useDerivedTheme();
+  return (
+    <ThemeProvider value={theme}>
+      <PaperProvider theme={getPaperTheme(theme)}>{children}</PaperProvider>
+    </ThemeProvider>
+  );
 }
 
 async function loadResourcesAndData() {
@@ -79,7 +91,6 @@ function App() {
 
 export default function Root(props) {
   const [loadingComplete, setLoadingComplete] = React.useState(false);
-
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
     (async () => {
@@ -99,9 +110,9 @@ export default function Root(props) {
     return (
       <ReduxProvider store={getStore()}>
         <SafeAreaProvider>
-          <PaperContainer>
+          <ThemeContainer>
             <App />
-          </PaperContainer>
+          </ThemeContainer>
         </SafeAreaProvider>
       </ReduxProvider>
     );

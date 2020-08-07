@@ -27,6 +27,7 @@ export default function AuthenticatedBase() {
   const navigation = useNavigation();
   const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
   const contactSearch = useSelector((state) => state.ui.contactSearch);
+
   return (
     <BottomTab.Navigator
       initialRouteName={defaultScreen}

@@ -19,18 +19,24 @@ const styles = {
   },
 };
 
+const themeOptions = [
+  {
+    value: 'auto',
+    display: 'Auto',
+  },
+  {
+    value: 'dark',
+    display: 'Dark',
+  },
+  {
+    value: 'light',
+    display: 'Light',
+  },
+];
+
 export default function ApplicationSettings() {
   const loggedIn = useSelector(selectLoggedIn);
   const settings = useSelector(selectSettings);
-  const toggleDarkMode = React.useCallback(() => {
-    updateSettings({ darkMode: !settings.darkMode });
-  }, [settings.darkMode]);
-  const setBaseCurrency = React.useCallback(
-    (baseCurrency) => {
-      updateSettings({ baseCurrency });
-    },
-    [settings.baseCurrency]
-  );
 
   return (
     <>
@@ -38,18 +44,20 @@ export default function ApplicationSettings() {
         Application
       </Text>
       <Surface style={styles.section}>
-        <SettingItem
-          title="Dark mode"
-          description={settings.darkMode ? 'On' : 'Off'}
-          primary
-          onPress={toggleDarkMode}
-          right={
-            <Switch
-              style={styles.switch}
-              value={settings.darkMode}
-              onValueChange={toggleDarkMode}
+        <Select
+          options={themeOptions}
+          value={settings.colorScheme}
+          updateValue={(colorScheme) => {
+            updateSettings({ colorScheme });
+          }}
+          render={({ display, openSelect }) => (
+            <SettingItem
+              title="Color scheme"
+              description={display}
+              primary
+              onPress={openSelect}
             />
-          }
+          )}
         />
         {loggedIn && (
           <>
@@ -57,7 +65,9 @@ export default function ApplicationSettings() {
             <Select
               options={baseCurrencies}
               value={settings.baseCurrency}
-              updateValue={setBaseCurrency}
+              updateValue={(baseCurrency) => {
+                updateSettings({ baseCurrency });
+              }}
               render={({ display, openSelect }) => (
                 <SettingItem
                   title="Base currency"
