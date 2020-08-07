@@ -1,3 +1,4 @@
+import React from 'react';
 import { DefaultTheme, DarkTheme } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
