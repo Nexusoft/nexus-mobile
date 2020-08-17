@@ -21,7 +21,7 @@ export default function SideMenu() {
       <Divider spacing={5} />
 
       <MenuItem linkTo="CoreInfo" icon={CoreIcon} label="Core information" />
-      <MenuItem icon={NexusIcon} label="About Nexus Wallet" />
+      <MenuItem linkTo="About" icon={NexusIcon} label="About Nexus Wallet" />
     </>
   );
 }
