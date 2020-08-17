@@ -45,7 +45,7 @@ export default function CoreInfoScreen() {
           label="Timestamp"
           value={
             !!coreInfo?.timestamp
-              ? moment.unix(coreInfo.timestamp).format('LLLL')
+              ? moment.unix(coreInfo.timestamp).format('llll')
               : ''
           }
         />
@@ -63,7 +63,7 @@ export default function CoreInfoScreen() {
       <Surface style={styles.section}>
         <InfoField
           inline
-          label="Network"
+          label="Active network"
           value={`${coreInfo?.private ? 'Private' : 'Public'} ${
             coreInfo?.testnet ? 'testnet ' + coreInfo.testnet : 'mainnet'
           }`}
@@ -79,7 +79,7 @@ export default function CoreInfoScreen() {
         <Divider />
         <InfoField
           inline
-          label="Sync. complete percentage"
+          label="Sync. complete"
           value={coreInfo?.synccomplete + '%'}
         />
         <Divider />
