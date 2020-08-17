@@ -14,10 +14,15 @@ export default function SideMenu() {
   return (
     <>
       <MenuItem linkTo="Accounts" icon={WalletIcon} label="Accounts" />
-      <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" />
-      <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" />
-      <MenuItem linkTo="Names" icon={NameIcon} label="Names" />
-      <MenuItem linkTo="Namespaces" icon={NamespaceIcon} label="Namespaces" />
+      <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" comingSoon />
+      <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" comingSoon />
+      <MenuItem linkTo="Names" icon={NameIcon} label="Names" comingSoon />
+      <MenuItem
+        linkTo="Namespaces"
+        icon={NamespaceIcon}
+        label="Namespaces"
+        comingSoon
+      />
       <Divider spacing={5} />
 
       <MenuItem linkTo="CoreInfo" icon={CoreIcon} label="Core information" />
