@@ -3,11 +3,11 @@ import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { TouchableRipple, Surface } from 'react-native-paper';
 
-import Divider from 'components/Divider';
 import Text from 'components/Text';
 import { updateSettings, selectSettings } from 'lib/settings';
 import { navigate } from 'lib/navigation';
 import { useTheme } from 'lib/theme';
+import { refreshCoreInfo } from 'lib/coreInfo';
 import SettingItem from './SettingItem';
 import commonStyles from './styles';
 
@@ -52,8 +52,9 @@ function CoreMode({ label, value }) {
   } else {
     return (
       <TouchableRipple
-        onPress={() => {
-          updateSettings({ coreMode: value });
+        onPress={async () => {
+          await updateSettings({ coreMode: value });
+          refreshCoreInfo();
         }}
       >
         {content}

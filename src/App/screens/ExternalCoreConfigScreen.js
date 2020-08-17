@@ -11,7 +11,7 @@ import { useTheme, disabledColor } from 'lib/theme';
 import { defaultSettings, updateSettings } from 'lib/settings';
 import { goBack } from 'lib/navigation';
 import { showError } from 'lib/ui';
-import { sendAPI } from 'lib/api';
+import { refreshCoreInfo } from 'lib/coreInfo';
 
 const styles = {
   screen: {
@@ -182,11 +182,12 @@ export default function ExternalCoreConfigScreen({ navigation }) {
               if (updates[key] === '') updates[key] = null;
             }
             await updateSettings(updates);
-            // TODO: resend get/info
-            goBack();
           } catch (err) {
             showError(err && err.message);
+            return;
           }
+          refreshCoreInfo();
+          goBack();
         }}
       >
         {(props) => (

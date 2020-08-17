@@ -5,6 +5,7 @@ import { selectSettings } from 'lib/settings';
 
 export async function sendAPI(endpoint, params) {
   const state = getStore().getState();
+  // TODO: handle embedded core mode
   const {
     externalCoreIP,
     externalCoreAPIPort,
