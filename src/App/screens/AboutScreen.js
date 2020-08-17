@@ -25,7 +25,7 @@ const styles = {
     alignItems: 'center',
   },
   section: {
-    marginVertical: 20,
+    marginVertical: 30,
     alignItems: 'center',
   },
   paragraph: {
@@ -175,6 +175,41 @@ export default function CoreInfoScreen() {
               Redux
             </Link>
             <Text> - MIT License</Text>
+          </View>
+
+          <View style={styles.paragraph}>
+            <Text style={styles.center}>Icons made by</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}
+            >
+              <Link url="https://www.flaticon.com/authors/freepik">
+                Freepik
+              </Link>
+              <Text>, </Text>
+              <Link url="https://www.flaticon.com/authors/pixel-perfect">
+                Pixel perfect
+              </Link>
+              <Text>, </Text>
+              <Link url="https://www.flaticon.com/authors/google">Google</Link>
+              <Text>, </Text>
+              <Link url="https://www.flaticon.com/authors/prosymbols">
+                Prosymbols
+              </Link>
+              <Text>, </Text>
+              <Link url="https://www.flaticon.com/authors/dave-gandy">
+                Dave Gandy
+              </Link>
+              <Text>, </Text>
+              <Link url="https://www.flaticon.com/authors/bqlqn">bqlqn</Link>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Text>from </Text>
+              <Link url="https://www.flaticon.com/">www.flaticon.com</Link>
+            </View>
           </View>
         </View>
       </View>
