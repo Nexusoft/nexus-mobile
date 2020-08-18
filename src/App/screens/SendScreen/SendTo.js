@@ -10,6 +10,7 @@ import AddressPicker from 'components/AddressPicker';
 import { useTheme, disabledColor } from 'lib/theme';
 import { sendAPI } from 'lib/api';
 import { navigate } from 'lib/navigation';
+import formatNumber from 'utils/formatNumber';
 import { getStore } from 'store';
 
 const styles = {
@@ -31,18 +32,6 @@ const styles = {
   },
   section: {
     marginBottom: 30,
-  },
-  addressBox: ({ theme }) => ({
-    borderWidth: 1,
-    borderColor: disabledColor(theme.foreground),
-    borderRadius: 4,
-    paddingVertical: 5,
-    paddingHorizontal: 8,
-    marginTop: 10,
-  }),
-  address: {
-    fontSize: 15,
-    textAlign: 'center',
   },
   send: {
     marginTop: 10,
@@ -156,7 +145,8 @@ export default function SendTo({ account }) {
               }}
               labelStyle={{ fontSize: 13 }}
             >
-              Send all ({account.balance} NXS)
+              Send all (
+              {formatNumber(account.balance, { maximumFractionDigits: 6 })} NXS)
             </Button>
           </View>
 
