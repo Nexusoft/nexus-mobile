@@ -139,7 +139,7 @@ export default function TextBox({
   );
 }
 
-function FormikTextBox({ name, ...rest }) {
+function FormikTextBox({ name, onChangeText, ...rest }) {
   const [field, meta, helpers] = useField(name);
   const hasError = !!(meta.touched && meta.error);
   return (
@@ -147,7 +147,10 @@ function FormikTextBox({ name, ...rest }) {
       <TextBox
         error={hasError}
         value={field.value}
-        onChangeText={helpers.setValue}
+        onChangeText={(...args) => {
+          onChangeText && onChangeText(...args);
+          helpers.setValue(...args);
+        }}
         onBlur={() => {
           helpers.setTouched(true);
         }}

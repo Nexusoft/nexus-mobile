@@ -93,7 +93,7 @@ function Account({ account }) {
           <TouchableRipple
             style={styles.accAction}
             onPress={() => {
-              navigate('Send', { accountName: account.name });
+              navigate('Send', { account });
             }}
           >
             <Text style={styles.accActionLabel({ theme })}>SEND</Text>
