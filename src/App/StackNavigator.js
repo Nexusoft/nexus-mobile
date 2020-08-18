@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, Platform, KeyboardAvoidingView } from 'react-native';
+import { Platform, KeyboardAvoidingView } from 'react-native';
 import {
   createStackNavigator,
   Header,
@@ -72,10 +72,6 @@ export default function StackNavigator({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={{ flex: 1 }}
     >
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={theme.dark ? '#000' : theme.primaryVariant}
-      />
       <Stack.Navigator
         initialRouteName="Base"
         headerMode="screen"

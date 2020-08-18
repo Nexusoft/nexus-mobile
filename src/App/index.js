@@ -20,6 +20,7 @@ import { refreshCoreInfo } from 'lib/coreInfo';
 import { createStore, getStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
 
+import StatusBar from './StatusBar';
 import Notifications from './Notifications';
 import Dialogs from './Dialogs';
 import DrawerNavigator from './DrawerNavigator';
@@ -78,6 +79,18 @@ function App() {
   const theme = useTheme();
   return (
     <View style={styles.container({ theme })}>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={
+          Platform.OS === 'ios'
+            ? theme.dark
+              ? theme.background
+              : theme.primary
+            : theme.dark
+            ? '#000'
+            : theme.primaryVariant
+        }
+      />
       <DrawerNavigator />
       <Dialogs />
       <Notifications />
