@@ -3,7 +3,7 @@ import React from 'react';
 import ScreenBody from 'components/ScreenBody';
 
 import SendFrom from './SendFrom';
-import Recipients from './Recipients';
+import SendTo from './SendTo';
 
 export default function SendScreen({ route }) {
   const account = route.params?.account;
@@ -11,7 +11,7 @@ export default function SendScreen({ route }) {
   return (
     <ScreenBody scroll={false}>
       <SendFrom account={account} />
-      <Recipients account={account} />
+      <SendTo account={account} />
     </ScreenBody>
   );
 }

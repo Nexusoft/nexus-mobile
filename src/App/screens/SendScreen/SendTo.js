@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
-import { Surface, Button, FAB, overlay } from 'react-native-paper';
+import { Button, FAB, overlay } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -17,17 +17,17 @@ const styles = {
     flex: 1,
     backgroundColor: overlay(2, theme.surface),
     paddingHorizontal: 30,
-    paddingVertical: 30,
+    paddingVertical: 20,
   }),
   heading: {
     textTransform: 'uppercase',
     fontSize: 13,
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   sendAll: {
     alignSelf: 'flex-end',
-    marginTop: -20,
+    marginTop: -15,
   },
   section: {
     marginBottom: 30,
@@ -90,7 +90,7 @@ async function resolveNameOrAddress(nameOrAddress) {
   }
 }
 
-export default function Recipients({ account }) {
+export default function SendTo({ account }) {
   const theme = useTheme();
 
   return (
@@ -102,7 +102,7 @@ export default function Recipients({ account }) {
       }}
       validationSchema={yup.object().shape({
         nameOrAddress: yup.string().required('Required!'),
-        amount: yup.number().min(0, 'Invalid!'),
+        amount: yup.number().typeError('Invalid!').min(0, 'Invalid!'),
       })}
       onSubmit={async (
         { nameOrAddress, amount, reference },
@@ -151,10 +151,12 @@ export default function Recipients({ account }) {
             <Button
               mode="text"
               style={styles.sendAll}
-              title=""
-              onPress={() => {}}
+              onPress={() => {
+                setFieldValue('amount', String(account.balance));
+              }}
+              labelStyle={{ fontSize: 13 }}
             >
-              Send all
+              Send all ({account.balance} NXS)
             </Button>
           </View>
 
