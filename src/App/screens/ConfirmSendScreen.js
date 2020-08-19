@@ -159,11 +159,14 @@ export default function ConfirmSendScreen({ route }) {
           pin: yup.string().required('Required!'),
         })}
         onSubmit={async ({ pin }) => {
-          const params = { pin, address: account.address, amount, reference };
+          const params = { pin, address: account.address, amount };
           if (recipient.name) {
             params.name_to = recipient.name;
           } else {
             params.address_to = recipient.address;
+          }
+          if (reference || reference === 0) {
+            params.reference = reference;
           }
 
           try {

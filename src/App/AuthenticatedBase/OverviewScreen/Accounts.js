@@ -8,6 +8,7 @@ import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import { navigate } from 'lib/navigation';
 import { useTheme } from 'lib/theme';
+import formatNumber from 'utils/formatNumber';
 import WalletIcon from 'icons/wallet.svg';
 
 const styles = {
@@ -74,7 +75,9 @@ function Account({ account }) {
                 {account.name}
               </Text>
             </View>
-            <Text style={styles.accBalance}>{account.balance} NXS</Text>
+            <Text style={styles.accBalance}>
+              {formatNumber(account.balance)} NXS
+            </Text>
           </View>
         </TouchableRipple>
 
