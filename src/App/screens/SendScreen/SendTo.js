@@ -71,7 +71,7 @@ async function resolveNameOrAddress(nameOrAddress) {
     const nameResult = await sendAPI('names/get/name', { name: nameOrAddress });
     return {
       name: nameOrAddress,
-      address: nameResult.address,
+      address: nameResult.register_address,
       contactName: findContactName(nameResult.address),
     };
   } catch (err) {

@@ -1,16 +1,20 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { FAB, Button } from 'react-native-paper';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
+import TextBox from 'components/TextBox';
 import PinDialog from 'components/PinDialog';
 import { useTheme, disabledColor } from 'lib/theme';
 import { goBack } from 'lib/navigation';
+import { sendAPI } from 'lib/api';
+import { showError } from 'lib/ui';
 import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
-import NextIcon from 'icons/next.svg';
 import WalletIcon from 'icons/wallet.svg';
 import SendIcon from 'icons/send.svg';
 import ContactsIcon from 'icons/address-book.svg';
@@ -25,19 +29,17 @@ const styles = {
     alignItems: 'center',
     marginBottom: 40,
   },
-  fromToSection: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 50,
-  },
   referenceSection: {
     alignItems: 'center',
     marginTop: 20,
   },
+  pinSection: {
+    marginTop: 40,
+  },
   buttonSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 70,
+    marginTop: 50,
   },
   fromTo: {
     flex: 1,
@@ -149,28 +151,74 @@ export default function ConfirmSendScreen({ route }) {
         </View>
       )}
 
-      <View style={styles.buttonSection}>
-        <Button
-          style={styles.cancel}
-          mode="text"
-          onPress={() => {
-            goBack();
-          }}
-        >
-          Cancel
-        </Button>
-        <FAB
-          style={styles.confirm}
-          mode="contained"
-          icon={({ size, color }) => (
-            <SvgIcon icon={SendIcon} {...{ size, color }} />
-          )}
-          onPress={() => {
-            setConfirmingPin(true);
-          }}
-          label="Send"
-        />
-      </View>
+      <Formik
+        initialValues={{
+          pin: '',
+        }}
+        validationSchema={yup.object().shape({
+          pin: yup.string().required('Required!'),
+        })}
+        onSubmit={async ({ pin }) => {
+          const params = { pin, address: account.address, amount, reference };
+          if (recipient.name) {
+            params.name_to = recipient.name;
+          } else {
+            params.address_to = recipient.address;
+          }
+
+          try {
+            await sendAPI('finance/debit/account', params);
+          } catch (err) {
+            showError(err && err.message);
+            return;
+          }
+          goBack(); // go back from ConfirmSend screen to Send screen
+          goBack(); // go back from Send screen
+        }}
+      >
+        {({ handleSubmit, isSubmitting }) => (
+          <>
+            <View style={styles.pinSection}>
+              <TextBox.Formik
+                mode="outlined"
+                name="pin"
+                label="Enter your PIN to confirm"
+                background={['surface', 0]}
+                secure
+                keyboardType={
+                  Platform.OS === 'android'
+                    ? 'visible-password'
+                    : 'numbers-and-punctuation'
+                }
+              />
+            </View>
+
+            <View style={styles.buttonSection}>
+              <Button
+                style={styles.cancel}
+                mode="text"
+                onPress={() => {
+                  goBack();
+                }}
+              >
+                Cancel
+              </Button>
+
+              <FAB
+                style={styles.confirm}
+                mode="contained"
+                icon={({ size, color }) => (
+                  <SvgIcon icon={SendIcon} {...{ size, color }} />
+                )}
+                onPress={handleSubmit}
+                loading={isSubmitting}
+                disabled={isSubmitting}
+                label={isSubmitting ? 'Sending...' : 'Send'}
+              />
+            </View>
+          </>
+        )}
+      </Formik>
 
       <PinDialog
         visible={confirmingPin}
