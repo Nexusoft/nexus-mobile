@@ -47,13 +47,12 @@ function findContactName(addr) {
   return contact && contact[0];
 }
 
+const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
+
 async function resolveNameOrAddress(nameOrAddress) {
   if (!nameOrAddress) return null;
 
-  if (
-    nameOrAddress.length === 51 &&
-    nameOrAddress.match(/([0OIl+/])/g) === null
-  ) {
+  if (base58Regex.test(nameOrAddress)) {
     const addressResult = await sendAPI('system/validate/address', {
       address: nameOrAddress,
     });
