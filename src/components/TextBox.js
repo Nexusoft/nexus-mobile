@@ -17,7 +17,6 @@ import ClearIcon from 'icons/x-circle.svg';
 
 const styles = {
   wrapper: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -88,12 +87,12 @@ export default function TextBox({
       keyboardAppearance={theme.dark ? 'dark' : 'light'}
       secureTextEntry={!!secure && !visible}
       style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
-      render={({ value, onChangeText, ...rest }) => (
+      render={({ value, onChangeText, style, ...rest }) => (
         <View style={styles.wrapper}>
           <TextInput
             value={value}
             onChangeText={onChangeText}
-            style={styles.input}
+            style={[style, styles.input]}
             {...rest}
           />
           {!!value && !!secure && (
