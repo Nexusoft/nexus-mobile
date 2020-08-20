@@ -1,5 +1,5 @@
 import { refreshCoreInfo } from 'lib/coreInfo';
-import { refreshUserStatus, setupUser } from 'lib/user';
+import { refreshUserStatus, refreshUserAccounts } from 'lib/user';
 import { createStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
 
@@ -23,15 +23,30 @@ function withTimeout(action, timeout) {
   ]);
 }
 
-export default async function initStore() {
-  // Load initialState here to avoid circular dependencies
-  const initialState = await loadInitialState();
-  createStore(initialState);
+export default function initStore() {
+  return new Promise(async (resolve) => {
+    // Load initialState here to avoid circular dependencies
+    const initialState = await loadInitialState();
+    const store = createStore(initialState);
+    await withTimeout(refreshCoreInfo, 1000);
 
-  const coreInfo = await withTimeout(refreshCoreInfo, 1000);
-  setupUser();
+    store.observe(
+      (state) => state.core.info,
+      async (coreInfo) => {
+        if (coreInfo) {
+          await refreshUserStatus();
+        }
+        resolve();
+      }
+    );
 
-  if (coreInfo) {
-    await withTimeout(refreshUserStatus, 1000);
-  }
+    store.observe(
+      (state) => state.user.status,
+      (userStatus) => {
+        if (userStatus) {
+          refreshUserAccounts();
+        }
+      }
+    );
+  });
 }

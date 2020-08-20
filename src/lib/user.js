@@ -40,28 +40,6 @@ export async function refreshUserAccounts() {
   }
 }
 
-export function setupUser() {
-  const store = getStore();
-
-  store.observe(
-    (state) => state.core.info,
-    (coreInfo) => {
-      if (coreInfo) {
-        refreshUserStatus();
-      }
-    }
-  );
-
-  store.observe(
-    (state) => state.user.status,
-    (userStatus) => {
-      if (userStatus) {
-        refreshUserAccounts();
-      }
-    }
-  );
-}
-
 export async function login({ username, password, pin }) {
   await sendAPI('users/login/user', { username, password, pin });
   await refreshUserStatus();
