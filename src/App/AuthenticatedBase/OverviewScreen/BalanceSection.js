@@ -75,9 +75,9 @@ export default function BalanceSection() {
     React.useCallback(() => {
       const store = getStore();
       const unobserve = store.observe(
-        (state) => state.core.info,
-        (coreInfo) => {
-          if (coreInfo) refreshUserBalances();
+        (state) => state.user.status,
+        (userStatus) => {
+          if (userStatus) refreshUserBalances();
         }
       );
 

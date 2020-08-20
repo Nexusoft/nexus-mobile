@@ -43,6 +43,14 @@ export function setupUser(store) {
     (coreInfo) => {
       if (coreInfo) {
         refreshUserStatus();
+      }
+    }
+  );
+
+  store.observe(
+    (state) => state.user.status,
+    (userStatus) => {
+      if (userStatus) {
         refreshUserAccounts();
       }
     }
