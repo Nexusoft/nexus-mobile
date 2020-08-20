@@ -24,7 +24,10 @@ function DisconnectedBase() {
         backgroundColor: theme.dark ? theme.background : theme.primary,
       }}
     >
-      <ActivityIndicator animating color={theme.foreground} />
+      <ActivityIndicator
+        animating
+        color={theme.dark ? theme.foreground : theme.onPrimary}
+      />
       <Text
         sub
         colorName={theme.dark ? 'foreground' : 'onPrimary'}
@@ -38,13 +41,14 @@ function DisconnectedBase() {
         disabled={refreshing}
         onPress={async () => {
           setRefreshing(true);
-          try {
-            await refreshCoreInfo();
-          } finally {
-            setRefreshing(false);
-          }
+          const coreInfo = await refreshCoreInfo();
+          if (!coreInfo) setRefreshing(false);
         }}
-        style={{ marginTop: 50 }}
+        style={{
+          marginTop: 50,
+          borderColor: theme.dark ? undefined : theme.onPrimary,
+        }}
+        labelStyle={theme.dark ? undefined : { color: theme.onPrimary }}
       >
         {refreshing ? 'Refreshing...' : 'Refresh'}
       </Button>
