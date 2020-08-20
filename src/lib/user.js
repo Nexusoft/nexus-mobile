@@ -12,6 +12,7 @@ export async function refreshUserStatus() {
     return status;
   } catch (err) {
     store.dispatch({ type: TYPE.LOGOUT });
+    return null;
   }
 }
 
@@ -23,6 +24,7 @@ export async function refreshUserBalances() {
     return balances;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER_BALANCES });
+    return null;
   }
 }
 
@@ -34,10 +36,13 @@ export async function refreshUserAccounts() {
     return accounts;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER_ACCOUNTS });
+    return null;
   }
 }
 
-export function setupUser(store) {
+export function setupUser() {
+  const store = getStore();
+
   store.observe(
     (state) => state.core.info,
     (coreInfo) => {

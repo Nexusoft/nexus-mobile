@@ -3,7 +3,7 @@ import createObserver from './createObserver';
 
 let store = null;
 
-export async function createStore(initialState) {
+export function createStore(initialState) {
   store = configureStore(initialState);
   store.observe = createObserver(store);
   return store;

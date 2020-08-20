@@ -6,24 +6,18 @@ import { Platform, UIManager, View } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Provider as PaperProvider } from 'react-native-paper';
+
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import {
-  ThemeProvider,
-  useDerivedTheme,
-  useTheme,
-  getPaperTheme,
-} from 'lib/theme';
-import { setupUser } from 'lib/user';
-import { refreshCoreInfo } from 'lib/coreInfo';
-import { createStore, getStore } from 'store';
-import loadInitialState from 'store/loadInitialState';
+import { useTheme } from 'lib/theme';
+import { getStore } from 'store';
 
+import ThemeContainer from './ThemeContainer';
 import StatusBar from './StatusBar';
 import Notifications from './Notifications';
 import Dialogs from './Dialogs';
 import DrawerNavigator from './DrawerNavigator';
+import initStore from './initStore';
 
 // For using LayoutAnimation
 if (Platform.OS === 'android') {
@@ -37,16 +31,7 @@ const styles = {
   }),
 };
 
-function ThemeContainer({ children }) {
-  const theme = useDerivedTheme();
-  return (
-    <ThemeProvider value={theme}>
-      <PaperProvider theme={getPaperTheme(theme)}>{children}</PaperProvider>
-    </ThemeProvider>
-  );
-}
-
-async function loadResourcesAndData() {
+async function loadResources() {
   try {
     // Load fonts
     await Font.loadAsync({
@@ -60,19 +45,6 @@ async function loadResourcesAndData() {
     // We might want to provide this error information to an error reporting service
     console.warn(e);
   }
-}
-
-function setupSubscribers(store) {
-  setupUser(store);
-}
-
-async function initializeStore() {
-  // Load initialState here to avoid circular dependencies
-  const initialState = await loadInitialState();
-  const store = await createStore(initialState);
-  setupSubscribers(store);
-  refreshCoreInfo();
-  return store;
 }
 
 function App() {
@@ -105,7 +77,7 @@ export default function Root(props) {
     (async () => {
       try {
         SplashScreen.preventAutoHide();
-        await Promise.all([initializeStore(), loadResourcesAndData()]);
+        await Promise.all([initStore(), loadResources()]);
         setLoadingComplete(true);
       } finally {
         SplashScreen.hide();
