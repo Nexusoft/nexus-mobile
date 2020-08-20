@@ -6,17 +6,17 @@ import loadInitialState from 'store/loadInitialState';
 function withTimeout(action, timeout) {
   const promise = new Promise((resolve) => {
     action()
-      .then(resolve)
+      .then((result) => {
+        resolve(result);
+      })
       .catch((err) => {
-        console.error('catch', err);
         resolve(null);
       });
   });
-  return new Promise.race([
+  return Promise.race([
     promise,
     new Promise((resolve) =>
       setTimeout(() => {
-        console.log('timeout');
         resolve(null);
       }, timeout)
     ),

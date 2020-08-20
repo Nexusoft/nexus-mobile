@@ -9,6 +9,7 @@ async function getInfo() {
   try {
     const coreInfo = await sendAPI('system/get/info');
     store.dispatch({ type: TYPE.SET_CORE_INFO, payload: coreInfo });
+    return coreInfo;
   } catch (err) {
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
     throw err;
