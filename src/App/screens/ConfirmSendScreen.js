@@ -190,7 +190,7 @@ export default function ConfirmSendScreen({ route }) {
                 secure
                 keyboardType={
                   Platform.OS === 'android'
-                    ? 'visible-password'
+                    ? 'default'
                     : 'numbers-and-punctuation'
                 }
               />
