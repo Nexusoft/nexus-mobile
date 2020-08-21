@@ -1,7 +1,7 @@
 export default function formatNumber(
   number,
   { maximumFractionDigits } = {
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 6,
   }
 ) {
   number = Number(number);
@@ -14,8 +14,7 @@ export default function formatNumber(
     }
   }
 
-  const approximate = !Number.isInteger(number * 10 ** maximumFractionDigits);
-  return `${approximate ? '~' : ''}${Intl.NumberFormat('en', {
+  return Intl.NumberFormat('en', {
     maximumFractionDigits,
-  }).format(number)}`;
+  }).format(number);
 }

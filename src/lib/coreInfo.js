@@ -24,9 +24,9 @@ export async function refreshCoreInfo() {
   const connected = selectConnected(getStore().getState());
   try {
     clearTimeout(timerId);
-    const result = await getInfo();
+    const coreInfo = await getInfo();
     waitTime = maxTime;
-    return result;
+    return coreInfo;
   } catch (err) {
     if (connected) waitTime = incStep;
     else if (waitTime < maxTime) waitTime += incStep;
