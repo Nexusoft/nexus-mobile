@@ -210,6 +210,7 @@ export default function ConfirmSendScreen({ route }) {
               <FAB
                 style={styles.confirm}
                 mode="contained"
+                animated={false}
                 icon={({ size, color }) => (
                   <SvgIcon icon={SendIcon} {...{ size, color }} />
                 )}
