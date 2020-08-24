@@ -56,6 +56,68 @@ function adaptTheme({ theme, backgroundName, elevation }) {
   }
 }
 
+const InnerTextBox = React.forwardRef(
+  (
+    {
+      mode,
+      dense,
+      secure,
+      clearButton,
+      iconColor,
+      value,
+      onChangeText,
+      style,
+      ...rest
+    },
+    ref
+  ) => {
+    const [visible, setVisible] = React.useState(false);
+    return (
+      <View style={styles.wrapper}>
+        <TextInput
+          ref={ref}
+          value={value}
+          onChangeText={onChangeText}
+          secureTextEntry={!!secure && !visible}
+          style={[style, styles.input]}
+          {...rest}
+        />
+        {!!value && !!secure && (
+          <TouchableWithoutFeedback
+            delayPressIn={0}
+            delayPressOut={0}
+            onPressIn={() => {
+              setVisible(true);
+            }}
+            onPressOut={() => {
+              setVisible(false);
+            }}
+          >
+            <View style={styles.icon({ mode, dense })}>
+              <SvgIcon
+                icon={visible ? VisibleIcon : InvisibleIcon}
+                size={16}
+                color={iconColor}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        )}
+        {!!value && !!clearButton && (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              onChangeText && onChangeText('');
+            }}
+          >
+            <View style={styles.icon({ mode, dense })}>
+              <SvgIcon sub icon={ClearIcon} size={16} color={iconColor} />
+            </View>
+          </TouchableWithoutFeedback>
+        )}
+      </View>
+    );
+  }
+);
+
 export default function TextBox({
   mode,
   secure,
@@ -66,7 +128,6 @@ export default function TextBox({
   ...rest
 }) {
   const theme = useTheme();
-  const [visible, setVisible] = React.useState(false);
   const [backgroundName, elevation] = Array.isArray(background)
     ? background
     : [background, 4];
@@ -85,53 +146,13 @@ export default function TextBox({
       autoCorrect={false}
       autoCapitalize="none"
       keyboardAppearance={theme.dark ? 'dark' : 'light'}
-      secureTextEntry={!!secure && !visible}
       style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
-      render={({ value, onChangeText, style, ...rest }) => (
-        <View style={styles.wrapper}>
-          <TextInput
-            value={value}
-            onChangeText={onChangeText}
-            style={[style, styles.input]}
-            {...rest}
-          />
-          {!!value && !!secure && (
-            <TouchableWithoutFeedback
-              delayPressIn={0}
-              delayPressOut={0}
-              onPressIn={() => {
-                setVisible(true);
-              }}
-              onPressOut={() => {
-                setVisible(false);
-              }}
-            >
-              <View style={styles.icon({ mode, dense })}>
-                <SvgIcon
-                  icon={visible ? VisibleIcon : InvisibleIcon}
-                  size={16}
-                  color={adaptedTheme.foreground}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          )}
-          {!!value && !!clearButton && (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                onChangeText && onChangeText('');
-              }}
-            >
-              <View style={styles.icon({ mode, dense })}>
-                <SvgIcon
-                  sub
-                  icon={ClearIcon}
-                  size={16}
-                  color={adaptedTheme.foreground}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          )}
-        </View>
+      render={(props) => (
+        <InnerTextBox
+          {...{ mode, secure, dense, clearButton }}
+          iconColor={adaptedTheme.foreground}
+          {...props}
+        />
       )}
       {...rest}
     />
