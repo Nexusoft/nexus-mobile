@@ -132,7 +132,7 @@ export default function BalanceSection() {
             </BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Stake (locked)</BalanceText>
+            <BalanceText>Staking (locked)</BalanceText>
             <BalanceText>
               {balances ? formatNumber(stake) + ' NXS' : 'N/A'}
             </BalanceText>
