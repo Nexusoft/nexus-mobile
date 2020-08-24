@@ -8,6 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import Text from 'components/Text';
 import { useTheme, subColor } from 'lib/theme';
 import { refreshUserBalances } from 'lib/user';
+import { refreshNXSPrice } from 'lib/market';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
 
@@ -69,7 +70,14 @@ export default function BalanceSection() {
   const theme = useTheme();
   const [expanded, setExpanded] = React.useState(false);
   const balances = useSelector((state) => state.user?.balances);
+  const baseCurrency = useSelector((state) => state.settings.baseCurrency);
+  const price = useSelector(
+    (state) => state.prices && state.prices[state.settings.baseCurrency]
+  );
   const { available, pending, unconfirmed, stake, immature } = balances || {};
+  React.useEffect(() => {
+    refreshNXSPrice();
+  }, []);
   useFocusEffect(
     React.useCallback(() => {
       const store = getStore();
@@ -101,9 +109,15 @@ export default function BalanceSection() {
                 ' NXS'
               : 'N/A'}
           </BalanceText>
-          <BalanceText style={styles.fiatValue} sub>
-            ≈27,000.01 USD
-          </BalanceText>
+          {!!price && (
+            <BalanceText style={styles.fiatValue} sub>
+              ≈
+              {formatNumber((available + stake) * price, {
+                maximumFractionDigits: 2,
+              })}{' '}
+              {baseCurrency}
+            </BalanceText>
+          )}
           <Ionicons
             style={styles.expandIcon({ theme })}
             name={expanded ? 'ios-arrow-up' : 'ios-arrow-down'}

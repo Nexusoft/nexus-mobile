@@ -7,6 +7,7 @@ import settings from './settings';
 import contacts from './contacts';
 import core from './core';
 import user from './user';
+import prices from './prices';
 
 export default function createRootReducer() {
   return combineReducers({
@@ -17,5 +18,6 @@ export default function createRootReducer() {
     contacts,
     core,
     user,
+    prices,
   });
 }
