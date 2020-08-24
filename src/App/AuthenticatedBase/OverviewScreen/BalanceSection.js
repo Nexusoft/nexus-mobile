@@ -111,7 +111,7 @@ export default function BalanceSection() {
           </BalanceText>
           {!!price && (
             <BalanceText style={styles.fiatValue} sub>
-              ≈
+              ≈ 
               {formatNumber((available + stake) * price, {
                 maximumFractionDigits: 2,
               })}{' '}
