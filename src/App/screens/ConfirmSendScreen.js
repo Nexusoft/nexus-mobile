@@ -12,7 +12,7 @@ import PinDialog from 'components/PinDialog';
 import { useTheme, disabledColor } from 'lib/theme';
 import { goBack } from 'lib/navigation';
 import { sendAPI } from 'lib/api';
-import { showError } from 'lib/ui';
+import { showNotification, showError } from 'lib/ui';
 import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
 import WalletIcon from 'icons/wallet.svg';
@@ -175,6 +175,7 @@ export default function ConfirmSendScreen({ route }) {
             showError(err && err.message);
             return;
           }
+          showNotification('Transaction sent');
           goBack(); // go back from ConfirmSend screen to Send screen
           goBack(); // go back from Send screen
         }}
