@@ -76,7 +76,7 @@ function Account({ account }) {
               </Text>
             </View>
             <Text style={styles.accBalance}>
-              {formatNumber(account.balance)} NXS
+              {formatNumber(account.balance + (account.stake || 0))} NXS
             </Text>
           </View>
         </TouchableRipple>
