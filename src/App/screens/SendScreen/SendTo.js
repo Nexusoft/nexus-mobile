@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, LayoutAnimation } from 'react-native';
 import { Button, FAB, overlay } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -33,6 +33,17 @@ const styles = {
   section: {
     marginBottom: 30,
   },
+  advancedToggle: {
+    alignSelf: 'flex-start',
+    marginBottom: 5,
+  },
+  advancedOptions: ({ expanded }) => ({
+    // setting height to 0 makes text have the stretch effect
+    // setting height to > 0 makes text have the revealing effect (on Android)
+    height: expanded ? undefined : 0.01,
+    overflow: 'hidden',
+    alignSelf: 'stretch',
+  }),
   send: {
     marginTop: 10,
   },
@@ -80,6 +91,7 @@ async function resolveNameOrAddress(nameOrAddress) {
 
 export default function SendTo({ account }) {
   const theme = useTheme();
+  const [advancedOpen, setAdvancedOpen] = React.useState(false);
 
   return (
     <Formik
@@ -142,7 +154,7 @@ export default function SendTo({ account }) {
               onPress={() => {
                 setFieldValue('amount', String(account.balance));
               }}
-              labelStyle={{ fontSize: 13 }}
+              labelStyle={{ fontSize: 12 }}
             >
               Send all (
               {formatNumber(account.balance, { maximumFractionDigits: 6 })} NXS)
@@ -150,13 +162,29 @@ export default function SendTo({ account }) {
           </View>
 
           <View style={styles.section}>
-            <TextBox.Formik
-              name="reference"
-              mode="outlined"
-              background={['surface', 2]}
-              label="Reference number (optional)"
-              keyboardType="number-pad"
-            />
+            <Button
+              mode="text"
+              compact
+              icon={advancedOpen ? 'chevron-down' : 'chevron-right'}
+              style={styles.advancedToggle}
+              labelStyle={{ fontSize: 12 }}
+              onPress={() => {
+                LayoutAnimation.easeInEaseOut();
+                setAdvancedOpen(!advancedOpen);
+              }}
+            >
+              Advanced options
+            </Button>
+
+            <View style={styles.advancedOptions({ expanded: advancedOpen })}>
+              <TextBox.Formik
+                name="reference"
+                mode="outlined"
+                background={['surface', 2]}
+                label="Reference number (optional)"
+                keyboardType="number-pad"
+              />
+            </View>
           </View>
 
           <FAB
