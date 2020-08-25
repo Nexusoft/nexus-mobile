@@ -98,7 +98,7 @@ export function toggleTransactionsFilter() {
   LayoutAnimation.easeInEaseOut();
   Keyboard.dismiss();
   getStore().dispatch({
-    type: TYPE.TOGGLE_TRANSACTIONS_FILTER,
+    type: TYPE.TOGGLE_TXS_FILTER,
   });
 }
 

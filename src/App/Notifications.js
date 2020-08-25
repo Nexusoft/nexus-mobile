@@ -30,7 +30,7 @@ function Notification({ notification }) {
 }
 
 export default function Notifications() {
-  const notifications = useSelector((state) => state.notifications);
+  const notifications = useSelector((state) => state.ui.notifications);
 
   return notifications.map((notif) => (
     <Notification key={notif.id} notification={notif} />

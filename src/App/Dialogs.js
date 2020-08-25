@@ -31,7 +31,7 @@ function Dialog({ id, type, ...rest }) {
 }
 
 export default function Dialogs() {
-  const dialogs = useSelector((state) => state.dialogs);
+  const dialogs = useSelector((state) => state.ui.dialogs);
 
   return dialogs.map((dialog) => <Dialog key={dialog.id} {...dialog} />);
 }
