@@ -4,7 +4,7 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.LOAD_TRITIUM_TRANSACTIONS:
+    case TYPE.LOAD_TRANSACTIONS:
       return (
         action.payload.list &&
         action.payload.list.reduce(
@@ -12,9 +12,15 @@ export default (state = initialState, action) => {
             map[tx.txid] = tx;
             return map;
           },
-          { ...state.map }
+          { ...state }
         )
       );
+
+    case TYPE.UPDATE_TRANSACTION:
+      return {
+        ...state,
+        [action.payload.txid]: action.payload,
+      };
 
     case TYPE.DISCONNECT_CORE:
     case TYPE.LOGOUT:

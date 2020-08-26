@@ -30,7 +30,7 @@ const styles = {
   },
 };
 
-export default function Transaction({ transaction }) {
+function Transaction({ transaction }) {
   const txTime = moment.unix(transaction.timestamp);
   return (
     <TouchableRipple
@@ -56,3 +56,5 @@ export default function Transaction({ transaction }) {
     </TouchableRipple>
   );
 }
+
+export default React.memo(Transaction);
