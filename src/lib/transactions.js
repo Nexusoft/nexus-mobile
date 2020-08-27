@@ -20,7 +20,7 @@ export async function loadTransactions() {
     page,
   });
   store.dispatch({
-    type: TYPE.LOAD_TRANSACTIONS,
+    type: TYPE.ADD_TRANSACTIONS,
     payload: {
       list: transactions,
       endReached: transactions.length < limit,

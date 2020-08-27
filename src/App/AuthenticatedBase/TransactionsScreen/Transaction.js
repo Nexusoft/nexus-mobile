@@ -6,13 +6,15 @@ import { TouchableRipple } from 'react-native-paper';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
+import { isConfirmed } from 'lib/transactions';
 import Contract from './Contract';
 
 const styles = {
-  wrapper: {
+  wrapper: ({ unconfirmed }) => ({
     flexDirection: 'row',
     alignItems: 'center',
-  },
+    opacity: unconfirmed ? 0.5 : 1,
+  }),
   date: {
     paddingVertical: 20,
     width: 80,
@@ -38,7 +40,7 @@ function Transaction({ transaction }) {
         navigate('TransactionDetails', { transaction });
       }}
     >
-      <View style={styles.wrapper}>
+      <View style={styles.wrapper({ unconfirmed: !isConfirmed(transaction) })}>
         <View style={styles.date}>
           <Text style={styles.day}>{txTime.format('DD')}</Text>
           <Text style={styles.month}>{txTime.format('MMM')}</Text>

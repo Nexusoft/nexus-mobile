@@ -4,7 +4,7 @@ const initialState = false;
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.LOAD_TRANSACTIONS:
+    case TYPE.ADD_TRANSACTIONS:
       return action.payload.endReached;
 
     case TYPE.DISCONNECT_CORE:

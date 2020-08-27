@@ -4,7 +4,7 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.LOAD_TRANSACTIONS:
+    case TYPE.ADD_TRANSACTIONS:
       return (
         action.payload.list &&
         action.payload.list.reduce(
