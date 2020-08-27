@@ -35,7 +35,7 @@ export async function loadTransactions() {
 }
 
 export async function fetchTransaction(txid) {
-  const tx = await apiPost('ledger/get/transaction', {
+  const tx = await sendAPI('ledger/get/transaction', {
     txid,
     verbose: 'summary',
   });

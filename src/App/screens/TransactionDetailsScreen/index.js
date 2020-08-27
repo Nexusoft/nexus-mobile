@@ -1,8 +1,10 @@
 import React from 'react';
 import { Platform } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
+import { sendAPI } from 'lib/api';
 import TransactionDetails from './TransactionDetails';
 import ContractDetails from './ContractDetails';
 
@@ -17,22 +19,35 @@ const styles = {
 
 export default function TransactionDetailsScreen({ route }) {
   const {
-    params: { transaction },
+    params: { txid },
   } = route;
+  const [transaction, setTransaction] = React.useState(null);
+  React.useEffect(() => {
+    (async () => {
+      const tx = await sendAPI('ledger/get/transaction', {
+        txid,
+        verbose: 'summary',
+      });
+      setTransaction(tx);
+    })();
+  }, []);
   return (
-    !!transaction && (
-      <ScreenBody>
-        <TransactionDetails transaction={transaction} />
+    <ScreenBody>
+      {transaction ? (
+        <>
+          <TransactionDetails transaction={transaction} />
 
-        <Text sub style={styles.subHeader}>
-          Contracts
-        </Text>
-        {!!transaction.contracts &&
-          transaction.contracts.map((contract) => (
+          <Text sub style={styles.subHeader}>
+            Contracts
+          </Text>
+          {transaction?.contracts?.map((contract) => (
             <ContractDetails key={contract.id} contract={contract} />
           ))}
-      </ScreenBody>
-    )
+        </>
+      ) : (
+        <ActivityIndicator />
+      )}
+    </ScreenBody>
   );
 }
 
