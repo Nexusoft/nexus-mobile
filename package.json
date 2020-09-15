@@ -1,18 +1,28 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "devtools": "react-devtools",
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios --simulator=\"iPhone 11 Pro Max\"",
     "web": "expo start --web",
-    "eject": "expo eject",
     "test": "jest --watchAll"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
+    "expo": "~38.0.9",
+    "expo-splash-screen": "^0.5.0",
+    "expo-status-bar": "^1.0.0",
+    "expo-updates": "~0.2.10",
+    "react": "~16.11.0",
+    "react-dom": "~16.13.1",
+    "react-native": "~0.62.2",
+    "react-native-gesture-handler": "~1.6.0",
+    "react-native-reanimated": "~1.9.0",
+    "react-native-screens": "~2.9.0",
+    "react-native-unimodules": "~0.10.1",
+    "react-native-web": "^0.13.5",
     "@expo/vector-icons": "~10.2.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.8.0",
@@ -20,7 +30,6 @@
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
     "base-64": "^0.1.0",
-    "expo": "~38.0.9",
     "expo-asset": "~8.1.7",
     "expo-barcode-scanner": "^8.2.1",
     "expo-constants": "~9.1.1",
@@ -29,18 +38,11 @@
     "formik": "^2.1.5",
     "intl": "^1.2.5",
     "moment": "^2.27.0",
-    "react": "~16.13.1",
-    "react-dom": "~16.13.1",
-    "react-native": "^0.62.2",
-    "react-native-gesture-handler": "~1.6.0",
     "react-native-paper": "^4.0.1",
     "react-native-qrcode-svg": "github:Qrysto/react-native-qrcode-svg#fix",
-    "react-native-reanimated": "~1.9.0",
     "react-native-safe-area-context": "~3.0.7",
-    "react-native-screens": "~2.9.0",
     "react-native-status-bar-height": "^2.5.0",
     "react-native-svg": "12.1.0",
-    "react-native-web": "^0.13.5",
     "react-navigation-backhandler": "^2.0.1",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
@@ -48,11 +50,16 @@
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
+    "babel-jest": "~25.2.6",
+    "jest": "~25.2.6",
+    "react-test-renderer": "~16.11.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "~8.2.3",
     "jest-expo": "~38.0.2",
     "react-devtools": "4.8.2",
     "react-native-svg-transformer": "^0.14.3"
   },
-  "private": true
+  "private": true,
+  "name": "nexus-mobile",
+  "version": "1.0.0"
 }
