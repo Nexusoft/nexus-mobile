@@ -76,11 +76,20 @@ export default function Root(props) {
   React.useEffect(() => {
     (async () => {
       try {
-        SplashScreen.preventAutoHide();
+        //suppressed warning, should probably be refactored
+        SplashScreen.preventAutoHideAsync()
+          .then((result) => {
+            return;
+          })
+          .catch((error) => {
+            return;
+          });
+
         await Promise.all([initStore(), loadResources()]);
         setLoadingComplete(true);
       } finally {
-        SplashScreen.hide();
+        //suppressed warning, should probably be refactored
+        SplashScreen.hideAsync();
       }
     })();
   }, []);
