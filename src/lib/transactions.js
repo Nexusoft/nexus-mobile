@@ -53,7 +53,9 @@ function watchTransaction(txid) {
     ({ core: { info } }) => info?.blocks,
     async (blocks) => {
       if (!blocks) return;
-
+      refreshUserAccounts();
+      unsubscribe();
+      return;
       const tx = await fetchTransaction(txid);
       if (tx && isConfirmed(tx)) {
         unsubscribe();

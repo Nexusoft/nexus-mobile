@@ -19,16 +19,12 @@ const styles = {
 
 export default function TransactionDetailsScreen({ route }) {
   const {
-    params: { txid },
+    params: { selectedTransaction },
   } = route;
   const [transaction, setTransaction] = React.useState(null);
   React.useEffect(() => {
     (async () => {
-      const tx = await sendAPI('ledger/get/transaction', {
-        txid,
-        verbose: 'summary',
-      });
-      setTransaction(tx);
+      setTransaction(selectedTransaction);
     })();
   }, []);
   return (
