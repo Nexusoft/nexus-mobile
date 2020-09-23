@@ -1,9 +1,9 @@
 {
   "scripts": {
     "devtools": "react-devtools",
-    "start": "react-native start",
-    "android": "react-native run-android",
-    "ios": "react-native run-ios --simulator=\"iPhone 11 Pro Max\"",
+    "start": "npx react-native start",
+    "android": "npx react-native run-android",
+    "ios": "npx react-native run-ios --simulator=\"iPhone 11 Pro Max\"",
     "web": "expo start --web",
     "test": "jest --watchAll"
   },
