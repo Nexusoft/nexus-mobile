@@ -37,7 +37,7 @@ function Transaction({ transaction }) {
   return (
     <TouchableRipple
       onPress={() => {
-        navigate('TransactionDetails', { selectedTransaction = transaction });
+        navigate('TransactionDetails', { selectedTransaction: transaction });
       }}
     >
       <View style={styles.wrapper({ unconfirmed: !isConfirmed(transaction) })}>
