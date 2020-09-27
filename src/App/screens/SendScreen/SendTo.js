@@ -25,6 +25,7 @@ const styles = {
     fontSize: 13,
     textAlign: 'center',
     marginBottom: 30,
+    opacity: 0.75,
   },
   sendAll: {
     alignSelf: 'flex-end',
