@@ -12,7 +12,7 @@ const styles = {
   wrapper: ({ theme }) => ({
     backgroundColor: theme.dark ? theme.background : theme.primary,
     paddingHorizontal: 30,
-    paddingTop: 10,
+    paddingTop: 20,
     paddingBottom: 30,
     elevation: 4,
     ...shadow(4),
@@ -22,6 +22,7 @@ const styles = {
     fontSize: 13,
     textAlign: 'center',
     marginBottom: 10,
+    opacity: 0.75,
   },
   addressBox: ({ theme }) => ({
     borderWidth: 1,
