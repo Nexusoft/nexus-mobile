@@ -25,8 +25,10 @@ const styles = {
   },
 };
 
-function Delta({ negative }) {
-  return <Text colorName={negative ? 'danger' : 'primary'} size={14} />;
+function Delta({ negative, ...rest }) {
+  return (
+    <Text colorName={negative ? 'danger' : 'primary'} size={14} {...rest} />
+  );
 }
 
 function Hash({ children, ...rest }) {
@@ -228,6 +230,7 @@ const contractContent = (contract) => {
 
 export default function Contract({ contract }) {
   const sign = getDeltaSign(contract);
+  console.log(!!contract.amount);
   return (
     <View style={styles.contract}>
       <View style={styles.contractContent}>{contractContent(contract)}</View>
