@@ -43,9 +43,9 @@ using namespace LLP;
 using namespace config;
 using namespace encoding;
 
-#define LOGI(...) \
-  ((void)__android_log_print(ANDROID_LOG_INFO, "nexusmobile::", __VA_ARGS__))
 #define LOG_D(...) __android_log_print(ANDROID_LOG_DEBUG, "Entrypoint", __VA_ARGS__)
+
+
 
 extern "C" {
 
@@ -62,40 +62,42 @@ jint JNI_Onload(JavaVM* vm, void* reserved) {
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_nexus_mobile_android_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz, jstring homepath) {
+Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject thiz, jstring homepath, jobjectArray params) {
     {
-
-
         const char * res;
 
         jboolean isCopy;
+        int size = env->GetArrayLength(params);
+
         res = env->GetStringUTFChars(homepath, &isCopy);
 
         if (isCopy == JNI_TRUE) {
             (env)->ReleaseStringUTFChars(homepath, res);
         }
 
-        LOG_D("a@@@@@@@@  %s", res);
         setenv("HOME",res,0);
 
+        int argc = size + 3;
 
-        int argc = 8;
-        char *argv[] = {
-                NULL,
-                strdup("-client=1"),
-                strdup("-verbose=2"),
-                strdup("-dns=0"),
-                strdup("-manager=0"),
-                strdup("-printtoconsole"),
-                strdup("-connect=test1.nexusminingpool.com"),
-                strdup("-testnet=605"),
-                NULL
-        };
+        char *argv[argc];
 
-        LOG_D("HELLOOWW  %s", getenv("HOME"));
-        LOG_D("argc %", argc);
-        LOG_D("YOOO FAM");
-        LOG_D("argv %", argv);
+        argv[0] = NULL;
+        argv[1] = strdup("-client=1");
+        argv[2] = strdup("-DANDROID");
+
+
+        for (int i=0; i < size; ++i)
+        {
+            jstring string = (jstring) env->GetObjectArrayElement(params, i);
+            const char* myarray = env->GetStringUTFChars(string, 0);
+            LOG_D("@@:: Params:   %s",myarray);
+            argv[4+i] = strdup(myarray);
+            env->ReleaseStringUTFChars(string, myarray);
+            env->DeleteLocalRef(string);
+        }
+
+        LOG_D("HOME  %s", getenv("HOME"));
+        LOG_D("argc %d", argc);
 
        /* Setup the timer timer. */
       runtime::timer timer;
@@ -365,7 +367,7 @@ Java_com_nexus_mobile_android_MainActivity_stringFromJNI(JNIEnv *env, jobject th
         /* Close the debug log file once and for all. */
         debug::Shutdown();
 
-        LOGI("calculation time: %" "sdfs", 999999);
+        LOG_D("calculation time: %" "sdfs", 999999);
         unsetenv("HOME");
         return env->NewStringUTF("Hello from JNI LIBS!");
     }

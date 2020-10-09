@@ -9,7 +9,10 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.lang.reflect.Array;
 
 import expo.modules.splashscreen.SplashScreen;
 import expo.modules.splashscreen.SplashScreenImageResizeMode;
@@ -26,7 +29,12 @@ public class MainActivity extends ReactActivity {
 
 
       Runnable runnable =
-              () -> { System.out.println("Lambda Runnable running"); stringFromJNI(getFilesDir().getAbsolutePath());};
+              () -> {
+          startNexusCore(
+                  getFilesDir().getAbsolutePath(),
+                  new String[]{"-dns=0","-manager=0","-connect=test1.nexusminingpool.com", "-testnet=605", "-verbose=2"}
+          );
+      };
 
       Thread thread = new Thread(runnable);
       thread.start();
@@ -34,7 +42,7 @@ public class MainActivity extends ReactActivity {
 
   }
 
-  public native String  stringFromJNI(String homepath);
+  public native String  startNexusCore(String homepath, String[] params);
   static{
       System.loadLibrary("nexusmobilelib");
 

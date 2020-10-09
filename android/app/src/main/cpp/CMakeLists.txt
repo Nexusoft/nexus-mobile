@@ -21,9 +21,17 @@ cmake_minimum_required(VERSION 3.4.1)
 set(distribution_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../distribution)
 
 add_library(lib_nexus SHARED IMPORTED)
-set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
-        ${CMAKE_CURRENT_SOURCE_DIR}/android.so)
 
+if(${ANDROID_ABI} MATCHES x86_64)
+    set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
+            ${CMAKE_CURRENT_SOURCE_DIR}/x86_64-android-nexuslib.so)
+elseif(${ANDROID_ABI} MATCHES arm64-v8a)
+    set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
+            ${CMAKE_CURRENT_SOURCE_DIR}/aarch64-android-nexuslib.so)
+else()
+    set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
+            ${CMAKE_CURRENT_SOURCE_DIR}/x86_64-android-nexuslib.so)
+endif()
 
 SET(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@android/${ANDROID_ABI})
 

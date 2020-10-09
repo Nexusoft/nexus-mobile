@@ -156,6 +156,7 @@ android {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
+            exclude "armeabi-v7a", "x86"
             include "arm64-v8a", "x86_64"
         }
     }

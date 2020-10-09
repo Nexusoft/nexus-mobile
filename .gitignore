@@ -80,3 +80,7 @@ buck-out/
 # Expo
 .expo/*
 web-build/
+
+
+# Android 
+/android/app/.cxx/
