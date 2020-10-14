@@ -3,22 +3,40 @@ import { encode } from 'base-64';
 import { getStore } from 'store';
 import { selectSettings } from 'lib/settings';
 
-export async function sendAPI(endpoint, params) {
+function getConfig() {
   const state = getStore().getState();
-  // TODO: handle embedded core mode
   const {
+    coreMode,
     externalCoreIP,
     externalCoreAPIPort,
     externalCoreAPIUser,
     externalCoreAPIPassword,
   } = selectSettings(state);
-  const baseUrl = `http://${externalCoreIP}:${externalCoreAPIPort}`;
+
+  return coreMode === 'embedded'
+    ? {
+        ip: '127.0.0.1',
+        port: '8080',
+        user: 'apiserver',
+        password: 'password',
+      }
+    : {
+        ip: externalCoreIP,
+        port: externalCoreAPIPort,
+        user: externalCoreAPIUser,
+        password: externalCoreAPIPassword,
+      };
+}
+
+export async function sendAPI(endpoint, params) {
+  const config = getConfig();
+
+  const baseUrl = `http://${config.ip}:${config.port}`;
   const response = await fetch(`${baseUrl}/${endpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization:
-        'Basic ' + encode(`${externalCoreAPIUser}:${externalCoreAPIPassword}`),
+      Authorization: 'Basic ' + encode(`${config.user}:${config.password}`),
     },
     body: params && JSON.stringify(params),
   });
