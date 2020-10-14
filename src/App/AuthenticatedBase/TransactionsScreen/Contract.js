@@ -25,8 +25,10 @@ const styles = {
   },
 };
 
-function Delta({ negative }) {
-  return <Text colorName={negative ? 'danger' : 'primary'} size={14} />;
+function Delta({ negative, ...rest }) {
+  return (
+    <Text colorName={negative ? 'danger' : 'primary'} size={14} {...rest} />
+  );
 }
 
 function Hash({ children, ...rest }) {

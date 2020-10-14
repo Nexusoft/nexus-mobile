@@ -133,6 +133,7 @@ export default function SendTo({ account }) {
               mode="outlined"
               background={['surface', 2]}
               label="Recipient name/address"
+              blurOnSubmit
             />
             <AddressPicker
               setAddress={(address) => {

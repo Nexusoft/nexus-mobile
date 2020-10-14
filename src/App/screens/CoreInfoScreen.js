@@ -94,7 +94,7 @@ export default function CoreInfoScreen() {
         />
       </Surface>
 
-      <Text sub style={styles.subHeader}>
+      {/* <Text sub style={styles.subHeader}>
         Legacy
       </Text>
       <Surface style={styles.section}>
@@ -105,7 +105,7 @@ export default function CoreInfoScreen() {
         />
         <Divider />
         <InfoField inline label="Transactions" value={coreInfo?.txtotal} />
-      </Surface>
+      </Surface> */}
     </ScreenBody>
   );
 }
