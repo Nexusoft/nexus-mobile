@@ -125,10 +125,18 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    externalNativeBuild {
+        cmake {
+            version '3.10.2'
+            path 'src/main/cpp/CMakeLists.txt'
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
 
     defaultConfig {
         applicationId 'com.nexus.mobile.android'
@@ -136,13 +144,20 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++14"
+                arguments '-DANDROID_STL=c++_static'
+            }
+        }
     }
     splits {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
-            include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
+            exclude "armeabi-v7a", "x86"
+            include "arm64-v8a", "x86_64"
         }
     }
     signingConfigs {
@@ -167,9 +182,7 @@ android {
     }
 
     packagingOptions {
-        pickFirst "lib/armeabi-v7a/libc++_shared.so"
         pickFirst "lib/arm64-v8a/libc++_shared.so"
-        pickFirst "lib/x86/libc++_shared.so"
         pickFirst "lib/x86_64/libc++_shared.so"
     }
 
@@ -178,7 +191,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // https://developer.android.com/studio/build/configure-apk-splits.html
-            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
+            def versionCodes = ["arm64-v8a": 1, "x86_64": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =

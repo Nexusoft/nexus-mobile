@@ -186,7 +186,7 @@
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = YD6KYK4JEA;
+						DevelopmentTeam = 5JDP35929Z;
 						LastSwiftMigration = 1120;
 					};
 				};
@@ -315,7 +315,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = nexusmobile/ios.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YD6KYK4JEA;
+				DEVELOPMENT_TEAM = 5JDP35929Z;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -345,6 +345,7 @@
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/nexusmobile/Supporting\"",
 				);
+				MARKETING_VERSION = 0.5.1;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DIPHONE",
@@ -354,12 +355,13 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nexus.mobile.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = io.nexus.mobilewallet;
 				PRODUCT_NAME = ios;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -372,7 +374,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = nexusmobile/ios.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YD6KYK4JEA;
+				DEVELOPMENT_TEAM = 5JDP35929Z;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/spikyfishgames/nexus-mobile/ios/**",
@@ -397,6 +400,8 @@
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/nexusmobile/Supporting\"",
 				);
+				MARKETING_VERSION = 0.5.1;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DIPHONE",
@@ -406,11 +411,12 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nexus.mobile.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = io.nexus.mobilewallet;
 				PRODUCT_NAME = ios;
 				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

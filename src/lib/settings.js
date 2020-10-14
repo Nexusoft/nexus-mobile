@@ -16,7 +16,7 @@ export const defaultSettings = {
   externalCoreRPCUser: 'rpcserver',
   externalCoreRPCPassword: 'password',
   externalCoreAPIPort: '8080',
-  externalCoreAPIUser: 'apiuser',
+  externalCoreAPIUser: 'apiserver',
   externalCoreAPIPassword: 'password',
 };
 
