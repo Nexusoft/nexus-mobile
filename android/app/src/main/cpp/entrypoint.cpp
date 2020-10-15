@@ -55,26 +55,25 @@ jint JNI_Onload(JavaVM* vm, void* reserved) {
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject thiz, jstring homepath, jobjectArray params) {
+Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject thiz, jstring homepath, jstring apiPassword , jobjectArray params) {
     {
         const char *res;
-
+        const char *inApiPassword;
         jboolean isCopy;
-        int size = env->GetArrayLength(params);
 
         res = env->GetStringUTFChars(homepath, &isCopy);
-
-        if (isCopy == JNI_TRUE) {
-            (env)->ReleaseStringUTFChars(homepath, res);
-        }
+        inApiPassword = env->GetStringUTFChars(apiPassword,&isCopy);
 
         setenv("HOME", res, 0);
+        (env)->ReleaseStringUTFChars(homepath, res);
 
         int defaultArgSize = 2;
+        int size = env->GetArrayLength(params);
         int argc = size + defaultArgSize;
 
         char *argv[argc];
 
+        //Set Default params
         argv[0] = NULL;
         argv[1] = strdup("-client=1");
 
@@ -82,58 +81,58 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
         for (int i = 0; i < size; ++i) {
             jstring string = (jstring) env->GetObjectArrayElement(params, i);
             const char *myarray = env->GetStringUTFChars(string, 0);
-            LOG_D("@@:: Params:   %s", myarray);
+            LOG_D("@@:: Incoming Params:   %s", myarray);
             argv[defaultArgSize + i] = strdup(myarray);
             env->ReleaseStringUTFChars(string, myarray);
             env->DeleteLocalRef(string);
         }
 
-        LOG_D("HOME  %s", getenv("HOME"));
-        LOG_D("argc %d", argc);
-
         /* Setup the timer timer. */
         runtime::timer timer;
         timer.Start();
 
-
         /* Handle all the signals with signal handler method. */
         SetupSignals();
 
-        LOG_D("%s", std::string(getenv("HOME")).c_str());
+        LOG_D("Home Env: %s", std::string(getenv("HOME")).c_str());
 
         ofstream myfile;
         string folder = std::string(getenv("HOME")) + "/Nexus";
         string fileLoc = std::string(folder + "/nexus.conf");
 
-        LOG_D("%s", folder.c_str());
-        LOG_D("%s", fileLoc.c_str());
+        LOG_D("Nexus Folder: %s", folder.c_str());
+        LOG_D("Nexus Conf Location: %s", fileLoc.c_str());
 
         struct stat statbuf;
         int isthere = stat(folder.c_str(), &statbuf);
-        LOG_D("%d", isthere);
+        LOG_D("Is Nexus Folder Already there? : %d", isthere);
         if (isthere < 0) {
             mode_t m = S_IRWXU | S_IRWXG | S_IRWXO;
-            int aaaaaa = mkdir((std::string(getenv("HOME"))).c_str(), m);
-            int status = mkdir(folder.c_str(), m);
-            LOG_D("%d", status);
+            int status = mkdir((std::string(getenv("HOME"))).c_str(), m);
+            LOG_D("Make Home Directory Status: %d", status);
+            status = mkdir(folder.c_str(), m);
+            LOG_D("Make Nexus Folder Status: %d", status);
         }
         int confthere = stat(fileLoc.c_str(), &statbuf);
-        LOG_D("%d", confthere);
-        cout << fileLoc << endl;
+        LOG_D("Is Nexus Conf There? : %d", confthere);
+
         myfile.open(fileLoc, std::fstream::in | std::fstream::out | std::fstream::app);
         if (confthere < 0) {
             LOG_D("!! WRITING FILE");
             // If file does not exist, write to it.
+            string fileContent = "apiuser=apiserver\napipassword=" + string(inApiPassword);
             myfile
-                    << "rpcuser=rpcuser\nrpcpassword=password\napiuser=apiserver\napipassword=password";
+                    << fileContent ;
 
 
         } else {
             LOG_D("!! FILE EXISTS");
 
         }
+        env->ReleaseStringUTFChars(apiPassword,inApiPassword);
         myfile.close();
 
+        LOG_D("Listing All Params sent to core: ");
         for (int i = 0; i < argc; i++) {
 
             LOG_D("argv[%d] = %s\n", i, argv[i]);

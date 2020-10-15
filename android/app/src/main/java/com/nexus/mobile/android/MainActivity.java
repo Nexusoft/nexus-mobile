@@ -10,9 +10,6 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
-import java.io.File;
-import java.lang.reflect.Array;
-
 import expo.modules.splashscreen.SplashScreen;
 import expo.modules.splashscreen.SplashScreenImageResizeMode;
 
@@ -41,6 +38,7 @@ public class MainActivity extends ReactActivity {
             public void run() {
                 startNexusCore(
                         getFilesDir().getAbsolutePath(),
+                        "password",
                         new String[]{"-dns=0", "-manager=0", "-connect=test1.nexusminingpool.com", "-testnet=605", "-verbose=1"}
                 );
                 super.run();
@@ -58,7 +56,7 @@ public class MainActivity extends ReactActivity {
       thread.start();
   }
 
-    public native String  startNexusCore(String homepath, String[] params);
+    public native String  startNexusCore(String homepath, String apipassword, String[] params);
     public  native  int ShutDownNexusCore();
     static{
         System.loadLibrary("nexusmobilelib");

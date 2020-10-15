@@ -24,13 +24,13 @@ add_library(lib_nexus SHARED IMPORTED)
 
 if(${ANDROID_ABI} MATCHES x86_64)
     set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
-            ${CMAKE_CURRENT_SOURCE_DIR}/x86_64-android-nexuslib.so)
+            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus/x86_64-android-nexuslib.so)
 elseif(${ANDROID_ABI} MATCHES arm64-v8a)
     set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
-            ${CMAKE_CURRENT_SOURCE_DIR}/aarch64-android-nexuslib.so)
+            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus/aarch64-android-nexuslib.so)
 else()
     set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
-            ${CMAKE_CURRENT_SOURCE_DIR}/x86_64-android-nexuslib.so)
+            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus/x86_64-android-nexuslib.so)
 endif()
 
 SET(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@android/${ANDROID_ABI})
@@ -40,21 +40,17 @@ SET(OPENSSL_INCLUDE_DIR ${OPENSSL_ROOT_DIR}/include)
 SET(OPENSSL_LIBRARIES "ssl" "crypto")
 
 
-message(${CMAKE_CURRENT_SOURCE_DIR}/android.a)
-
 # build application's shared lib
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 set(CMAKE_SHARED_LINKER_FLAGS "-Wall -v -Wl ")
 
 LINK_DIRECTORIES(${OPENSSL_LIBRARIES_DIR})
 
-
-
 add_library(nexusmobilelib SHARED
         entrypoint.cpp)
 
 target_include_directories(nexusmobilelib PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/Headers/
+        ${CMAKE_CURRENT_SOURCE_DIR}/Nexus/Headers/
         /usr/local/Cellar/openssl@android/${ANDROID_ABI}/include )
 
 
