@@ -35,13 +35,6 @@
 #include <Legacy/include/ambassador.h>
 
 using namespace std;
-using namespace Legacy;
-using namespace LLD;
-using namespace TAO;
-using namespace LLC;
-using namespace LLP;
-using namespace config;
-using namespace encoding;
 
 #define LOG_D(...) __android_log_print(ANDROID_LOG_DEBUG, "Entrypoint", __VA_ARGS__)
 
@@ -64,7 +57,7 @@ jint JNI_Onload(JavaVM* vm, void* reserved) {
 JNIEXPORT jstring JNICALL
 Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject thiz, jstring homepath, jobjectArray params) {
     {
-        const char * res;
+        const char *res;
 
         jboolean isCopy;
         int size = env->GetArrayLength(params);
@@ -75,23 +68,22 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
             (env)->ReleaseStringUTFChars(homepath, res);
         }
 
-        setenv("HOME",res,0);
+        setenv("HOME", res, 0);
 
-        int argc = size + 3;
+        int defaultArgSize = 2;
+        int argc = size + defaultArgSize;
 
         char *argv[argc];
 
         argv[0] = NULL;
         argv[1] = strdup("-client=1");
-        argv[2] = strdup("-DANDROID");
 
 
-        for (int i=0; i < size; ++i)
-        {
+        for (int i = 0; i < size; ++i) {
             jstring string = (jstring) env->GetObjectArrayElement(params, i);
-            const char* myarray = env->GetStringUTFChars(string, 0);
-            LOG_D("@@:: Params:   %s",myarray);
-            argv[4+i] = strdup(myarray);
+            const char *myarray = env->GetStringUTFChars(string, 0);
+            LOG_D("@@:: Params:   %s", myarray);
+            argv[defaultArgSize + i] = strdup(myarray);
             env->ReleaseStringUTFChars(string, myarray);
             env->DeleteLocalRef(string);
         }
@@ -99,47 +91,44 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
         LOG_D("HOME  %s", getenv("HOME"));
         LOG_D("argc %d", argc);
 
-       /* Setup the timer timer. */
-      runtime::timer timer;
-      timer.Start();
+        /* Setup the timer timer. */
+        runtime::timer timer;
+        timer.Start();
 
 
-      /* Handle all the signals with signal handler method. */
-      SetupSignals();
+        /* Handle all the signals with signal handler method. */
+        SetupSignals();
 
-        LOG_D("%s",std::string(getenv("HOME")).c_str() );
+        LOG_D("%s", std::string(getenv("HOME")).c_str());
 
-      ofstream myfile;
-      string folder = std::string(getenv("HOME")) + "/Documents/Nexus" ;
-      string fileLoc = std::string(folder + "/nexus.conf" );
+        ofstream myfile;
+        string folder = std::string(getenv("HOME")) + "/Nexus";
+        string fileLoc = std::string(folder + "/nexus.conf");
 
-      LOG_D("%s",folder.c_str());
-      LOG_D("%s",fileLoc.c_str());
+        LOG_D("%s", folder.c_str());
+        LOG_D("%s", fileLoc.c_str());
 
-      struct stat statbuf;
-      int isthere = stat(folder.c_str(), &statbuf);
-        LOG_D("%d",isthere);
-      if ( isthere < 0)
-      {
-        mode_t m = S_IRWXU | S_IRWXG | S_IRWXO;
-        int aaaaaa = mkdir((std::string(getenv("HOME")) + "/Documents").c_str(),m);
-                    int status = mkdir(folder.c_str(), m);
-          LOG_D("%d",status);
-      }
-      int confthere = stat(fileLoc.c_str(), &statbuf);
-        LOG_D("%d",confthere);
+        struct stat statbuf;
+        int isthere = stat(folder.c_str(), &statbuf);
+        LOG_D("%d", isthere);
+        if (isthere < 0) {
+            mode_t m = S_IRWXU | S_IRWXG | S_IRWXO;
+            int aaaaaa = mkdir((std::string(getenv("HOME"))).c_str(), m);
+            int status = mkdir(folder.c_str(), m);
+            LOG_D("%d", status);
+        }
+        int confthere = stat(fileLoc.c_str(), &statbuf);
+        LOG_D("%d", confthere);
         cout << fileLoc << endl;
-        myfile.open (fileLoc, std::fstream::in | std::fstream::out | std::fstream::app);
-        if (confthere < 0)
-        {
+        myfile.open(fileLoc, std::fstream::in | std::fstream::out | std::fstream::app);
+        if (confthere < 0) {
             LOG_D("!! WRITING FILE");
             // If file does not exist, write to it.
-            myfile << "rpcuser=rpcuser\nrpcpassword=password\napiuser=apiserver\napipassword=password";
+            myfile
+                    << "rpcuser=rpcuser\nrpcpassword=password\napiuser=apiserver\napipassword=password";
 
 
-        }
-        else
-        {
+        } else {
             LOG_D("!! FILE EXISTS");
 
         }
@@ -172,10 +161,8 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
 
         /* Handle Commandline switch */
-        for(int i = 1; i < argc; ++i)
-        {
-            if(!convert::IsSwitchChar(argv[i][0]))
-            {
+        for (int i = 1; i < argc; ++i) {
+            if (!convert::IsSwitchChar(argv[i][0])) {
                 int nRet = 0;
 
                 /* As a helpful shortcut, if the method name includes a "/" then we will assume it is meant for the API
@@ -184,10 +171,10 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
                 std::string endpoint = std::string(argv[i]);
                 std::string::size_type pos = endpoint.find('/');
-                if(pos != endpoint.npos || config::GetBoolArg(std::string("-api")))
+                if (pos != endpoint.npos || config::GetBoolArg(std::string("-api")))
                     fIsAPI = true;
 
-                if(fIsAPI)
+                if (fIsAPI)
                     nRet = TAO::API::CommandLineAPI(argc, argv, i);
                 else
                     nRet = TAO::API::CommandLineRPC(argc, argv, i);
@@ -202,16 +189,14 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
 
         /* Run the process as Daemon RPC/LLP Server if Flagged. */
-        if(config::fDaemon)
-        {
+        if (config::fDaemon) {
             debug::log(0, FUNCTION, "-daemon flag enabled. Running in background");
             Daemonize();
         }
 
         /* Create directories if they don't exist yet. */
-        if(!filesystem::exists(config::GetDataDir()) &&
-            filesystem::create_directory(config::GetDataDir()))
-        {
+        if (!filesystem::exists(config::GetDataDir()) &&
+            filesystem::create_directory(config::GetDataDir())) {
             debug::log(0, FUNCTION, "Generated Path ", config::GetDataDir());
         }
 
@@ -219,14 +204,13 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
         LLP::TIME_SERVER = LLP::CreateTimeServer();
 
 
-        #ifndef NO_WALLET
+#ifndef NO_WALLET
         /* Set up RPC server */
-        if(!config::fClient.load())
-        {
+        if (!config::fClient.load()) {
             /* Instantiate the RPC server */
             LLP::RPC_SERVER = LLP::CreateRPCServer();
         }
-        #endif
+#endif
 
 
         /* Startup timer stats. */
@@ -235,8 +219,7 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
         /* Check for failures. */
         bool fFailed = config::fShutdown.load();
-        if(!fFailed)
-        {
+        if (!fFailed) {
             /* Initialize LLD. */
             LLD::Initialize();
 
@@ -246,18 +229,35 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
 
             /* Get the port for Tritium Server. Allow serverport or port params to be used (serverport takes preference)*/
-            uint16_t nPort = static_cast<uint16_t>(config::GetArg(std::string("-port"), config::fTestNet.load() ? (TRITIUM_TESTNET_PORT + (config::GetArg("-testnet", 0) - 1)) : TRITIUM_MAINNET_PORT));
+            uint16_t nPort = static_cast<uint16_t>(config::GetArg(std::string("-port"),
+                                                                  config::fTestNet.load() ? (
+                                                                          TRITIUM_TESTNET_PORT +
+                                                                          (config::GetArg(
+                                                                                  "-testnet", 0) -
+                                                                           1))
+                                                                                          : TRITIUM_MAINNET_PORT));
             nPort = static_cast<uint16_t>(config::GetArg(std::string("-serverport"), nPort));
 
-            uint16_t nSSLPort = static_cast<uint16_t>(config::GetArg(std::string("-sslport"), config::fTestNet.load() ? (TRITIUM_TESTNET_SSL_PORT + (config::GetArg("-testnet", 0) - 1)) : TRITIUM_MAINNET_SSL_PORT));
+            uint16_t nSSLPort = static_cast<uint16_t>(config::GetArg(std::string("-sslport"),
+                                                                     config::fTestNet.load() ? (
+                                                                             TRITIUM_TESTNET_SSL_PORT +
+                                                                             (config::GetArg(
+                                                                                     "-testnet",
+                                                                                     0) - 1))
+                                                                                             : TRITIUM_MAINNET_SSL_PORT));
 
             /* Initialize the Tritium Server. */
             LLP::TRITIUM_SERVER = LLP::CreateTAOServer<LLP::TritiumNode>(nPort, nSSLPort);
 
 
             /* Get the port for the P2P server. */
-            nPort = static_cast<uint16_t>(config::GetArg(std::string("-p2pport"), config::fTestNet.load() ? TESTNET_P2P_PORT : MAINNET_P2P_PORT));
-            nSSLPort = static_cast<uint16_t>(config::GetArg(std::string("-p2psslport"), config::fTestNet.load() ? TESTNET_P2P_SSL_PORT : MAINNET_P2P_SSL_PORT));
+            nPort = static_cast<uint16_t>(config::GetArg(std::string("-p2pport"),
+                                                         config::fTestNet.load() ? TESTNET_P2P_PORT
+                                                                                 : MAINNET_P2P_PORT));
+            nSSLPort = static_cast<uint16_t>(config::GetArg(std::string("-p2psslport"),
+                                                            config::fTestNet.load()
+                                                            ? TESTNET_P2P_SSL_PORT
+                                                            : MAINNET_P2P_SSL_PORT));
             /* Initialize the P2P Server */
             LLP::P2P_SERVER = LLP::CreateP2PServer<LLP::P2PNode>(nPort, nSSLPort);
 
@@ -267,17 +267,21 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
 
             /* ensure that apiuser / apipassword has been configured */
-            if((config::mapArgs.find("-apiuser") == config::mapArgs.end()
-            || config::mapArgs.find("-apipassword") == config::mapArgs.end())
-            && config::GetBoolArg("-apiauth", true))
-            {
-                debug::log(0, ANSI_COLOR_BRIGHT_RED, "!!!WARNING!!! API DISABLED", ANSI_COLOR_RESET);
-                debug::log(0, ANSI_COLOR_BRIGHT_YELLOW, "You must set apiuser=<user> and apipassword=<password> in nexus.conf", ANSI_COLOR_RESET);
-                debug::log(0, ANSI_COLOR_BRIGHT_YELLOW, "or commandline arguments.  If you intend to run the API server without", ANSI_COLOR_RESET);
-                debug::log(0, ANSI_COLOR_BRIGHT_YELLOW, "authenticating requests (not recommended), please start with set apiauth=0", ANSI_COLOR_RESET);
-            }
-            else
-            {
+            if ((config::mapArgs.find("-apiuser") == config::mapArgs.end()
+                 || config::mapArgs.find("-apipassword") == config::mapArgs.end())
+                && config::GetBoolArg("-apiauth", true)) {
+                debug::log(0, ANSI_COLOR_BRIGHT_RED, "!!!WARNING!!! API DISABLED",
+                           ANSI_COLOR_RESET);
+                debug::log(0, ANSI_COLOR_BRIGHT_YELLOW,
+                           "You must set apiuser=<user> and apipassword=<password> in nexus.conf",
+                           ANSI_COLOR_RESET);
+                debug::log(0, ANSI_COLOR_BRIGHT_YELLOW,
+                           "or commandline arguments.  If you intend to run the API server without",
+                           ANSI_COLOR_RESET);
+                debug::log(0, ANSI_COLOR_BRIGHT_YELLOW,
+                           "authenticating requests (not recommended), please start with set apiauth=0",
+                           ANSI_COLOR_RESET);
+            } else {
                 /* Create the Core API Server. */
                 LLP::API_SERVER = LLP::CreateAPIServer();
             }
@@ -288,8 +292,8 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
 
             /* Set up Mining Server */
-            if(!config::fClient.load() && config::GetBoolArg(std::string("-mining")))
-                  LLP::MINING_SERVER.store(LLP::CreateMiningServer());
+            if (!config::fClient.load() && config::GetBoolArg(std::string("-mining")))
+                LLP::MINING_SERVER.store(LLP::CreateMiningServer());
 
 
             /* Elapsed Milliseconds from timer. */
@@ -307,22 +311,20 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
             /* Initialize generator thread. */
             std::thread thread;
-            if(config::GetBoolArg(std::string("-private")))
+            if (config::GetBoolArg(std::string("-private")))
                 thread = std::thread(TAO::Ledger::ThreadGenerator);
 
 
             /* Wait for shutdown. */
-            if(!config::GetBoolArg(std::string("-gdb")))
-            {
+            if (!config::GetBoolArg(std::string("-gdb"))) {
                 std::mutex SHUTDOWN_MUTEX;
                 std::unique_lock<std::mutex> SHUTDOWN_LOCK(SHUTDOWN_MUTEX);
-                SHUTDOWN.wait(SHUTDOWN_LOCK, []{ return config::fShutdown.load(); });
+                SHUTDOWN.wait(SHUTDOWN_LOCK, [] { return config::fShutdown.load(); });
             }
 
 
-            /* GDB mode waits for keyboard input to initiate clean shutdown. */
-            else
-            {
+                /* GDB mode waits for keyboard input to initiate clean shutdown. */
+            else {
                 getchar();
                 config::fShutdown = true;
             }
@@ -333,8 +335,7 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
 
             /* Wait for the private condition. */
-            if(config::GetBoolArg(std::string("-private")))
-            {
+            if (config::GetBoolArg(std::string("-private"))) {
                 TAO::Ledger::PRIVATE_CONDITION.notify_all();
                 thread.join();
             }
@@ -343,7 +344,6 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
         /* Shutdown metrics. */
         timer.Reset();
-
 
         /* Shutdown the API. */
         TAO::API::Shutdown();
@@ -367,13 +367,19 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
         /* Close the debug log file once and for all. */
         debug::Shutdown();
 
-        LOG_D("calculation time: %" "sdfs", 999999);
         unsetenv("HOME");
-        return env->NewStringUTF("Hello from JNI LIBS!");
+        return env->NewStringUTF("Shutdown");
     }
+}
 
-
-
+    JNIEXPORT jint JNICALL
+    Java_com_nexus_mobile_android_MainActivity_ShutDownNexusCore(JNIEnv *env, jobject thiz)
+    {
+        {
+            LOG_D("### Set Shutdown Flag");
+            Shutdown();
+            return 0;
+        }
     }
 
 
