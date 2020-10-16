@@ -119,37 +119,6 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
           />
         </View>
       </Surface>
-
-      <Text sub style={styles.title}>
-        RPC server
-      </Text>
-      <Surface style={styles.section}>
-        <View style={styles.field}>
-          <Text style={styles.label}>RPC port</Text>
-          <TextBox
-            name="externalCoreRPCPort"
-            placeholder={defaultSettings.externalCoreRPCPort}
-            keyboardType="number-pad"
-          />
-        </View>
-        <Divider inset={20} />
-        <View style={styles.field}>
-          <Text style={styles.label}>RPC username</Text>
-          <TextBox
-            name="externalCoreRPCUser"
-            placeholder={defaultSettings.externalCoreRPCUser}
-          />
-        </View>
-        <Divider inset={20} />
-        <View style={styles.field}>
-          <Text style={styles.label}>RPC password</Text>
-          <TextBox
-            name="externalCoreRPCPassword"
-            placeholder={defaultSettings.externalCoreRPCPassword}
-            secureTextEntry
-          />
-        </View>
-      </Surface>
     </>
   );
 }
@@ -157,9 +126,6 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
 export default function ExternalCoreConfigScreen({ navigation }) {
   const {
     externalCoreIP,
-    externalCoreRPCPort,
-    externalCoreRPCUser,
-    externalCoreRPCPassword,
     externalCoreAPIPort,
     externalCoreAPIUser,
     externalCoreAPIPassword,
@@ -169,9 +135,6 @@ export default function ExternalCoreConfigScreen({ navigation }) {
       <Formik
         initialValues={{
           externalCoreIP,
-          externalCoreRPCPort,
-          externalCoreRPCUser,
-          externalCoreRPCPassword,
           externalCoreAPIPort,
           externalCoreAPIUser,
           externalCoreAPIPassword,
