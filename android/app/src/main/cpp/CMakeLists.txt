@@ -24,13 +24,13 @@ add_library(lib_nexus SHARED IMPORTED)
 
 if(${ANDROID_ABI} MATCHES x86_64)
     set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
-            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus/x86_64-android-nexuslib.so)
+            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/x86_64-android-nexuslib.so)
 elseif(${ANDROID_ABI} MATCHES arm64-v8a)
     set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
-            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus/aarch64-android-nexuslib.so)
+            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/aarch64-android-nexuslib.so)
 else()
     set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
-            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus/x86_64-android-nexuslib.so)
+            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/x86_64-android-nexuslib.so)
 endif()
 
 SET(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@android/${ANDROID_ABI})
@@ -50,7 +50,7 @@ add_library(nexusmobilelib SHARED
         entrypoint.cpp)
 
 target_include_directories(nexusmobilelib PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/Nexus/Headers/
+        ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/Headers/
         /usr/local/Cellar/openssl@android/${ANDROID_ABI}/include )
 
 
