@@ -39,24 +39,8 @@
 #include <Legacy/include/ambassador.h>
 
 using namespace std;
-using namespace Legacy;
-using namespace LLD;
-using namespace TAO;
-using namespace LLC;
-using namespace LLP;
-using namespace config;
-using namespace encoding;
 
-
-int startNexus ()
-{
-    cout << "Testing Static Lib" << endl;
-    cout << to_string(LLC::GetRand256().Get64()) << endl;
-    return 1;
-}
-
-
-int runNexus (int argc, char** argv)
+int startNexus (int argc, char** argv)
 {
   
 
@@ -323,4 +307,9 @@ int runNexus (int argc, char** argv)
     debug::Shutdown();
 
     return 0;
+}
+
+int shutdown()
+{
+    Shutdown();
 }

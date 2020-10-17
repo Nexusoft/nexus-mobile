@@ -21,8 +21,7 @@ void* PosixThreadMainRoutine(void* data)
           NULL
      };
      
-     startNexus();
-     runNexus(8, my_argv);
+     startNexus(8, my_argv);
      return NULL;
 }
 void LaunchThread()

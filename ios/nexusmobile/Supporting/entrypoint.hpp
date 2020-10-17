@@ -13,5 +13,5 @@
 
 #endif /* entrypoint_hpp */
 
-int startNexus();
-int runNexus(int argc, char** argv);
+int startNexus(int argc, char** argv);
+int shutdown();
