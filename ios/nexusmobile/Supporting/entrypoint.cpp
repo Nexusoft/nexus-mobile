@@ -2,14 +2,11 @@
 //  entrypoint.cpp
 //  NexusLibrary
 //
-//  Created by Spiky Fish Games on 8/20/20.
-//  Copyright © 2020 Nexus. All rights reserved.
+//
+//  Pure c++ file that runs the core, sets up the Nexus folder, and creates a nexus.conf
 //
 
 #include "entrypoint.hpp"
-//#include </Users/spikyfishgames/LLL-TAO/src/testsource.cpp>
-//#include </Users/spikyfishgames/LLL-TAO/src/main.cpp>
-//#include <main.cpp>
 #include <LLC/include/random.h>
 #include <iostream>
 #include <sys/stat.h>
@@ -40,7 +37,7 @@
 
 using namespace std;
 
-int startNexus (int argc, char** argv)
+int startNexus (int argc, char** argv, char* inApiPassword)
 {
   
 
@@ -74,7 +71,8 @@ int startNexus (int argc, char** argv)
     {
       cout << "!! WRITING FILE" << endl;
         // If file does not exist, write to it.
-        myfile << "rpcuser=rpcuser\nrpcpassword=password\napiuser=apiuser\napipassword=password";
+        string fileContent = "apiuser=apiserver\napipassword=" + string(inApiPassword);
+        myfile << fileContent;
       
             
     }
@@ -309,7 +307,8 @@ int startNexus (int argc, char** argv)
     return 0;
 }
 
-int shutdown()
+int shutdownNexus()
 {
     Shutdown();
+    return 0;
 }
