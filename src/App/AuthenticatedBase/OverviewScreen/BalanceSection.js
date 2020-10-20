@@ -9,6 +9,7 @@ import Text from 'components/Text';
 import { useTheme, subColor } from 'lib/theme';
 import { refreshUserBalances } from 'lib/user';
 import { refreshNXSPrice } from 'lib/market';
+import { selectSetting } from 'lib/settings';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
 
@@ -70,9 +71,9 @@ export default function BalanceSection() {
   const theme = useTheme();
   const [expanded, setExpanded] = React.useState(false);
   const balances = useSelector((state) => state.user?.balances);
-  const baseCurrency = useSelector((state) => state.settings.baseCurrency);
+  const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const price = useSelector(
-    (state) => state.prices && state.prices[state.settings.baseCurrency]
+    (state) => state.prices && state.prices[baseCurrency]
   );
   const { available, pending, unconfirmed, stake, immature } = balances || {};
   React.useEffect(() => {

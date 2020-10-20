@@ -56,3 +56,8 @@ export const selectSettings = memoize(
       return settings;
     }, {})
 );
+
+export const selectSetting = (key) => (state) => {
+  const value = state.settings[key];
+  return value === null || value === undefined ? defaultSettings[key] : value;
+};
