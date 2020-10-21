@@ -10,6 +10,7 @@ import LogoIcon from 'icons/logo-full.svg';
 import SettingsIcon from 'icons/settings.svg';
 import BalanceSection from './BalanceSection';
 import Accounts from './Accounts';
+import Text from 'components/Text';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -55,6 +56,10 @@ OverviewScreen.nav = ({ theme }) => ({
     ),
     headerTitleAlign: 'center',
     headerRight: ({ tintColor }) => (
+      <View style={{flexDirection: 'row', 
+      alignSelf: 'flex-start'}}>
+        {/* TODO: Remove */}
+      <Text style={{color:tintColor, position:'relative',borderTopWidth:15}}>Beta</Text>
       <IconButton
         icon={({ size }) => (
           <SvgIcon icon={SettingsIcon} size={size} color={tintColor} />
@@ -65,6 +70,7 @@ OverviewScreen.nav = ({ theme }) => ({
           navigate('Settings');
         }}
       />
+      </View>
     ),
   },
 });
