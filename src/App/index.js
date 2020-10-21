@@ -6,9 +6,10 @@ import { Platform, UIManager, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
+import Text from 'components/Text';
 import { useTheme } from 'lib/theme';
 import { getStore } from 'store';
 
@@ -17,6 +18,7 @@ import StatusBar from './StatusBar';
 import Notifications from './Notifications';
 import Dialogs from './Dialogs';
 import DrawerNavigator from './DrawerNavigator';
+import SyncIndicator from './SyncIndicator';
 import initStore from './initStore';
 
 // For using LayoutAnimation
@@ -66,6 +68,7 @@ function App() {
       <DrawerNavigator />
       <Dialogs />
       <Notifications />
+      <SyncIndicator />
     </View>
   );
 }
