@@ -351,7 +351,7 @@
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/nexusmobile/Supporting\"",
 				);
-				MARKETING_VERSION = 0.5.1;
+				MARKETING_VERSION = 0.6.0;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DIPHONE",
@@ -406,7 +406,7 @@
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/nexusmobile/Supporting\"",
 				);
-				MARKETING_VERSION = 0.5.1;
+				MARKETING_VERSION = 0.6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"$(inherited)",
