@@ -18,7 +18,4 @@ export default function SendScreen({ route }) {
 
 SendScreen.nav = {
   name: 'Send',
-  options: {
-    headerShown: false,
-  },
 };

@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { Surface } from 'react-native-paper';
 
 import Divider from 'components/Divider';
-import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Text from 'components/Text';
 import { updateSettings, selectSettings } from 'lib/settings';

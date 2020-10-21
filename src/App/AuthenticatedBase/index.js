@@ -47,7 +47,12 @@ export default function AuthenticatedBase() {
       }}
       screenOptions={{
         tabBarButton: (props) => {
-          return <TouchableRipple {...props} />;
+          return (
+            <TouchableRipple
+              {...props}
+              style={[props.style, { marginTop: -5, paddingTop: 5 }]}
+            />
+          );
         },
       }}
     >

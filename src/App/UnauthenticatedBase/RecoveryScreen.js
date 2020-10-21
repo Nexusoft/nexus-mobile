@@ -19,8 +19,9 @@ const styles = {
   field: {
     marginBottom: 0,
   },
-  loginBtn: {
+  recoverBtn: {
     marginTop: 20,
+    marginBottom: 40,
   },
   heading: ({ theme }) => ({
     fontSize: 19,
@@ -116,7 +117,7 @@ function RecoveryForm({ values, handleSubmit, isSubmitting }) {
         style={styles.field}
       />
       <FAB
-        style={styles.loginBtn}
+        style={styles.recoverBtn}
         disabled={isSubmitting}
         loading={isSubmitting}
         onPress={handleSubmit}

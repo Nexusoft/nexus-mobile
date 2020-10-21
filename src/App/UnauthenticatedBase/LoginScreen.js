@@ -20,6 +20,7 @@ const styles = {
   },
   loginBtn: {
     marginTop: 20,
+    marginBottom: 40,
   },
   heading: ({ theme }) => ({
     fontSize: 19,

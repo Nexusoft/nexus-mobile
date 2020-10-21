@@ -25,6 +25,7 @@ const styles = {
     fontSize: 13,
     textAlign: 'center',
     marginBottom: 30,
+    opacity: 0.75,
   },
   sendAll: {
     alignSelf: 'flex-end',
@@ -132,6 +133,7 @@ export default function SendTo({ account }) {
               mode="outlined"
               background={['surface', 2]}
               label="Recipient name/address"
+              blurOnSubmit
             />
             <AddressPicker
               setAddress={(address) => {
