@@ -17,6 +17,7 @@ async function getInfo() {
 }
 
 const maxTime = 10000;
+const quickWaitTime = 1000;
 const incStep = 1000;
 let waitTime = 0;
 let timerId = null;
@@ -25,7 +26,12 @@ export async function refreshCoreInfo() {
   try {
     clearTimeout(timerId);
     const coreInfo = await getInfo();
-    waitTime = maxTime;
+    if (coreInfo?.synchronizing && coreInfo?.clientmode) {
+      // Refresh core info quicker so that sync % displayed is more updated
+      waitTime = quickWaitTime;
+    } else {
+      waitTime = maxTime;
+    }
     return coreInfo;
   } catch (err) {
     if (connected) waitTime = incStep;

@@ -27,6 +27,8 @@ export async function loadTransactions() {
     },
   });
 
+  watchNewTransactions();
+
   transactions.forEach((tx) => {
     if (!isConfirmed(tx)) {
       watchTransaction(tx.txid);
@@ -62,6 +64,30 @@ function watchTransaction(txid) {
         // Reload the account list
         // so that the account balances (available & unconfirmed) are up-to-date
         refreshUserAccounts();
+      }
+    }
+  );
+}
+
+function watchNewTransactions() {
+  getStore().observe(
+    ({ user: { status } }) => status?.transactions,
+    async (txCount, oldTxCount) => {
+      if (
+        txCount > oldTxCount &&
+        typeof txCount === 'number' &&
+        typeof oldTxCount === 'number'
+      ) {
+        const transactions = await sendAPI('users/list/transactions', {
+          verbose: 'summary',
+          limit: txCount - oldTxCount,
+        });
+        store.dispatch({
+          type: TYPE.ADD_TRANSACTIONS,
+          payload: {
+            list: transactions,
+          },
+        });
       }
     }
   );
