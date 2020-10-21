@@ -12,18 +12,20 @@ import { getStore } from 'store';
 import UnauthenticatedBase from './UnauthenticatedBase';
 import AuthenticatedBase from './AuthenticatedBase';
 
+const styles = {
+  container: ({ theme }) => ({
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.dark ? theme.background : theme.primary,
+  }),
+};
+
 function DisconnectedBase() {
   const theme = useTheme();
   const [refreshing, setRefreshing] = React.useState(false);
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: theme.dark ? theme.background : theme.primary,
-      }}
-    >
+    <View style={styles.container({ theme })}>
       <ActivityIndicator
         animating
         color={theme.dark ? theme.foreground : theme.onPrimary}
@@ -52,6 +54,26 @@ function DisconnectedBase() {
       >
         {refreshing ? 'Refreshing...' : 'Refresh'}
       </Button>
+    </View>
+  );
+}
+
+function ZeroConnectionsBase() {
+  const theme = useTheme();
+  return (
+    <View style={styles.container({ theme })}>
+      <ActivityIndicator
+        animating
+        color={theme.dark ? theme.foreground : theme.onPrimary}
+      />
+      <Text
+        sub
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        size={18}
+        style={{ textAlign: 'center', marginTop: 20 }}
+      >
+        Connecting to other nodes...
+      </Text>
     </View>
   );
 }
@@ -100,18 +122,17 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
 export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
   const loggedIn = useSelector(selectLoggedIn);
+  const connections = useSelector((state) => state.core.info?.connections);
   useDefaultScreenFix();
   useDynamicNavOptions({ route, navigation, loggedIn });
 
-  return connected ? (
-    loggedIn ? (
-      <AuthenticatedBase />
-    ) : (
-      <UnauthenticatedBase />
-    )
-  ) : (
-    <DisconnectedBase />
-  );
+  if (!connected) return <DisconnectedBase />;
+
+  if (!connections) return <ZeroConnectionsBase />;
+
+  if (!loggedIn) return <UnauthenticatedBase />;
+
+  return <AuthenticatedBase />;
 }
 
 BaseScreen.nav = {
