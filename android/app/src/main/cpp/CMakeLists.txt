@@ -27,7 +27,7 @@ if(${ANDROID_ABI} MATCHES x86_64)
             ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/x86_64-android-nexuslib.so)
 elseif(${ANDROID_ABI} MATCHES arm64-v8a)
     set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
-            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/aarch64-android-nexuslib.so)
+            ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/arm64-v8a-android-nexuslib.so)
 else()
     set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
             ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/x86_64-android-nexuslib.so)
