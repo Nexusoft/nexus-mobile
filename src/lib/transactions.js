@@ -32,8 +32,6 @@ export async function loadTransactions() {
     },
   });
 
-  watchNewTransactions();
-
   transactions.forEach((tx) => {
     if (!isConfirmed(tx)) {
       watchTransaction(tx.txid);
@@ -100,14 +98,20 @@ function watchTransaction(txid) {
   );
 }
 
-function watchNewTransactions() {
+export function watchNewTransactions() {
   getStore().observe(
-    ({ user: { status } }) => status?.transactions,
-    async (txCount, oldTxCount) => {
+    (state) => state,
+    async (
+      { user: { status: userStatus }, core: { info: coreInfo } },
+      { user: { status: oldUserStatus }, core: { info: oldCoreInfo } }
+    ) => {
+      const txCount = userStatus?.transactions;
+      const oldTxCount = oldUserStatus?.transactions;
       if (
         txCount > oldTxCount &&
         typeof txCount === 'number' &&
-        typeof oldTxCount === 'number'
+        typeof oldTxCount === 'number' &&
+        !oldCoreInfo.synchronizing
       ) {
         const transactions = await sendAPI('users/list/transactions', {
           verbose: 'summary',
@@ -119,7 +123,6 @@ function watchNewTransactions() {
             list: transactions,
           },
         });
-        console.log('new txs', transactions);
 
         transactions.forEach((tx) => {
           if (!isConfirmed(tx)) {
@@ -127,7 +130,6 @@ function watchNewTransactions() {
           }
 
           const changes = getBalanceChanges(tx);
-          console.log('changes', changes);
           if (changes.length) {
             const changeLines = changes.map(
               (change) =>

@@ -1,5 +1,6 @@
 import { refreshCoreInfo } from 'lib/coreInfo';
 import { refreshUserStatus, refreshUserAccounts } from 'lib/user';
+import { watchNewTransactions } from 'lib/transactions';
 import { createStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
 
@@ -48,5 +49,7 @@ export default function initStore() {
         }
       }
     );
+
+    watchNewTransactions();
   });
 }
