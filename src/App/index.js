@@ -94,7 +94,7 @@ function App() {
   );
 }
 
-export default function Root(props) {
+export default function Root() {
   const [loadingComplete, setLoadingComplete] = React.useState(false);
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
@@ -119,7 +119,7 @@ export default function Root(props) {
     })();
   }, []);
 
-  if (!loadingComplete && !props.skipLoadingScreen) {
+  if (!loadingComplete) {
     return null;
   } else {
     return (

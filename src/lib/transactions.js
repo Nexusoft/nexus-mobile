@@ -78,15 +78,11 @@ export async function fetchTransaction(txid) {
 }
 
 function watchTransaction(txid) {
-  const store = getStore();
   // Update everytime a new block is received
-  const unsubscribe = store.observe(
+  const unsubscribe = getStore().observe(
     ({ core: { info } }) => info?.blocks,
     async (blocks) => {
       if (!blocks) return;
-      refreshUserAccounts();
-      unsubscribe();
-      return;
       const tx = await fetchTransaction(txid);
       if (tx && isConfirmed(tx)) {
         unsubscribe();
