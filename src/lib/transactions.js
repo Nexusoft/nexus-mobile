@@ -101,17 +101,16 @@ function watchTransaction(txid) {
 export function watchNewTransactions() {
   getStore().observe(
     (state) => state,
-    async (
-      { user: { status: userStatus }, core: { info: coreInfo } },
-      { user: { status: oldUserStatus }, core: { info: oldCoreInfo } }
-    ) => {
-      const txCount = userStatus?.transactions;
-      const oldTxCount = oldUserStatus?.transactions;
+    async (state, oldState) => {
+      if (!oldState || !state) return;
+      const txCount = state?.user?.status?.transactions;
+      const oldTxCount = state?.user?.status?.transactions;
+      const wasSyncing = state?.core?.info?.synchronizing;
       if (
         txCount > oldTxCount &&
         typeof txCount === 'number' &&
         typeof oldTxCount === 'number' &&
-        !oldCoreInfo.synchronizing
+        !wasSyncing
       ) {
         const transactions = await sendAPI('users/list/transactions', {
           verbose: 'summary',
