@@ -100,8 +100,8 @@ export function watchNewTransactions() {
     async (state, oldState) => {
       if (!oldState || !state) return;
       const txCount = state?.user?.status?.transactions;
-      const oldTxCount = state?.user?.status?.transactions;
-      const wasSyncing = state?.core?.info?.synchronizing;
+      const oldTxCount = oldState?.user?.status?.transactions;
+      const wasSyncing = oldState?.core?.info?.synchronizing;
       if (
         txCount > oldTxCount &&
         typeof txCount === 'number' &&
