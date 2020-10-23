@@ -20,6 +20,7 @@ const styles = {
   },
   accounts: {
     flex: 1,
+    marginBottom: 30,
   },
   account: {
     paddingVertical: 10,
