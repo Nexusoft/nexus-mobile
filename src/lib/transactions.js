@@ -1,7 +1,12 @@
+import { scheduleNotificationAsync } from 'expo-notifications';
+
 import * as TYPE from 'consts/actionTypes';
 import { sendAPI } from 'lib/api';
+import { getDeltaSign } from 'lib/contracts';
+import { getTokenName } from 'lib/tokens';
 import { refreshUserAccounts } from 'lib/user';
 import { getStore } from 'store';
+import formatNumber from 'utils/formatNumber';
 
 export const isConfirmed = (tx) => !!tx.confirmations;
 
@@ -35,6 +40,32 @@ export async function loadTransactions() {
     }
   });
 }
+
+const getBalanceChanges = (tx) =>
+  tx.contracts
+    ? tx.contracts.reduce((changes, contract) => {
+        const sign = getDeltaSign(contract);
+        if (sign && contract.amount) {
+          let change = changes.find(
+            contract.token_name
+              ? (change) => change.token_name === contract.token_name
+              : (change) => change.token === contract.token
+          );
+          if (change) {
+            change.amount =
+              change.amount + (sign === '-' ? -1 : 1) * contract.amount;
+          } else {
+            change = {
+              token_name: contract.token_name,
+              token: contract.token,
+              amount: (sign === '-' ? -1 : 1) * contract.amount,
+            };
+            changes.push(change);
+          }
+        }
+        return changes;
+      }, [])
+    : 0;
 
 export async function fetchTransaction(txid) {
   const tx = await sendAPI('ledger/get/transaction', {
@@ -82,11 +113,37 @@ function watchNewTransactions() {
           verbose: 'summary',
           limit: txCount - oldTxCount,
         });
-        store.dispatch({
+        getStore().dispatch({
           type: TYPE.ADD_TRANSACTIONS,
           payload: {
             list: transactions,
           },
+        });
+        console.log('new txs', transactions);
+
+        transactions.forEach((tx) => {
+          if (!isConfirmed(tx)) {
+            watchTransaction(tx.txid);
+          }
+
+          const changes = getBalanceChanges(tx);
+          console.log('changes', changes);
+          if (changes.length) {
+            const changeLines = changes.map(
+              (change) =>
+                `${change.amount >= 0 ? '+' : ''}${formatNumber(
+                  change.amount
+                )} ${getTokenName(change, { markup: false })}`
+            );
+            scheduleNotificationAsync({
+              content: {
+                title: 'New transaction',
+                body: changeLines.join(' \n'),
+                data: { type: 'new_transaction', txid: tx.txid },
+              },
+              trigger: null,
+            });
+          }
         });
       }
     }

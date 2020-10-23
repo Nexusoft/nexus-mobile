@@ -45,7 +45,8 @@
     "react-navigation-backhandler": "^2.0.1",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
-    "yup": "^0.29.3"
+    "yup": "^0.29.3",
+    "expo-notifications": "~0.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",

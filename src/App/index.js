@@ -5,11 +5,13 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { Platform, UIManager, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
+import {
+  requestPermissionsAsync,
+  setNotificationHandler,
+} from 'expo-notifications';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 
-import Text from 'components/Text';
 import { useTheme } from 'lib/theme';
 import { getStore } from 'store';
 
@@ -49,6 +51,25 @@ async function loadResources() {
   }
 }
 
+async function checkPermissions() {
+  await requestPermissionsAsync({
+    android: {},
+    ios: {
+      allowAlert: true,
+      allowBadge: true,
+      allowSound: true,
+      allowCriticalAlerts: true,
+    },
+  });
+  setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
+}
+
 function App() {
   const theme = useTheme();
   return (
@@ -77,6 +98,7 @@ export default function Root(props) {
   const [loadingComplete, setLoadingComplete] = React.useState(false);
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
+    checkPermissions();
     (async () => {
       try {
         //suppressed warning, should probably be refactored

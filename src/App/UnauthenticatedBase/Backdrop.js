@@ -2,9 +2,7 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { shadow, overlay } from 'react-native-paper';
 
-import SvgIcon from 'components/SvgIcon';
 import { useTheme } from 'lib/theme';
-import LogoIcon from 'icons/logo-full.svg';
 
 const styles = {
   wrapper: ({ theme }) => ({
