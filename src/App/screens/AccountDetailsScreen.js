@@ -148,7 +148,7 @@ export default function AccountDetailsScreen({ route }) {
             style={styles.action}
             mode="text"
             onPress={() => {
-              navigate('Send');
+              navigate('Send', { account });
             }}
           >
             Send
