@@ -55,6 +55,12 @@ export default function CoreInfoScreen() {
           label="Multi-user mode"
           value={coreInfo?.multiuser ? 'Yes' : 'No'}
         />
+        <Divider />
+        <InfoField
+          inline
+          label="Lite mode"
+          value={coreInfo?.clientmode ? 'Yes' : 'No'}
+        />
       </Surface>
 
       <Text sub style={styles.subHeader}>
