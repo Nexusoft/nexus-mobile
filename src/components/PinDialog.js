@@ -22,9 +22,7 @@ export default function PinDialog({ onDismiss, ...rest }) {
             autoFocus
             secure
             keyboardType={
-              Platform.OS === 'android'
-                ? 'visible-password'
-                : 'numbers-and-punctuation'
+              Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
             }
           />
           <Button
