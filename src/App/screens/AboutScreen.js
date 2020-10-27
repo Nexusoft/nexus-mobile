@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Linking, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
 import { Surface } from 'react-native-paper';
 
 import Divider from 'components/Divider';
@@ -7,6 +8,8 @@ import InfoField from 'components/InfoField';
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import { useTheme } from 'lib/theme';
+
+import { version, builddate } from '../../../package.json'; //not too happy about this
 
 const styles = {
   subHeader: {
@@ -60,19 +63,23 @@ function Link({ children, url, style, ...rest }) {
 }
 
 export default function CoreInfoScreen() {
+  const coreVer = useSelector((state) => state.core.info.version).substring(0,10).replace(/[^0-9\.]+/g, "");
+  const coreDate = "fff";
+  console.log(coreDate);
+
   return (
     <ScreenBody>
       <Surface style={styles.infoSection}>
-        <InfoField inline label="Wallet version" value="1.0.0" />
+        <InfoField inline label="Wallet version" value={version} />
         <Divider />
-        <InfoField inline label="Wallet build date" value="August 17, 2020" />
+        <InfoField inline label="Wallet build date" value={builddate} />
         <Divider />
-        <InfoField inline label="Embedded core version" value="5.0.3" />
+        <InfoField inline label="Embedded core version" value={coreVer} />
         <Divider />
         <InfoField
           inline
           label="Embedded core build date"
-          value="August 17, 2020"
+          value={coreDate}
         />
       </Surface>
 

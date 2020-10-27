@@ -32,6 +32,7 @@
     "react": "~16.11.0",
     "react-dom": "~16.13.1",
     "react-native": "~0.62.2",
+    "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-paper": "^4.0.1",
     "react-native-qrcode-svg": "github:Qrysto/react-native-qrcode-svg#fix",
@@ -60,5 +61,6 @@
   },
   "private": true,
   "name": "nexus-mobile",
-  "version": "1.0.0"
+  "version": "0.6.1",
+  "builddate": "Nov 1 2020"
 }

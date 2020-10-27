@@ -17,6 +17,8 @@ import RecoveryScreen from './RecoveryScreen';
 const BottomTab = createBottomTabNavigator();
 const screens = [CreateUserScreen, LoginScreen, RecoveryScreen];
 
+import { version, builddate } from '../../../package.json'; // not too happy about this
+
 const styles = {
   wrapper: ({ theme }) => ({
     flex: 1,
@@ -51,7 +53,6 @@ function ColoredText({ style, ...rest }) {
 
 export default function UnauthenticatedBase() {
   const theme = useTheme();
-
   return (
     <View style={styles.wrapper({ theme })}>
       <BottomTab.Navigator
@@ -90,6 +91,10 @@ export default function UnauthenticatedBase() {
           );
         })}
       </BottomTab.Navigator>
+      <View> 
+        <Text style={{color: 'gray', position:'absolute', top:-20 , right: 40}}>{"v" + version.toString()}</Text>
+      </View>
+      
     </View>
   );
   //
