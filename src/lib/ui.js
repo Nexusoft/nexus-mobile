@@ -86,6 +86,27 @@ export function confirm(options) {
   });
 }
 
+export function confirmPin(options) {
+  return new Promise((resolve) => {
+    const store = getStore();
+    const id = newUID();
+    store.dispatch({
+      type: TYPE.OPEN_DIALOG,
+      payload: {
+        id,
+        type: 'pinConfirmation',
+        onConfirm: (pin) => {
+          resolve(pin);
+        },
+        onCancel: () => {
+          resolve(null);
+        },
+        ...options,
+      },
+    });
+  });
+}
+
 export function closeDialog(id) {
   const store = getStore();
   store.dispatch({

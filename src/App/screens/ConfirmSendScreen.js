@@ -227,7 +227,7 @@ export default function ConfirmSendScreen({ route }) {
 
       <PinDialog
         visible={confirmingPin}
-        onDismiss={() => {
+        onCancel={() => {
           setConfirmingPin(false);
         }}
       />
