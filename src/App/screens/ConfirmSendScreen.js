@@ -8,7 +8,6 @@ import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
-import PinDialog from 'components/PinDialog';
 import { useTheme, disabledColor } from 'lib/theme';
 import { goBack } from 'lib/navigation';
 import { sendAPI } from 'lib/api';
@@ -91,7 +90,6 @@ const styles = {
 export default function ConfirmSendScreen({ route }) {
   const theme = useTheme();
   const { account, recipient, amount, reference } = route.params || {};
-  const [confirmingPin, setConfirmingPin] = React.useState(false);
   return (
     <ScreenBody style={styles.wrapper} surface>
       <View style={styles.amountSection}>
@@ -224,13 +222,6 @@ export default function ConfirmSendScreen({ route }) {
           </>
         )}
       </Formik>
-
-      <PinDialog
-        visible={confirmingPin}
-        onCancel={() => {
-          setConfirmingPin(false);
-        }}
-      />
     </ScreenBody>
   );
 }
