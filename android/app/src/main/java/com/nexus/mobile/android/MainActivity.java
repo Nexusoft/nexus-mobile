@@ -1,5 +1,6 @@
 package com.nexus.mobile.android;
 
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
 
 import android.os.SystemClock;

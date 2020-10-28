@@ -91,6 +91,17 @@ export default function CoreSettings() {
             />
           </>
         )}
+        {
+          settings.coreMode === 'embedded' && (
+            <SettingItem
+              small
+              title="Core Log"
+              right="arrow"
+              onPress={() => {
+                navigate('EmbeddedCoreLogReader');
+              }} />
+          )
+        }
       </Surface>
     </>
   );

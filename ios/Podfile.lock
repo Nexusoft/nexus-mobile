@@ -339,6 +339,8 @@ PODS:
     - ReactCommon/callinvoker (= 0.62.2)
   - RNCMaskedView (0.1.10):
     - React
+  - RNFS (2.16.6):
+    - React
   - RNGestureHandler (1.6.1):
     - React
   - RNReanimated (1.9.0):
@@ -385,7 +387,7 @@ DEPENDENCIES:
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - EXLocation (from `../node_modules/expo-location/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
-  - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
+  - EXSplashScreen (from `../node_modules/expo/node_modules/expo-splash-screen/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXUpdates (from `../node_modules/expo-updates/ios`)
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
@@ -436,6 +438,7 @@ DEPENDENCIES:
   - ReactCommon/callinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -495,7 +498,7 @@ EXTERNAL SOURCES:
   EXPermissions:
     :path: "../node_modules/expo-permissions/ios"
   EXSplashScreen:
-    :path: "../node_modules/expo-splash-screen/ios"
+    :path: "../node_modules/expo/node_modules/expo-splash-screen/ios"
   EXSQLite:
     :path: "../node_modules/expo-sqlite/ios"
   EXUpdates:
@@ -552,6 +555,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -641,6 +646,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
@@ -662,6 +668,6 @@ SPEC CHECKSUMS:
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 9312e7749ed3b74325e0a40818f86b191bb485a6
+PODFILE CHECKSUM: 1cecd853f19f397cd023830f03fb7cd12097a1db
 
 COCOAPODS: 1.9.3

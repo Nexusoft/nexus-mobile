@@ -21,6 +21,7 @@ import ContactDetailsScreen from './screens/ContactDetailsScreen';
 import NewAccountScreen from './screens/NewAccountScreen';
 import NewContactScreen from './screens/NewContactScreen';
 import ConfirmSendScreen from './screens/ConfirmSendScreen';
+import EmeddedCoreLogReaderScreen from './screens/EmeddedCoreLogReaderScreen';
 import ExternalCoreConfigScreen from './screens/ExternalCoreConfigScreen';
 import SetRecoveryScreen from './screens/SetRecoveryScreen';
 import ChangePasswordScreen from './screens/ChangePasswordScreen';
@@ -49,6 +50,7 @@ const screens = [
   NewAccountScreen,
   NewContactScreen,
   ConfirmSendScreen,
+  EmeddedCoreLogReaderScreen,
   ExternalCoreConfigScreen,
   SetRecoveryScreen,
   ChangePasswordScreen,

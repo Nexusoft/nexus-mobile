@@ -51,13 +51,13 @@
   "devDependencies": {
     "@babel/core": "^7.11.1",
     "babel-jest": "~25.2.6",
-    "jest": "~25.2.6",
-    "react-test-renderer": "~16.11.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "~8.2.3",
+    "jest": "~25.2.6",
     "jest-expo": "~38.0.2",
-    "react-devtools": "4.8.2",
-    "react-native-svg-transformer": "^0.14.3"
+    "react-devtools": "^4.8.2",
+    "react-native-svg-transformer": "^0.14.3",
+    "react-test-renderer": "~16.11.0"
   },
   "private": true,
   "name": "nexus-mobile",
