@@ -23,7 +23,7 @@ export const CLOSE_DIALOG = 'CLOSE_DIALOG';
 export const SEARCH_CONTACTS = 'SEARCH_CONTACTS';
 
 // Market
-export const UPDATE_PRICES = 'UPDATE_PRICES';
+export const UPDATE_MARKET_PRICE = 'UPDATE_MARKET_PRICE';
 
 // Transactions
 export const ADD_TRANSACTIONS = 'ADD_TRANSACTIONS';
