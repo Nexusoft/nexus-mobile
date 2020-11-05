@@ -2,7 +2,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import React from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
-import { Platform, UIManager, View } from 'react-native';
+import { AppState, Platform, UIManager, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -20,6 +20,11 @@ import Dialogs from './Dialogs';
 import DrawerNavigator from './DrawerNavigator';
 import SyncIndicator from './SyncIndicator';
 import initStore from './initStore';
+
+import { sendAPI } from 'lib/api';
+import { encode } from 'base-64';
+
+import BackgroundTimer from 'react-native-background-timer';
 
 // For using LayoutAnimation
 if (Platform.OS === 'android') {
@@ -43,6 +48,7 @@ async function loadResources() {
       'noto-sans-bold': require('fonts/NotoSans-Bold.ttf'),
       robotomono: require('fonts/RobotoMono-Regular.ttf'),
     });
+
   } catch (e) {
     // We might want to provide this error information to an error reporting service
     console.warn(e);
@@ -73,12 +79,32 @@ function App() {
   );
 }
 
+const _handleAppStateChange = (nextAppState) => {
+    if (nextAppState == "background") {
+
+      BackgroundTimer.runBackgroundTimer(() => { 
+        console.log("@@@@@@@  BACKGROUND @@@@@@@");
+        sendAPI("system/get/info").then(res => console.log(res));
+        },
+        3000);
+  }
+  else
+  {
+    BackgroundTimer.stopBackgroundTimer(); 
+  }
+}
+
+
 export default function Root(props) {
   const [loadingComplete, setLoadingComplete] = React.useState(false);
   // Load any resources or data that we need prior to rendering the app
+  
   React.useEffect(() => {
     (async () => {
       try {
+
+        AppState.addEventListener("change", _handleAppStateChange);
+
         //suppressed warning, should probably be refactored
         SplashScreen.preventAutoHideAsync()
           .then((result) => {
@@ -94,7 +120,7 @@ export default function Root(props) {
         //suppressed warning, should probably be refactored
         SplashScreen.hideAsync();
       }
-    })();
+    })(() => AppState.removeEventListener("change", _handleAppStateChange))
   }, []);
 
   if (!loadingComplete && !props.skipLoadingScreen) {
