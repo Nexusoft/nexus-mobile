@@ -26,6 +26,11 @@ import { encode } from 'base-64';
 
 import BackgroundTimer from 'react-native-background-timer';
 
+import {Notifications as RNNotifications} from 'react-native-notifications';
+
+import { loadTransactions } from 'lib/transactions';
+
+
 // For using LayoutAnimation
 if (Platform.OS === 'android') {
   UIManager?.setLayoutAnimationEnabledExperimental(true);
@@ -84,9 +89,9 @@ const _handleAppStateChange = (nextAppState) => {
 
       BackgroundTimer.runBackgroundTimer(() => { 
         console.log("@@@@@@@  BACKGROUND @@@@@@@");
-        sendAPI("system/get/info").then(res => console.log(res));
+        loadTransactions();
         },
-        3000);
+        10000);
   }
   else
   {
@@ -103,7 +108,7 @@ export default function Root(props) {
     (async () => {
       try {
 
-        AppState.addEventListener("change", _handleAppStateChange);
+        
 
         //suppressed warning, should probably be refactored
         SplashScreen.preventAutoHideAsync()
@@ -116,16 +121,21 @@ export default function Root(props) {
 
         await Promise.all([initStore(), loadResources()]);
         setLoadingComplete(true);
+        
       } finally {
         //suppressed warning, should probably be refactored
         SplashScreen.hideAsync();
+        
+       
       }
+      
     })(() => AppState.removeEventListener("change", _handleAppStateChange))
   }, []);
 
   if (!loadingComplete && !props.skipLoadingScreen) {
     return null;
   } else {
+    AppState.addEventListener("change", _handleAppStateChange);
     return (
       <ReduxProvider store={getStore()}>
         <SafeAreaProvider>
