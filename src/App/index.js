@@ -26,7 +26,7 @@ import { encode } from 'base-64';
 
 import BackgroundTimer from 'react-native-background-timer';
 
-import {Notifications as RNNotifications} from 'react-native-notifications';
+import PushNotification from 'react-native-push-notification';
 
 import { loadTransactions } from 'lib/transactions';
 
@@ -62,6 +62,24 @@ async function loadResources() {
 
 function App() {
   const theme = useTheme();
+
+  PushNotification.configure({
+    onNotification: (notification) => {console.log('NotificationHandler:', notification);},
+    requestPermissions: Platform.OS === 'ios'
+  });
+  PushNotification.createChannel(
+    {
+      channelId: "default-channel-id", // (required)
+      channelName: `Default channel`, // (required)
+      channelDescription: "A default channel", // (optional) default: undefined.
+      soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+      importance: 4, // (optional) default: 4. Int value of the Android notification importance
+      vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+    },
+    (created) => console.log(`createChannel 'default-channel-id' returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+  );
+  PushNotification.setApplicationIconBadgeNumber(0);
+
   return (
     <View style={styles.container({ theme })}>
       <StatusBar
