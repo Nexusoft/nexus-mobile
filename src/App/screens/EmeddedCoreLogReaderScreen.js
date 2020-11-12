@@ -5,6 +5,7 @@ import { Surface, Button, IconButton } from 'react-native-paper';
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useTheme } from 'lib/theme';
 import RNFS from 'react-native-fs';
 import SvgIcon from 'components/SvgIcon';
 import RecoveryIcon from 'icons/recovery.svg';
@@ -23,7 +24,10 @@ async function handleReadFile (logOutput,setLogOutput)
     if (logOutput === true)
     {
         //TODO: Change this
-        const result = await RNFS.readFile(RNFS.DocumentDirectoryPath + "/Nexus/testnet605/client/log/0.log", 'ascii');
+        const fileStats = await RNFS.stat(RNFS.DocumentDirectoryPath + '/Nexus/testnet605/client/log/0.log');
+        const bytestoread = 50000;
+        const byteposition = Math.sign(fileStats.size - bytestoread) ? fileStats.size - bytestoread :fileStats.size ;
+        const result = await RNFS.read(RNFS.DocumentDirectoryPath + "/Nexus/testnet605/client/log/0.log",50000,byteposition,'ascii');
         const formated = result.split(`\n`).reverse().join(`\n`);
         setLogOutput(formated);
     }
@@ -32,16 +36,16 @@ async function handleReadFile (logOutput,setLogOutput)
 
 
 const LogOutput = () => {
-    
     const {logOutput, setLogOutput} = EmbeddedCoreLogReaderScreen.logCallback;
     handleReadFile(logOutput, setLogOutput);
+    const theme = useTheme();
     if (logOutput === true)
     {
-        return (<Text>Loading</Text>);
+        return (<Text style={{color: theme.foreground}}>Loading</Text>);
     }
     else{
     return (
-        <TextInput multiline editable={false}>
+        <TextInput multiline editable={false} style={{color: theme.foreground}}>
             {logOutput}
         </TextInput>
     )}
