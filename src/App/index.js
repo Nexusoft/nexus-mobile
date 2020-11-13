@@ -27,6 +27,8 @@ import PushNotification from 'react-native-push-notification';
 
 import { loadTransactions } from 'lib/transactions';
 
+import {selectLoggedIn, refreshUserStatus} from 'lib/user';
+
 
 // For using LayoutAnimation
 if (Platform.OS === 'android') {
@@ -106,7 +108,10 @@ const _handleAppStateChange = (nextAppState) => {
 
       BackgroundTimer.runBackgroundTimer(() => { 
         console.log("@@@@@@@  BACKGROUND @@@@@@@");
-        loadTransactions();
+        if (selectLoggedIn)
+          {
+            refreshUserStatus();
+          }
         },
         10000);
   }

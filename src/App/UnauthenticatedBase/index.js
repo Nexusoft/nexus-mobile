@@ -97,9 +97,10 @@ export default function UnauthenticatedBase() {
       <Button style={{backgroundColor:'pink'}}mode='text' onPress={() => {
         console.log("Push Local Notification");
         PushNotification.localNotification({
-          channelId: 'default-channel-id',
-          title: "My Notification Title", // (optional)
-          message: "My Notification Message", // (required)
+          channelId: 'transaction-channel-id',
+          color: '#0ca4fb',
+          title: "Transaction Received",
+          message: `Incoming: ${100}`,
 
       });
       }}>

@@ -3,7 +3,7 @@ import { sendAPI } from 'lib/api';
 import { refreshUserAccounts } from 'lib/user';
 import { getStore } from 'store';
 
-//import {Notifications} from 'react-native-notifications';
+import PushNotification from 'react-native-push-notification';
 
 export const isConfirmed = (tx) => !!tx.confirmations;
 
@@ -33,11 +33,6 @@ export async function loadTransactions() {
 
   transactions.forEach((tx) => {
     if (!isConfirmed(tx)) {
-      //Notifications.postLocalNotification({
-      //  title: "Transaction Recieved",
-      //  body: `You just recieved ${tx.contracts[0].amount} nxs`,
-      //  extra: "data"
-      //});
       watchTransaction(tx.txid);
     }
   });
@@ -88,6 +83,13 @@ function watchNewTransactions() {
         const transactions = await sendAPI('users/list/transactions', {
           verbose: 'summary',
           limit: txCount - oldTxCount,
+        });
+          PushNotification.localNotification({
+            channelId: 'transaction-channel-id',
+            color: '#0ca4fb',
+            title: "Transaction Received",
+            message: `Incoming Nexus `,
+    
         });
         store.dispatch({
           type: TYPE.ADD_TRANSACTIONS,
