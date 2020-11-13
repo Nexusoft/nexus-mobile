@@ -23,7 +23,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.nexus.mobile.ios"
+      "bundleIdentifier": "io.nexus.wallet.ios"
     },
     "packagerOpts": {
       "config": "metro.config.js",
@@ -44,7 +44,7 @@
     "description": "",
     "sdkVersion": "38.0.0",
     "android": {
-      "package": "com.nexus.mobile.android"
+      "package": "io.nexus.wallet.android"
     }
   }
 }

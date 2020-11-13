@@ -351,7 +351,7 @@
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/nexusmobile/Supporting\"",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DIPHONE",
@@ -361,7 +361,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.nexus.mobilewallet;
+				PRODUCT_BUNDLE_IDENTIFIER = io.nexus.wallet;
 				PRODUCT_NAME = ios;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -406,7 +406,7 @@
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/nexusmobile/Supporting\"",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"$(inherited)",
@@ -417,7 +417,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.nexus.mobilewallet;
+				PRODUCT_BUNDLE_IDENTIFIER = io.nexus.wallet;
 				PRODUCT_NAME = ios;
 				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = "";
