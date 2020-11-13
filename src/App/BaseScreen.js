@@ -123,12 +123,13 @@ export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
   const loggedIn = useSelector(selectLoggedIn);
   const connections = useSelector((state) => state.core.info?.connections);
+  const privateNet = useSelector((state) => state.core.info?.private);
   useDefaultScreenFix();
   useDynamicNavOptions({ route, navigation, loggedIn });
 
   if (!connected) return <DisconnectedBase />;
 
-  if (!connections) return <ZeroConnectionsBase />;
+  if (!connections && !privateNet) return <ZeroConnectionsBase />;
 
   if (!loggedIn) return <UnauthenticatedBase />;
 

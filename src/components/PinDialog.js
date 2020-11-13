@@ -7,11 +7,17 @@ import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
 import LockIcon from 'icons/lock.svg';
 
-export default function PinDialog({ onDismiss, ...rest }) {
+export default function PinDialog({ onDismiss, onCancel, onConfirm, ...rest }) {
   const [pin, setPin] = React.useState('');
   return (
     <Portal>
-      <Dialog onDismiss={onDismiss} {...rest}>
+      <Dialog
+        onDismiss={() => {
+          onCancel && onCancel();
+          onDismiss && onDismiss();
+        }}
+        {...rest}
+      >
         <Dialog.Content>
           <TextBox
             style={{ fontSize: 18 }}
@@ -22,9 +28,7 @@ export default function PinDialog({ onDismiss, ...rest }) {
             autoFocus
             secure
             keyboardType={
-              Platform.OS === 'android'
-                ? 'visible-password'
-                : 'numbers-and-punctuation'
+              Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
             }
           />
           <Button
@@ -33,7 +37,10 @@ export default function PinDialog({ onDismiss, ...rest }) {
             icon={({ color, size }) => (
               <SvgIcon icon={LockIcon} color={color} size={size} />
             )}
-            onPress={onDismiss}
+            onPress={() => {
+              onConfirm && onConfirm(pin);
+              onDismiss && onDismiss();
+            }}
           >
             Proceed
           </Button>

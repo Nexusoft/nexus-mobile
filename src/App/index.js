@@ -5,11 +5,15 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { AppState, Platform, UIManager, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
+import {
+  requestPermissionsAsync,
+  setNotificationHandler,
+  setNotificationChannelAsync,
+  AndroidImportance,
+} from 'expo-notifications';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 
-import Text from 'components/Text';
 import { useTheme } from 'lib/theme';
 import { getStore } from 'store';
 
@@ -22,10 +26,6 @@ import SyncIndicator from './SyncIndicator';
 import initStore from './initStore';
 
 import BackgroundTimer from 'react-native-background-timer';
-
-import PushNotification from 'react-native-push-notification';
-
-import { loadTransactions } from 'lib/transactions';
 
 import {selectLoggedIn, refreshUserStatus} from 'lib/user';
 
@@ -58,28 +58,32 @@ async function loadResources() {
     console.warn(e);
   }
 }
-
-function setUpDeviceNotifications(){
-  PushNotification.configure({
-    onNotification: (notification) => {console.log('NotificationHandler:', notification); },
-    requestPermissions: Platform.OS === 'ios'
-  });
-  PushNotification.createChannel({
-      channelId: "transaction-channel-id",
-      channelName: `Transaction Channel`,
-      channelDescription: "Notification Channel for incoming Transactions",
-      soundName: "default",
-      importance: 4,
-      vibrate: true,
+async function checkPermissions() {
+  await requestPermissionsAsync({
+    android: {},
+    ios: {
+      allowAlert: true,
+      allowBadge: true,
+      allowSound: true,
+      allowCriticalAlerts: true,
     },
-    (created) => console.log(`createChannel 'transaction-channel-id' returned '${created}'`) 
-  );
-  PushNotification.setApplicationIconBadgeNumber(0);
+  });
+  setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
+  setNotificationChannelAsync('transaction-channel-id', {
+    name: 'Transaction Channel',
+    importance: AndroidImportance.HIGH,
+    description:' Notification Channel for incoming Transactions'
+  });
 }
 
 function App() {
   const theme = useTheme();
-  setUpDeviceNotifications();
   return (
     <View style={styles.container({ theme })}>
       <StatusBar
@@ -122,11 +126,12 @@ const _handleAppStateChange = (nextAppState) => {
 }
 
 
-export default function Root(props) {
+export default function Root() {
   const [loadingComplete, setLoadingComplete] = React.useState(false);
   // Load any resources or data that we need prior to rendering the app
   
   React.useEffect(() => {
+    checkPermissions();
     (async () => {
       try {
         //suppressed warning, should probably be refactored
@@ -151,7 +156,7 @@ export default function Root(props) {
     })(() => AppState.removeEventListener("change", _handleAppStateChange))
   }, []);
 
-  if (!loadingComplete && !props.skipLoadingScreen) {
+  if (!loadingComplete) {
     return null;
   } else {
     AppState.addEventListener("change", _handleAppStateChange);

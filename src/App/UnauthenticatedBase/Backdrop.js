@@ -1,12 +1,8 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 import { shadow, overlay } from 'react-native-paper';
-
-import Text from 'components/Text';
-import SvgIcon from 'components/SvgIcon';
-import { useTheme } from 'lib/theme';
-import LogoIcon from 'icons/logo-full.svg';
 import { mix } from 'utils/color';
+import { useTheme } from 'lib/theme';
 
 const styles = {
   wrapper: ({ theme }) => ({

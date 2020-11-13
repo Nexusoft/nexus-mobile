@@ -19,7 +19,7 @@ const screens = [CreateUserScreen, LoginScreen, RecoveryScreen];
 
 import { version, builddate } from '../../../package.json'; // not too happy about this
 
-import PushNotification from 'react-native-push-notification';
+import { scheduleNotificationAsync } from 'expo-notifications';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -96,13 +96,15 @@ export default function UnauthenticatedBase() {
       </BottomTab.Navigator>
       <Button style={{backgroundColor:'pink'}}mode='text' onPress={() => {
         console.log("Push Local Notification");
-        PushNotification.localNotification({
-          channelId: 'transaction-channel-id',
-          color: '#0ca4fb',
-          title: "Transaction Received",
-          message: `Incoming: ${100}`,
-
-      });
+        scheduleNotificationAsync({
+          content: {
+            title: 'New transaction',
+            body: "Test",
+            data: { type: 'new_transaction', txid: "000000000" },
+          },
+          trigger: null,
+          channelId: "transaction-channel-id"
+        });
       }}>
         asdd
       </Button>

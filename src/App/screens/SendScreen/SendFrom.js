@@ -55,16 +55,11 @@ export default function SendFrom({ account }) {
               size={16}
               color={color}
               style={{ marginRight: 8 }}
+              disabled={!account.name}
             />
-            {account.name ? (
-              <Text bold color={color} size={16}>
-                {account.name}
-              </Text>
-            ) : (
-              <Text disabled color={color} size={16}>
-                No name
-              </Text>
-            )}
+            <Text bold color={color} size={16} disabled={!account.name}>
+              {account.name || 'No name'}
+            </Text>
           </View>
           <View style={styles.addressBox({ theme })}>
             <Text mono color={color} style={styles.address}>

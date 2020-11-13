@@ -1,30 +1,51 @@
 import React from 'react';
 import { FAB } from 'react-native-paper';
+import { Formik } from 'formik';
 
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
-import PinDialog from 'components/PinDialog';
+import { confirmPin, showError } from 'lib/ui';
+import { sendAPI } from 'lib/api';
+import { refreshUserAccounts } from 'lib/user';
+import { goBack } from 'lib/navigation';
 
 export default function NewAccountScreen() {
-  const [confirmingPin, setConfirmingPin] = React.useState(false);
   return (
     <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
-      <TextBox label="Account name" />
-      <FAB
-        mode="contained"
-        style={{ marginTop: 30 }}
-        onPress={() => {
-          setConfirmingPin(true);
+      <Formik
+        initialValues={{
+          name: '',
         }}
-        label="Create account"
-      />
-
-      <PinDialog
-        visible={confirmingPin}
-        onDismiss={() => {
-          setConfirmingPin(false);
+        onSubmit={async ({ name }) => {
+          const pin = await confirmPin();
+          if (pin !== null) {
+            try {
+              await sendAPI('finance/create/account', {
+                name: name || undefined,
+                pin,
+              });
+              refreshUserAccounts();
+              goBack();
+            } catch (err) {
+              showError(err && err.message);
+            }
+          }
         }}
-      />
+      >
+        {({ handleSubmit, isSubmitting }) => (
+          <>
+            <TextBox.Formik name="name" label="Account name (optional)" />
+            <FAB
+              mode="contained"
+              disabled={isSubmitting}
+              loading={isSubmitting}
+              style={{ marginTop: 30 }}
+              onPress={handleSubmit}
+              label="Create account"
+            />
+          </>
+        )}
+      </Formik>
     </ScreenBody>
   );
 }

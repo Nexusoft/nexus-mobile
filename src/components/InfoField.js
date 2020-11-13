@@ -21,6 +21,7 @@ const styles = {
       alignItems: 'center',
     },
   value: ({ inline, bordered, theme }) => [
+    !!inline && { flex: 1, marginLeft: 8 },
     !inline && {
       marginTop: 7,
     },
@@ -33,6 +34,9 @@ const styles = {
       marginTop: 5,
     },
   ],
+  valueText: {
+    textAlign: 'right',
+  },
 };
 
 export default function InfoField({
@@ -53,8 +57,20 @@ export default function InfoField({
         </Text>
         {!inline && control}
       </View>
-      <View style={styles.value({ inline, bordered, theme })}>
-        <Text size={15} inline={inline} selectable mono={mono}>
+      <View
+        style={styles.value({
+          inline,
+          bordered,
+          theme,
+        })}
+      >
+        <Text
+          size={15}
+          inline={inline}
+          selectable
+          mono={mono}
+          style={styles.valueText}
+        >
           {value}
         </Text>
       </View>

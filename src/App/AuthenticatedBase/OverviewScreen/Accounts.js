@@ -20,6 +20,7 @@ const styles = {
   },
   accounts: {
     flex: 1,
+    marginBottom: 30,
   },
   account: {
     paddingVertical: 10,
@@ -70,9 +71,14 @@ function Account({ account }) {
         >
           <View style={styles.accInfo}>
             <View style={styles.accNameIcon}>
-              <SvgIcon icon={WalletIcon} size={14} style={styles.accIcon} />
-              <Text style={styles.accName} bold>
-                {account.name}
+              <SvgIcon
+                icon={WalletIcon}
+                size={14}
+                style={styles.accIcon}
+                disabled={!account.name}
+              />
+              <Text style={styles.accName} bold disabled={!account.name}>
+                {account.name || 'No name'}
               </Text>
             </View>
             <Text style={styles.accBalance}>
