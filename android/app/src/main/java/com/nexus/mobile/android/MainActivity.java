@@ -1,5 +1,7 @@
 package com.nexus.mobile.android;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
 
@@ -26,6 +28,8 @@ public class MainActivity extends ReactActivity {
     private Thread thread;
     private  NexusCore nexuscore;
 
+    private CoreStatus coreStatus;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -43,6 +47,7 @@ public class MainActivity extends ReactActivity {
                         new String[]{"-dns=0", "-manager=0", "-connect=test1.nexusminingpool.com", "-testnet=605", "-verbose=1"}
                 );
                 super.run();
+
             }
 
             @Override
@@ -51,10 +56,12 @@ public class MainActivity extends ReactActivity {
                 super.stop();
             }
         };
+        CoreStatus.SetUpCoreStatusChannel(this);
 
       thread = new Thread(nexuscore);
       thread.setDaemon(true);
       thread.start();
+      coreStatus = new CoreStatus(this);
   }
 
     public native String  startNexusCore(String homepath, String apipassword, String[] params);
@@ -70,6 +77,8 @@ public class MainActivity extends ReactActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d("NEXUS","&& ONDESTROY");
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
         nexuscore.stop();
     }
 

@@ -21,9 +21,6 @@ import DrawerNavigator from './DrawerNavigator';
 import SyncIndicator from './SyncIndicator';
 import initStore from './initStore';
 
-import { sendAPI } from 'lib/api';
-import { encode } from 'base-64';
-
 import BackgroundTimer from 'react-native-background-timer';
 
 import PushNotification from 'react-native-push-notification';
@@ -60,26 +57,27 @@ async function loadResources() {
   }
 }
 
-function App() {
-  const theme = useTheme();
-
+function setUpDeviceNotifications(){
   PushNotification.configure({
-    onNotification: (notification) => {console.log('NotificationHandler:', notification);},
+    onNotification: (notification) => {console.log('NotificationHandler:', notification); },
     requestPermissions: Platform.OS === 'ios'
   });
-  PushNotification.createChannel(
-    {
-      channelId: "default-channel-id", // (required)
-      channelName: `Default channel`, // (required)
-      channelDescription: "A default channel", // (optional) default: undefined.
-      soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-      importance: 4, // (optional) default: 4. Int value of the Android notification importance
-      vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+  PushNotification.createChannel({
+      channelId: "transaction-channel-id",
+      channelName: `Transaction Channel`,
+      channelDescription: "Notification Channel for incoming Transactions",
+      soundName: "default",
+      importance: 4,
+      vibrate: true,
     },
-    (created) => console.log(`createChannel 'default-channel-id' returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+    (created) => console.log(`createChannel 'transaction-channel-id' returned '${created}'`) 
   );
   PushNotification.setApplicationIconBadgeNumber(0);
+}
 
+function App() {
+  const theme = useTheme();
+  setUpDeviceNotifications();
   return (
     <View style={styles.container({ theme })}>
       <StatusBar
@@ -105,6 +103,7 @@ function App() {
 const _handleAppStateChange = (nextAppState) => {
     if (nextAppState == "background") {
 
+
       BackgroundTimer.runBackgroundTimer(() => { 
         console.log("@@@@@@@  BACKGROUND @@@@@@@");
         loadTransactions();
@@ -125,9 +124,6 @@ export default function Root(props) {
   React.useEffect(() => {
     (async () => {
       try {
-
-        
-
         //suppressed warning, should probably be refactored
         SplashScreen.preventAutoHideAsync()
           .then((result) => {
