@@ -8,7 +8,6 @@ import { refreshUserAccounts } from 'lib/user';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
 
-import PushNotification from 'react-native-push-notification';
 
 export const isConfirmed = (tx) => !!tx.confirmations;
 

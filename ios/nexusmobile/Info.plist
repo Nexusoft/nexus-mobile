@@ -76,6 +76,12 @@
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Needed For QR</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

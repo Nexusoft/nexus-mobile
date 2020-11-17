@@ -2,7 +2,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import React from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
-import { AppState, Platform, UIManager, View } from 'react-native';
+import { AppState, Platform, UIManager, View, Alert } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import {
@@ -106,22 +106,42 @@ function App() {
   );
 }
 
+// Possible issue in crossplatform solution, fallback to ios specific
+var iosBGTimerInterval = null;
+
 const _handleAppStateChange = (nextAppState) => {
     if (nextAppState == "background") {
-
-
-      BackgroundTimer.runBackgroundTimer(() => { 
-        console.log("@@@@@@@  BACKGROUND @@@@@@@");
-        if (selectLoggedIn)
-          {
-            refreshUserStatus();
-          }
-        },
-        10000);
+      // Consider rework? Had to fallback to platform specific, possible error in package
+      if (Platform.OS === 'android') {
+        BackgroundTimer.runBackgroundTimer(() => { 
+          console.log("@@@@@@@  BACKGROUND @@@@@@@");
+          if (selectLoggedIn)
+            {
+              refreshUserStatus();
+            }
+          },
+          10000);
+        
+      }
+      else //ios
+      {
+        BackgroundTimer.start();
+        iosBGTimerInterval = setInterval(() => {
+          console.log("@@@@@@@  BACKGROUND IOS @@@@@@@");
+          refreshUserStatus();
+        }, 10000);
+      }
   }
   else
   {
-    BackgroundTimer.stopBackgroundTimer(); 
+    if (Platform.OS === 'android') {
+      BackgroundTimer.stopBackgroundTimer(); 
+    }
+    else //ios
+    {
+      clearInterval(iosBGTimerInterval );
+      BackgroundTimer.stop();
+    }
   }
 }
 
@@ -144,6 +164,18 @@ export default function Root() {
           });
 
         await Promise.all([initStore(), loadResources()]);
+        setTimeout(() => {
+          // Ugly
+          Alert.alert(
+            "Nexus Core Is Running",
+            "Nexus Core will continue to sync with the network in the background unless app is closed.",
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+
+          );
+        }, 10000);
         setLoadingComplete(true);
         
       } finally {
