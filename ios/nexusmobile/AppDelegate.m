@@ -10,6 +10,9 @@
 #import <EXSplashScreen/EXSplashScreenService.h>
 #import <UMCore/UMModuleRegistryProvider.h>
 
+#import <UserNotificationsUI/UserNotificationsUI.h>;
+#import <UserNotifications/UserNotifications.h>;
+
 #include "NexusCore.h"
 
 #if DEBUG
@@ -106,6 +109,9 @@ static void InitializeFlipper(UIApplication *application) {
 {
   printf("Shutting Down");
   ShutdownNexus();
+  
+   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  [center removeAllDeliveredNotifications];
 }
 
 @end
