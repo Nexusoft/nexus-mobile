@@ -43,7 +43,7 @@ export default function Backdrop({
   const theme = useTheme();
   return (
     <View style={[styles.wrapper({ theme }), style]} {...rest}>
-      <Text style={styles.beta({theme})}>Beta: Testnet 605</Text>
+      <Text style={styles.beta({theme})}>Beta</Text>
       <View style={styles.backPane}>{backdropContent}</View>
       <ScrollView style={styles.frontPane({ theme })}>{children}</ScrollView>
     </View>

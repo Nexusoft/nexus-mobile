@@ -63,6 +63,6 @@
   },
   "private": true,
   "name": "nexus-mobile",
-  "version": "0.6.1",
-  "builddate": "Nov 1 2020"
+  "version": "0.7.0",
+  "builddate": "Nov 17 2020"
 }

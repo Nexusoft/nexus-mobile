@@ -20,15 +20,11 @@ void* PosixThreadMainRoutine(void* data)
              NULL,
           strdup("-client=1"),
           strdup("-verbose=2"),
-          strdup("-dns=0"),
-          strdup("-manager=0"),
           strdup("-printtoconsole"),
-          strdup("-connect=test1.nexusminingpool.com"),
-          strdup("-testnet=605"),
           NULL
      };
      
-     startNexus(8, my_argv,strdup("password"));
+     startNexus(4, my_argv,strdup("password"));
      return NULL;
 }
 
