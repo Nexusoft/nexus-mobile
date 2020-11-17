@@ -94,20 +94,6 @@ export default function UnauthenticatedBase() {
           );
         })}
       </BottomTab.Navigator>
-      <Button style={{backgroundColor:'pink'}}mode='text' onPress={() => {
-        console.log("Push Local Notification");
-        scheduleNotificationAsync({
-          content: {
-            title: 'New transaction',
-            body: "Test",
-            data: { type: 'new_transaction', txid: "000000000" },
-          },
-          trigger: null,
-          channelId: "transaction-channel-id"
-        });
-      }}>
-        asdd
-      </Button>
       <View> 
         <Text style={{color: 'gray', position:'absolute', top:-20 , right: 40}}>{"v" + version.toString()}</Text>
       </View>
