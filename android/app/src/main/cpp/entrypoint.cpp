@@ -55,13 +55,15 @@ jint JNI_Onload(JavaVM* vm, void* reserved) {
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject thiz, jstring homepath, jstring apiPassword , jobjectArray params) {
+Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject thiz, jstring homepath, jstring apiUser ,jstring apiPassword , jobjectArray params) {
     {
         const char *res;
+        const char *inApiUser;
         const char *inApiPassword;
         jboolean isCopy;
 
         res = env->GetStringUTFChars(homepath, &isCopy);
+        inApiUser = env->GetStringUTFChars(apiUser,&isCopy);
         inApiPassword = env->GetStringUTFChars(apiPassword,&isCopy);
 
         setenv("HOME", res, 0);
@@ -120,7 +122,7 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
         if (confthere < 0) {
             LOG_D("!! WRITING FILE");
             // If file does not exist, write to it.
-            string fileContent = "apiuser=apiserver\napipassword=" + string(inApiPassword);
+            string fileContent = "apiuser=" + string(inApiUser) +"\napipassword=" + string(inApiPassword);
             myfile
                     << fileContent ;
 
@@ -130,6 +132,7 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
         }
         env->ReleaseStringUTFChars(apiPassword,inApiPassword);
+        env->ReleaseStringUTFChars(apiUser,inApiUser);
         myfile.close();
 
         LOG_D("Listing All Params sent to core: ");

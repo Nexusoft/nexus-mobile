@@ -11,5 +11,5 @@
 #endif /* NexusCore_h */
 
 
-void LaunchThread();
+void LaunchThread(NSArray *userCreds);
 void ShutdownNexus();

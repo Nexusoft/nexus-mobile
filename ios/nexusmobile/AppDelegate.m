@@ -10,8 +10,8 @@
 #import <EXSplashScreen/EXSplashScreenService.h>
 #import <UMCore/UMModuleRegistryProvider.h>
 
-#import <UserNotificationsUI/UserNotificationsUI.h>;
-#import <UserNotifications/UserNotifications.h>;
+#import <UserNotificationsUI/UserNotificationsUI.h>
+#import <UserNotifications/UserNotifications.h>
 
 #include "NexusCore.h"
 
@@ -43,14 +43,20 @@ static void InitializeFlipper(UIApplication *application) {
 
 @implementation AppDelegate
 
+NSArray *userCreds = @[@"username", @"password"];
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #if DEBUG
   InitializeFlipper(application);
 #endif
   
+  
+  NSString *uuid = [[NSUUID UUID] UUIDString];
+  
+  userCreds = @[uuid,[NSString stringWithFormat:@"%u",arc4random_uniform(NSDate.date.timeIntervalSince1970)]];
   /// START NEXUS CORE
-  LaunchThread();
+  LaunchThread(userCreds);
   ////////////////////////////////////////////////////////////////////////////////////
   
   self.moduleRegistryAdapter = [[UMModuleRegistryAdapter alloc] initWithModuleRegistryProvider:[[UMModuleRegistryProvider alloc] init]];
@@ -72,7 +78,10 @@ static void InitializeFlipper(UIApplication *application) {
 - (RCTBridge *)initializeReactNativeApp
 {
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:self.launchOptions];
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge moduleName:@"main" initialProperties:nil];
+
+  NSDictionary *props = @{@"userCreds" : userCreds};
+
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge moduleName:@"main" initialProperties:props];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

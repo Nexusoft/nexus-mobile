@@ -7,6 +7,8 @@ function getConfig() {
   const state = getStore().getState();
   const {
     coreMode,
+    embeddedUser,
+    embeddedPassword,
     externalCoreIP,
     externalCoreAPIPort,
     externalCoreAPIUser,
@@ -17,8 +19,8 @@ function getConfig() {
     ? {
         ip: '127.0.0.1',
         port: '8080',
-        user: 'apiserver',
-        password: 'password',
+        user: embeddedUser,
+        password:embeddedPassword,
       }
     : {
         ip: externalCoreIP,
@@ -30,7 +32,8 @@ function getConfig() {
 
 export async function sendAPI(endpoint, params) {
   const config = getConfig();
-
+console.log("LLLLLLLL");
+console.log(config);
   const baseUrl = `http://${config.ip}:${config.port}`;
   const response = await fetch(`${baseUrl}/${endpoint}`, {
     method: 'POST',

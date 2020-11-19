@@ -6,12 +6,16 @@ import android.media.MediaScannerConnection;
 import android.os.Bundle;
 
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
+
+import java.security.SecureRandom;
+import java.util.Base64;
 
 import expo.modules.splashscreen.SplashScreen;
 import expo.modules.splashscreen.SplashScreenImageResizeMode;
@@ -41,10 +45,17 @@ public class MainActivity extends ReactActivity {
         {
             @Override
             public void run() {
+                SecureRandom random = new SecureRandom();
+                byte bytes[] = new byte[10];
+                random.nextBytes(bytes);
+                String userCreds[] = new String[]{Settings.Secure.getString(getBaseContext().getContentResolver(),
+                        Settings.Secure.ANDROID_ID),Base64.getEncoder().encodeToString(bytes).replaceAll("([+/])","")};
+                Log.d("NEXUS", "User " + userCreds[0]  + " : " + userCreds[1]);
                 startNexusCore(
                         getFilesDir().getAbsolutePath(),
-                        "password",
-                        new String[]{"-dns=0", "-manager=0", "-connect=test1.nexusminingpool.com", "-testnet=605", "-verbose=1"}
+                        userCreds[0],
+                        userCreds[1],
+                        new String[]{"-manager=1", "-connect=node1.nexusoft.io", "-connect=node2.nexusoft.io", "-connect=node3.nexusoft.io", "-connect=node4.nexusoft.io","-verbose=1"}
                 );
                 super.run();
 
@@ -64,7 +75,7 @@ public class MainActivity extends ReactActivity {
       coreStatus = new CoreStatus(this);
   }
 
-    public native String  startNexusCore(String homepath, String apipassword, String[] params);
+    public native String  startNexusCore(String homepath,String apiuser, String apipassword, String[] params);
     public  native  int ShutDownNexusCore();
     static{
         System.loadLibrary("nexusmobilelib");

@@ -127,6 +127,10 @@ export default function BaseScreen({ route, navigation }) {
   useDefaultScreenFix();
   useDynamicNavOptions({ route, navigation, loggedIn });
 
+  console.log(connected);
+  console.log(useSelector((state) => state.core))
+  console.log(connections);
+
   if (!connected) return <DisconnectedBase />;
 
   if (!connections && !privateNet) return <ZeroConnectionsBase />;

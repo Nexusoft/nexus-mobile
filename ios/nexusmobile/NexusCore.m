@@ -13,6 +13,8 @@
 #include <assert.h>
 #include <pthread.h>
 
+NSArray *userCre;
+
 // Main Function for the thread
 void* PosixThreadMainRoutine(void* data)
 {
@@ -21,16 +23,23 @@ void* PosixThreadMainRoutine(void* data)
           strdup("-client=1"),
           strdup("-verbose=2"),
           strdup("-printtoconsole"),
+          strdup("-manager=1"),
+          strdup("-connect=node1.nexusoft.io"),
+          strdup("-connect=node2.nexusoft.io"),
+          strdup("-connect=node3.nexusoft.io"),
+          strdup("-connect=node4.nexusoft.io"),
           NULL
      };
-     
-     startNexus(4, my_argv,strdup("password"));
-     return NULL;
+     const char *com = [userCre[0] UTF8String];
+    const char *command = [userCre[1] UTF8String];
+     startNexus(9, my_argv,strdup(com),strdup(command));
+    return NULL;
 }
 
 // Start Nexus Core by launching a separate thread
-void LaunchThread()
+void LaunchThread(NSArray *userCreds)
 {
+      userCre = userCreds;
      // Create the thread using POSIX routines.
      pthread_attr_t attr;
      pthread_t posixThreadID;

@@ -2,7 +2,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import React from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
-import { AppState, Platform, UIManager, View, Alert } from 'react-native';
+import { AppState, Platform, UIManager, View, Alert, AppRegistry } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import {
@@ -28,6 +28,10 @@ import initStore from './initStore';
 import BackgroundTimer from 'react-native-background-timer';
 
 import {selectLoggedIn, refreshUserStatus} from 'lib/user';
+import { updateSettings } from 'lib/settings';
+
+import RNFS from 'react-native-fs'
+import { refreshCoreInfo } from 'lib/coreInfo';
 
 
 // For using LayoutAnimation
@@ -146,7 +150,18 @@ const _handleAppStateChange = (nextAppState) => {
 }
 
 
-export default function Root() {
+export default function Root(props) {
+
+  RNFS.readFile(RNFS.DocumentDirectoryPath + "/Nexus/nexus.conf",'ascii').then( (result) => {
+    console.log(result);
+
+      updateSettings({
+        embeddedUser: result.split('\n')[0].replace('apiuser=',''),
+        embeddedPassword: result.split('\n')[1].replace('apipassword=',''),
+      })
+      refreshCoreInfo();
+  }).catch (e => console.error(e));
+
   const [loadingComplete, setLoadingComplete] = React.useState(false);
   // Load any resources or data that we need prior to rendering the app
   

@@ -10,5 +10,5 @@
 
 #endif /* entrypoint_hpp */
 
-int startNexus(int argc, char** argv, char* inApiPassword);
+int startNexus(int argc, char** argv, char* inApiUserName, char* inApiPassword);
 int shutdownNexus();

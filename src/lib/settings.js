@@ -11,6 +11,8 @@ export const defaultSettings = {
 
   // Core
   coreMode: 'embedded',
+  embeddedUser: "apiserver",
+  embeddedPassword: "password",
   externalCoreIP: '127.0.0.1',
   externalCoreAPIPort: '8080',
   externalCoreAPIUser: 'apiserver',

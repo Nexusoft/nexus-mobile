@@ -37,7 +37,7 @@
 
 using namespace std;
 
-int startNexus (int argc, char** argv, char* inApiPassword)
+int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword)
 {
   
 
@@ -71,7 +71,7 @@ int startNexus (int argc, char** argv, char* inApiPassword)
     {
       cout << "!! WRITING FILE" << endl;
         // If file does not exist, write to it.
-        string fileContent = "apiuser=apiserver\napipassword=" + string(inApiPassword);
+        string fileContent = "apiuser=" + string(inApiUserName) + "\napipassword=" + string(inApiPassword);
         myfile << fileContent;
       
             
