@@ -21,8 +21,7 @@ void* PosixThreadMainRoutine(void* data)
            char *my_argv[] = {
              NULL,
           strdup("-client=1"),
-          strdup("-verbose=2"),
-          strdup("-printtoconsole"),
+          strdup("-verbose=0"),
           strdup("-manager=1"),
           strdup("-connect=node1.nexusoft.io"),
           strdup("-connect=node2.nexusoft.io"),
@@ -32,7 +31,7 @@ void* PosixThreadMainRoutine(void* data)
      };
      const char *com = [userCre[0] UTF8String];
     const char *command = [userCre[1] UTF8String];
-     startNexus(9, my_argv,strdup(com),strdup(command));
+     startNexus(8, my_argv,strdup(com),strdup(command));
     return NULL;
 }
 
