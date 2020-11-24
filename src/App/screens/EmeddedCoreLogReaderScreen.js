@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, Platform } from 'react-native';
 import { Surface, Button, IconButton } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
@@ -24,10 +24,10 @@ async function handleReadFile (logOutput,setLogOutput)
     if (logOutput === true)
     {
         //TODO: Change this
-        const fileStats = await RNFS.stat(RNFS.DocumentDirectoryPath + '/Nexus/client/log/0.log');
+        const fileStats = await RNFS.stat(RNFS.Docum(Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath) + '/Nexus/client/log/0.log');
         const bytestoread = 50000;
         const byteposition = Math.sign(fileStats.size - bytestoread) ? fileStats.size - bytestoread :fileStats.size ;
-        const result = await RNFS.read(RNFS.DocumentDirectoryPath + "/Nexus/client/log/0.log",50000,byteposition,'ascii');
+        const result = await RNFS.read((Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath) + "/Nexus/client/log/0.log",50000,byteposition,'ascii');
         const formated = result.split(`\n`).reverse().join(`\n`);
         setLogOutput(formated);
     }

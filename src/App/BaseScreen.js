@@ -127,6 +127,7 @@ export default function BaseScreen({ route, navigation }) {
   useDefaultScreenFix();
   useDynamicNavOptions({ route, navigation, loggedIn });
 
+  console.log("&&&&&&&&");
   console.log(connected);
   console.log(useSelector((state) => state.core))
   console.log(connections);

@@ -152,7 +152,7 @@ const _handleAppStateChange = (nextAppState) => {
 
 export default function Root(props) {
 
-  RNFS.readFile(RNFS.DocumentDirectoryPath + "/Nexus/nexus.conf",'ascii').then( (result) => {
+  RNFS.readFile((Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath) + "/Nexus/nexus.conf",'ascii').then( (result) => {
     console.log(result);
 
       updateSettings({

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
 
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
+import java.io.File;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -31,6 +33,7 @@ public class MainActivity extends ReactActivity {
 
     private Thread thread;
     private  NexusCore nexuscore;
+    private  PowerManager.WakeLock wakeLock;
 
     private CoreStatus coreStatus;
 
@@ -49,13 +52,13 @@ public class MainActivity extends ReactActivity {
                 byte bytes[] = new byte[10];
                 random.nextBytes(bytes);
                 String userCreds[] = new String[]{Settings.Secure.getString(getBaseContext().getContentResolver(),
-                        Settings.Secure.ANDROID_ID),Base64.getEncoder().encodeToString(bytes).replaceAll("([+/])","")};
+                        Settings.Secure.ANDROID_ID),Base64.getEncoder().encodeToString(bytes).replaceAll("([+/=])","")};
                 Log.d("NEXUS", "User " + userCreds[0]  + " : " + userCreds[1]);
                 startNexusCore(
-                        getFilesDir().getAbsolutePath(),
+                        getExternalFilesDir(null).getAbsolutePath(),
                         userCreds[0],
                         userCreds[1],
-                        new String[]{"-manager=1", "-connect=node1.nexusoft.io", "-connect=node2.nexusoft.io", "-connect=node3.nexusoft.io", "-connect=node4.nexusoft.io","-verbose=1"}
+                        new String[]{"-manager=1", "-connect=node1.nexusoft.io", "-connect=node2.nexusoft.io", "-connect=node3.nexusoft.io", "-connect=node4.nexusoft.io","-verbose=0"}
                 );
                 super.run();
 
@@ -73,6 +76,10 @@ public class MainActivity extends ReactActivity {
       thread.setDaemon(true);
       thread.start();
       coreStatus = new CoreStatus(this);
+      PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+      wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+              "Nexus::BackgroundTASK");
+      wakeLock.acquire();
   }
 
     public native String  startNexusCore(String homepath,String apiuser, String apipassword, String[] params);
@@ -86,11 +93,12 @@ public class MainActivity extends ReactActivity {
     // Possible change to OnStop ?
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        Log.d("NEXUS","&& ONDESTROY");
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
+        wakeLock.release();
+        Log.d("NEXUS","&& ONDESTROY");
         nexuscore.stop();
+        super.onDestroy();
     }
 
 
