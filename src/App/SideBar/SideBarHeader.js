@@ -47,28 +47,33 @@ const styles = {
     justifyContent: 'center',
     paddingVertical: 10,
   },
-  userNameLine: ({ expanded }) => ({
+  userNameLine: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     marginBottom: 25,
-  }),
+  },
   userAvatarName: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexShrink: 1,
   },
   avatar: ({ theme }) => ({
     marginRight: 15,
     color: theme.dark ? theme.foreground : theme.onPrimary,
+    flexShrink: 0,
   }),
   userName: ({ theme }) => ({
     fontSize: 24,
     color: theme.dark ? theme.foreground : theme.onPrimary,
+    flexShrink: 1,
   }),
   expandIcon: ({ theme }) => ({
     fontSize: 18,
     color: subColor(theme.dark ? theme.foreground : theme.onPrimary),
+    flexShrink: 0,
+    marginLeft: 10,
   }),
   userActions: ({ expanded }) => ({
     // setting height to 0 makes text have the stretch effect
@@ -185,14 +190,20 @@ export default function SideBarHeader({ navigation }) {
         }}
       >
         <View style={styles.userArea}>
-          <View style={styles.userNameLine({ expanded })}>
+          <View style={styles.userNameLine}>
             <View style={styles.userAvatarName}>
               <SvgIcon
                 style={styles.avatar({ theme })}
                 icon={UserIcon}
                 size={25}
               />
-              <Text style={styles.userName({ theme })}>{username}</Text>
+              <Text
+                ellipsizeMode="tail"
+                numberOfLines={expanded ? undefined : 1}
+                style={styles.userName({ theme })}
+              >
+                {username}
+              </Text>
             </View>
             <Ionicons
               style={styles.expandIcon({ theme })}
