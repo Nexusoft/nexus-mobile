@@ -71,7 +71,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     {
       cout << "!! WRITING FILE" << endl;
         // If file does not exist, write to it.
-        string fileContent = "apiuser=" + string(inApiUserName) + "\napipassword=" + string(inApiPassword);
+        string fileContent = "apiuser=" + string(inApiUserName) + "\napipassword=" + string(inApiPassword) + "\nconnect=node1.nexusoft.io\nconnect=node2.nexusoft.io\nconnect=node3.nexusoft.io\nconnect=node4.nexusoft.io";
         myfile << fileContent;
       
             
@@ -311,4 +311,17 @@ int shutdownNexus()
 {
     Shutdown();
     return 0;
+}
+
+
+int closeListening()
+{
+  LLP::CloseListening();
+  return 0;
+}
+
+int openListening()
+{
+  LLP::OpenListening();
+  return 0;
 }

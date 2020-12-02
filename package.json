@@ -20,6 +20,7 @@
     "base-64": "^0.1.0",
     "expo": "~38.0.9",
     "expo-asset": "~8.1.7",
+    "expo-background-fetch": "^8.5.0",
     "expo-barcode-scanner": "^8.2.1",
     "expo-constants": "~9.1.1",
     "expo-font": "~8.2.1",
@@ -63,6 +64,6 @@
   },
   "private": true,
   "name": "nexus-mobile",
-  "version": "0.7.0.2",
-  "builddate": "Nov 20 2020"
+  "version": "0.7.0.3",
+  "builddate": "Dec 02 2020"
 }

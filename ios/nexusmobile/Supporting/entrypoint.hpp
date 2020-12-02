@@ -12,3 +12,5 @@
 
 int startNexus(int argc, char** argv, char* inApiUserName, char* inApiPassword);
 int shutdownNexus();
+int closeListening();
+int openListening();

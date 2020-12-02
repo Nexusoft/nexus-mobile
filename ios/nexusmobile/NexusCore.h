@@ -13,3 +13,5 @@
 
 void LaunchThread(NSArray *userCreds);
 void ShutdownNexus();
+void OpenSocket();
+void CloseSocket();

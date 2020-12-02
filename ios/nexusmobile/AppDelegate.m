@@ -114,6 +114,15 @@ NSArray *userCreds = @[@"username", @"password"];
   [splashScreenService showSplashScreenFor:self.window.rootViewController];
 }
 
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+  OpenSocket();
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+  CloseSocket();
+}
+
 - (void)applicationWillTerminate:(UIApplication *)app
 {
   printf("Shutting Down");
