@@ -32,8 +32,6 @@ function getConfig() {
 
 export async function sendAPI(endpoint, params) {
   const config = getConfig();
-console.log("LLLLLLLL");
-console.log(config);
   const baseUrl = `http://${config.ip}:${config.port}`;
   const response = await fetch(`${baseUrl}/${endpoint}`, {
     method: 'POST',
