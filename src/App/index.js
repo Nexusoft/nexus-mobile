@@ -10,6 +10,7 @@ import {
   setNotificationHandler,
   setNotificationChannelAsync,
   AndroidImportance,
+  scheduleNotificationAsync,
 } from 'expo-notifications';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -113,9 +114,38 @@ function App() {
 // Possible issue in crossplatform solution, fallback to ios specific
 var iosBGTimerInterval = null;
 
+import * as TaskManager from "expo-task-manager";
+import * as BackgroundFetch from "expo-background-fetch";
+import sleep from 'utils/sleep';
+import { set } from 'react-native-reanimated';
+
+
+
+const BACKGROUND_FETCH_TASK = "background-fetch";
+
+TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
+  const now = Date.now();
+
+  console.log(
+    `Got background fetch call at date: ${new Date(now).toISOString()}`
+  );
+  
+  await sleep(5000);
+  scheduleNotificationAsync({
+    content: {
+      title: 'Updated',
+      body: `The core was updated at ${new Date(now).toISOString()}`,
+    },
+    trigger: null,
+  });
+  
+  await BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
+  registerIOSBackgroundTask();
+  return BackgroundFetch.Result.NewData;
+});
+
 const _handleAppStateChange = (nextAppState) => {
     if (nextAppState == "background") {
-      // Consider rework? Had to fallback to platform specific, possible error in package
       if (Platform.OS === 'android') {
         BackgroundTimer.runBackgroundTimer(() => { 
           console.log("@@@@@@@  BACKGROUND @@@@@@@");
@@ -129,38 +159,58 @@ const _handleAppStateChange = (nextAppState) => {
       }
       else //ios
       {
-        BackgroundTimer.start();
-        iosBGTimerInterval = setInterval(() => {
-          console.log("@@@@@@@  BACKGROUND IOS @@@@@@@");
-          refreshUserStatus();
-        }, 10000);
+        if (!isInBG)
+        {
+          isInBG = true;
+          registerIOSBackgroundTask();
+        } 
       }
+      
   }
   else
   {
-    if (Platform.OS === 'android') {
-      BackgroundTimer.stopBackgroundTimer(); 
-    }
-    else //ios
+    if (nextAppState == 'active')
     {
-      clearInterval(iosBGTimerInterval );
-      BackgroundTimer.stop();
+      if (Platform.OS === 'android') {
+        BackgroundTimer.stopBackgroundTimer(); 
+      }
+      else //ios
+      {
+        isInBG = false;
+        TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK).then
+        (
+          (isRegistered) => 
+          {
+            if (isRegistered)
+            {
+              console.log("Remove Task");
+              BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
+            }
+          }
+        );
+      }
+      
     }
+   
   }
+}
+
+var isInBG = false;
+
+const registerIOSBackgroundTask = async() => {
+  console.log("Reg Task");
+  await BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
+    minimumInterval: 60, // 1 minute
+    stopOnTerminate: false,
+    startOnBoot: true,
+  });
+  console.log("Finished Reg");
+  await BackgroundFetch.setMinimumIntervalAsync(60)
+
 }
 
 
 export default function Root(props) {
-
-  RNFS.readFile((Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath) + "/Nexus/nexus.conf",'ascii').then( (result) => {
-    console.log(result);
-
-      updateSettings({
-        embeddedUser: result.split('\n')[0].replace('apiuser=',''),
-        embeddedPassword: result.split('\n')[1].replace('apipassword=',''),
-      })
-      refreshCoreInfo();
-  }).catch (e => console.error(e));
 
   const [loadingComplete, setLoadingComplete] = React.useState(false);
   // Load any resources or data that we need prior to rendering the app
@@ -179,8 +229,18 @@ export default function Root(props) {
           });
 
         await Promise.all([initStore(), loadResources()]);
+        console.log("no Store so getting settings");
+        const result = await RNFS.readFile((Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath) + "/Nexus/nexus.conf",'ascii');
+        console.log(result);
+    
+          updateSettings({
+            embeddedUser: result.split('\n')[0].replace('apiuser=',''),
+            embeddedPassword: result.split('\n')[1].replace('apipassword=',''),
+          });
+
         setTimeout(() => {
           // Ugly
+          (Platform.OS === 'android' ?
           Alert.alert(
             "Nexus Core Is Running",
             "Nexus Core will continue to sync with the network in the background unless app is closed.",
@@ -189,6 +249,15 @@ export default function Root(props) {
             ],
             { cancelable: false }
 
+          ) : Alert.alert(
+            "Nexus Core may lose sync",
+            "Currently IOS limits background activity, Nexus will attempt to resync in the background but it is not guaranteed.",
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+
+          )
           );
         }, 10000);
         setLoadingComplete(true);
