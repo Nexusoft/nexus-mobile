@@ -11,6 +11,7 @@ import { navigate, navReadyRef } from 'lib/navigation';
 import { getStore } from 'store';
 import UnauthenticatedBase from './UnauthenticatedBase';
 import AuthenticatedBase from './AuthenticatedBase';
+import SyncIndicator from 'components/SyncIndicator';
 
 const styles = {
   container: ({ theme }) => ({
@@ -78,6 +79,27 @@ function ZeroConnectionsBase() {
   );
 }
 
+function SynchronizingBase() {
+  const theme = useTheme();
+  const percentage = useSelector((state) => state.core.info?.synccomplete);
+  return (
+    <View style={styles.container({ theme })}>
+      <ActivityIndicator
+        animating
+        color={theme.dark ? theme.foreground : theme.onPrimary}
+      />
+      <Text
+        sub
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        size={18}
+        style={{ textAlign: 'center', marginTop: 20 }}
+      >
+        Synchronizing {percentage}%...
+      </Text>
+    </View>
+  );
+}
+
 // Fix default BottomTab screen being the first tab when login state changes
 function useDefaultScreenFix() {
   React.useEffect(() => {
@@ -124,6 +146,7 @@ export default function BaseScreen({ route, navigation }) {
   const loggedIn = useSelector(selectLoggedIn);
   const connections = useSelector((state) => state.core.info?.connections);
   const privateNet = useSelector((state) => state.core.info?.private);
+  const syncing = useSelector((state) => state.core.info?.synchronizing);
   useDefaultScreenFix();
   useDynamicNavOptions({ route, navigation, loggedIn });
 
@@ -133,7 +156,14 @@ export default function BaseScreen({ route, navigation }) {
 
   if (!loggedIn) return <UnauthenticatedBase />;
 
-  return <AuthenticatedBase />;
+  if (syncing) return <SynchronizingBase />;
+
+  return (
+    <>
+      <AuthenticatedBase />
+      <SyncIndicator />
+    </>
+  );
 }
 
 BaseScreen.nav = {
