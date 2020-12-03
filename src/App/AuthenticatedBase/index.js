@@ -9,11 +9,12 @@ import {
 } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
+import SvgIcon from 'components/SvgIcon';
+import CustomBottomTabBar from 'components/CustomBottomTabBar';
 import { useTheme } from 'lib/theme';
 import OverviewScreen from './OverviewScreen';
 import TransactionsScreen from './TransactionsScreen';
 import ContactsScreen from './ContactsScreen';
-import SvgIcon from 'components/SvgIcon';
 import { fade } from 'utils/color';
 import { flatHeader } from 'utils/styles';
 import MenuIcon from 'icons/menu.svg';
@@ -33,6 +34,7 @@ export default function AuthenticatedBase() {
       initialRouteName={defaultScreen}
       backBehavior="initialRoute"
       shifting={false}
+      tabBar={(props) => <CustomBottomTabBar {...props} />}
       tabBarOptions={{
         activeTintColor: theme.foreground,
         inactiveTintColor: fade(theme.foreground, 0.5),
