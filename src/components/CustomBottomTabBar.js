@@ -1,5 +1,5 @@
 import React from 'react';
-import { Keyboard } from 'react-native';
+import { Platform, Keyboard } from 'react-native';
 import { BottomTabBar } from '@react-navigation/bottom-tabs';
 
 export default function CustomBottomTabBar({ style, ...rest }) {
@@ -11,11 +11,19 @@ export default function CustomBottomTabBar({ style, ...rest }) {
     const handleKeyboardHide = () => {
       setHidden(false);
     };
-    Keyboard.addListener('keyboardWillShow', handleKeyboardShow);
-    Keyboard.addListener('keyboardWillHide', handleKeyboardHide);
+    const showEvent = Platform.select({
+      android: 'keyboardDidShow',
+      ios: 'keyboardWillShow',
+    });
+    const hideEvent = Platform.select({
+      android: 'keyboardDidHide',
+      ios: 'keyboardWillHide',
+    });
+    Keyboard.addListener(showEvent, handleKeyboardShow);
+    Keyboard.addListener(hideEvent, handleKeyboardHide);
     return () => {
-      Keyboard.removeListener('keyboardWillShow', handleKeyboardShow);
-      Keyboard.removeListener('keyboardWillHide', handleKeyboardHide);
+      Keyboard.removeListener(showEvent, handleKeyboardShow);
+      Keyboard.removeListener(hideEvent, handleKeyboardHide);
     };
   }, []);
 
