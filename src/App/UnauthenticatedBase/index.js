@@ -5,6 +5,7 @@ import { IconButton, shadow, overlay, Button } from 'react-native-paper';
 
 import Text from 'components/Text';
 import SvgIcon from 'components/SvgIcon';
+import CustomBottomTabBar from 'components/CustomBottomTabBar';
 import { useTheme, subColor } from 'lib/theme';
 import { navigate } from 'lib/navigation';
 import { flatHeader } from 'utils/styles';
@@ -40,19 +41,6 @@ const styles = {
   },
 };
 
-function ColoredText({ style, ...rest }) {
-  const theme = useTheme();
-  return (
-    <Text
-      style={[
-        { color: subColor(theme.dark ? theme.foreground : theme.onPrimary) },
-        style,
-      ]}
-      {...rest}
-    />
-  );
-}
-
 export default function UnauthenticatedBase() {
   const theme = useTheme();
   return (
@@ -61,6 +49,7 @@ export default function UnauthenticatedBase() {
       <BottomTab.Navigator
         initialRouteName="Login"
         shifting={false}
+        tabBar={(props) => <CustomBottomTabBar {...props} />}
         tabBarOptions={{
           activeTintColor: theme.foreground,
           inactiveTintColor: fade(theme.foreground, 0.5),

@@ -23,7 +23,6 @@ import StatusBar from './StatusBar';
 import Notifications from './Notifications';
 import Dialogs from './Dialogs';
 import DrawerNavigator from './DrawerNavigator';
-import SyncIndicator from './SyncIndicator';
 import initStore from './initStore';
 
 import BackgroundTimer from 'react-native-background-timer';
@@ -106,7 +105,6 @@ function App() {
       <DrawerNavigator />
       <Dialogs />
       <Notifications />
-      <SyncIndicator />
     </View>
   );
 }
