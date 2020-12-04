@@ -1,16 +1,18 @@
 import React from 'react';
 import { View } from 'react-native';
 import { shadow, IconButton, overlay } from 'react-native-paper';
-import { useTheme } from 'lib/theme';
 
 import SvgIcon from 'components/SvgIcon';
+import Text from 'components/Text';
 import { navigate } from 'lib/navigation';
+import { useTheme } from 'lib/theme';
+import { flatHeader } from 'utils/styles';
 import HomeIcon from 'icons/home.svg';
 import LogoIcon from 'icons/logo-full.svg';
 import SettingsIcon from 'icons/settings.svg';
 import BalanceSection from './BalanceSection';
 import Accounts from './Accounts';
-import Text from 'components/Text';
+import MenuIcon from 'icons/menu.svg';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -41,25 +43,25 @@ export default function OverviewScreen() {
   );
 }
 
-OverviewScreen.nav = ({ theme }) => ({
-  name: 'Overview',
-  icon: HomeIcon,
-  stackOptions: {
-    title: 'Overview',
-    headerTitle: () => (
-      <SvgIcon
-        icon={LogoIcon}
-        width={110}
-        height={25}
-        color={theme.dark ? theme.foreground : theme.onPrimary}
-      />
-    ),
-    headerTitleAlign: 'center',
-    headerRight: ({ tintColor }) => (
-      <View style={{flexDirection: 'row', 
-      alignSelf: 'flex-start'}}>
-        {/* TODO: Remove */}
-      <Text style={{color:tintColor, position:'relative',borderTopWidth:15}}>Beta</Text>
+OverviewScreen.stackOptions = ({ theme, navigation }) => ({
+  title: 'Overview',
+  headerTitle: () => (
+    <SvgIcon
+      icon={LogoIcon}
+      width={110}
+      height={25}
+      color={theme.dark ? theme.foreground : theme.onPrimary}
+    />
+  ),
+  headerTitleAlign: 'center',
+  headerRight: ({ tintColor }) => (
+    <View style={{ flexDirection: 'row', alignSelf: 'flex-start' }}>
+      {/* TODO: Remove */}
+      <Text
+        style={{ color: tintColor, position: 'relative', borderTopWidth: 15 }}
+      >
+        Beta
+      </Text>
       <IconButton
         icon={({ size }) => (
           <SvgIcon icon={SettingsIcon} size={size} color={tintColor} />
@@ -70,7 +72,19 @@ OverviewScreen.nav = ({ theme }) => ({
           navigate('Settings');
         }}
       />
-      </View>
-    ),
-  },
+    </View>
+  ),
+  headerLeft: ({ tintColor }) => (
+    <IconButton
+      icon={({ size }) => (
+        <SvgIcon icon={MenuIcon} size={size} color={tintColor} />
+      )}
+      color={tintColor}
+      size={25}
+      onPress={() => {
+        navigation.openDrawer();
+      }}
+    />
+  ),
+  headerStyle: flatHeader(theme),
 });

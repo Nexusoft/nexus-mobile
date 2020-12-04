@@ -10,8 +10,7 @@ import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef } from 'lib/navigation';
 import { getStore } from 'store';
 import UnauthenticatedBase from './UnauthenticatedBase';
-import AuthenticatedBase from './AuthenticatedBase';
-import SyncIndicator from 'components/SyncIndicator';
+import OverviewScreen from './OverviewScreen';
 
 const styles = {
   container: ({ theme }) => ({
@@ -124,7 +123,7 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
   const contactSearch = useSelector((state) => state.ui.contactSearch);
   React.useLayoutEffect(() => {
     if (loggedIn) {
-      const options = AuthenticatedBase.stackOptions({
+      const options = OverviewScreen.stackOptions({
         theme,
         navigation,
         txFilterOpen,
@@ -154,16 +153,11 @@ export default function BaseScreen({ route, navigation }) {
 
   if (!connections && !privateNet) return <ZeroConnectionsBase />;
 
-  if (!loggedIn) return <UnauthenticatedBase />;
-
   if (syncing) return <SynchronizingBase />;
 
-  return (
-    <>
-      <AuthenticatedBase />
-      <SyncIndicator />
-    </>
-  );
+  if (!loggedIn) return <UnauthenticatedBase />;
+
+  return <OverviewScreen />;
 }
 
 BaseScreen.nav = {

@@ -15,9 +15,7 @@ import TransactionIcon from 'icons/transaction.svg';
 // import Filters from './Filters';
 import Transaction from './Transaction';
 
-const selectTransactions = memoize((txMap) =>
-  Object.values(txMap).sort((tx1, tx2) => tx2.timestamp - tx1.timestamp)
-);
+const selectTransactions = memoize((txMap) => Object.values(txMap));
 
 export default function TransactionsScreen() {
   const loadedAll = useSelector((state) => state.transactions.loadedAll);
@@ -57,10 +55,10 @@ export default function TransactionsScreen() {
 TransactionsScreen.nav = ({ txFilterOpen }) => ({
   name: 'Transactions',
   icon: TransactionIcon,
-  stackOptions: {
+  options: {
     title: 'Transactions',
     headerTitle: 'Transactions',
-    headerTitleAlign: 'left',
+    // headerTitleAlign: 'left',
     headerRight: undefined,
     // ({ tintColor }) => (
     //   <IconButton
@@ -75,11 +73,11 @@ TransactionsScreen.nav = ({ txFilterOpen }) => ({
     //   />
     // ),
   },
-  listeners: {
-    blur: () => {
-      if (txFilterOpen) {
-        toggleTransactionsFilter();
-      }
-    },
-  },
+  // listeners: {
+  //   blur: () => {
+  //     if (txFilterOpen) {
+  //       toggleTransactionsFilter();
+  //     }
+  //   },
+  // },
 });
