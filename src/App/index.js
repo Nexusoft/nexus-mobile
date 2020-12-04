@@ -130,7 +130,7 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     `Got background fetch call at date: ${new Date(now).toISOString()}`
   );
   
-  await sleep(5000);
+  await sleep(15000);
   scheduleNotificationAsync({
     content: {
       title: 'Updated',
@@ -154,7 +154,7 @@ const _handleAppStateChange = (nextAppState) => {
               refreshUserStatus();
             }
           },
-          10000);
+          25000);
         
       }
       else //ios
