@@ -11,7 +11,7 @@ import { navigate, navReadyRef } from 'lib/navigation';
 import { getStore } from 'store';
 import UnauthenticatedBase from './UnauthenticatedBase';
 import AuthenticatedBase from './AuthenticatedBase';
-import SyncIndicator from 'components/SyncIndicator';
+import SyncIndicator from './SyncIndicator';
 
 const styles = {
   container: ({ theme }) => ({
