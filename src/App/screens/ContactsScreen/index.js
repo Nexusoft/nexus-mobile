@@ -9,7 +9,6 @@ import TextBox from 'components/TextBox';
 import { navigate } from 'lib/navigation';
 import { setContactSearch } from 'lib/ui';
 import memoize from 'utils/memoize';
-import ContactsIcon from 'icons/address-book.svg';
 import Contact from './Contact';
 
 const styles = {
@@ -69,11 +68,7 @@ export default function ContactsScreen() {
 
 ContactsScreen.nav = ({ contactSearch, theme }) => ({
   name: 'Contacts',
-  icon: ContactsIcon,
   options: {
-    tabBarLabel: 'Contacts',
-  },
-  stackOptions: {
     title: 'Contacts',
     headerTitle:
       typeof contactSearch === 'string'
@@ -88,7 +83,7 @@ ContactsScreen.nav = ({ contactSearch, theme }) => ({
             />
           )
         : 'Contacts',
-    headerTitleAlign: 'left',
+    // headerTitleAlign: 'left',
     headerRight:
       typeof contactSearch === 'string'
         ? ({ tintColor }) => (
@@ -112,11 +107,11 @@ ContactsScreen.nav = ({ contactSearch, theme }) => ({
             />
           ),
   },
-  listeners: {
-    blur: () => {
-      if (typeof contactSearch === 'string') {
-        setContactSearch(null);
-      }
-    },
-  },
+  // listeners: {
+  //   blur: () => {
+  //     if (typeof contactSearch === 'string') {
+  //       setContactSearch(null);
+  //     }
+  //   },
+  // },
 });

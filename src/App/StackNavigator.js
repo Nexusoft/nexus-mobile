@@ -11,6 +11,8 @@ import ReceiveScreen from './screens/ReceiveScreen';
 import SendScreen from './screens/SendScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import AccountsScreen from './screens/AccountsScreen';
+import ContactsScreen from './screens/ContactsScreen';
+import TransactionsScreen from './screens/TransactionsScreen';
 import TokensScreen from './screens/TokensScreen';
 import NamesScreen from './screens/NamesScreen';
 import NamespacesScreen from './screens/NamespacesScreen';
@@ -40,6 +42,8 @@ const screens = [
   SendScreen,
   SettingsScreen,
   AccountsScreen,
+  ContactsScreen,
+  TransactionsScreen,
   TokensScreen,
   NamesScreen,
   NamespacesScreen,

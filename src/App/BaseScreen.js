@@ -10,7 +10,7 @@ import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef } from 'lib/navigation';
 import { getStore } from 'store';
 import UnauthenticatedBase from './UnauthenticatedBase';
-import AuthenticatedBase from './AuthenticatedBase';
+import OverviewScreen from './OverviewScreen';
 
 const styles = {
   container: ({ theme }) => ({
@@ -123,7 +123,7 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
   const contactSearch = useSelector((state) => state.ui.contactSearch);
   React.useLayoutEffect(() => {
     if (loggedIn) {
-      const options = AuthenticatedBase.stackOptions({
+      const options = OverviewScreen.stackOptions({
         theme,
         navigation,
         txFilterOpen,
@@ -157,7 +157,7 @@ export default function BaseScreen({ route, navigation }) {
 
   if (!loggedIn) return <UnauthenticatedBase />;
 
-  return <AuthenticatedBase />;
+  return <OverviewScreen />;
 }
 
 BaseScreen.nav = {

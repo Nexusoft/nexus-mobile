@@ -55,10 +55,10 @@ export default function TransactionsScreen() {
 TransactionsScreen.nav = ({ txFilterOpen }) => ({
   name: 'Transactions',
   icon: TransactionIcon,
-  stackOptions: {
+  options: {
     title: 'Transactions',
     headerTitle: 'Transactions',
-    headerTitleAlign: 'left',
+    // headerTitleAlign: 'left',
     headerRight: undefined,
     // ({ tintColor }) => (
     //   <IconButton
@@ -73,11 +73,11 @@ TransactionsScreen.nav = ({ txFilterOpen }) => ({
     //   />
     // ),
   },
-  listeners: {
-    blur: () => {
-      if (txFilterOpen) {
-        toggleTransactionsFilter();
-      }
-    },
-  },
+  // listeners: {
+  //   blur: () => {
+  //     if (txFilterOpen) {
+  //       toggleTransactionsFilter();
+  //     }
+  //   },
+  // },
 });
