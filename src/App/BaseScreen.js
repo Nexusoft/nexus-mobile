@@ -11,7 +11,6 @@ import { navigate, navReadyRef } from 'lib/navigation';
 import { getStore } from 'store';
 import UnauthenticatedBase from './UnauthenticatedBase';
 import AuthenticatedBase from './AuthenticatedBase';
-import SyncIndicator from './SyncIndicator';
 
 const styles = {
   container: ({ theme }) => ({
@@ -154,16 +153,11 @@ export default function BaseScreen({ route, navigation }) {
 
   if (!connections && !privateNet) return <ZeroConnectionsBase />;
 
-  if (!loggedIn) return <UnauthenticatedBase />;
-
   if (syncing) return <SynchronizingBase />;
 
-  return (
-    <>
-      <AuthenticatedBase />
-      <SyncIndicator />
-    </>
-  );
+  if (!loggedIn) return <UnauthenticatedBase />;
+
+  return <AuthenticatedBase />;
 }
 
 BaseScreen.nav = {
