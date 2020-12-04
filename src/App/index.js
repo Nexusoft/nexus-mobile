@@ -174,8 +174,9 @@ const _handleAppStateChange = (nextAppState) => {
       }
       else //ios
       {
-        isInBG = false;
-        TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK).then
+        if (isInBG)
+        {
+          TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK).then
         (
           (isRegistered) => 
           {
@@ -183,9 +184,13 @@ const _handleAppStateChange = (nextAppState) => {
             {
               console.log("Remove Task");
               BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
+              refreshCoreInfo();
             }
           }
         );
+        }
+        
+        isInBG = false;
       }
       
     }
