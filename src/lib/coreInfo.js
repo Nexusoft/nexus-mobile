@@ -17,27 +17,23 @@ async function getInfo() {
   }
 }
 
-const maxTime = 10000;
+const regularWaitTime = 10000;
 const quickWaitTime = 1000;
-const incStep = 1000;
-let waitTime = 0;
+let waitTime = regularWaitTime;
 let timerId = null;
 export async function refreshCoreInfo() {
-  const connected = selectConnected(getStore().getState());
   try {
     clearTimeout(timerId);
     const coreInfo = await getInfo();
     if (coreInfo?.synchronizing && coreInfo?.clientmode) {
-      // Refresh core info quicker so that sync % displayed is more updated
+      // Refresh quicker so that sync percentage is updated more frequently
       waitTime = quickWaitTime;
     } else {
-      waitTime = maxTime;
+      waitTime = regularWaitTime;
     }
     return coreInfo;
   } catch (err) {
-    if (connected) waitTime = incStep;
-    else if (waitTime < maxTime) waitTime += incStep;
-    else waitTime = maxTime;
+    waitTime = quickWaitTime;
     return null;
   } finally {
     timerId = setTimeout(refreshCoreInfo, waitTime);
