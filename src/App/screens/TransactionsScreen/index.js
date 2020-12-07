@@ -60,7 +60,7 @@ TransactionsScreen.nav = ({ txFilterOpen }) => ({
   stackOptions: {
     title: 'Transactions',
     headerTitle: 'Transactions',
-    headerTitleAlign: 'left',
+    // headerTitleAlign: 'left',
     headerRight: undefined,
     // ({ tintColor }) => (
     //   <IconButton
@@ -75,11 +75,11 @@ TransactionsScreen.nav = ({ txFilterOpen }) => ({
     //   />
     // ),
   },
-  listeners: {
-    blur: () => {
-      if (txFilterOpen) {
-        toggleTransactionsFilter();
-      }
-    },
-  },
+  // listeners: {
+  //   blur: () => {
+  //     if (txFilterOpen) {
+  //       toggleTransactionsFilter();
+  //     }
+  //   },
+  // },
 });
