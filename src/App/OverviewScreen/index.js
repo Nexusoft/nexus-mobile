@@ -44,6 +44,7 @@ export default function OverviewScreen() {
 }
 
 OverviewScreen.stackOptions = ({ theme, navigation }) => ({
+  name: 'Overview',
   title: 'Overview',
   headerTitle: () => (
     <SvgIcon

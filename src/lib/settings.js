@@ -23,7 +23,7 @@ export async function loadSettings() {
   const keys = Object.keys(defaultSettings);
   const results = await AsyncStorage.multiGet(keys);
   const settings = results.reduce((settings, [key, value]) => {
-    settings[key] = value && JSON.parse(value);
+    settings[key] = (value && JSON.parse(value)) || defaultSettings[key];
     return settings;
   }, {});
   return settings;
