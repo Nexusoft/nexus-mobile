@@ -27,9 +27,9 @@ const styles = {
     ...shadow(8),
   }),
   /* TODO: Remove */
-  beta: ({theme}) => ({
-    color:theme.background,
-    backgroundColor: mix('black',theme.primary,.90),
+  beta: ({ theme }) => ({
+    color: theme.background,
+    backgroundColor: mix('black', theme.primary, 0.9),
     textAlign: 'center',
   }),
 };
@@ -43,9 +43,14 @@ export default function Backdrop({
   const theme = useTheme();
   return (
     <View style={[styles.wrapper({ theme }), style]} {...rest}>
-      <Text style={styles.beta({theme})}>Beta</Text>
+      <Text style={styles.beta({ theme })}>Beta</Text>
       <View style={styles.backPane}>{backdropContent}</View>
-      <ScrollView style={styles.frontPane({ theme })}>{children}</ScrollView>
+      <ScrollView
+        style={styles.frontPane({ theme })}
+        keyboardShouldPersistTaps="handled"
+      >
+        {children}
+      </ScrollView>
     </View>
   );
 }
