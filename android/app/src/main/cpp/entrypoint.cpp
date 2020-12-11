@@ -384,5 +384,20 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
         }
     }
 
+    JNIEXPORT jint JNICALL
+    Java_com_nexus_mobile_android_MainActivity_CloseListenSocket(JNIEnv *env, jobject thiz)
+    {
+
+        LLP::CloseListening();
+        return 0;
+    }
+
+    JNIEXPORT jint  JNICALL
+    Java_com_nexus_mobile_android_MainActivity_OpenListenSocket(JNIEnv *env, jobject thiz)
+    {
+        LLP::OpenListening();
+        return 0;
+    }
+
 
 }

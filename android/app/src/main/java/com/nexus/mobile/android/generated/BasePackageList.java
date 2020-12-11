@@ -8,6 +8,7 @@ public class BasePackageList {
   public List<Package> getPackageList() {
     return Arrays.<Package>asList(
         new expo.modules.application.ApplicationPackage(),
+        new expo.modules.backgroundfetch.BackgroundFetchPackage(),
         new expo.modules.barcodescanner.BarCodeScannerPackage(),
         new expo.modules.constants.ConstantsPackage(),
         new expo.modules.errorrecovery.ErrorRecoveryPackage(),
@@ -21,6 +22,7 @@ public class BasePackageList {
         new expo.modules.permissions.PermissionsPackage(),
         new expo.modules.splashscreen.SplashScreenPackage(),
         new expo.modules.sqlite.SQLitePackage(),
+        new expo.modules.taskManager.TaskManagerPackage(),
         new expo.modules.updates.UpdatesPackage(),
         new expo.modules.webbrowser.WebBrowserPackage()
     );
