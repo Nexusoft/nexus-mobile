@@ -71,6 +71,7 @@ function ConfirmRecoveryDialog({ newRecovery, visible, onDismiss, onConfirm }) {
                 </Text>
               </View>
               <TextBox.Formik
+                autoFocus
                 multiline
                 name="recovery"
                 label="Re-enter new recovery phrase"
@@ -173,7 +174,12 @@ export default function SetRecoveryScreen() {
                 </Text>
               </View>
 
-              <TextBox.Formik secure name="password" label="Password" />
+              <TextBox.Formik
+                secure
+                name="password"
+                label="Password"
+                autoFocus
+              />
               <TextBox.Formik secure name="pin" label="PIN" />
               {hasRecoveryPhrase && (
                 <TextBox.Formik

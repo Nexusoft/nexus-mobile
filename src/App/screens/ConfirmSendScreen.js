@@ -182,6 +182,7 @@ export default function ConfirmSendScreen({ route }) {
           <>
             <View style={styles.pinSection}>
               <TextBox.Formik
+                autoFocus
                 mode="outlined"
                 name="pin"
                 label="Enter your PIN to confirm"

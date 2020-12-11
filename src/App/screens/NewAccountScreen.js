@@ -34,7 +34,11 @@ export default function NewAccountScreen() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <>
-            <TextBox.Formik name="name" label="Account name (optional)" />
+            <TextBox.Formik
+              autoFocus
+              name="name"
+              label="Account name (optional)"
+            />
             <FAB
               mode="contained"
               disabled={isSubmitting}
