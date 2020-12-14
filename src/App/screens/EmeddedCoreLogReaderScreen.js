@@ -24,7 +24,7 @@ async function handleReadFile (logOutput,setLogOutput)
     if (logOutput === true)
     {
         //TODO: Change this
-        const fileStats = await RNFS.stat(RNFS.Docum(Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath) + '/Nexus/client/log/0.log');
+        const fileStats = await RNFS.stat((Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath) + '/Nexus/client/log/0.log');
         const bytestoread = 50000;
         const byteposition = Math.sign(fileStats.size - bytestoread) ? fileStats.size - bytestoread :fileStats.size ;
         const result = await RNFS.read((Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath) + "/Nexus/client/log/0.log",50000,byteposition,'ascii');
