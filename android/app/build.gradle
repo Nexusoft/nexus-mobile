@@ -125,7 +125,7 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 def versionMajor = 0
 def versionMinor = 7
 def versionPatch = 0
-def buildNumber = 6
+def buildNumber = 7
 
 def genVersionCode = versionMajor * 10000000 + versionMinor * 100000 + versionPatch * 1000 + buildNumber
 
@@ -153,7 +153,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode genVersionCode
-        versionName "0.7.0-6"
+        versionName "0.7.0-7"
         ndk {
             abiFilters 'x86_64', 'arm64-v8a'
         }
