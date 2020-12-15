@@ -1,14 +1,14 @@
 import { getStore } from 'store';
 import * as TYPE from 'consts/actionTypes';
 
+import { selectSetting } from './settings';
+
 let timerId = null;
 export async function refreshMarketPrice() {
   try {
     clearTimeout(timerId);
     const store = getStore();
-    const {
-      settings: { baseCurrency },
-    } = store.getState();
+    const baseCurrency = selectSetting("baseCurrency")(store.getState());
 
     const response = await fetch(
       `https://nexus-wallet-external-services.herokuapp.com/market-price?base_currency=${baseCurrency}`
