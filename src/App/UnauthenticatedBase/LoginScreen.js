@@ -93,7 +93,7 @@ export default function LoginScreen() {
         onSubmit={async ({ username, password, pin }) => {
           try {
             await sendAPI('users/login/user', { username, password, pin });
-            await sendAPI('users/unlock/user', { pin, notifications:true });
+            await sendAPI('users/unlock/user', { pin, notifications: true });
             await refreshUserStatus();
           } catch (err) {
             showError(err && err.message);
@@ -108,4 +108,7 @@ export default function LoginScreen() {
 LoginScreen.nav = {
   name: 'Login',
   title: 'Login',
+  stackOptions: {
+    title: 'Login',
+  },
 };

@@ -108,9 +108,7 @@ function useDefaultScreenFix() {
       const store = getStore();
       const connected = selectConnected(store.getState());
       if (!connected) return;
-      if (loggedIn) {
-        navigate('Overview');
-      } else {
+      if (!loggedIn) {
         navigate('Login');
       }
     });
@@ -134,6 +132,7 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
     } else {
       const options = UnauthenticatedBase.stackOptions({
         theme,
+        route,
       });
       navigation.setOptions(options);
     }

@@ -259,4 +259,7 @@ export default function CreateUserScreen() {
 CreateUserScreen.nav = {
   name: 'CreateUser',
   title: 'Register',
+  stackOptions: {
+    title: 'Register',
+  },
 };
