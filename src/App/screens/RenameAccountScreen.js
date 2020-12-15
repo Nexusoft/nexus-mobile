@@ -12,6 +12,8 @@ import { sendAPI } from 'lib/api';
 import { refreshUserAccounts } from 'lib/user';
 import { goBack } from 'lib/navigation';
 
+const getFee = (accountName) => (accountName ? 2 : 1);
+
 export default function RenameAccountScreen({ route }) {
   const {
     params: { account },
@@ -52,6 +54,19 @@ export default function RenameAccountScreen({ route }) {
           }
 
           try {
+            // Check if balance is enough to pay the fee, otherwise user might
+            // end up creating a new name without nullifying the old name
+            const fee = getFee(account?.name);
+            const defaultAccount = await sendAPI('finance/get/account', {
+              name: 'default',
+            });
+            if (defaultAccount.balance < fee) {
+              showError(
+                'Your default account balance is not enough to pay the fee.'
+              );
+              return;
+            }
+
             const pin = await confirmPin();
             if (pin !== null) {
               await sendAPI(
@@ -84,7 +99,7 @@ export default function RenameAccountScreen({ route }) {
           <>
             <TextBox.Formik autoFocus name="name" label="Account name" />
             <Text sub style={{ textAlign: 'center', marginTop: 30 }}>
-              Fee: {account?.name ? 2 : 1} NXS
+              Fee: {getFee(account?.name)} NXS
             </Text>
             <FAB
               mode="contained"
