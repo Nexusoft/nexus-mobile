@@ -17,6 +17,7 @@ import RecoveryScreen from './RecoveryScreen';
 
 const BottomTab = createBottomTabNavigator();
 const screens = [CreateUserScreen, LoginScreen, RecoveryScreen];
+const defaultScreen = 'Login';
 
 import { version, builddate } from '../../../package.json'; // not too happy about this
 
@@ -45,9 +46,8 @@ export default function UnauthenticatedBase() {
   const theme = useTheme();
   return (
     <View style={styles.wrapper({ theme })}>
-      
       <BottomTab.Navigator
-        initialRouteName="Login"
+        initialRouteName={defaultScreen}
         shifting={false}
         tabBar={(props) => <CustomBottomTabBar {...props} />}
         tabBarOptions={{
@@ -83,10 +83,13 @@ export default function UnauthenticatedBase() {
           );
         })}
       </BottomTab.Navigator>
-      <View> 
-        <Text style={{color: 'gray', position:'absolute', top:-20 , right: 40}}>{"v" + version.toString()}</Text>
+      <View>
+        <Text
+          style={{ color: 'gray', position: 'absolute', top: -20, right: 40 }}
+        >
+          {'v' + version.toString()}
+        </Text>
       </View>
-      
     </View>
   );
   //
@@ -106,20 +109,29 @@ export default function UnauthenticatedBase() {
   // </View>
 }
 
-UnauthenticatedBase.stackOptions = ({ theme }) => ({
-  headerLeft: () => null,
-  headerRight: ({ tintColor }) => (
-    <IconButton
-      icon={({ size }) => (
-        <SvgIcon icon={SettingsIcon} size={size} color={tintColor} />
-      )}
-      color={tintColor}
-      size={25}
-      onPress={() => {
-        navigate('Settings');
-      }}
-    />
-  ),
-  headerStyle: flatHeader(theme),
-  headerTitle: '',
-});
+UnauthenticatedBase.stackOptions = ({ theme, route }) => {
+  const routeName =
+    route.state?.routes[route.state.index]?.name || defaultScreen;
+  const { stackOptions } =
+    screens.map((Screen) => Screen.nav).find((nav) => nav.name === routeName) ||
+    {};
+
+  return {
+    headerLeft: () => null,
+    headerRight: ({ tintColor }) => (
+      <IconButton
+        icon={({ size }) => (
+          <SvgIcon icon={SettingsIcon} size={size} color={tintColor} />
+        )}
+        color={tintColor}
+        size={25}
+        onPress={() => {
+          navigate('Settings');
+        }}
+      />
+    ),
+    headerStyle: flatHeader(theme),
+    headerTitle: '',
+    ...stackOptions,
+  };
+};

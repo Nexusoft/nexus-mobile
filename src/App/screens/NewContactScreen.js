@@ -53,6 +53,7 @@ export default function NewContactScreen() {
         {({ isSubmitting, handleSubmit, setFieldValue }) => (
           <>
             <TextBox.Formik
+              autoFocus
               name="name"
               label="Contact name"
               autoCapitalize="words"

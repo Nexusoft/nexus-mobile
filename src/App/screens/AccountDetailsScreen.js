@@ -12,6 +12,7 @@ import { showNotification } from 'lib/ui';
 import { navigate } from 'lib/navigation';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';
+import EditIcon from 'icons/edit.svg';
 
 const styles = {
   account: {
@@ -21,6 +22,9 @@ const styles = {
   },
   address: {
     textAlign: 'center',
+  },
+  nameWrapper: {
+    flexDirection: 'row',
   },
   actions: {
     flexDirection: 'row',
@@ -40,7 +44,13 @@ export default function AccountDetailsScreen({ route }) {
           compact
           inline
           label="Account name"
-          value={account.name || <Text disabled>No name</Text>}
+          value={
+            account.name || (
+              <Text disabled style={{ marginRight: 10 }}>
+                No name
+              </Text>
+            )
+          }
         />
         <Divider />
         <InfoField
@@ -142,6 +152,16 @@ export default function AccountDetailsScreen({ route }) {
             }}
           >
             Receive
+          </Button>
+          <Divider vertical inset={10} />
+          <Button
+            style={styles.action}
+            mode="text"
+            onPress={() => {
+              navigate('RenameAccount', { account });
+            }}
+          >
+            Rename
           </Button>
           <Divider vertical inset={10} />
           <Button

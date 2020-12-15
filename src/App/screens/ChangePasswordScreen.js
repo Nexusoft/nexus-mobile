@@ -51,6 +51,7 @@ function ConfirmPasswordPinDialog({
           <Dialog visible={visible} onDismiss={onDismiss}>
             <Dialog.Content>
               <TextBox.Formik
+                autoFocus
                 secure
                 name="password"
                 label="Re-enter new password"
@@ -112,7 +113,12 @@ export default function ChangePasswordScreen() {
       >
         {({ isSubmitting, handleSubmit, values }) => (
           <>
-            <TextBox.Formik secure name="password" label="Current password" />
+            <TextBox.Formik
+              secure
+              name="password"
+              label="Current password"
+              autoFocus
+            />
             <TextBox.Formik secure name="pin" label="Current PIN" />
 
             <View style={styles.newCredentials}>

@@ -196,4 +196,7 @@ export default function RecoveryScreen() {
 RecoveryScreen.nav = {
   name: 'Recovery',
   title: 'Recover',
+  stackOptions: {
+    title: 'Recover',
+  },
 };
