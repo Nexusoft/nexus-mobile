@@ -150,6 +150,7 @@ const _handleAppStateChange = (nextAppState) => {
           if (selectLoggedIn)
             {
               refreshUserStatus();
+              refreshCoreInfo();
             }
           },
           25000);
