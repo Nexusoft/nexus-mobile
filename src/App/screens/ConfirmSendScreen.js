@@ -145,7 +145,7 @@ export default function ConfirmSendScreen({ route }) {
           <Text style={styles.label} sub size={16}>
             Reference number
           </Text>
-          <Text style={styles.referenceNo}>942189</Text>
+        <Text style={styles.referenceNo}>{reference}</Text>
         </View>
       )}
 
