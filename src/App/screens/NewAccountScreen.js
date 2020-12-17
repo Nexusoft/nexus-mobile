@@ -8,6 +8,7 @@ import { confirmPin, showError } from 'lib/ui';
 import { sendAPI } from 'lib/api';
 import { refreshUserAccounts } from 'lib/user';
 import { goBack } from 'lib/navigation';
+import { createLocalNameFee } from 'lib/fees';
 
 export default function NewAccountScreen() {
   return (
@@ -17,7 +18,7 @@ export default function NewAccountScreen() {
           name: '',
         }}
         onSubmit={async ({ name }) => {
-          const pin = await confirmPin();
+          const pin = await confirmPin({ fee: createLocalNameFee });
           if (pin !== null) {
             try {
               await sendAPI('finance/create/account', {
