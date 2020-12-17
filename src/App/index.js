@@ -79,11 +79,14 @@ async function checkPermissions() {
       shouldSetBadge: true,
     }),
   });
-  setNotificationChannelAsync('transaction-channel-id', {
-    name: 'Transaction Channel',
-    importance: AndroidImportance.HIGH,
-    description:' Notification Channel for incoming Transactions'
-  });
+  if (Platform.OS === 'android'){
+    //Only used for Android
+    setNotificationChannelAsync('transaction-channel-id', {
+      name: 'Transaction Channel',
+      importance: AndroidImportance.HIGH,
+      description:' Notification Channel for incoming Transactions'
+    });
+  }
 }
 
 function App() {
