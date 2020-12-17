@@ -67,7 +67,7 @@ export default function RenameAccountScreen({ route }) {
               return;
             }
 
-            const pin = await confirmPin();
+            const pin = await confirmPin({ fee });
             if (pin !== null) {
               await sendAPI(
                 nameRecord ? 'names/update/name' : 'names/create/name',
