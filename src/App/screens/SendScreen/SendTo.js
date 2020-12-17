@@ -104,6 +104,7 @@ export default function SendTo({ account }) {
       validationSchema={yup.object().shape({
         nameOrAddress: yup.string().required('Required!'),
         amount: yup.number().typeError('Invalid!').min(0, 'Invalid!'),
+        reference: yup.number().notRequired().typeError('Invalid!').min(0,'Must be positive!')
       })}
       onSubmit={async (
         { nameOrAddress, amount, reference },
