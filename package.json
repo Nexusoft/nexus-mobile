@@ -65,5 +65,6 @@
   "private": true,
   "name": "nexus-mobile",
   "version": "0.7.0-7",
-  "builddate": "Dec 15 2020"
+  "builddate": "Dec, 18th 2020",
+  "builddatecore": "Dec, 15th 2020"
 }
