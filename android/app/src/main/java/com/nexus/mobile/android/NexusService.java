@@ -3,6 +3,7 @@ package com.nexus.mobile.android;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
@@ -63,7 +64,8 @@ public class NexusService extends Service {
         int notificationID = CoreStatus.notificationID;
         String channelID = CoreStatus.channelID;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID)
-                .setSmallIcon(R.mipmap.ic_notification)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.notification_icon))
+                .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle("Core Active")
                 .setContentText("Core is running in the background")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
