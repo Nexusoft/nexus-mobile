@@ -13,7 +13,6 @@ import {
   Button,
 } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 
 import SvgIcon from 'components/SvgIcon';
@@ -30,6 +29,8 @@ import KeyIcon from 'icons/key.svg';
 import RecoveryIcon from 'icons/recovery.svg';
 import LogoutIcon from 'icons/logout.svg';
 import CopyIcon from 'icons/copy.svg';
+import UpArrowIcon from 'icons/chevron-up.svg';
+import DownArrowIcon from 'icons/chevron-down.svg';
 import MenuItem from './MenuItem';
 
 const styles = {
@@ -70,7 +71,6 @@ const styles = {
     flexShrink: 1,
   }),
   expandIcon: ({ theme }) => ({
-    fontSize: 18,
     color: subColor(theme.dark ? theme.foreground : theme.onPrimary),
     flexShrink: 0,
     marginLeft: 10,
@@ -205,9 +205,10 @@ export default function SideBarHeader({ navigation }) {
                 {username}
               </Text>
             </View>
-            <Ionicons
+            <SvgIcon
+              size={12}
               style={styles.expandIcon({ theme })}
-              name={expanded ? 'ios-arrow-up' : 'ios-arrow-down'}
+              icon={expanded ? UpArrowIcon : DownArrowIcon}
             />
           </View>
 

@@ -63,7 +63,9 @@ function Link({ children, url, style, ...rest }) {
 }
 
 export default function CoreInfoScreen() {
-  const coreVer = useSelector((state) => state.core.info.version).substring(0,10).replace(/[^0-9\.]+/g, "");
+  const coreVer = useSelector((state) => state.core.info.version)
+    .substring(0,10)
+    .replace(/[^0-9\.]+/g, "");
   const coreDate = builddatecore;
 
   return (
@@ -75,11 +77,7 @@ export default function CoreInfoScreen() {
         <Divider />
         <InfoField inline label="Embedded core version" value={coreVer} />
         <Divider />
-        <InfoField
-          inline
-          label="Embedded core build date"
-          value={coreDate}
-        />
+        <InfoField inline label="Embedded core build date" value={coreDate} />
       </Surface>
 
       <View style={styles.legal}>
@@ -211,6 +209,10 @@ export default function CoreInfoScreen() {
               </Link>
               <Text>, </Text>
               <Link url="https://www.flaticon.com/authors/bqlqn">bqlqn</Link>
+              <Text>, </Text>
+              <Link url="https://www.flaticon.com/authors/roundicons">
+                Roundicons
+              </Link>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <Text>from </Text>

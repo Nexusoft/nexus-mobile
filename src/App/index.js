@@ -2,7 +2,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import React from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
-import { AppState, Platform, UIManager, View, Alert, AppRegistry } from 'react-native';
+import { AppState, Platform, UIManager, View, Alert } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import {
@@ -12,7 +12,6 @@ import {
   AndroidImportance,
   scheduleNotificationAsync,
 } from 'expo-notifications';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useTheme } from 'lib/theme';
@@ -27,12 +26,11 @@ import initStore from './initStore';
 
 import BackgroundTimer from 'react-native-background-timer';
 
-import {selectLoggedIn, refreshUserStatus} from 'lib/user';
+import { selectLoggedIn, refreshUserStatus } from 'lib/user';
 import { updateSettings } from 'lib/settings';
 
-import RNFS from 'react-native-fs'
+import RNFS from 'react-native-fs';
 import { refreshCoreInfo } from 'lib/coreInfo';
-
 
 // For using LayoutAnimation
 if (Platform.OS === 'android') {
@@ -50,13 +48,10 @@ async function loadResources() {
   try {
     // Load fonts
     await Font.loadAsync({
-      ...Ionicons.font,
-      ...MaterialIcons.font,
       'noto-sans': require('fonts/NotoSans-Regular.ttf'),
       'noto-sans-bold': require('fonts/NotoSans-Bold.ttf'),
       robotomono: require('fonts/RobotoMono-Regular.ttf'),
     });
-
   } catch (e) {
     // We might want to provide this error information to an error reporting service
     console.warn(e);
@@ -115,14 +110,12 @@ function App() {
 // Possible issue in crossplatform solution, fallback to ios specific
 var iosBGTimerInterval = null;
 
-import * as TaskManager from "expo-task-manager";
-import * as BackgroundFetch from "expo-background-fetch";
+import * as TaskManager from 'expo-task-manager';
+import * as BackgroundFetch from 'expo-background-fetch';
 import sleep from 'utils/sleep';
 import { set } from 'react-native-reanimated';
 
-
-
-const BACKGROUND_FETCH_TASK = "background-fetch";
+const BACKGROUND_FETCH_TASK = 'background-fetch';
 
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   const now = Date.now();
@@ -130,7 +123,7 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   console.log(
     `Got background fetch call at date: ${new Date(now).toISOString()}`
   );
-  
+
   await sleep(15000);
   scheduleNotificationAsync({
     content: {
@@ -139,7 +132,7 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     },
     trigger: null,
   });
-  
+
   await BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
   registerIOSBackgroundTask();
   return BackgroundFetch.Result.NewData;
@@ -167,61 +160,48 @@ const _handleAppStateChange = (nextAppState) => {
           registerIOSBackgroundTask();
         } 
       }
-      
-  }
-  else
-  {
-    if (nextAppState == 'active')
-    {
+    
+  } else {
+    if (nextAppState == 'active') {
       if (Platform.OS === 'android') {
-        BackgroundTimer.stopBackgroundTimer(); 
-      }
-      else //ios
-      {
-        if (isInBG)
-        {
-          TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK).then
-        (
-          (isRegistered) => 
-          {
-            if (isRegistered)
-            {
-              console.log("Remove Task");
-              BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
-              refreshCoreInfo();
+        BackgroundTimer.stopBackgroundTimer();
+      } //ios
+      else {
+        if (isInBG) {
+          TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK).then(
+            (isRegistered) => {
+              if (isRegistered) {
+                console.log('Remove Task');
+                BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
+                refreshCoreInfo();
+              }
             }
-          }
-        );
+          );
         }
-        
+
         isInBG = false;
       }
-      
     }
-   
   }
-}
+};
 
 var isInBG = false;
 
-const registerIOSBackgroundTask = async() => {
-  console.log("Reg Task");
+const registerIOSBackgroundTask = async () => {
+  console.log('Reg Task');
   await BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
     minimumInterval: 60, // 1 minute
     stopOnTerminate: false,
     startOnBoot: true,
   });
-  console.log("Finished Reg");
-  await BackgroundFetch.setMinimumIntervalAsync(60)
-
-}
-
+  console.log('Finished Reg');
+  await BackgroundFetch.setMinimumIntervalAsync(60);
+};
 
 export default function Root(props) {
-
   const [loadingComplete, setLoadingComplete] = React.useState(false);
   // Load any resources or data that we need prior to rendering the app
-  
+
   React.useEffect(() => {
     checkPermissions();
     (async () => {
@@ -236,53 +216,48 @@ export default function Root(props) {
           });
 
         await Promise.all([initStore(), loadResources()]);
-        console.log("no Store so getting settings");
-        const result = await RNFS.readFile((Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath) + "/Nexus/nexus.conf",'ascii');
+        console.log('no Store so getting settings');
+        const result = await RNFS.readFile(
+          (Platform.OS === 'android'
+            ? RNFS.ExternalDirectoryPath
+            : RNFS.DocumentDirectoryPath) + '/Nexus/nexus.conf',
+          'ascii'
+        );
         console.log(result);
-    
-          updateSettings({
-            embeddedUser: result.split('\n')[0].replace('apiuser=',''),
-            embeddedPassword: result.split('\n')[1].replace('apipassword=',''),
-          });
+
+        updateSettings({
+          embeddedUser: result.split('\n')[0].replace('apiuser=', ''),
+          embeddedPassword: result.split('\n')[1].replace('apipassword=', ''),
+        });
 
         setTimeout(() => {
           // Ugly
-          (Platform.OS === 'android' ?
-          Alert.alert(
-            "Nexus Core Is Running",
-            "Nexus Core will continue to sync with the network in the background unless app is closed.",
-            [
-              { text: "OK", onPress: () => console.log("OK Pressed") }
-            ],
-            { cancelable: false }
-
-          ) : Alert.alert(
-            "Nexus Core may lose sync",
-            "Currently IOS limits background activity, Nexus will attempt to resync in the background but it is not guaranteed.",
-            [
-              { text: "OK", onPress: () => console.log("OK Pressed") }
-            ],
-            { cancelable: false }
-
-          )
-          );
+          Platform.OS === 'android'
+            ? Alert.alert(
+                'Nexus Core Is Running',
+                'Nexus Core will continue to sync with the network in the background unless app is closed.',
+                [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+                { cancelable: false }
+              )
+            : Alert.alert(
+                'Nexus Core may lose sync',
+                'Currently IOS limits background activity, Nexus will attempt to resync in the background but it is not guaranteed.',
+                [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+                { cancelable: false }
+              );
         }, 10000);
         setLoadingComplete(true);
-        
       } finally {
         //suppressed warning, should probably be refactored
         SplashScreen.hideAsync();
-        
-       
       }
-      
-    })(() => AppState.removeEventListener("change", _handleAppStateChange))
+    })(() => AppState.removeEventListener('change', _handleAppStateChange));
   }, []);
 
   if (!loadingComplete) {
     return null;
   } else {
-    AppState.addEventListener("change", _handleAppStateChange);
+    AppState.addEventListener('change', _handleAppStateChange);
     return (
       <ReduxProvider store={getStore()}>
         <SafeAreaProvider>
