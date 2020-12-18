@@ -1,17 +1,19 @@
 import React from 'react';
 import { LayoutAnimation, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 
 import Text from 'components/Text';
+import SvgIcon from 'components/SvgIcon';
 import { useTheme, subColor } from 'lib/theme';
 import { refreshUserBalances } from 'lib/user';
 import { refreshMarketPrice } from 'lib/market';
 import { selectSetting } from 'lib/settings';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
+import UpArrowIcon from 'icons/chevron-up.svg';
+import DownArrowIcon from 'icons/chevron-down.svg';
 
 const styles = {
   wrapper: {
@@ -39,7 +41,6 @@ const styles = {
     position: 'absolute',
     top: 4,
     right: 10,
-    fontSize: 15,
     alignSelf: 'flex-end',
     color: subColor(theme.dark ? theme.foreground : theme.onPrimary),
   }),
@@ -117,9 +118,10 @@ export default function BalanceSection() {
               {baseCurrency}
             </BalanceText>
           )}
-          <Ionicons
+          <SvgIcon
+            size={10}
             style={styles.expandIcon({ theme })}
-            name={expanded ? 'ios-arrow-up' : 'ios-arrow-down'}
+            icon={expanded ? UpArrowIcon : DownArrowIcon}
           />
         </View>
 
