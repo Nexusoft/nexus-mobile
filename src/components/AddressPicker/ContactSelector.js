@@ -17,7 +17,7 @@ const selectContacts = memoize(
     Object.entries(contacts).map(([name, contact]) => ({ name, ...contact }))
 );
 
-export default function ContactsSelector({ setAddress, style }) {
+export default function ContactSelector({ setAddress, style }) {
   const [contactsOpen, setContactsOpen] = React.useState(false);
   const contacts = useSelector((state) => selectContacts(state.contacts));
   return (
