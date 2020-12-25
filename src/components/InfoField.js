@@ -34,9 +34,9 @@ const styles = {
       marginTop: 5,
     },
   ],
-  valueText: {
-    textAlign: 'right',
-  },
+  valueText: ({ inline }) => ({
+    textAlign: inline ? 'right' : 'left',
+  }),
 };
 
 export default function InfoField({
@@ -69,7 +69,7 @@ export default function InfoField({
           inline={inline}
           selectable
           mono={mono}
-          style={styles.valueText}
+          style={styles.valueText({ inline })}
         >
           {value}
         </Text>
