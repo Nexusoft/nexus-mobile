@@ -18,6 +18,7 @@ import { lighten, darken } from 'utils/color';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';
 import SendIcon from 'icons/send.svg';
+import AccountSelector from './AccountSelector';
 
 const styles = {
   wrapper: {
@@ -75,7 +76,7 @@ const styles = {
 
 const getinitial = (name) => (name && name.length >= 1 ? name.charAt(0) : '');
 
-function NormalMode({ startEditing }) {
+function DetailsMode({ startEditing, selectAccount }) {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
@@ -129,7 +130,7 @@ function NormalMode({ startEditing }) {
         uppercase={false}
         icon={(props) => <SvgIcon icon={SendIcon} {...props} />}
         onPress={() => {
-          navigate('Send');
+          selectAccount();
         }}
         style={{ marginTop: 30 }}
       >
@@ -212,6 +213,7 @@ function EditMode({ isSubmitting, endEditing, handleSubmit, setFieldValue }) {
 
 export default function ContactDetailsScreen({ navigation, route }) {
   const [editing, setEditing] = React.useState(false);
+  const [selectingAccount, setSelectingAccount] = React.useState(false);
   const contact = route.params?.contact;
   return (
     <ScreenBody style={styles.wrapper}>
@@ -245,12 +247,25 @@ export default function ContactDetailsScreen({ navigation, route }) {
           )}
         </Formik>
       ) : (
-        <NormalMode
+        <DetailsMode
           startEditing={() => {
             setEditing(true);
           }}
+          selectAccount={() => {
+            setSelectingAccount(true);
+          }}
         />
       )}
+      <AccountSelector
+        visible={selectingAccount}
+        onDismiss={() => {
+          setSelectingAccount(false);
+        }}
+        onSelectAccount={(account) => {
+          setSelectingAccount(false);
+          navigate('Send', { account });
+        }}
+      />
     </ScreenBody>
   );
 }
