@@ -7,7 +7,6 @@ import Text from 'components/Text';
 import { navigate } from 'lib/navigation';
 import { useTheme } from 'lib/theme';
 import { flatHeader } from 'utils/styles';
-import HomeIcon from 'icons/home.svg';
 import LogoIcon from 'icons/logo-full.svg';
 import SettingsIcon from 'icons/settings.svg';
 import BalanceSection from './BalanceSection';

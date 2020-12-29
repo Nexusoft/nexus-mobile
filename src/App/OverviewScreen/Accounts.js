@@ -1,5 +1,10 @@
 import React from 'react';
-import { View, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import {
+  View,
+  ScrollView,
+  TouchableWithoutFeedback,
+  FlatList,
+} from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
@@ -7,8 +12,10 @@ import Text from 'components/Text';
 import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import { navigate } from 'lib/navigation';
+import { refreshUserAccounts } from 'lib/user';
 import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
+import useRefresh from 'utils/useRefresh';
 import WalletIcon from 'icons/wallet.svg';
 
 const styles = {
@@ -116,6 +123,7 @@ function Account({ account }) {
 
 export default function Accounts() {
   const accounts = useSelector((state) => state.user.accounts);
+  const [refreshing, refresh] = useRefresh(refreshUserAccounts);
   return (
     <>
       <TouchableWithoutFeedback
@@ -127,12 +135,14 @@ export default function Accounts() {
           Accounts
         </Text>
       </TouchableWithoutFeedback>
-      <ScrollView style={styles.accounts}>
-        {accounts &&
-          accounts.map((account) => (
-            <Account key={account.address} account={account} />
-          ))}
-      </ScrollView>
+      <FlatList
+        refreshing={refreshing}
+        onRefresh={refresh}
+        style={styles.accounts}
+        data={accounts}
+        keyExtractor={(acc) => acc.address}
+        renderItem={({ item: account }) => <Account account={account} />}
+      />
     </>
   );
 }
