@@ -1,5 +1,6 @@
 package com.nexus.mobile.android;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -19,6 +20,8 @@ public class CoreStatus {
     static final public int notificationID = 201409;
 
     public CoreStatus(Context context){
+        return;
+        /*
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setSmallIcon(R.mipmap.ic_notification)
                 .setContentTitle("Core Active")
@@ -29,7 +32,9 @@ public class CoreStatus {
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setOngoing(true);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(notificationID, builder.build());
+        Notification coreNotification = builder.build();
+        //notificationManager.notify(notificationID,builder.bu;
+        //startForground(notificationID, coreNotification); */
     }
 
     static public void SetUpCoreStatusChannel(Context context)

@@ -3,6 +3,7 @@ package com.nexus.mobile.android;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -34,6 +35,8 @@ public class MainApplication extends Application implements ReactApplication {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
     new BasePackageList().getPackageList()
   );
+
+
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override

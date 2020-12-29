@@ -9,7 +9,7 @@ import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import { useTheme } from 'lib/theme';
 
-import { version, builddate } from '../../../package.json'; //not too happy about this
+import { version, builddate, builddatecore } from '../../../package.json'; //not too happy about this
 
 const styles = {
   subHeader: {
@@ -64,10 +64,9 @@ function Link({ children, url, style, ...rest }) {
 
 export default function CoreInfoScreen() {
   const coreVer = useSelector((state) => state.core.info.version)
-    .substring(0, 10)
-    .replace(/[^0-9\.]+/g, '');
-  const coreDate = 'fff';
-  console.log(coreDate);
+    .substring(0,10)
+    .replace(/[^0-9\.]+/g, "");
+  const coreDate = builddatecore;
 
   return (
     <ScreenBody>

@@ -74,11 +74,14 @@ async function checkPermissions() {
       shouldSetBadge: true,
     }),
   });
-  setNotificationChannelAsync('transaction-channel-id', {
-    name: 'Transaction Channel',
-    importance: AndroidImportance.HIGH,
-    description: ' Notification Channel for incoming Transactions',
-  });
+  if (Platform.OS === 'android'){
+    //Only used for Android
+    setNotificationChannelAsync('transaction-channel-id', {
+      name: 'Transaction Channel',
+      importance: AndroidImportance.HIGH,
+      description:' Notification Channel for incoming Transactions'
+    });
+  }
 }
 
 function App() {
@@ -136,21 +139,28 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 });
 
 const _handleAppStateChange = (nextAppState) => {
-  if (nextAppState == 'background') {
-    if (Platform.OS === 'android') {
-      BackgroundTimer.runBackgroundTimer(() => {
-        console.log('@@@@@@@  BACKGROUND @@@@@@@');
-        if (selectLoggedIn) {
-          refreshUserStatus();
-        }
-      }, 25000);
-    } //ios
-    else {
-      if (!isInBG) {
-        isInBG = true;
-        registerIOSBackgroundTask();
+    if (nextAppState == "background") {
+      if (Platform.OS === 'android') {
+        BackgroundTimer.runBackgroundTimer(() => { 
+          console.log("@@@@@@@  BACKGROUND @@@@@@@");
+          if (selectLoggedIn)
+            {
+              refreshUserStatus();
+              refreshCoreInfo();
+            }
+          },
+          25000);
+        
       }
-    }
+      else //ios
+      {
+        if (!isInBG)
+        {
+          isInBG = true;
+          registerIOSBackgroundTask();
+        } 
+      }
+    
   } else {
     if (nextAppState == 'active') {
       if (Platform.OS === 'android') {
