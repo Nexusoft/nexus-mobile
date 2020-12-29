@@ -8,25 +8,24 @@ import { refreshUserAccounts } from 'lib/user';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
 
-
 export const isConfirmed = (tx) => !!tx.confirmations;
 
 const limit = 20;
-export async function loadTransactions() {
+export async function loadTransactions({ reload } = { reload: false }) {
   const store = getStore();
   const {
     transactions: { txMap },
   } = store.getState();
   const loadedTransactions = Object.values(txMap);
-  const page = Math.floor(loadedTransactions.length / limit);
+  const offset = reload ? 0 : loadedTransactions.length;
 
   const transactions = await sendAPI('users/list/transactions', {
     verbose: 'summary',
     limit,
-    page,
+    offset,
   });
   store.dispatch({
-    type: TYPE.ADD_TRANSACTIONS,
+    type: reload ? TYPE.RELOAD_TRANSACTIONS : TYPE.ADD_TRANSACTIONS,
     payload: {
       list: transactions,
       endReached: transactions.length < limit,
@@ -108,7 +107,7 @@ export function watchNewTransactions() {
         typeof txCount === 'number' &&
         typeof oldTxCount === 'number' &&
         !wasSyncing
-      ) { 
+      ) {
         const transactions = await sendAPI('users/list/transactions', {
           verbose: 'summary',
           limit: txCount - oldTxCount,
@@ -140,7 +139,7 @@ export function watchNewTransactions() {
                 data: { type: 'new_transaction', txid: tx.txid },
               },
               trigger: null,
-              channelId: "transaction-channel-id"
+              channelId: 'transaction-channel-id',
             });
           }
         });

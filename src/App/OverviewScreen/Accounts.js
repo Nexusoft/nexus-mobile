@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  ScrollView,
-  TouchableWithoutFeedback,
-  FlatList,
-} from 'react-native';
+import { View, TouchableWithoutFeedback, FlatList } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
