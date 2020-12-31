@@ -10,6 +10,7 @@ import AddressPicker from 'components/AddressPicker';
 import { useTheme, disabledColor } from 'lib/theme';
 import { callAPI } from 'lib/api';
 import { navigate } from 'lib/navigation';
+import { getTokenName } from 'lib/tokens';
 import formatNumber from 'utils/formatNumber';
 import { getStore } from 'store';
 
@@ -152,7 +153,7 @@ export default function SendTo({ account }) {
               name="amount"
               mode="outlined"
               background={['surface', 2]}
-              label="Amount (NXS)"
+              label={`Amount (${getTokenName(account, { markup: false })})`}
               keyboardType="numeric"
             />
             <Button
@@ -164,7 +165,8 @@ export default function SendTo({ account }) {
               labelStyle={{ fontSize: 12 }}
             >
               Send all (
-              {formatNumber(account.balance, { maximumFractionDigits: 6 })} NXS)
+              {formatNumber(account.balance, { maximumFractionDigits: 6 })}{' '}
+              {getTokenName(account, { markup: false })})
             </Button>
           </View>
 

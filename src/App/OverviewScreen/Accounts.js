@@ -7,7 +7,8 @@ import Text from 'components/Text';
 import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import { navigate } from 'lib/navigation';
-import { refreshUserAccounts } from 'lib/user';
+import { refreshUserAccounts, refreshUserBalances } from 'lib/user';
+import { refreshMarketPrice } from 'lib/market';
 import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
 import useRefresh from 'utils/useRefresh';
@@ -116,9 +117,12 @@ function Account({ account }) {
   );
 }
 
+const refreshData = () =>
+  Promise.all([refreshUserAccounts, refreshUserBalances, refreshMarketPrice]);
+
 export default function Accounts() {
   const accounts = useSelector((state) => state.user.accounts);
-  const [refreshing, refresh] = useRefresh(refreshUserAccounts);
+  const [refreshing, refresh] = useRefresh(refreshData);
   return (
     <>
       <TouchableWithoutFeedback
