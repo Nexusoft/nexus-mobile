@@ -10,7 +10,7 @@ import SvgIcon from 'components/SvgIcon';
 import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { refreshUserStatus } from 'lib/user';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { showError } from 'lib/ui';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
@@ -176,7 +176,7 @@ export default function RecoveryScreen() {
         })}
         onSubmit={async ({ username, recovery, password, pin }) => {
           try {
-            await sendAPI('users/recover/user', {
+            await callAPI('users/recover/user', {
               username,
               recovery,
               password,

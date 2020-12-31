@@ -1,5 +1,5 @@
 import * as TYPE from 'consts/actionTypes';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { getStore } from 'store';
 
 export const selectLoggedIn = (state) => !!state.user.status;
@@ -7,7 +7,7 @@ export const selectLoggedIn = (state) => !!state.user.status;
 export async function refreshUserStatus() {
   const store = getStore();
   try {
-    const status = await sendAPI('users/get/status');
+    const status = await callAPI('users/get/status');
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     return status;
   } catch (err) {
@@ -19,7 +19,7 @@ export async function refreshUserStatus() {
 export async function refreshUserBalances() {
   const store = getStore();
   try {
-    const balances = await sendAPI('finance/get/balances');
+    const balances = await callAPI('finance/get/balances');
     store.dispatch({ type: TYPE.SET_USER_BALANCES, payload: balances });
     return balances;
   } catch (err) {
@@ -31,7 +31,7 @@ export async function refreshUserBalances() {
 export async function refreshUserAccounts() {
   const store = getStore();
   try {
-    const accounts = await sendAPI('users/list/accounts');
+    const accounts = await callAPI('users/list/accounts');
     store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: accounts });
     return accounts;
   } catch (err) {
@@ -41,11 +41,11 @@ export async function refreshUserAccounts() {
 }
 
 export async function login({ username, password, pin }) {
-  await sendAPI('users/login/user', { username, password, pin });
+  await callAPI('users/login/user', { username, password, pin });
   await refreshUserStatus();
 }
 
 export async function logout() {
-  await sendAPI('users/logout/user');
+  await callAPI('users/logout/user');
   await refreshUserStatus();
 }

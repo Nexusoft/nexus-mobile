@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
 import { confirmPin, showError } from 'lib/ui';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { refreshUserAccounts } from 'lib/user';
 import { goBack } from 'lib/navigation';
 import { createLocalNameFee } from 'lib/fees';
@@ -21,7 +21,7 @@ export default function NewAccountScreen() {
           const pin = await confirmPin({ fee: createLocalNameFee });
           if (pin !== null) {
             try {
-              await sendAPI('finance/create/account', {
+              await callAPI('finance/create/account', {
                 name: name || undefined,
                 pin,
               });

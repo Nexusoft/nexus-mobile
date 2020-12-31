@@ -10,7 +10,7 @@ import SvgIcon from 'components/SvgIcon';
 import InfoField from 'components/InfoField';
 import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { showError, showSuccess, showNotification } from 'lib/ui';
 import { navigate } from 'lib/navigation';
 import { selectLoggedIn } from 'lib/user';
@@ -152,7 +152,7 @@ function useRegistrationWatcher() {
         (state) => state.core?.info?.blocks,
         async (blocks) => {
           if (blocks) {
-            const txs = await sendAPI('users/list/transactions', {
+            const txs = await callAPI('users/list/transactions', {
               username: registration?.username,
               order: 'asc',
               limit: 1,
@@ -270,7 +270,7 @@ export default function CreateUserScreen() {
           })}
           onSubmit={async ({ username, password, pin }) => {
             try {
-              const result = await sendAPI('users/create/user', {
+              const result = await callAPI('users/create/user', {
                 username,
                 password,
                 pin,

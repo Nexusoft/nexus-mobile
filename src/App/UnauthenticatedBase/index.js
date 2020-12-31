@@ -97,7 +97,7 @@ export default function UnauthenticatedBase() {
   //       initialValues={{ username: '', password: '', pin: '' }}
   //       onSubmit={async ({ username, password, pin }) => {
   //         try {
-  //           await sendAPI('users/login/user', { username, password, pin });
+  //           await callAPI('users/login/user', { username, password, pin });
   //           await refreshUserStatus();
   //         } catch (err) {
   //           showError(err && err.message);

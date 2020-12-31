@@ -8,7 +8,7 @@ import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import AddressPicker from 'components/AddressPicker';
 import { useTheme, disabledColor } from 'lib/theme';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { navigate } from 'lib/navigation';
 import formatNumber from 'utils/formatNumber';
 import { getStore } from 'store';
@@ -65,7 +65,7 @@ async function resolveNameOrAddress(nameOrAddress) {
   if (!nameOrAddress) return null;
 
   if (base58Regex.test(nameOrAddress)) {
-    const addressResult = await sendAPI('system/validate/address', {
+    const addressResult = await callAPI('system/validate/address', {
       address: nameOrAddress,
     });
     if (addressResult.is_valid) {
@@ -79,7 +79,7 @@ async function resolveNameOrAddress(nameOrAddress) {
 
   // This is a name
   try {
-    const nameResult = await sendAPI('names/get/name', { name: nameOrAddress });
+    const nameResult = await callAPI('names/get/name', { name: nameOrAddress });
     return {
       name: nameOrAddress,
       address: nameResult.register_address,
@@ -104,7 +104,11 @@ export default function SendTo({ account }) {
       validationSchema={yup.object().shape({
         nameOrAddress: yup.string().required('Required!'),
         amount: yup.number().typeError('Invalid!').min(0, 'Invalid!'),
-        reference: yup.number().notRequired().typeError('Invalid!').min(0,'Must be positive!')
+        reference: yup
+          .number()
+          .notRequired()
+          .typeError('Invalid!')
+          .min(0, 'Must be positive!'),
       })}
       onSubmit={async (
         { nameOrAddress, amount, reference },

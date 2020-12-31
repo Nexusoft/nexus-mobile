@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import Portal from 'components/Portal';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { goBack } from 'lib/navigation';
 import { showError, showNotification } from 'lib/ui';
 
@@ -97,7 +97,7 @@ export default function ChangePasswordScreen() {
         })}
         onSubmit={async ({ password, pin, newPassword, newPin }) => {
           try {
-            await sendAPI('users/update/user', {
+            await callAPI('users/update/user', {
               password,
               pin,
               new_password: newPassword,

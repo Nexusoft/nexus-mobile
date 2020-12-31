@@ -1,7 +1,7 @@
 import { scheduleNotificationAsync } from 'expo-notifications';
 
 import * as TYPE from 'consts/actionTypes';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { getDeltaSign } from 'lib/contracts';
 import { getTokenName } from 'lib/tokens';
 import { refreshUserAccounts } from 'lib/user';
@@ -19,7 +19,7 @@ export async function loadTransactions({ reload } = { reload: false }) {
   const loadedTransactions = Object.values(txMap);
   const offset = reload ? 0 : loadedTransactions.length;
 
-  const transactions = await sendAPI('users/list/transactions', {
+  const transactions = await callAPI('users/list/transactions', {
     verbose: 'summary',
     limit,
     offset,
@@ -66,7 +66,7 @@ const getBalanceChanges = (tx) =>
     : 0;
 
 export async function fetchTransaction(txid) {
-  const tx = await sendAPI('ledger/get/transaction', {
+  const tx = await callAPI('ledger/get/transaction', {
     txid,
     verbose: 'summary',
   });
@@ -108,7 +108,7 @@ export function watchNewTransactions() {
         typeof oldTxCount === 'number' &&
         !wasSyncing
       ) {
-        const transactions = await sendAPI('users/list/transactions', {
+        const transactions = await callAPI('users/list/transactions', {
           verbose: 'summary',
           limit: txCount - oldTxCount,
         });
