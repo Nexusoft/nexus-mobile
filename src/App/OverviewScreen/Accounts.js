@@ -58,7 +58,7 @@ const styles = {
   },
   accActionLabel: ({ theme }) => ({
     fontSize: 11,
-    color: theme.dark ? theme.primary : undefined,
+    color: theme.dark ? theme.primary : theme.foreground,
   }),
 };
 
