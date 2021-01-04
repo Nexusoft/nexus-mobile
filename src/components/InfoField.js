@@ -21,7 +21,7 @@ const styles = {
       alignItems: 'center',
     },
   value: ({ inline, bordered, theme }) => [
-    !!inline && { flex: 1, marginLeft: 8 },
+    !!inline && { flex: 1, marginLeft: 8, alignItems: 'flex-end' },
     !inline && {
       marginTop: 7,
     },
@@ -64,15 +64,19 @@ export default function InfoField({
           theme,
         })}
       >
-        <Text
-          size={15}
-          inline={inline}
-          selectable
-          mono={mono}
-          style={styles.valueText({ inline })}
-        >
-          {value}
-        </Text>
+        {typeof value === 'string' || typeof value === 'number' ? (
+          <Text
+            size={15}
+            inline={inline}
+            selectable
+            mono={mono}
+            style={styles.valueText({ inline })}
+          >
+            {value}
+          </Text>
+        ) : (
+          value
+        )}
       </View>
     </View>
   );

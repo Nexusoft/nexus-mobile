@@ -102,6 +102,17 @@ export default function AccountDetailsScreen({ route }) {
             )
           }
         />
+        {!!account.token && account.token?.length === 51 && (
+          <InfoField
+            compact
+            label="Token address"
+            value={
+              <Text mono style={styles.address}>
+                {segmentAddress(account.token)}
+              </Text>
+            }
+          />
+        )}
         <Divider />
         <InfoField
           compact
