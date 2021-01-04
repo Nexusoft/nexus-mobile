@@ -2,6 +2,7 @@ import React from 'react';
 import { FAB } from 'react-native-paper';
 import { Formik } from 'formik';
 
+import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
 import { confirmPin, showError } from 'lib/ui';
@@ -18,7 +19,7 @@ export default function NewAccountScreen() {
           name: '',
         }}
         onSubmit={async ({ name }) => {
-          const pin = await confirmPin({ fee: createLocalNameFee });
+          const pin = await confirmPin({ fee: name ? createLocalNameFee : 0 });
           if (pin !== null) {
             try {
               await callAPI('finance/create/account', {
@@ -33,18 +34,21 @@ export default function NewAccountScreen() {
           }
         }}
       >
-        {({ handleSubmit, isSubmitting }) => (
+        {({ handleSubmit, isSubmitting, values }) => (
           <>
             <TextBox.Formik
               autoFocus
               name="name"
               label="Account name (optional)"
             />
+            <Text sub style={{ textAlign: 'center', marginTop: 30 }}>
+              Fee: {values.name ? createLocalNameFee : 0} NXS
+            </Text>
             <FAB
               mode="contained"
               disabled={isSubmitting}
               loading={isSubmitting}
-              style={{ marginTop: 30 }}
+              style={{ marginTop: 10 }}
               onPress={handleSubmit}
               label="Create account"
             />
