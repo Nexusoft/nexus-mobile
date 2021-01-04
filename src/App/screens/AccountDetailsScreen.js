@@ -191,15 +191,17 @@ export default function AccountDetailsScreen({ route }) {
             Receive
           </Button>
           <Divider vertical inset={10} />
-          <Button
-            style={styles.action}
-            mode="text"
-            onPress={() => {
-              navigate('RenameAccount', { account });
-            }}
-          >
-            Rename
-          </Button>
+          {account.name !== 'default' && (
+            <Button
+              style={styles.action}
+              mode="text"
+              onPress={() => {
+                navigate('RenameAccount', { account });
+              }}
+            >
+              Rename
+            </Button>
+          )}
           <Divider vertical inset={10} />
           <Button
             style={styles.action}
