@@ -47,7 +47,7 @@ export default function AccountDetailsScreen({ route }) {
           value={
             account.name || (
               <Text disabled style={{ marginRight: 10 }}>
-                No name
+                Unnamed
               </Text>
             )
           }

@@ -81,7 +81,7 @@ function Account({ account }) {
                 disabled={!account.name}
               />
               <Text style={styles.accName} bold disabled={!account.name}>
-                {account.name || 'No name'}
+                {account.name || 'Unnamed'}
               </Text>
             </View>
             <Text style={styles.accBalance}>

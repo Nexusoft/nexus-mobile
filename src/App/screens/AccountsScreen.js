@@ -64,7 +64,7 @@ export default function AccountsScreen() {
             >
               <View style={styles.account}>
                 <Text style={styles.accName} bold disabled={!account.name}>
-                  {account.name || 'No name'}
+                  {account.name || 'Unnamed'}
                 </Text>
                 <View style={styles.addressBox({ theme })}>
                   <Text style={styles.address} mono>

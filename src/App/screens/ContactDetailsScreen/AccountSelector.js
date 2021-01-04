@@ -68,7 +68,7 @@ export default function AccountSelector({ onSelectAccount, ...rest }) {
                       disabled={!account.name}
                     />
                     <Text style={styles.accName} bold disabled={!account.name}>
-                      {account.name || 'No name'}
+                      {account.name || 'Unnamed'}
                     </Text>
                   </View>
 
