@@ -9,10 +9,10 @@ import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import InfoField from 'components/InfoField';
 import { showNotification } from 'lib/ui';
+import { getTokenName } from 'lib/tokens';
 import { navigate } from 'lib/navigation';
 import segmentAddress from 'utils/segmentAddress';
 import CopyIcon from 'icons/copy.svg';
-import EditIcon from 'icons/edit.svg';
 
 const styles = {
   account: {
@@ -94,28 +94,46 @@ export default function AccountDetailsScreen({ route }) {
           compact
           inline
           label="Token name"
-          value={account.token_name}
+          value={
+            account.token_name || (
+              <Text disabled style={{ marginRight: 10 }}>
+                Unnamed
+              </Text>
+            )
+          }
         />
         <Divider />
         <InfoField
           compact
           inline
           label="Available balance"
-          value={`${account.balance} ${account.token_name}`}
+          value={
+            <Text>
+              {account.balance} {getTokenName(account)}
+            </Text>
+          }
         />
         <Divider />
         <InfoField
           compact
           inline
           label="Pending balance"
-          value={`${account.pending} ${account.token_name}`}
+          value={
+            <Text>
+              {account.pending} {getTokenName(account)}
+            </Text>
+          }
         />
         <Divider />
         <InfoField
           compact
           inline
           label="Unconfirmed balance"
-          value={`${account.unconfirmed} ${account.token_name}`}
+          value={
+            <Text>
+              {account.unconfirmed} {getTokenName(account)}
+            </Text>
+          }
         />
         <Divider />
         {account.stake !== undefined && (
@@ -124,7 +142,11 @@ export default function AccountDetailsScreen({ route }) {
               compact
               inline
               label="Staking balance (locked)"
-              value={`${account.stake} ${account.token_name}`}
+              value={
+                <Text>
+                  {account.stake} {getTokenName(account)}
+                </Text>
+              }
             />
             <Divider />
           </>
@@ -135,7 +157,11 @@ export default function AccountDetailsScreen({ route }) {
               compact
               inline
               label="Immature balance"
-              value={`${account.immature} ${account.token_name}`}
+              value={
+                <Text>
+                  {account.immature} {getTokenName(account)}
+                </Text>
+              }
             />
             <Divider />
           </>
