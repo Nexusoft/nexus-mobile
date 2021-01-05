@@ -98,7 +98,7 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 
         LOG_D("Home Env: %s", std::string(getenv("HOME")).c_str());
 
-        ofstream myfile;
+        ofstream nexusConfFile;
         string folder = std::string(getenv("HOME")) + "/Nexus";
         string fileLoc = std::string(folder + "/nexus.conf");
 
@@ -118,12 +118,12 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
         int confthere = stat(fileLoc.c_str(), &statbuf);
         LOG_D("Is Nexus Conf There? : %d", confthere);
 
-        myfile.open(fileLoc, std::fstream::in | std::fstream::out | std::fstream::app);
+        nexusConfFile.open(fileLoc, std::fstream::in | std::fstream::out | std::fstream::app);
         if (confthere < 0) {
             LOG_D("!! WRITING FILE");
             // If file does not exist, write to it.
             string fileContent = "apiuser=" + string(inApiUser) +"\napipassword=" + string(inApiPassword);
-            myfile
+            nexusConfFile
                     << fileContent ;
 
 
@@ -133,7 +133,7 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
         }
         env->ReleaseStringUTFChars(apiPassword,inApiPassword);
         env->ReleaseStringUTFChars(apiUser,inApiUser);
-        myfile.close();
+        nexusConfFile.close();
 
         LOG_D("Listing All Params sent to core: ");
         for (int i = 0; i < argc; i++) {

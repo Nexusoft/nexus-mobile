@@ -10,19 +10,24 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import java.security.SecureRandom;
 import java.util.Base64;
 
+/*
+
+    Nexus Core. This is a foreground service.
+
+ */
 
 public class NexusService extends Service {
 
     protected NexusCore _nexuscore;
     protected Thread _servicethread;
 
-
+    static final public String channelID = "core-status-channel";
+    static final public int notificationID = 201409;
 
     @Nullable
     @Override
@@ -61,8 +66,6 @@ public class NexusService extends Service {
         };
         _servicethread = new Thread(_nexuscore);
         _servicethread.start();
-        int notificationID = CoreStatus.notificationID;
-        String channelID = CoreStatus.channelID;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.notification_icon))
                 .setSmallIcon(R.drawable.notification_icon)
@@ -75,7 +78,6 @@ public class NexusService extends Service {
                 .setOngoing(true);
 
         Notification coreNotification = builder.build();
-        //notificationManager.notify(notificationID,builder.bu;
         startForeground(notificationID, coreNotification);
 
 
