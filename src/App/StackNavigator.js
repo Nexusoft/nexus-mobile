@@ -14,10 +14,6 @@ import AccountsScreen from './screens/AccountsScreen';
 import ContactsScreen from './screens/ContactsScreen';
 import TransactionsScreen from './screens/TransactionsScreen';
 import RenameAccountScreen from './screens/RenameAccountScreen';
-import TokensScreen from './screens/TokensScreen';
-import NamesScreen from './screens/NamesScreen';
-import NamespacesScreen from './screens/NamespacesScreen';
-import AssetsScreen from './screens/AssetsScreen';
 import TransactionDetailsScreen from './screens/TransactionDetailsScreen';
 import AccountDetailsScreen from './screens/AccountDetailsScreen';
 import ContactDetailsScreen from './screens/ContactDetailsScreen';
@@ -46,10 +42,6 @@ const screens = [
   ContactsScreen,
   TransactionsScreen,
   RenameAccountScreen,
-  TokensScreen,
-  NamesScreen,
-  NamespacesScreen,
-  AssetsScreen,
   TransactionDetailsScreen,
   AccountDetailsScreen,
   ContactDetailsScreen,

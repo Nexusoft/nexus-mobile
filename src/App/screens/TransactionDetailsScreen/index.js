@@ -4,7 +4,7 @@ import { ActivityIndicator } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import TransactionDetails from './TransactionDetails';
 import ContractDetails from './ContractDetails';
 
@@ -24,7 +24,7 @@ export default function TransactionDetailsScreen({ route }) {
   const [transaction, setTransaction] = React.useState(null);
   React.useEffect(() => {
     (async () => {
-      const tx = await sendAPI('ledger/get/transaction', {
+      const tx = await callAPI('ledger/get/transaction', {
         txid,
         verbose: 'summary',
       });

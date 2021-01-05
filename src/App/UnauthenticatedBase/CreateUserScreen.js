@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Clipboard } from 'react-native';
 import { Formik } from 'formik';
 import { FAB, Dialog, ActivityIndicator, Button } from 'react-native-paper';
 import * as yup from 'yup';
@@ -7,15 +7,17 @@ import * as yup from 'yup';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
+import InfoField from 'components/InfoField';
 import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
-import { sendAPI } from 'lib/api';
-import { showError, showSuccess } from 'lib/ui';
+import { callAPI } from 'lib/api';
+import { showError, showSuccess, showNotification } from 'lib/ui';
 import { navigate } from 'lib/navigation';
 import { selectLoggedIn } from 'lib/user';
 import { getStore } from 'store';
 import useMounted from 'utils/useMounted';
 import LogoIcon from 'icons/logo-full.svg';
+import CopyIcon from 'icons/copy.svg';
 import Backdrop from './Backdrop';
 
 const styles = {
@@ -140,65 +142,68 @@ function CreateUserForm({ values, handleSubmit, isSubmitting }) {
 }
 
 function useRegistrationWatcher() {
-  const [registering, setRegistering] = React.useState(false);
+  const [registration, setRegistration] = React.useState(null);
   const mounted = useMounted();
-  const watchUserRegistration = (username) => {
-    setRegistering(username);
-    const store = getStore();
-    const unobserve = store.observe(
-      (state) => state.core?.info?.blocks,
-      async (blocks) => {
-        if (blocks) {
-          const txs = await sendAPI('users/list/transactions', {
-            username,
-            order: 'asc',
-            limit: 1,
-            verbose: 'summary',
-          });
-          if (txs && txs[0]?.confirmations) {
-            unobserve();
-            const store = getStore();
-            const loggedIn = selectLoggedIn(store.getState());
-            showSuccess(
-              <Text>
-                User <Text bold>{username}</Text> has been registered on Nexus
-                blockchain!
-              </Text>,
-              {
-                getButtons: ({ onDismiss }) => (
-                  <>
-                    <Button mode="text" onPress={onDismiss}>
-                      Dismiss
-                    </Button>
-                    {!loggedIn && (
-                      <Button
-                        mode="text"
-                        onPress={() => {
-                          onDismiss();
-                          navigate('Login');
-                        }}
-                      >
-                        Log in
+  const watchRegistration = React.useCallback(
+    ({ username, txid }) => {
+      setRegistration({ username, txid });
+      const store = getStore();
+      const unobserve = store.observe(
+        (state) => state.core?.info?.blocks,
+        async (blocks) => {
+          if (blocks) {
+            const txs = await callAPI('users/list/transactions', {
+              username: registration?.username,
+              order: 'asc',
+              limit: 1,
+              verbose: 'summary',
+            });
+            if (txs && txs[0]?.confirmations) {
+              unobserve();
+              const store = getStore();
+              const loggedIn = selectLoggedIn(store.getState());
+              showSuccess(
+                <Text>
+                  User <Text bold>{registration?.username}</Text> has been
+                  registered on Nexus blockchain!
+                </Text>,
+                {
+                  getButtons: ({ onDismiss }) => (
+                    <>
+                      <Button mode="text" onPress={onDismiss}>
+                        Dismiss
                       </Button>
-                    )}
-                  </>
-                ),
+                      {!loggedIn && (
+                        <Button
+                          mode="text"
+                          onPress={() => {
+                            onDismiss();
+                            navigate('Login');
+                          }}
+                        >
+                          Log in
+                        </Button>
+                      )}
+                    </>
+                  ),
+                }
+              );
+              if (mounted.current) {
+                setRegistration(null);
               }
-            );
-            if (mounted.current) {
-              setRegistering(null);
             }
           }
         }
-      }
-    );
-  };
-  return [registering, watchUserRegistration];
+      );
+    },
+    [registration]
+  );
+  return [registration, watchRegistration];
 }
 
 export default function CreateUserScreen() {
   const theme = useTheme();
-  const [registering, watchUserRegistration] = useRegistrationWatcher();
+  const [registration, watchRegistration] = useRegistrationWatcher();
 
   return (
     <Backdrop
@@ -215,13 +220,36 @@ export default function CreateUserScreen() {
         </>
       }
     >
-      {!!registering ? (
+      {!!registration ? (
         <View style={styles.creating}>
           <ActivityIndicator animating color={theme.foreground} size="small" />
           <Text style={styles.creatingText}>
-            User registration for <Text bold>{registering}</Text> is waiting to
-            be confirmed on Nexus blockchain...
+            User registration for <Text bold>{registration?.username}</Text> is
+            waiting to be confirmed on Nexus blockchain...
           </Text>
+          <InfoField
+            label="Transaction ID"
+            control={
+              <Button
+                mode="text"
+                icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
+                labelStyle={{ fontSize: 12 }}
+                onPress={() => {
+                  Clipboard.setString(registration?.txid);
+                  showNotification('Copied to clipboard');
+                }}
+              >
+                Copy
+              </Button>
+            }
+            value={
+              <Text mono size={13}>
+                {registration?.txid}
+              </Text>
+            }
+            mono
+            bordered
+          />
         </View>
       ) : (
         <Formik
@@ -242,12 +270,16 @@ export default function CreateUserScreen() {
           })}
           onSubmit={async ({ username, password, pin }) => {
             try {
-              await sendAPI('users/create/user', { username, password, pin });
+              const result = await callAPI('users/create/user', {
+                username,
+                password,
+                pin,
+              });
+              watchRegistration({ username, txid: result.hash });
             } catch (err) {
               showError(err && err.message);
               return;
             }
-            watchUserRegistration(username);
           }}
           component={CreateUserForm}
         />

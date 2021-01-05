@@ -58,7 +58,7 @@ export default function SendFrom({ account }) {
               disabled={!account.name}
             />
             <Text bold color={color} size={16} disabled={!account.name}>
-              {account.name || 'No name'}
+              {account.name || 'Unnamed'}
             </Text>
           </View>
           <View style={styles.addressBox({ theme })}>

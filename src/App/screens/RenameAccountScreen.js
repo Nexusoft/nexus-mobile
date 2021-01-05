@@ -8,7 +8,7 @@ import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
 import { confirmPin, showError } from 'lib/ui';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { refreshUserAccounts } from 'lib/user';
 import { goBack } from 'lib/navigation';
 
@@ -34,7 +34,7 @@ export default function RenameAccountScreen({ route }) {
         onSubmit={async ({ name }) => {
           let nameRecord;
           try {
-            nameRecord = await sendAPI('names/get/name', {
+            nameRecord = await callAPI('names/get/name', {
               name: `${username}:${name}`,
             });
             if (
@@ -57,7 +57,7 @@ export default function RenameAccountScreen({ route }) {
             // Check if balance is enough to pay the fee, otherwise user might
             // end up creating a new name without nullifying the old name
             const fee = getFee(account?.name);
-            const defaultAccount = await sendAPI('finance/get/account', {
+            const defaultAccount = await callAPI('finance/get/account', {
               name: 'default',
             });
             if (defaultAccount.balance < fee) {
@@ -69,7 +69,7 @@ export default function RenameAccountScreen({ route }) {
 
             const pin = await confirmPin({ fee });
             if (pin !== null) {
-              await sendAPI(
+              await callAPI(
                 nameRecord ? 'names/update/name' : 'names/create/name',
                 {
                   pin,
@@ -79,7 +79,7 @@ export default function RenameAccountScreen({ route }) {
               );
 
               if (account?.name) {
-                await sendAPI('names/update/name', {
+                await callAPI('names/update/name', {
                   pin,
                   name: account.name,
                   register_address: '0',

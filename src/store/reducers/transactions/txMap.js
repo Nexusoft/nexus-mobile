@@ -4,6 +4,15 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case TYPE.RELOAD_TRANSACTIONS:
+      return (
+        action.payload.list &&
+        action.payload.list.reduce((map, tx) => {
+          map[tx.txid] = tx;
+          return map;
+        }, {})
+      );
+
     case TYPE.ADD_TRANSACTIONS:
       return (
         action.payload.list &&

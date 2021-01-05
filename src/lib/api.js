@@ -20,7 +20,7 @@ function getConfig() {
         ip: '127.0.0.1',
         port: '8080',
         user: embeddedUser,
-        password:embeddedPassword,
+        password: embeddedPassword,
       }
     : {
         ip: externalCoreIP,
@@ -30,7 +30,7 @@ function getConfig() {
       };
 }
 
-export async function sendAPI(endpoint, params) {
+export async function callAPI(endpoint, params) {
   const config = getConfig();
   const baseUrl = `http://${config.ip}:${config.port}`;
   const response = await fetch(`${baseUrl}/${endpoint}`, {

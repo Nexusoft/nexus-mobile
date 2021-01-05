@@ -10,7 +10,7 @@ import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import { useTheme, disabledColor } from 'lib/theme';
 import { goBack } from 'lib/navigation';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { showNotification, showError } from 'lib/ui';
 import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
@@ -145,7 +145,7 @@ export default function ConfirmSendScreen({ route }) {
           <Text style={styles.label} sub size={16}>
             Reference number
           </Text>
-        <Text style={styles.referenceNo}>{reference}</Text>
+          <Text style={styles.referenceNo}>{reference}</Text>
         </View>
       )}
 
@@ -168,7 +168,7 @@ export default function ConfirmSendScreen({ route }) {
           }
 
           try {
-            await sendAPI('finance/debit/account', params);
+            await callAPI('finance/debit/account', params);
           } catch (err) {
             showError(err && err.message);
             return;

@@ -9,7 +9,7 @@ import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
 import { useTheme } from 'lib/theme';
 import { refreshUserStatus } from 'lib/user';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { showError } from 'lib/ui';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
@@ -92,8 +92,8 @@ export default function LoginScreen() {
         })}
         onSubmit={async ({ username, password, pin }) => {
           try {
-            await sendAPI('users/login/user', { username, password, pin });
-            await sendAPI('users/unlock/user', { pin, notifications: true });
+            await callAPI('users/login/user', { username, password, pin });
+            await callAPI('users/unlock/user', { pin, notifications: true });
             await refreshUserStatus();
           } catch (err) {
             showError(err && err.message);

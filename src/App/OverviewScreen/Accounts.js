@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { View, TouchableWithoutFeedback, FlatList } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
@@ -7,8 +7,11 @@ import Text from 'components/Text';
 import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import { navigate } from 'lib/navigation';
+import { refreshUserAccounts, refreshUserBalances } from 'lib/user';
+import { refreshMarketPrice } from 'lib/market';
 import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
+import useRefresh from 'utils/useRefresh';
 import WalletIcon from 'icons/wallet.svg';
 
 const styles = {
@@ -55,7 +58,7 @@ const styles = {
   },
   accActionLabel: ({ theme }) => ({
     fontSize: 11,
-    color: theme.dark ? theme.primary : undefined,
+    color: theme.dark ? theme.primary : theme.foreground,
   }),
 };
 
@@ -78,7 +81,7 @@ function Account({ account }) {
                 disabled={!account.name}
               />
               <Text style={styles.accName} bold disabled={!account.name}>
-                {account.name || 'No name'}
+                {account.name || 'Unnamed'}
               </Text>
             </View>
             <Text style={styles.accBalance}>
@@ -114,8 +117,12 @@ function Account({ account }) {
   );
 }
 
+const refreshData = () =>
+  Promise.all([refreshUserAccounts, refreshUserBalances, refreshMarketPrice]);
+
 export default function Accounts() {
   const accounts = useSelector((state) => state.user.accounts);
+  const [refreshing, refresh] = useRefresh(refreshData);
   return (
     <>
       <TouchableWithoutFeedback
@@ -127,12 +134,14 @@ export default function Accounts() {
           Accounts
         </Text>
       </TouchableWithoutFeedback>
-      <ScrollView style={styles.accounts}>
-        {accounts &&
-          accounts.map((account) => (
-            <Account key={account.address} account={account} />
-          ))}
-      </ScrollView>
+      <FlatList
+        refreshing={refreshing}
+        onRefresh={refresh}
+        style={styles.accounts}
+        data={accounts}
+        keyExtractor={(acc) => acc.address}
+        renderItem={({ item: account }) => <Account account={account} />}
+      />
     </>
   );
 }

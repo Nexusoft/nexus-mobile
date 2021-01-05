@@ -1,5 +1,5 @@
 import * as TYPE from 'consts/actionTypes';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { getStore } from 'store';
 
 export const selectConnected = (state) => !!state.core.info;
@@ -7,7 +7,7 @@ export const selectConnected = (state) => !!state.core.info;
 async function getInfo() {
   const store = getStore();
   try {
-    const coreInfo = await sendAPI('system/get/info');
+    const coreInfo = await callAPI('system/get/info');
     console.log(coreInfo);
     store.dispatch({ type: TYPE.SET_CORE_INFO, payload: coreInfo });
     return coreInfo;

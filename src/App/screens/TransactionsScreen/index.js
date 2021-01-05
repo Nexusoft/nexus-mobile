@@ -10,6 +10,7 @@ import Divider from 'components/Divider';
 import { loadTransactions } from 'lib/transactions';
 import { toggleTransactionsFilter } from 'lib/ui';
 import memoize from 'utils/memoize';
+import useRefresh from 'utils/useRefresh';
 import TransactionIcon from 'icons/transaction.svg';
 // import AdjustIcon from 'icons/adjust.svg';
 // import Filters from './Filters';
@@ -19,37 +20,47 @@ const selectTransactions = memoize((txMap) =>
   Object.values(txMap).sort((tx1, tx2) => tx2.timestamp - tx1.timestamp)
 );
 
-export default function TransactionsScreen() {
-  const loadedAll = useSelector((state) => state.transactions.loadedAll);
-  const transactions = useSelector((state) =>
-    selectTransactions(state.transactions.txMap)
-  );
+function useLoadMore() {
   const [loading, setLoading] = React.useState(false);
-  const load = async () => {
+  const loadMore = React.useCallback(async () => {
     setLoading(true);
     try {
       await loadTransactions();
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+  return [loading, loadMore];
+}
+
+export default function TransactionsScreen() {
+  const loadedAll = useSelector((state) => state.transactions.loadedAll);
+  const transactions = useSelector((state) =>
+    selectTransactions(state.transactions.txMap)
+  );
+  const [refreshing, refresh] = useRefresh(() =>
+    loadTransactions({ reload: true })
+  );
+  const [loadingMore, loadMore] = useLoadMore();
   React.useEffect(() => {
-    if (!loadedAll && !transactions.length) {
-      load();
+    if (!transactions.length && !loadedAll) {
+      loadMore();
     }
   }, []);
   return (
     <ScreenBody surface scroll={false}>
       {/* <Filters /> */}
       <FlatList
+        refreshing={refreshing}
+        onRefresh={refresh}
         data={transactions}
         ItemSeparatorComponent={Divider}
         keyExtractor={(tx) => tx.txid}
         renderItem={({ item }) => <Transaction transaction={item} />}
-        onEndReached={loadedAll ? undefined : load}
+        onEndReached={loadedAll ? undefined : loadMore}
         onEndReachedThreshold={0.1}
       />
-      {loading && <ActivityIndicator />}
+      {loadingMore && <ActivityIndicator />}
     </ScreenBody>
   );
 }
