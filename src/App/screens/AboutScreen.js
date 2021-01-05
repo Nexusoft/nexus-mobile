@@ -86,7 +86,7 @@ export default function CoreInfoScreen() {
             <Text bold style={styles.center}>
               Copyright
             </Text>{' '}
-            2020 NEXUS DEVELOPMENT, U.S. LLC.
+            2021 NEXUS DEVELOPMENT, U.S. LLC.
           </Text>
           <Link url="https://nexus.io/">nexus.io</Link>
 
@@ -122,7 +122,7 @@ export default function CoreInfoScreen() {
           <Text bold style={styles.header}>
             License Agreement
           </Text>
-          <Text style={styles.paragraph}>Copyright 2020 Nexus</Text>
+          <Text style={styles.paragraph}>Copyright 2021 Nexus</Text>
           <Text style={styles.paragraph}>
             Permission is hereby granted, free of charge, to any person
             obtaining a copy of this software and associated documentation files
