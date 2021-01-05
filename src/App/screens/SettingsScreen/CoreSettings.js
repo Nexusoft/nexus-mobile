@@ -10,6 +10,10 @@ import { useTheme } from 'lib/theme';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import SettingItem from './SettingItem';
 import commonStyles from './styles';
+import { confirm } from 'lib/ui';
+import { sendAPI } from 'lib/api';
+import { scanFile, unlink,ExternalDirectoryPath,DocumentDirectoryPath } from 'react-native-fs';
+
 
 const styles = {
   ...commonStyles,
@@ -93,6 +97,7 @@ export default function CoreSettings() {
         )}
         {
           settings.coreMode === 'embedded' && (
+            <>
             <SettingItem
               small
               title="Core Log"
@@ -100,6 +105,27 @@ export default function CoreSettings() {
               onPress={() => {
                 navigate('EmbeddedCoreLogReader');
               }} />
+
+            <SettingItem 
+                small
+                title="Delete Database"
+                description="Delete all core data and resync from scratch"
+                onPress={ async() => 
+                {
+                  const confirmed = await confirm({
+                    title: 'Are you sure you want Delete?',
+                    confirmLabel: 'Delete Database',
+                    danger: true,
+                  });
+                  if (confirmed) {
+                    await sendAPI('system/stop',{});
+                    await unlink((Platform.OS === 'android' ? ExternalDirectoryPath : DocumentDirectoryPath) + "/Nexus/client");
+                    await scanFile((Platform.OS === 'android' ? ExternalDirectoryPath : DocumentDirectoryPath));
+                    showSuccess("Database deleted. Please swipe to close the app.")
+                    /* Not the best solution, but we do not expect this function to be used very ofter. */
+                    
+              }}} />
+              </>
           )
         }
       </Surface>
