@@ -39,4 +39,4 @@ information or see https://opensource.org/licenses/MIT.
 
 ## Contributing
 
-If you would like to contribute as always submit a pull request. This library development is expected to be on-going.
+If you would like to contribute as always submit a pull request.

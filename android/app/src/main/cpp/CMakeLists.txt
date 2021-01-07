@@ -23,6 +23,18 @@ set(distribution_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../distribution)
 # Sets target to be built by MAKE
 add_library(lib_nexus SHARED IMPORTED)
 
+# Search OpenSSL using find_package, will search for OpenSSL in standard Directories
+find_package(OpenSSL QUIET)
+
+if( OPENSSL_FOUND )
+    message(STATUS "Using OpenSSL ${OPENSSL_VERSION}")
+else()
+    # Can not auto find OpenSSL, use hardcoded input.
+    # Keep ANDROID_ABI but set this to the location of your built openssl for android
+    SET(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@android/${ANDROID_ABI})
+    SET(OPENSSL_INCLUDE_DIR ${OPENSSL_ROOT_DIR}/include)
+endif()
+
 # Depending on the build ABI use the specific compiled c project
 if(${ANDROID_ABI} MATCHES x86_64)
     set_target_properties(lib_nexus PROPERTIES IMPORTED_LOCATION
@@ -35,12 +47,9 @@ else()
             ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/x86_64-android-nexuslib.so)
 endif()
 
-# Keep ANDROID_ABI but set this to the location of your built openssl for android
-SET(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@android/${ANDROID_ABI})
 
 # Set openssl consts
-SET(OPENSSL_LIBRARIES_DIR "${OPENSSL_ROOT_DIR}/lib")
-SET(OPENSSL_INCLUDE_DIR ${OPENSSL_ROOT_DIR}/include)
+string(REPLACE "include" "lib" OPENSSL_LIBRARIES_DIR ${OPENSSL_INCLUDE_DIR})
 SET(OPENSSL_LIBRARIES "ssl" "crypto")
 
 # build application's shared lib
@@ -57,7 +66,7 @@ add_library(nexusmobilelib SHARED
 # Add all includes to MAKE
 target_include_directories(nexusmobilelib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/Headers/
-        ${OPENSSL_ROOT_DIR}/include )
+        ${OPENSSL_INCLUDE_DIR} )
 
 # Add specific openssl libs to MAKE
 target_link_libraries(nexusmobilelib lib_nexus ${OPENSSL_LIBRARIES})
