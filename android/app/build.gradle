@@ -129,6 +129,11 @@ def buildNumber = 7
 
 def genVersionCode = versionMajor * 10000000 + versionMinor * 100000 + versionPatch * 1000 + buildNumber
 
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def openSSLDir = properties.getProperty('openssl.dir')
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -161,7 +166,7 @@ android {
             cmake {
                 abiFilters "arm64-v8a", "x86_64"
                 cppFlags "-std=c++14"
-                arguments '-DANDROID_STL=c++_static'
+                arguments '-DANDROID_STL=c++_static', '-DOPENSSL_ROOT_DIR=' + openSSLDir
             }
         }
     }

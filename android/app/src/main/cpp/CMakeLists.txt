@@ -29,9 +29,15 @@ find_package(OpenSSL QUIET)
 if( OPENSSL_FOUND )
     message(STATUS "Using OpenSSL ${OPENSSL_VERSION}")
 else()
-    # Can not auto find OpenSSL, use hardcoded input.
-    # Keep ANDROID_ABI but set this to the location of your built openssl for android
-    SET(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@android/${ANDROID_ABI})
+    # Build.gradle will pass openssl.dir IF supplied in the local.properties.
+    if(${OPENSSL_ROOT_DIR} MATCHES null)
+        # Can not auto find OpenSSL or not supplied with dir, use hardcoded input.
+        # Keep ANDROID_ABI but set this to the location of your built openssl for android
+        SET(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@android/${ANDROID_ABI})
+    else()
+        # Use dir supplied with local.properties
+        SET(OPENSSL_ROOT_DIR ${OPENSSL_ROOT_DIR}/${ANDROID_ABI})
+    endif()
     SET(OPENSSL_INCLUDE_DIR ${OPENSSL_ROOT_DIR}/include)
 endif()
 
