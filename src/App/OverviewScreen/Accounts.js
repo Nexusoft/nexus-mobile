@@ -131,7 +131,7 @@ export default function Accounts() {
         }}
       >
         <Text style={styles.accountsHeader} sub>
-          Accounts
+          Your Accounts
         </Text>
       </TouchableWithoutFeedback>
       <FlatList
