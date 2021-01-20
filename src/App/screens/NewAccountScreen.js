@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
+import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import { confirmPin, showError } from 'lib/ui';
 import { callAPI } from 'lib/api';
 import { refreshUserAccounts } from 'lib/user';
@@ -55,6 +56,8 @@ export default function NewAccountScreen() {
           </>
         )}
       </Formik>
+
+      <ZeroConnectionsOverlay />
     </ScreenBody>
   );
 }

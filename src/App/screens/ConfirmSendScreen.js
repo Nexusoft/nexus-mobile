@@ -8,6 +8,7 @@ import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
+import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import { useTheme, disabledColor } from 'lib/theme';
 import { goBack } from 'lib/navigation';
 import { callAPI } from 'lib/api';
@@ -223,6 +224,8 @@ export default function ConfirmSendScreen({ route }) {
           </>
         )}
       </Formik>
+
+      <ZeroConnectionsOverlay />
     </ScreenBody>
   );
 }

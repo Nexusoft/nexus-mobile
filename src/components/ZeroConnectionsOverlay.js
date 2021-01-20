@@ -26,13 +26,14 @@ export default function ZeroConnectionsOverlay() {
   const connections = useSelector((state) => state.core.info?.connections);
   const privateNet = useSelector((state) => state.core.info?.private);
   return (
-    // !connections &&
-    // !privateNet &&
-    <View style={styles.container({ theme })}>
-      <ActivityIndicator animating color={theme.foreground} />
-      <Text sub color={theme.foreground} size={18} style={styles.message}>
-        Please wait while we connect you to the network...
-      </Text>
-    </View>
+    !connections &&
+    !privateNet && (
+      <View style={styles.container({ theme })}>
+        <ActivityIndicator animating color={theme.foreground} />
+        <Text sub color={theme.foreground} size={18} style={styles.message}>
+          Please wait while we connect you to the network...
+        </Text>
+      </View>
+    )
   );
 }
