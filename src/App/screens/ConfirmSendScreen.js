@@ -8,11 +8,11 @@ import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
+import TokenName from 'components/TokenName';
 import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import { useTheme, disabledColor } from 'lib/theme';
 import { goBack } from 'lib/navigation';
 import { callAPI } from 'lib/api';
-import { getTokenName } from 'lib/tokens';
 import { showNotification, showError } from 'lib/ui';
 import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
@@ -100,7 +100,7 @@ export default function ConfirmSendScreen({ route }) {
         </Text>
         <Text style={styles.amount}>
           {formatNumber(amount, { maximumFractionDigits: 6 })}{' '}
-          {getTokenName(account)}
+          <TokenName account={account} />
         </Text>
       </View>
 

@@ -9,8 +9,8 @@ import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import InfoField from 'components/InfoField';
+import TokenName from 'components/TokenName';
 import { showNotification } from 'lib/ui';
-import { getTokenName } from 'lib/tokens';
 import { navigate } from 'lib/navigation';
 import { refreshUserAccount } from 'lib/user';
 import segmentAddress from 'utils/segmentAddress';
@@ -132,7 +132,7 @@ export default function AccountDetailsScreen({ route }) {
             label="Available balance"
             value={
               <Text>
-                {account.balance} {getTokenName(account)}
+                {account.balance} <TokenName account={account} />
               </Text>
             }
           />
@@ -143,7 +143,7 @@ export default function AccountDetailsScreen({ route }) {
             label="Pending balance"
             value={
               <Text>
-                {account.pending} {getTokenName(account)}
+                {account.pending} <TokenName account={account} />
               </Text>
             }
           />
@@ -154,7 +154,7 @@ export default function AccountDetailsScreen({ route }) {
             label="Unconfirmed balance"
             value={
               <Text>
-                {account.unconfirmed} {getTokenName(account)}
+                {account.unconfirmed} <TokenName account={account} />
               </Text>
             }
           />
@@ -167,7 +167,7 @@ export default function AccountDetailsScreen({ route }) {
                 label="Staking balance (locked)"
                 value={
                   <Text>
-                    {account.stake} {getTokenName(account)}
+                    {account.stake} <TokenName account={account} />
                   </Text>
                 }
               />
@@ -182,7 +182,7 @@ export default function AccountDetailsScreen({ route }) {
                 label="Immature balance"
                 value={
                   <Text>
-                    {account.immature} {getTokenName(account)}
+                    {account.immature} <TokenName account={account} />
                   </Text>
                 }
               />
