@@ -48,6 +48,7 @@ void LaunchThread(NSArray *userCreds)
      assert(!returnVal);
      if (threadError != 0)
      {
+       printf("$$ERROR");
           // Report an error.
      }
 }
