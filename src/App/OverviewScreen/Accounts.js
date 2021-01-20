@@ -10,6 +10,7 @@ import { navigate } from 'lib/navigation';
 import { refreshUserAccounts, refreshUserBalances } from 'lib/user';
 import { refreshMarketPrice } from 'lib/market';
 import { useTheme } from 'lib/theme';
+import { getTokenName } from 'lib/tokens';
 import formatNumber from 'utils/formatNumber';
 import useRefresh from 'utils/useRefresh';
 import WalletIcon from 'icons/wallet.svg';
@@ -85,7 +86,8 @@ function Account({ account }) {
               </Text>
             </View>
             <Text style={styles.accBalance}>
-              {formatNumber(account.balance + (account.stake || 0))} NXS
+              {formatNumber(account.balance + (account.stake || 0))}{' '}
+              {getTokenName(account)}
             </Text>
           </View>
         </TouchableRipple>

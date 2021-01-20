@@ -12,6 +12,7 @@ import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import { useTheme, disabledColor } from 'lib/theme';
 import { goBack } from 'lib/navigation';
 import { callAPI } from 'lib/api';
+import { getTokenName } from 'lib/tokens';
 import { showNotification, showError } from 'lib/ui';
 import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
@@ -98,7 +99,8 @@ export default function ConfirmSendScreen({ route }) {
           You're sending
         </Text>
         <Text style={styles.amount}>
-          {formatNumber(amount, { maximumFractionDigits: 6 })} NXS
+          {formatNumber(amount, { maximumFractionDigits: 6 })}{' '}
+          {getTokenName(account)}
         </Text>
       </View>
 
