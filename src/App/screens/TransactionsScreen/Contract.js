@@ -2,8 +2,8 @@ import React from 'react';
 import { View } from 'react-native';
 
 import Text from 'components/Text';
+import TokenName from 'components/TokenName';
 import { getDeltaSign } from 'lib/contracts';
-import { getTokenName } from 'lib/tokens';
 
 const styles = {
   contract: {
@@ -238,7 +238,8 @@ export default function Contract({ contract }) {
       {!!contract.amount && (
         <Delta negative={sign === '-'}>
           {sign}
-          {contract.amount} {getTokenName(contract)}
+          {contract.amount}{' '}
+          {contract.token ? TokenName.from({ contract }) : 'NXS'}
         </Delta>
       )}
     </View>

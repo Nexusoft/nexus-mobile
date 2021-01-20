@@ -8,6 +8,8 @@ import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
+import TokenName from 'components/TokenName';
+import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import { useTheme, disabledColor } from 'lib/theme';
 import { goBack } from 'lib/navigation';
 import { callAPI } from 'lib/api';
@@ -97,7 +99,8 @@ export default function ConfirmSendScreen({ route }) {
           You're sending
         </Text>
         <Text style={styles.amount}>
-          {formatNumber(amount, { maximumFractionDigits: 6 })} NXS
+          {formatNumber(amount, { maximumFractionDigits: 6 })}{' '}
+          <TokenName account={account} />
         </Text>
       </View>
 
@@ -223,6 +226,8 @@ export default function ConfirmSendScreen({ route }) {
           </>
         )}
       </Formik>
+
+      <ZeroConnectionsOverlay />
     </ScreenBody>
   );
 }

@@ -6,11 +6,11 @@ import * as yup from 'yup';
 
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
+import TokenName from 'components/TokenName';
 import AddressPicker from 'components/AddressPicker';
-import { useTheme, disabledColor } from 'lib/theme';
+import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
 import { navigate } from 'lib/navigation';
-import { getTokenName } from 'lib/tokens';
 import formatNumber from 'utils/formatNumber';
 import { getStore } from 'store';
 
@@ -153,7 +153,7 @@ export default function SendTo({ account }) {
               name="amount"
               mode="outlined"
               background={['surface', 2]}
-              label={`Amount (${getTokenName(account, { markup: false })})`}
+              label={`Amount (${TokenName.from({ account })})`}
               keyboardType="numeric"
             />
             <Button
@@ -166,7 +166,7 @@ export default function SendTo({ account }) {
             >
               Send all (
               {formatNumber(account.balance, { maximumFractionDigits: 6 })}{' '}
-              {getTokenName(account, { markup: false })})
+              {TokenName.from({ account })})
             </Button>
           </View>
 

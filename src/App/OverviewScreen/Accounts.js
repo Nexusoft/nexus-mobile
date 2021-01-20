@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
+import TokenName from 'components/TokenName';
 import { navigate } from 'lib/navigation';
 import { refreshUserAccounts, refreshUserBalances } from 'lib/user';
 import { refreshMarketPrice } from 'lib/market';
@@ -69,7 +70,7 @@ function Account({ account }) {
       <View style={styles.account}>
         <TouchableRipple
           onPress={() => {
-            navigate('AccountDetails', { account });
+            navigate('AccountDetails', { address: account.address });
           }}
         >
           <View style={styles.accInfo}>
@@ -85,7 +86,8 @@ function Account({ account }) {
               </Text>
             </View>
             <Text style={styles.accBalance}>
-              {formatNumber(account.balance + (account.stake || 0))} NXS
+              {formatNumber(account.balance + (account.stake || 0))}{' '}
+              <TokenName account={account} />
             </Text>
           </View>
         </TouchableRipple>

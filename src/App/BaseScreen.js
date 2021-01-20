@@ -58,26 +58,6 @@ function DisconnectedBase() {
   );
 }
 
-function ZeroConnectionsBase() {
-  const theme = useTheme();
-  return (
-    <View style={styles.container({ theme })}>
-      <ActivityIndicator
-        animating
-        color={theme.dark ? theme.foreground : theme.onPrimary}
-      />
-      <Text
-        sub
-        colorName={theme.dark ? 'foreground' : 'onPrimary'}
-        size={18}
-        style={{ textAlign: 'center', marginTop: 20 }}
-      >
-        Connecting to other nodes...
-      </Text>
-    </View>
-  );
-}
-
 function SynchronizingBase() {
   const theme = useTheme();
   const percentage = useSelector((state) => state.core.info?.synccomplete);
@@ -142,15 +122,11 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
 export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
   const loggedIn = useSelector(selectLoggedIn);
-  const connections = useSelector((state) => state.core.info?.connections);
-  const privateNet = useSelector((state) => state.core.info?.private);
   const syncing = useSelector((state) => state.core.info?.synchronizing);
   useDefaultScreenFix();
   useDynamicNavOptions({ route, navigation, loggedIn });
 
   if (!connected) return <DisconnectedBase />;
-
-  if (!connections && !privateNet) return <ZeroConnectionsBase />;
 
   if (syncing) return <SynchronizingBase />;
 

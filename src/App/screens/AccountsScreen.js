@@ -59,7 +59,9 @@ export default function AccountsScreen() {
           renderItem={({ item: account }) => (
             <TouchableRipple
               onPress={() => {
-                navigate('AccountDetails', { account });
+                navigate('AccountDetails', {
+                  address: account.address,
+                });
               }}
             >
               <View style={styles.account}>

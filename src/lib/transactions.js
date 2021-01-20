@@ -1,9 +1,9 @@
 import { scheduleNotificationAsync } from 'expo-notifications';
 
+import TokenName from 'components/TokenName';
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
 import { getDeltaSign } from 'lib/contracts';
-import { getTokenName } from 'lib/tokens';
 import { refreshUserAccounts } from 'lib/user';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
@@ -130,7 +130,7 @@ export function watchNewTransactions() {
               (change) =>
                 `${change.amount >= 0 ? '+' : ''}${formatNumber(
                   change.amount
-                )} ${getTokenName(change, { markup: false })}`
+                )} ${TokenName.from({ contract: change })}`
             );
             scheduleNotificationAsync({
               content: {
