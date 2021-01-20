@@ -40,6 +40,20 @@ export async function refreshUserAccounts() {
   }
 }
 
+export async function refreshUserAccount(address) {
+  const store = getStore();
+  try {
+    const account = await callAPI('finance/get/account', { address });
+    store.dispatch({
+      type: TYPE.SET_USER_ACCOUNT,
+      payload: { address, account },
+    });
+    return account;
+  } catch (err) {
+    return null;
+  }
+}
+
 export async function login({ username, password, pin }) {
   await callAPI('users/login/user', { username, password, pin });
   await refreshUserStatus();

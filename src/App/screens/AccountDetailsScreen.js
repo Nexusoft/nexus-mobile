@@ -12,7 +12,7 @@ import InfoField from 'components/InfoField';
 import { showNotification } from 'lib/ui';
 import { getTokenName } from 'lib/tokens';
 import { navigate } from 'lib/navigation';
-import { refreshUserAccounts } from 'lib/user';
+import { refreshUserAccount } from 'lib/user';
 import segmentAddress from 'utils/segmentAddress';
 import useRefresh from 'utils/useRefresh';
 import CopyIcon from 'icons/copy.svg';
@@ -43,7 +43,7 @@ export default function AccountDetailsScreen({ route }) {
   const account = useSelector((state) =>
     state.user.accounts?.find((acc) => acc.address === address)
   );
-  const [refreshing, refresh] = useRefresh(refreshUserAccounts);
+  const [refreshing, refresh] = useRefresh(() => refreshUserAccount(address));
   return (
     !!account && (
       <ScreenBody

@@ -7,6 +7,18 @@ export default (state = initialState, action) => {
     case TYPE.SET_USER_ACCOUNTS:
       return action.payload;
 
+    case TYPE.SET_USER_ACCOUNT: {
+      const { address, account } = action.payload;
+      const accounts = [...(state || [])];
+      const index = accounts.findIndex((acc) => acc.address === address);
+      if (index !== -1) {
+        accounts.splice(index, 1, account);
+        return accounts;
+      } else {
+        return state;
+      }
+    }
+
     case TYPE.DISCONNECT_CORE:
     case TYPE.LOGOUT:
     case TYPE.CLEAR_USER_ACCOUNTS:
