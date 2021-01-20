@@ -31,7 +31,7 @@ export default function TransactionDetailsScreen({ route }) {
     });
     setTransaction(tx);
   };
-  const [refreshing, refresh] = useRefresh(() => loadTransaction());
+  const [refreshing, refresh] = useRefresh(loadTransaction);
   React.useEffect(() => {
     loadTransaction();
   }, []);

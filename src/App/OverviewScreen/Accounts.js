@@ -70,7 +70,7 @@ function Account({ account }) {
       <View style={styles.account}>
         <TouchableRipple
           onPress={() => {
-            navigate('AccountDetails', { account });
+            navigate('AccountDetails', { address: account.address });
           }}
         >
           <View style={styles.accInfo}>
