@@ -35,6 +35,7 @@ export async function callAPI(endpoint, params) {
   const baseUrl = `http://${config.ip}:${config.port}`;
   const response = await fetch(`${baseUrl}/${endpoint}`, {
     method: 'POST',
+    keepalive: false,
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Basic ' + encode(`${config.user}:${config.password}`),

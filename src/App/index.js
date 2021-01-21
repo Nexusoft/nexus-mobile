@@ -26,7 +26,7 @@ import initStore from './initStore';
 
 import BackgroundTimer from 'react-native-background-timer';
 
-import { selectLoggedIn, refreshUserStatus } from 'lib/user';
+import { selectLoggedIn, refreshUserStatus,refreshUserSync } from 'lib/user';
 import { updateSettings } from 'lib/settings';
 
 import RNFS from 'react-native-fs';
@@ -163,6 +163,10 @@ const _handleAppStateChange = (nextAppState) => {
     
   } else {
     if (nextAppState == 'active') {
+      if (selectLoggedIn)
+      {
+        refreshUserSync();
+      }
       if (Platform.OS === 'android') {
         BackgroundTimer.stopBackgroundTimer();
       } //ios

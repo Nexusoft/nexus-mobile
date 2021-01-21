@@ -1,5 +1,6 @@
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
+import { debug } from 'react-native-reanimated';
 import { getStore } from 'store';
 
 export const selectLoggedIn = (state) => !!state.user.status;
@@ -36,6 +37,16 @@ export async function refreshUserAccounts() {
     return accounts;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER_ACCOUNTS });
+    return null;
+  }
+}
+
+export async function refreshUserSync(){
+  try {
+    const result = await callAPI('users/sync/user');
+    console.log(result);
+    return result;
+  } catch (err) {
     return null;
   }
 }

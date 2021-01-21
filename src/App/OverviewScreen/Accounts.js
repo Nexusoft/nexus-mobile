@@ -8,7 +8,7 @@ import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import TokenName from 'components/TokenName';
 import { navigate } from 'lib/navigation';
-import { refreshUserAccounts, refreshUserBalances } from 'lib/user';
+import { refreshUserAccounts, refreshUserBalances, refreshUserSync } from 'lib/user';
 import { refreshMarketPrice } from 'lib/market';
 import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
@@ -120,7 +120,7 @@ function Account({ account }) {
 }
 
 const refreshData = () =>
-  Promise.all([refreshUserAccounts, refreshUserBalances, refreshMarketPrice]);
+    Promise.all([refreshUserAccounts(), refreshUserSync(),refreshUserBalances(), refreshMarketPrice()])
 
 export default function Accounts() {
   const accounts = useSelector((state) => state.user.accounts);
