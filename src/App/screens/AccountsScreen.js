@@ -8,7 +8,7 @@ import Text from 'components/Text';
 import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
 import { navigate } from 'lib/navigation';
-import { refreshUserAccounts, refreshUserSync } from 'lib/user';
+import { refreshUserAccounts } from 'lib/user';
 import { disabledColor } from 'lib/theme';
 import segmentAddress from 'utils/segmentAddress';
 import useRefresh from 'utils/useRefresh';
@@ -46,7 +46,7 @@ const styles = {
 export default function AccountsScreen() {
   const theme = useTheme();
   const accounts = useSelector((state) => state.user.accounts);
-  const [refreshing, refresh] = useRefresh(Promise.all([refreshUserSync(),refreshUserAccounts()]))
+  const [refreshing, refresh] = useRefresh(refreshUserAccounts);
   return (
     <ScreenBody scroll={false} surface style={styles.wrapper}>
       {accounts && (

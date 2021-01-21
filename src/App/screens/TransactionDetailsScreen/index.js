@@ -9,7 +9,6 @@ import { callAPI } from 'lib/api';
 import useRefresh from 'utils/useRefresh';
 import TransactionDetails from './TransactionDetails';
 import ContractDetails from './ContractDetails';
-import { refreshUserSync } from 'lib/user';
 
 const styles = {
   subHeader: {
@@ -26,7 +25,6 @@ export default function TransactionDetailsScreen({ route }) {
   } = route;
   const [transaction, setTransaction] = React.useState(null);
   const loadTransaction = async () => {
-    await refreshUserSync();
     const tx = await callAPI('ledger/get/transaction', {
       txid,
       verbose: 'summary',

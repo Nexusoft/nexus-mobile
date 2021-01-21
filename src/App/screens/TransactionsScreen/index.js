@@ -15,7 +15,6 @@ import TransactionIcon from 'icons/transaction.svg';
 // import AdjustIcon from 'icons/adjust.svg';
 // import Filters from './Filters';
 import Transaction from './Transaction';
-import { refreshUserSync } from 'lib/user';
 
 const selectTransactions = memoize((txMap) =>
   Object.values(txMap).sort((tx1, tx2) => tx2.timestamp - tx1.timestamp)
@@ -40,10 +39,7 @@ export default function TransactionsScreen() {
     selectTransactions(state.transactions.txMap)
   );
   const [refreshing, refresh] = useRefresh(() =>
-    {
-      refreshUserSync();  
-      loadTransactions({ reload: true });
-    }
+    loadTransactions({ reload: true })
   );
   const [loadingMore, loadMore] = useLoadMore();
   React.useEffect(() => {
