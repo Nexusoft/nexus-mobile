@@ -1,6 +1,5 @@
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
-import { debug } from 'react-native-reanimated';
 import { getStore } from 'store';
 
 export const selectLoggedIn = (state) => !!state.user.status;

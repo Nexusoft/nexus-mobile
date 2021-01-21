@@ -143,7 +143,7 @@ const _handleAppStateChange = (nextAppState) => {
       if (Platform.OS === 'android') {
         BackgroundTimer.runBackgroundTimer(() => { 
           console.log("@@@@@@@  BACKGROUND @@@@@@@");
-          if (selectLoggedIn)
+          if (selectLoggedIn(getStore().getState()))
             {
               refreshUserStatus();
               refreshCoreInfo();
@@ -163,7 +163,7 @@ const _handleAppStateChange = (nextAppState) => {
     
   } else {
     if (nextAppState == 'active') {
-      if (selectLoggedIn)
+      if (selectLoggedIn(getStore().getState()))
       {
         refreshUserSync();
       }
