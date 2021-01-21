@@ -6,7 +6,10 @@ export default function useRefresh(doRefresh, options = {resync: true}) {
   const refresh = async () => {
     setRefreshing(true);
     try {
-      options.resync && await refreshUserSync();
+      try {
+        options.resync && await refreshUserSync();
+      } catch (err) {
+      } 
       await doRefresh();
     } finally {
       setRefreshing(false);
