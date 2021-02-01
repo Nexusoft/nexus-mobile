@@ -71,7 +71,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     {
       cout << "!! WRITING FILE" << endl;
         // If file does not exist, write to it.
-        string fileContent = "apiuser=" + string(inApiUserName) + "\napipassword=" + string(inApiPassword) + "\nconnect=node1.nexusoft.io\nconnect=node2.nexusoft.io\nconnect=node3.nexusoft.io\nconnect=node4.nexusoft.io";
+        string fileContent = "apiuser=" + string(inApiUserName) + "\napipassword=" + string(inApiPassword);
         myfile << fileContent;
       
             

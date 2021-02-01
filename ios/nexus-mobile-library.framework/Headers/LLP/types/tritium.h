@@ -156,14 +156,6 @@ namespace LLP
     class TritiumNode : public BaseConnection<MessagePacket>
     {
 
-        /** Switch Node
-         *
-         *  Helper function to switch available nodes.
-         *
-         **/
-        static void SwitchNode();
-
-
         /** State of if this node has logged in to remote node. **/
         std::atomic<bool> fLoggedIn;
 
@@ -213,6 +205,14 @@ namespace LLP
          *
          **/
         static std::string Name() { return "Tritium"; }
+
+
+        /** Switch Node
+         *
+         *  Helper function to switch available nodes.
+         *
+         **/
+        static void SwitchNode();
 
 
         /** The block height at the start of the last sync session **/
@@ -450,7 +450,7 @@ namespace LLP
          *  @return a pointer to connected node.
          *
          **/
-        static memory::atomic_ptr<TritiumNode>& GetNode(const uint64_t nSession);
+        static std::shared_ptr<TritiumNode>& GetNode(const uint64_t nSession);
 
 
         /** NewMessage
@@ -559,6 +559,14 @@ namespace LLP
          * 
          **/
         static void SyncSigChain(LLP::TritiumNode* pNode, const uint256_t& hashGenesis, bool bWait, bool bSyncEvents);
+
+
+        /** Sync
+         *
+         *  Initiates a chain synchronization from the peer.
+         *
+         **/
+        void Sync();
 
     };
 } // end namespace LLP
