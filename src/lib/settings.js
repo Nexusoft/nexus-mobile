@@ -11,8 +11,8 @@ export const defaultSettings = {
 
   // Core
   coreMode: 'embedded',
-  embeddedUser: "apiserver",
-  embeddedPassword: "password",
+  embeddedUser: 'apiserver',
+  embeddedPassword: 'password',
   externalCoreIP: '127.0.0.1',
   externalCoreAPIPort: '8080',
   externalCoreAPIUser: 'apiserver',
@@ -30,6 +30,7 @@ export async function loadSettings() {
 }
 
 export async function updateSettings(updates) {
+  console.log(updates);
   if (updates) {
     const store = getStore();
     store.dispatch({
