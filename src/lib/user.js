@@ -2,7 +2,20 @@ import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
 import { getStore } from 'store';
 
+//Store Selects
+
 export const selectLoggedIn = (state) => !!state.user.status;
+
+export const selectUserIsUnconfirmed = (state) => 
+{
+  const trans = state.transactions.txMap;
+  const unconfirmedTransaction = Object.fromEntries(Object.entries(trans).filter(([key, value]) => (value.type === 'tritium first' && value.confirmations == 0)));
+  console.log(unconfirmedTransaction);
+  for (var i in unconfirmedTransaction) return true;
+  return false;
+}
+
+// Refreshes
 
 export async function refreshUserStatus() {
   const store = getStore();
@@ -42,11 +55,25 @@ export async function refreshUserAccounts() {
 
 export async function refreshUserSync(){
   try {
-    const result = await callAPI('users/sync/user');
+    const result = await callAPI('ledger/sync/sigchain');
     console.log(result);
     return result;
   } catch (err) {
     return null;
+  }
+}
+
+export async function refreshHeaders(){
+  try {
+    const result = await callAPI('ledger/sync/headers');
+    return result;
+  } catch (error) {
+    if (error.code === '-306')
+    {
+      setTimeout(() => {
+        refreshHeaders();
+      }, 500);
+    }
   }
 }
 
@@ -63,6 +90,8 @@ export async function refreshUserAccount(address) {
     return null;
   }
 }
+
+// Functions
 
 export async function login({ username, password, pin }) {
   await callAPI('users/login/user', { username, password, pin });
