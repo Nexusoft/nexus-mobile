@@ -23,11 +23,16 @@ void* PosixThreadMainRoutine(void* data)
           strdup("-client=1"),
           strdup("-verbose=0"),
           strdup("-manager=1"),
+          strdup("-timeout=30"),
+          strdup("-connect=node1.nexusoft.io"),
+          strdup("-connect=node2.nexusoft.io"),
+          strdup("-connect=node3.nexusoft.io"),
+          strdup("-connect=node4.nexusoft.io"),
           NULL
      };
      const char *com = [userCre[0] UTF8String];
     const char *command = [userCre[1] UTF8String];
-     startNexus(4, my_argv,strdup(com),strdup(command));
+     startNexus(8, my_argv,strdup(com),strdup(command));
     return NULL;
 }
 
