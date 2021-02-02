@@ -6,11 +6,11 @@ import { getStore } from 'store';
 
 export const selectLoggedIn = (state) => !!state.user.status;
 
+// Return true if user is logged in but not confirmed
 export const selectUserIsUnconfirmed = (state) => 
 {
   const trans = state.transactions.txMap;
   const unconfirmedTransaction = Object.fromEntries(Object.entries(trans).filter(([key, value]) => (value.type === 'tritium first' && value.confirmations == 0)));
-  console.log(unconfirmedTransaction);
   for (var i in unconfirmedTransaction) return true;
   return false;
 }
