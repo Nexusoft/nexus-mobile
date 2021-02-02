@@ -26,7 +26,7 @@ import initStore from './initStore';
 
 import BackgroundTimer from 'react-native-background-timer';
 
-import { selectLoggedIn, refreshUserStatus,refreshUserSync } from 'lib/user';
+import { selectLoggedIn,refreshUserSync,refreshHeaders } from 'lib/user';
 import { updateSettings } from 'lib/settings';
 
 import RNFS from 'react-native-fs';
@@ -123,16 +123,7 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   console.log(
     `Got background fetch call at date: ${new Date(now).toISOString()}`
   );
-
-  await sleep(15000);
-  scheduleNotificationAsync({
-    content: {
-      title: 'Updated',
-      body: `The core was updated at ${new Date(now).toISOString()}`,
-    },
-    trigger: null,
-  });
-
+  await sleep(25000);
   await BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
   registerIOSBackgroundTask();
   return BackgroundFetch.Result.NewData;
@@ -142,10 +133,8 @@ const _handleAppStateChange = (nextAppState) => {
     if (nextAppState == "background") {
       if (Platform.OS === 'android') {
         BackgroundTimer.runBackgroundTimer(() => { 
-          console.log("@@@@@@@  BACKGROUND @@@@@@@");
           if (selectLoggedIn(getStore().getState()))
             {
-              refreshUserStatus();
               refreshCoreInfo();
             }
           },
@@ -163,21 +152,18 @@ const _handleAppStateChange = (nextAppState) => {
     
   } else {
     if (nextAppState == 'active') {
-      if (selectLoggedIn(getStore().getState()))
-      {
-        refreshUserSync();
-      }
       if (Platform.OS === 'android') {
         BackgroundTimer.stopBackgroundTimer();
       } //ios
       else {
         if (isInBG) {
           TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK).then(
-            (isRegistered) => {
+            async(isRegistered) => {
               if (isRegistered) {
-                console.log('Remove Task');
                 BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
-                refreshCoreInfo();
+                await refreshCoreInfo();
+                await refreshHeaders();
+                await refreshUserSync();
               }
             }
           );
