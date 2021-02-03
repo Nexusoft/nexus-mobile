@@ -1,6 +1,8 @@
 package com.nexus.mobile.android;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -14,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import android.os.Build;
 
 /*
 
@@ -64,6 +67,7 @@ public class NexusService extends Service {
                 super.stop();
             }
         };
+        SetUpCoreStatusChannel();
         _servicethread = new Thread(_nexuscore);
         _servicethread.start();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID)
@@ -80,8 +84,18 @@ public class NexusService extends Service {
         Notification coreNotification = builder.build();
         startForeground(notificationID, coreNotification);
 
-
         super.onCreate();
+    }
+
+    public void SetUpCoreStatusChannel()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(channelID, "Core Running Channel", importance);
+            channel.setDescription("The Nexus Core Is running");
+            NotificationManager notificationManager = this.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
