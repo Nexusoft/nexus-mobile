@@ -7,13 +7,11 @@ import { getStore } from 'store';
 export const selectLoggedIn = (state) => !!state.user.status;
 
 // Return true if user is logged in but not confirmed
-export const selectUserIsUnconfirmed = (state) => 
-{
-  const trans = state.transactions.txMap;
-  const unconfirmedTransaction = Object.fromEntries(Object.entries(trans).filter(([key, value]) => (value.type === 'tritium first' && value.confirmations == 0)));
-  for (var i in unconfirmedTransaction) return true;
-  return false;
-}
+export const selectUserIsUnconfirmed = (state) => {
+  const txs = Object.values(state.transactions.txMap);
+  const genesisTx = txs.find((tx) => tx.type === 'tritium first');
+  return !!genesisTx?.confirmations;
+};
 
 // Refreshes
 
@@ -53,7 +51,7 @@ export async function refreshUserAccounts() {
   }
 }
 
-export async function refreshUserSync(){
+export async function refreshUserSync() {
   try {
     const result = await callAPI('ledger/sync/sigchain');
     console.log(result);
@@ -63,13 +61,12 @@ export async function refreshUserSync(){
   }
 }
 
-export async function refreshHeaders(){
+export async function refreshHeaders() {
   try {
     const result = await callAPI('ledger/sync/headers');
     return result;
   } catch (error) {
-    if (error.code === '-306')
-    {
+    if (error.code === '-306') {
       setTimeout(() => {
         refreshHeaders();
       }, 500);
