@@ -4,13 +4,17 @@ import { useSelector } from 'react-redux';
 import { ActivityIndicator, Button } from 'react-native-paper';
 
 import Text from 'components/Text';
+import InfoField from 'components/InfoField';
+import SvgIcon from 'components/SvgIcon';
 import { useTheme } from 'lib/theme';
-import { selectLoggedIn } from 'lib/user';
+import { selectLoggedIn, selectUserIsUnconfirmed } from 'lib/user';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef } from 'lib/navigation';
 import { getStore } from 'store';
 import UnauthenticatedBase from './UnauthenticatedBase';
 import OverviewScreen from './OverviewScreen';
+
+import CopyIcon from 'icons/copy.svg';
 
 const styles = {
   container: ({ theme }) => ({
@@ -19,6 +23,14 @@ const styles = {
     justifyContent: 'center',
     backgroundColor: theme.dark ? theme.background : theme.primary,
   }),
+  creating: {
+    marginTop: 50,
+    verticalAlign: 'center',
+  },
+  creatingText: {
+    marginTop: 40,
+    textAlign: 'center',
+  },
 };
 
 function DisconnectedBase() {
@@ -55,6 +67,46 @@ function DisconnectedBase() {
         {refreshing ? 'Refreshing...' : 'Refresh'}
       </Button>
     </View>
+  );
+}
+
+function UnconfirmedUserBase() {
+  const {username} = useSelector((state) => state.user.status);
+  const theme = useTheme();
+  const txid = useSelector((state) => Object.keys(state.transactions.txMap)[0] );
+  console.log("%%%%%");
+  console.log(txid);
+  return (
+    <View style={styles.creating}>
+    <ActivityIndicator animating color={theme.foreground} size="small" />
+    <Text style={styles.creatingText}>
+      User registration for <Text bold>{username}</Text> is
+      waiting to be confirmed on Nexus blockchain...
+    </Text>
+    <InfoField
+      label="Transaction ID"
+      control={
+        <Button
+          mode="text"
+          icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
+          labelStyle={{ fontSize: 12 }}
+          onPress={() => {
+            Clipboard.setString(txid);
+            showNotification('Copied to clipboard');
+          }}
+        >
+          Copy
+        </Button>
+      }
+      value={
+        <Text mono size={13}>
+          {txid}
+        </Text>
+      }
+      mono
+      bordered
+    />
+  </View>
   );
 }
 
@@ -123,14 +175,20 @@ export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
   const loggedIn = useSelector(selectLoggedIn);
   const syncing = useSelector((state) => state.core.info?.synchronizing);
+  const unconfirmedUser = useSelector(selectUserIsUnconfirmed);
+
   useDefaultScreenFix();
-  useDynamicNavOptions({ route, navigation, loggedIn });
+  useDynamicNavOptions({ route, navigation, loggedIn: loggedIn && !unconfirmedUser });
+
+  //console.log(unconfirmedUser);
 
   if (!connected) return <DisconnectedBase />;
 
   if (syncing) return <SynchronizingBase />;
 
   if (!loggedIn) return <UnauthenticatedBase />;
+
+  if (unconfirmedUser) return <UnconfirmedUserBase />;
 
   return <OverviewScreen />;
 }

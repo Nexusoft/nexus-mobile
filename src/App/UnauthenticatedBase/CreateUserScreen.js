@@ -13,12 +13,13 @@ import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
 import { showError, showSuccess, showNotification } from 'lib/ui';
 import { navigate } from 'lib/navigation';
-import { selectLoggedIn } from 'lib/user';
+import { refreshUserStatus, selectLoggedIn } from 'lib/user';
 import { getStore } from 'store';
 import useMounted from 'utils/useMounted';
 import LogoIcon from 'icons/logo-full.svg';
 import CopyIcon from 'icons/copy.svg';
 import Backdrop from './Backdrop';
+import { loadTransactions } from 'lib/transactions';
 
 const styles = {
   field: {
@@ -203,7 +204,7 @@ function useRegistrationWatcher() {
 
 export default function CreateUserScreen() {
   const theme = useTheme();
-  const [registration, watchRegistration] = useRegistrationWatcher();
+  //const [registration, watchRegistration] = useRegistrationWatcher();
 
   return (
     <Backdrop
@@ -220,38 +221,6 @@ export default function CreateUserScreen() {
         </>
       }
     >
-      {!!registration ? (
-        <View style={styles.creating}>
-          <ActivityIndicator animating color={theme.foreground} size="small" />
-          <Text style={styles.creatingText}>
-            User registration for <Text bold>{registration?.username}</Text> is
-            waiting to be confirmed on Nexus blockchain...
-          </Text>
-          <InfoField
-            label="Transaction ID"
-            control={
-              <Button
-                mode="text"
-                icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
-                labelStyle={{ fontSize: 12 }}
-                onPress={() => {
-                  Clipboard.setString(registration?.txid);
-                  showNotification('Copied to clipboard');
-                }}
-              >
-                Copy
-              </Button>
-            }
-            value={
-              <Text mono size={13}>
-                {registration?.txid}
-              </Text>
-            }
-            mono
-            bordered
-          />
-        </View>
-      ) : (
         <Formik
           initialValues={{ username: '', password: '', pin: '' }}
           validationSchema={yup.object().shape({
@@ -270,20 +239,30 @@ export default function CreateUserScreen() {
           })}
           onSubmit={async ({ username, password, pin }) => {
             try {
-              const result = await callAPI('users/create/user', {
+                await callAPI('users/create/user', {
                 username,
                 password,
                 pin,
               });
-              watchRegistration({ username, txid: result.hash });
             } catch (err) {
               showError(err && err.message);
               return;
             }
+            // Allow mempool login
+            try {
+              await callAPI('users/login/user', { username, password, pin });
+              await callAPI('users/unlock/user', { pin, notifications: true });
+              await refreshUserStatus();
+              await loadTransactions();
+            } catch (err) {
+              console.log(err);
+              showError(err && (err.message + '\n Your account was created but encountered an login error'));
+              return;
+            }  
           }}
           component={CreateUserForm}
         />
-      )}
+      
     </Backdrop>
   );
 }

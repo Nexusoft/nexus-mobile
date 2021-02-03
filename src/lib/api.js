@@ -17,7 +17,7 @@ function getConfig() {
 
   return coreMode === 'embedded'
     ? {
-        ip: '127.0.0.1',
+        ip: 'localhost',
         port: '8080',
         user: embeddedUser,
         password: embeddedPassword,
@@ -35,7 +35,6 @@ export async function callAPI(endpoint, params) {
   const baseUrl = `http://${config.ip}:${config.port}`;
   const response = await fetch(`${baseUrl}/${endpoint}`, {
     method: 'POST',
-    keepalive: false,
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Basic ' + encode(`${config.user}:${config.password}`),
