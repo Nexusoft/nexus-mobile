@@ -10,7 +10,7 @@ export const selectLoggedIn = (state) => !!state.user.status;
 export const selectUserIsUnconfirmed = (state) => {
   const txs = Object.values(state.transactions.txMap);
   const genesisTx = txs.find((tx) => tx.type === 'tritium first');
-  return !!genesisTx?.confirmations;
+  return !genesisTx?.confirmations;
 };
 
 // Refreshes
