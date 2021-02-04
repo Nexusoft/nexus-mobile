@@ -34,27 +34,27 @@ export async function loadTransactions({ reload } = { reload: false }) {
 
   transactions.forEach((tx) => {
     if (!isConfirmed(tx)) {
-      watchTransaction(tx.txid);
+      watchTransaction({ txid: tx.txid });
     }
   });
 }
 
 export async function loadGenesis() {
-  const result = await callAPI('users/list/transactions', {
-    verbose: 'summary',
-    limit: 1,
-    where: [
-      {
-        field: 'type',
-        op: '=',
-        value: 'tritium first',
-      },
-    ],
-  });
-  getStore().dispatch({
-    type: TYPE.UPDATE_TRANSACTION,
-    payload: result[0],
-  });
+  const where = [
+    {
+      field: 'type',
+      op: '=',
+      value: 'tritium first',
+    },
+  ];
+  let genesisTx;
+  try {
+    genesisTx = await fetchTransaction({ where });
+  } finally {
+    if (!genesisTx || !isConfirmed(genesisTx)) {
+      watchTransaction({ where });
+    }
+  }
 }
 
 const getBalanceChanges = (tx) =>
@@ -83,11 +83,21 @@ const getBalanceChanges = (tx) =>
       }, [])
     : 0;
 
-export async function fetchTransaction(txid) {
-  const tx = await callAPI('ledger/get/transaction', {
-    txid,
-    verbose: 'summary',
-  });
+export async function fetchTransaction({ txid, where }) {
+  let tx;
+  if (where) {
+    const txs = await callAPI('users/list/transactions', {
+      verbose: 'summary',
+      limit: 1,
+      where,
+    });
+    tx = txs?.[0];
+  } else {
+    tx = await callAPI('ledger/get/transaction', {
+      txid,
+      verbose: 'summary',
+    });
+  }
   getStore().dispatch({
     type: TYPE.UPDATE_TRANSACTION,
     payload: tx,
@@ -95,13 +105,13 @@ export async function fetchTransaction(txid) {
   return tx;
 }
 
-function watchTransaction(txid) {
+function watchTransaction({ txid, where }) {
   // Update everytime a new block is received
   const unsubscribe = getStore().observe(
     ({ core: { info } }) => info?.blocks,
     async (blocks) => {
       if (!blocks) return;
-      const tx = await fetchTransaction(txid);
+      const tx = await fetchTransaction({ txid, where });
       if (tx && isConfirmed(tx)) {
         unsubscribe();
         // Reload the account list
@@ -139,7 +149,7 @@ export function watchNewTransactions() {
 
         transactions.forEach((tx) => {
           if (!isConfirmed(tx)) {
-            watchTransaction(tx.txid);
+            watchTransaction({ txid: tx.txid });
           }
 
           const changes = getBalanceChanges(tx);
