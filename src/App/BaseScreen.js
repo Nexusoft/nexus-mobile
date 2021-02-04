@@ -22,6 +22,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.dark ? theme.background : theme.primary,
+    paddingHorizontal: 30,
   }),
   creating: {
     marginTop: 50,
@@ -75,17 +76,23 @@ function UnconfirmedUserBase() {
   const theme = useTheme();
   const txs = useSelector((state) => Object.values(state.transactions.txMap));
   const txid = txs.find((tx) => tx.type === 'tritium first')?.txid;
+  const color = theme.dark ? theme.foreground : theme.onPrimary;
   return (
-    <View style={styles.creating}>
-      <ActivityIndicator animating color={theme.foreground} size="small" />
-      <Text style={styles.creatingText}>
-        User registration for <Text bold>{username}</Text> is waiting to be
-        confirmed on Nexus blockchain...
+    <View style={styles.container({ theme })}>
+      <ActivityIndicator animating color={color} />
+      <Text style={styles.creatingText} sub color={color} size={18}>
+        User registration for{' '}
+        <Text bold color={color}>
+          {username}
+        </Text>{' '}
+        is waiting to be confirmed on Nexus blockchain...
       </Text>
       <InfoField
         label="Transaction ID"
+        color={color}
         control={
           <Button
+            color={color}
             mode="text"
             icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
             labelStyle={{ fontSize: 12 }}
@@ -98,7 +105,7 @@ function UnconfirmedUserBase() {
           </Button>
         }
         value={
-          <Text mono size={13}>
+          <Text mono size={13} color={color}>
             {txid}
           </Text>
         }
@@ -189,7 +196,7 @@ export default function BaseScreen({ route, navigation }) {
 
   if (!loggedIn) return <UnauthenticatedBase />;
 
-  if (unconfirmedUser) return <UnconfirmedUserBase />;
+  if (true) return <UnconfirmedUserBase />;
 
   return <OverviewScreen />;
 }

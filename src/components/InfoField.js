@@ -20,14 +20,14 @@ const styles = {
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-  value: ({ inline, bordered, theme }) => [
+  value: ({ inline, bordered, theme, color, colorName }) => [
     !!inline && { flex: 1, marginLeft: 8, alignItems: 'flex-end' },
     !inline && {
       marginTop: 7,
     },
     bordered && {
       borderWidth: 1,
-      borderColor: disabledColor(theme.foreground),
+      borderColor: disabledColor(color || theme[colorName] || theme.foreground),
       borderRadius: 4,
       paddingVertical: 5,
       paddingHorizontal: 8,
@@ -47,12 +47,14 @@ export default function InfoField({
   value,
   mono,
   bordered,
+  color,
+  colorName,
 }) {
   const theme = useTheme();
   return (
     <View style={styles.line({ inline, compact })}>
       <View style={styles.label({ expanded: !inline && !!control })}>
-        <Text sub size={14}>
+        <Text sub size={14} color={color} colorName={colorName}>
           {label}
         </Text>
         {!inline && control}
@@ -62,6 +64,8 @@ export default function InfoField({
           inline,
           bordered,
           theme,
+          color,
+          colorName,
         })}
       >
         {typeof value === 'string' || typeof value === 'number' ? (
@@ -71,6 +75,8 @@ export default function InfoField({
             selectable
             mono={mono}
             style={styles.valueText({ inline })}
+            color={color}
+            colorName={colorName}
           >
             {value}
           </Text>
