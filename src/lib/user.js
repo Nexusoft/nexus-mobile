@@ -20,8 +20,6 @@ export async function refreshUserStatus() {
   const store = getStore();
   try {
     const status = await callAPI('users/get/status');
-    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
-
     const state = store.getState();
     if (selectUserIsUnconfirmed(state)) {
       try {
@@ -30,6 +28,7 @@ export async function refreshUserStatus() {
         console.error(err);
       }
     }
+    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     return status;
   } catch (err) {
     store.dispatch({ type: TYPE.LOGOUT });
