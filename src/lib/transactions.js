@@ -39,7 +39,7 @@ export async function loadTransactions({ reload } = { reload: false }) {
   });
 }
 
-export async function loadGenisis() {
+export async function loadGenesis() {
   const result = await callAPI('users/list/transactions', {
     verbose: 'summary',
     limit: 1,

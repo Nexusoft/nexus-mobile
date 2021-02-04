@@ -14,7 +14,7 @@ import { showError, showSuccess, showNotification } from 'lib/ui';
 import { refreshUserStatus } from 'lib/user';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
-import { loadGenisis, loadTransactions } from 'lib/transactions';
+import { loadGenesis, loadTransactions } from 'lib/transactions';
 
 const styles = {
   field: {
@@ -179,7 +179,7 @@ export default function CreateUserScreen() {
             await callAPI('users/login/user', { username, password, pin });
             await callAPI('users/unlock/user', { pin, notifications: true });
             await refreshUserStatus();
-            await loadGenisis();
+            await loadGenesis();
           } catch (err) {
             console.log(err);
             showError(
