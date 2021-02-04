@@ -10,8 +10,8 @@ import { useTheme } from 'lib/theme';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import SettingItem from './SettingItem';
 import commonStyles from './styles';
-import { confirm } from 'lib/ui';
-import { sendAPI } from 'lib/api';
+import { confirm, showSuccess } from 'lib/ui';
+import { callAPI } from 'lib/api';
 import {
   scanFile,
   unlink,
@@ -120,17 +120,14 @@ export default function CoreSettings() {
                   danger: true,
                 });
                 if (confirmed) {
-                  await sendAPI('system/stop', {});
+                  await callAPI('system/stop', {});
                   await unlink(
                     (Platform.OS === 'android'
                       ? ExternalDirectoryPath
                       : DocumentDirectoryPath) + '/Nexus/client'
                   );
-                  await scanFile(
-                    Platform.OS === 'android'
-                      ? ExternalDirectoryPath
-                      : DocumentDirectoryPath
-                  );
+                  if (Platform.OS === 'android')
+                    await scanFile(ExternalDirectoryPath);
                   showSuccess(
                     'Database deleted. Please swipe to close the app.'
                   );
