@@ -74,7 +74,7 @@ function UnconfirmedUserBase() {
   const { username } = useSelector((state) => state.user.status);
   const theme = useTheme();
   const txs = useSelector((state) => Object.values(state.transactions.txMap));
-  const txid = txs.find((tx) => tx.type === 'tritium first').txid;
+  const txid = txs.find((tx) => tx.type === 'tritium first')?.txid;
   return (
     <View style={styles.creating}>
       <ActivityIndicator animating color={theme.foreground} size="small" />

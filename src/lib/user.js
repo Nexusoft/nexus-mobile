@@ -1,6 +1,6 @@
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
-import { loadGenesis } from 'lib/transactions';
+import { refreshGenesisTx } from 'lib/transactions';
 import { getStore } from 'store';
 
 // Store Selects
@@ -21,6 +21,15 @@ export async function refreshUserStatus() {
   try {
     const status = await callAPI('users/get/status');
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+
+    const state = store.getState();
+    if (selectUserIsUnconfirmed(state)) {
+      try {
+        await refreshGenesisTx();
+      } catch (err) {
+        console.error(err);
+      }
+    }
     return status;
   } catch (err) {
     store.dispatch({ type: TYPE.LOGOUT });
@@ -55,7 +64,6 @@ export async function refreshUserAccounts() {
 export async function refreshUserSync() {
   try {
     const result = await callAPI('ledger/sync/sigchain');
-    console.log(result);
     return result;
   } catch (err) {
     return null;
@@ -94,7 +102,7 @@ export async function refreshUserAccount(address) {
 export async function login({ username, password, pin }) {
   await callAPI('users/login/user', { username, password, pin });
   await callAPI('users/unlock/user', { pin, notifications: true });
-  await Promise.all([loadGenesis(), refreshUserStatus()]);
+  await refreshUserStatus();
 }
 
 export async function logout() {

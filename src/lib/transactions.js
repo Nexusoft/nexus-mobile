@@ -39,22 +39,16 @@ export async function loadTransactions({ reload } = { reload: false }) {
   });
 }
 
-export async function loadGenesis() {
-  const where = [
-    {
-      field: 'type',
-      op: '=',
-      value: 'tritium first',
-    },
-  ];
-  let genesisTx;
-  try {
-    genesisTx = await fetchTransaction({ where });
-  } finally {
-    if (!genesisTx || !isConfirmed(genesisTx)) {
-      watchTransaction({ where });
-    }
-  }
+export async function refreshGenesisTx() {
+  return await fetchTransaction({
+    where: [
+      {
+        field: 'type',
+        op: '=',
+        value: 'tritium first',
+      },
+    ],
+  });
 }
 
 const getBalanceChanges = (tx) =>
