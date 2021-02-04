@@ -8,12 +8,10 @@ import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
 import { useTheme } from 'lib/theme';
-import { refreshUserStatus } from 'lib/user';
-import { callAPI } from 'lib/api';
+import { login } from 'lib/user';
 import { showError } from 'lib/ui';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
-import { loadGenesis } from 'lib/transactions';
 
 const styles = {
   field: {
@@ -93,10 +91,7 @@ export default function LoginScreen() {
         })}
         onSubmit={async ({ username, password, pin }) => {
           try {
-            await callAPI('users/login/user', { username, password, pin });
-            await callAPI('users/unlock/user', { pin, notifications: true });
-            await loadGenesis();
-            await refreshUserStatus();
+            await login({ username, password, pin });
           } catch (err) {
             showError(err && err.message);
           }

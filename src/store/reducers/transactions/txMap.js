@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
     case TYPE.UPDATE_TRANSACTION:
       return {
         ...state,
-        [action.payload.txid]: action.payload,
+        [action.payload?.txid]: action.payload,
       };
 
     case TYPE.DISCONNECT_CORE:

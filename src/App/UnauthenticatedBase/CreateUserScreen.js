@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Clipboard } from 'react-native';
+import { View } from 'react-native';
 import { Formik } from 'formik';
-import { FAB, Dialog, ActivityIndicator, Button } from 'react-native-paper';
+import { FAB, Dialog } from 'react-native-paper';
 import * as yup from 'yup';
 
 import Text from 'components/Text';
@@ -10,11 +10,10 @@ import SvgIcon from 'components/SvgIcon';
 import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
-import { showError, showSuccess, showNotification } from 'lib/ui';
-import { refreshUserStatus } from 'lib/user';
+import { showError } from 'lib/ui';
+import { login } from 'lib/user';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
-import { loadGenesis, loadTransactions } from 'lib/transactions';
 
 const styles = {
   field: {
@@ -176,10 +175,7 @@ export default function CreateUserScreen() {
           }
           // Allow mempool login
           try {
-            await callAPI('users/login/user', { username, password, pin });
-            await callAPI('users/unlock/user', { pin, notifications: true });
-            await refreshUserStatus();
-            await loadGenesis();
+            await login({ username, password, pin });
           } catch (err) {
             console.log(err);
             showError(

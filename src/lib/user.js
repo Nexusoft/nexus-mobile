@@ -1,8 +1,9 @@
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
+import { loadGenesis } from 'lib/transactions';
 import { getStore } from 'store';
 
-//Store Selects
+// Store Selects
 
 export const selectLoggedIn = (state) => !!state.user.status;
 
@@ -92,7 +93,8 @@ export async function refreshUserAccount(address) {
 
 export async function login({ username, password, pin }) {
   await callAPI('users/login/user', { username, password, pin });
-  await refreshUserStatus();
+  await callAPI('users/unlock/user', { pin, notifications: true });
+  await Promise.all([loadGenesis(), refreshUserStatus()]);
 }
 
 export async function logout() {
