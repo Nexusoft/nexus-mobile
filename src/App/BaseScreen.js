@@ -196,7 +196,7 @@ export default function BaseScreen({ route, navigation }) {
 
   if (!loggedIn) return <UnauthenticatedBase />;
 
-  if (true) return <UnconfirmedUserBase />;
+  if (unconfirmedUser) return <UnconfirmedUserBase />;
 
   return <OverviewScreen />;
 }
