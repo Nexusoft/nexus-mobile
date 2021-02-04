@@ -39,6 +39,24 @@ export async function loadTransactions({ reload } = { reload: false }) {
   });
 }
 
+export async function loadGenisis() {
+  const result = await callAPI('users/list/transactions', {
+    verbose: 'summary',
+    limit: 1,
+    where: [
+      {
+        field: 'type',
+        op: '=',
+        value: 'tritium first',
+      },
+    ],
+  });
+  getStore().dispatch({
+    type: TYPE.UPDATE_TRANSACTION,
+    payload: result[0],
+  });
+}
+
 const getBalanceChanges = (tx) =>
   tx.contracts
     ? tx.contracts.reduce((changes, contract) => {

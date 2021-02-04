@@ -7,19 +7,14 @@ import * as yup from 'yup';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
-import InfoField from 'components/InfoField';
 import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
 import { showError, showSuccess, showNotification } from 'lib/ui';
-import { navigate } from 'lib/navigation';
-import { refreshUserStatus, selectLoggedIn } from 'lib/user';
-import { getStore } from 'store';
-import useMounted from 'utils/useMounted';
+import { refreshUserStatus } from 'lib/user';
 import LogoIcon from 'icons/logo-full.svg';
-import CopyIcon from 'icons/copy.svg';
 import Backdrop from './Backdrop';
-import { loadTransactions } from 'lib/transactions';
+import { loadGenisis, loadTransactions } from 'lib/transactions';
 
 const styles = {
   field: {
@@ -36,14 +31,6 @@ const styles = {
   }),
   logo: {
     marginBottom: 30,
-  },
-  creating: {
-    marginTop: 50,
-    verticalAlign: 'center',
-  },
-  creatingText: {
-    marginTop: 40,
-    textAlign: 'center',
   },
 };
 
@@ -142,69 +129,8 @@ function CreateUserForm({ values, handleSubmit, isSubmitting }) {
   );
 }
 
-function useRegistrationWatcher() {
-  const [registration, setRegistration] = React.useState(null);
-  const mounted = useMounted();
-  const watchRegistration = React.useCallback(
-    ({ username, txid }) => {
-      setRegistration({ username, txid });
-      const store = getStore();
-      const unobserve = store.observe(
-        (state) => state.core?.info?.blocks,
-        async (blocks) => {
-          if (blocks) {
-            const txs = await callAPI('users/list/transactions', {
-              username: registration?.username,
-              order: 'asc',
-              limit: 1,
-              verbose: 'summary',
-            });
-            if (txs && txs[0]?.confirmations) {
-              unobserve();
-              const store = getStore();
-              const loggedIn = selectLoggedIn(store.getState());
-              showSuccess(
-                <Text>
-                  User <Text bold>{registration?.username}</Text> has been
-                  registered on Nexus blockchain!
-                </Text>,
-                {
-                  getButtons: ({ onDismiss }) => (
-                    <>
-                      <Button mode="text" onPress={onDismiss}>
-                        Dismiss
-                      </Button>
-                      {!loggedIn && (
-                        <Button
-                          mode="text"
-                          onPress={() => {
-                            onDismiss();
-                            navigate('Login');
-                          }}
-                        >
-                          Log in
-                        </Button>
-                      )}
-                    </>
-                  ),
-                }
-              );
-              if (mounted.current) {
-                setRegistration(null);
-              }
-            }
-          }
-        }
-      );
-    },
-    [registration]
-  );
-  return [registration, watchRegistration];
-}
-
 export default function CreateUserScreen() {
   const theme = useTheme();
-  //const [registration, watchRegistration] = useRegistrationWatcher();
 
   return (
     <Backdrop
@@ -221,48 +147,51 @@ export default function CreateUserScreen() {
         </>
       }
     >
-        <Formik
-          initialValues={{ username: '', password: '', pin: '' }}
-          validationSchema={yup.object().shape({
-            username: yup
-              .string()
-              .required('Required!')
-              .min(3, 'Must be at least 3 characters!'),
-            password: yup
-              .string()
-              .required('Required!')
-              .min(8, 'Must be at least 8 characters!'),
-            pin: yup
-              .string()
-              .required('Required!')
-              .min(4, 'Must be at least 4 characters!'),
-          })}
-          onSubmit={async ({ username, password, pin }) => {
-            try {
-                await callAPI('users/create/user', {
-                username,
-                password,
-                pin,
-              });
-            } catch (err) {
-              showError(err && err.message);
-              return;
-            }
-            // Allow mempool login
-            try {
-              await callAPI('users/login/user', { username, password, pin });
-              await callAPI('users/unlock/user', { pin, notifications: true });
-              await refreshUserStatus();
-              await loadTransactions();
-            } catch (err) {
-              console.log(err);
-              showError(err && (err.message + '\n Your account was created but encountered an login error'));
-              return;
-            }  
-          }}
-          component={CreateUserForm}
-        />
-      
+      <Formik
+        initialValues={{ username: '', password: '', pin: '' }}
+        validationSchema={yup.object().shape({
+          username: yup
+            .string()
+            .required('Required!')
+            .min(3, 'Must be at least 3 characters!'),
+          password: yup
+            .string()
+            .required('Required!')
+            .min(8, 'Must be at least 8 characters!'),
+          pin: yup
+            .string()
+            .required('Required!')
+            .min(4, 'Must be at least 4 characters!'),
+        })}
+        onSubmit={async ({ username, password, pin }) => {
+          try {
+            await callAPI('users/create/user', {
+              username,
+              password,
+              pin,
+            });
+          } catch (err) {
+            showError(err && err.message);
+            return;
+          }
+          // Allow mempool login
+          try {
+            await callAPI('users/login/user', { username, password, pin });
+            await callAPI('users/unlock/user', { pin, notifications: true });
+            await refreshUserStatus();
+            await loadGenisis();
+          } catch (err) {
+            console.log(err);
+            showError(
+              err &&
+                err.message +
+                  '\n Your account was created but encountered an login error'
+            );
+            return;
+          }
+        }}
+        component={CreateUserForm}
+      />
     </Backdrop>
   );
 }

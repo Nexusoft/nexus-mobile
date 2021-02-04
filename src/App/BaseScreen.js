@@ -71,42 +71,41 @@ function DisconnectedBase() {
 }
 
 function UnconfirmedUserBase() {
-  const {username} = useSelector((state) => state.user.status);
+  const { username } = useSelector((state) => state.user.status);
   const theme = useTheme();
-  const txid = useSelector((state) => Object.keys(state.transactions.txMap)[0] );
-  console.log("%%%%%");
-  console.log(txid);
+  const txs = useSelector((state) => Object.values(state.transactions.txMap));
+  const txid = txs.find((tx) => tx.type === 'tritium first').txid;
   return (
     <View style={styles.creating}>
-    <ActivityIndicator animating color={theme.foreground} size="small" />
-    <Text style={styles.creatingText}>
-      User registration for <Text bold>{username}</Text> is
-      waiting to be confirmed on Nexus blockchain...
-    </Text>
-    <InfoField
-      label="Transaction ID"
-      control={
-        <Button
-          mode="text"
-          icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
-          labelStyle={{ fontSize: 12 }}
-          onPress={() => {
-            Clipboard.setString(txid);
-            showNotification('Copied to clipboard');
-          }}
-        >
-          Copy
-        </Button>
-      }
-      value={
-        <Text mono size={13}>
-          {txid}
-        </Text>
-      }
-      mono
-      bordered
-    />
-  </View>
+      <ActivityIndicator animating color={theme.foreground} size="small" />
+      <Text style={styles.creatingText}>
+        User registration for <Text bold>{username}</Text> is waiting to be
+        confirmed on Nexus blockchain...
+      </Text>
+      <InfoField
+        label="Transaction ID"
+        control={
+          <Button
+            mode="text"
+            icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
+            labelStyle={{ fontSize: 12 }}
+            onPress={() => {
+              Clipboard.setString(txid);
+              showNotification('Copied to clipboard');
+            }}
+          >
+            Copy
+          </Button>
+        }
+        value={
+          <Text mono size={13}>
+            {txid}
+          </Text>
+        }
+        mono
+        bordered
+      />
+    </View>
   );
 }
 
@@ -178,9 +177,11 @@ export default function BaseScreen({ route, navigation }) {
   const unconfirmedUser = useSelector(selectUserIsUnconfirmed);
 
   useDefaultScreenFix();
-  useDynamicNavOptions({ route, navigation, loggedIn: loggedIn && !unconfirmedUser });
-
-  //console.log(unconfirmedUser);
+  useDynamicNavOptions({
+    route,
+    navigation,
+    loggedIn: loggedIn && !unconfirmedUser,
+  });
 
   if (!connected) return <DisconnectedBase />;
 

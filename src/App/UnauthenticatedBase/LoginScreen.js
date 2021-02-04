@@ -13,6 +13,7 @@ import { callAPI } from 'lib/api';
 import { showError } from 'lib/ui';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
+import { loadGenisis } from 'lib/transactions';
 
 const styles = {
   field: {
@@ -94,6 +95,7 @@ export default function LoginScreen() {
           try {
             await callAPI('users/login/user', { username, password, pin });
             await callAPI('users/unlock/user', { pin, notifications: true });
+            await loadGenisis();
             await refreshUserStatus();
           } catch (err) {
             showError(err && err.message);
