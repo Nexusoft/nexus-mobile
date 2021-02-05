@@ -125,7 +125,7 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 def versionMajor = 0
 def versionMinor = 8
 def versionPatch = 0
-def buildNumber = 15
+def buildNumber = 16
 
 def genVersionCode = versionMajor * 10000000 + versionMinor * 100000 + versionPatch * 1000 + buildNumber
 def genVersionName = "${versionMajor}.${versionMinor}.${versionPatch}-${buildNumber}"
