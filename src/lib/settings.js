@@ -8,6 +8,7 @@ export const defaultSettings = {
   // Application
   colorScheme: 'auto', // auto | light | dark
   baseCurrency: 'USD',
+  hideBalances: false,
 
   // Core
   coreMode: 'embedded',
@@ -30,7 +31,6 @@ export async function loadSettings() {
 }
 
 export async function updateSettings(updates) {
-  console.log(updates);
   if (updates) {
     const store = getStore();
     store.dispatch({

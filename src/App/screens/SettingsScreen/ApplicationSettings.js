@@ -5,6 +5,7 @@ import { Surface } from 'react-native-paper';
 import Divider from 'components/Divider';
 import Select from 'components/Select';
 import Text from 'components/Text';
+import Switch from 'components/Switch';
 import { updateSettings, selectSettings } from 'lib/settings';
 import { selectLoggedIn } from 'lib/user';
 import baseCurrencies from 'consts/baseCurrencies';
@@ -58,6 +59,7 @@ export default function ApplicationSettings() {
             />
           )}
         />
+
         {loggedIn && (
           <>
             <Divider inset={20} />
@@ -78,6 +80,20 @@ export default function ApplicationSettings() {
             />
           </>
         )}
+
+        <Divider inset={20} />
+        <SettingItem
+          title="Hide balances"
+          description="Hide balances on Overview screen"
+          right={
+            <Switch
+              value={settings.hideBalances}
+              onValueChange={(hideBalances) => {
+                updateSettings({ hideBalances });
+              }}
+            />
+          }
+        />
       </Surface>
     </>
   );

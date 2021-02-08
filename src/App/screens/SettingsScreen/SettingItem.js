@@ -41,6 +41,8 @@ export default function SettingItem({
           <Text style={{ fontSize }}>{title}</Text>
           {!!description && (
             <Text
+              sub
+              colorName={primary ? 'primary' : undefined}
               style={[
                 styles.description,
                 primary ? { color: theme.primary } : null,
