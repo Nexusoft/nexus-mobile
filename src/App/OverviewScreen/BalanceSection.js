@@ -73,6 +73,7 @@ export default function BalanceSection() {
   const [expanded, setExpanded] = React.useState(false);
   const balances = useSelector((state) => state.user?.balances);
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
+  const hideBalances = useSelector(selectSetting('hideBalances'));
   const price = useSelector(({ market: { price } }) => price);
   const { available, pending, unconfirmed, stake, immature } = balances || {};
   React.useEffect(() => {
@@ -91,6 +92,11 @@ export default function BalanceSection() {
       return unobserve;
     }, [])
   );
+  const balance = (amount, formatOptions, currency = 'NXS') => {
+    if (hideBalances) return '??? ' + currency;
+    if (!balances) return 'N/A';
+    return formatNumber(amount, formatOptions) + ' ' + currency;
+  };
 
   return (
     <TouchableRipple
@@ -104,18 +110,18 @@ export default function BalanceSection() {
         <View style={styles.brief}>
           <BalanceText style={styles.balanceLabel}>Balance</BalanceText>
           <BalanceText style={styles.balance}>
-            {balances
-              ? formatNumber(available + stake, { maximumFractionDigits: 2 }) +
-                ' NXS'
-              : 'N/A'}
+            {balance(available + stake, { maximumFractionDigits: 2 })}
           </BalanceText>
-          {!!price && (
+          {!!price && !!balances && (
             <BalanceText style={styles.fiatValue} sub>
               ≈ 
-              {formatNumber((available + stake) * price, {
-                maximumFractionDigits: 2,
-              })}{' '}
-              {baseCurrency}
+              {balance(
+                (available + stake) * price,
+                {
+                  maximumFractionDigits: 2,
+                },
+                baseCurrency
+              )}
             </BalanceText>
           )}
           <SvgIcon
@@ -128,42 +134,28 @@ export default function BalanceSection() {
         <View style={styles.subBalances({ expanded })}>
           <View style={styles.subBalance}>
             <BalanceText>Available</BalanceText>
-            <BalanceText>
-              {balances ? formatNumber(available) + ' NXS' : 'N/A'}
-            </BalanceText>
+            <BalanceText>{balance(available)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Staking (locked)</BalanceText>
-            <BalanceText>
-              {balances ? formatNumber(stake) + ' NXS' : 'N/A'}
-            </BalanceText>
+            <BalanceText>{balance(stake)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Pending</BalanceText>
-            <BalanceText>
-              {balances ? formatNumber(pending) + ' NXS' : 'N/A'}
-            </BalanceText>
+            <BalanceText>{balance(pending)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Unconfirmed</BalanceText>
-            <BalanceText>
-              {balances ? formatNumber(unconfirmed) + ' NXS' : 'N/A'}
-            </BalanceText>
+            <BalanceText>{balance(unconfirmed)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Immature</BalanceText>
-            <BalanceText>
-              {balances ? formatNumber(immature) + ' NXS' : 'N/A'}
-            </BalanceText>
+            <BalanceText>{balance(immature)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Total</BalanceText>
             <BalanceText>
-              {balances
-                ? formatNumber(
-                    available + stake + pending + unconfirmed + immature
-                  ) + ' NXS'
-                : 'N/A'}
+              {balance(available + stake + pending + unconfirmed + immature)}
             </BalanceText>
           </View>
         </View>
