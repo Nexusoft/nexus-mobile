@@ -78,22 +78,22 @@ export default function ApplicationSettings() {
                 />
               )}
             />
+
+            <Divider inset={20} />
+            <SettingItem
+              title="Hide balances"
+              description="Hide balances on Overview screen"
+              right={
+                <Switch
+                  value={settings.hideBalances}
+                  onValueChange={(hideBalances) => {
+                    updateSettings({ hideBalances });
+                  }}
+                />
+              }
+            />
           </>
         )}
-
-        <Divider inset={20} />
-        <SettingItem
-          title="Hide balances"
-          description="Hide balances on Overview screen"
-          right={
-            <Switch
-              value={settings.hideBalances}
-              onValueChange={(hideBalances) => {
-                updateSettings({ hideBalances });
-              }}
-            />
-          }
-        />
       </Surface>
     </>
   );
