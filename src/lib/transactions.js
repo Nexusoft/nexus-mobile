@@ -44,18 +44,18 @@ export async function refreshGenesisTx() {
     (await fetchTransaction({
       where: [
         {
-          field: 'confirmations',
-          op: '<',
-          value: '0',
+          field: 'type',
+          op: '=',
+          value: 'tritium first',
         },
       ],
     })) ||
     (await fetchTransaction({
       where: [
         {
-          field: 'type',
-          op: '=',
-          value: 'tritium first',
+          field: 'confirmations',
+          op: '<',
+          value: '0',
         },
       ],
     }))
