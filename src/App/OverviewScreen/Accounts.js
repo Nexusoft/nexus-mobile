@@ -10,6 +10,7 @@ import TokenName from 'components/TokenName';
 import { navigate } from 'lib/navigation';
 import { refreshUserAccounts, refreshUserBalances } from 'lib/user';
 import { refreshMarketPrice } from 'lib/market';
+import { selectSetting } from 'lib/settings';
 import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
 import useRefresh from 'utils/useRefresh';
@@ -65,6 +66,7 @@ const styles = {
 
 function Account({ account }) {
   const theme = useTheme();
+  const hideBalances = useSelector(selectSetting('hideBalances'));
   return (
     <>
       <View style={styles.account}>
@@ -86,7 +88,9 @@ function Account({ account }) {
               </Text>
             </View>
             <Text style={styles.accBalance}>
-              {formatNumber(account.balance + (account.stake || 0))}{' '}
+              {hideBalances
+                ? '???'
+                : formatNumber(account.balance + (account.stake || 0))}{' '}
               <TokenName account={account} />
             </Text>
           </View>
