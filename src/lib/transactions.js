@@ -40,15 +40,26 @@ export async function loadTransactions({ reload } = { reload: false }) {
 }
 
 export async function refreshGenesisTx() {
-  return await fetchTransaction({
-    where: [
-      {
-        field: 'type',
-        op: '=',
-        value: 'tritium first',
-      },
-    ],
-  });
+  return (
+    (await fetchTransaction({
+      where: [
+        {
+          field: 'confirmations',
+          op: '<',
+          value: '0',
+        },
+      ],
+    })) ||
+    (await fetchTransaction({
+      where: [
+        {
+          field: 'type',
+          op: '=',
+          value: 'tritium first',
+        },
+      ],
+    }))
+  );
 }
 
 const getBalanceChanges = (tx) =>
@@ -92,10 +103,12 @@ export async function fetchTransaction({ txid, where }) {
       verbose: 'summary',
     });
   }
-  getStore().dispatch({
-    type: TYPE.UPDATE_TRANSACTION,
-    payload: tx,
-  });
+  if (tx) {
+    getStore().dispatch({
+      type: TYPE.UPDATE_TRANSACTION,
+      payload: tx,
+    });
+  }
   return tx;
 }
 
