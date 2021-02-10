@@ -54,7 +54,7 @@ export async function refreshGenesisTx() {
       where: [
         {
           field: 'confirmations',
-          op: '<',
+          op: '=',
           value: '0',
         },
       ],
