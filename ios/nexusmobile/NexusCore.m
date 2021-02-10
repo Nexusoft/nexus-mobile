@@ -15,6 +15,9 @@
 
 NSArray *userCre;
 
+
+//testnet=605 connect=test1.nexusminingpool.com
+
 // Main Function for the thread
 void* PosixThreadMainRoutine(void* data)
 {
