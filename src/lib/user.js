@@ -7,12 +7,8 @@ import { getStore } from 'store';
 
 export const selectLoggedIn = (state) => !!state.user.status;
 
-// Return true if user is logged in but not confirmed
-export const selectUserIsUnconfirmed = (state) => {
-  const txs = Object.values(state.transactions.txMap);
-  const genesisTx = txs.find((tx) => tx.type === 'tritium first');
-  return !genesisTx?.confirmations;
-};
+// Return user's confirmed status
+export const selectUserIsConfirmed = (state) => state.user.status.confirmed;
 
 // Refreshes
 
@@ -21,7 +17,7 @@ export async function refreshUserStatus() {
   try {
     const status = await callAPI('users/get/status');
     const state = store.getState();
-    if (selectUserIsUnconfirmed(state)) {
+    if (selectUserIsConfirmed(state)) {
       try {
         await refreshGenesisTx();
       } catch (err) {
@@ -107,9 +103,13 @@ export async function refreshUserAccount(address) {
 // Functions
 
 export async function login({ username, password, pin }) {
+  console.log('login');
   await callAPI('users/login/user', { username, password, pin });
+  console.log('logged in');
   await callAPI('users/unlock/user', { pin, notifications: true });
+  console.log('unclocked');
   await refreshUserStatus();
+  console.log('refreshed');
 }
 
 export async function logout() {

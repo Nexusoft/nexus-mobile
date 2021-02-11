@@ -181,13 +181,13 @@ export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
   const loggedIn = useSelector(selectLoggedIn);
   const syncing = useSelector((state) => state.core.info?.synchronizing);
-  const unconfirmedUser = useSelector(selectUserIsUnconfirmed);
+  const confirmedUser = useSelector(selectUserIsConfirmed);
 
   useDefaultScreenFix();
   useDynamicNavOptions({
     route,
     navigation,
-    loggedIn: loggedIn && !unconfirmedUser,
+    loggedIn: loggedIn && confirmedUser,
   });
 
   if (!connected) return <DisconnectedBase />;
@@ -196,7 +196,7 @@ export default function BaseScreen({ route, navigation }) {
 
   if (!loggedIn) return <UnauthenticatedBase />;
 
-  if (unconfirmedUser) return <UnconfirmedUserBase />;
+  if (!confirmedUser) return <UnconfirmedUserBase />;
 
   return <OverviewScreen />;
 }
