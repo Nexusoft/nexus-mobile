@@ -157,15 +157,17 @@ export function watchNewTransactions() {
                   change.amount
                 )} ${TokenName.from({ contract: change })}`
             );
-            scheduleNotificationAsync({
-              content: {
-                title: 'New transaction',
-                body: changeLines.join(' \n'),
-                data: { type: 'new_transaction', txid: tx.txid },
-              },
-              trigger: null,
-              channelId: 'transaction-channel-id',
-            });
+            if (tx.confirmations <= 5) {
+              scheduleNotificationAsync({
+                content: {
+                  title: 'New transaction',
+                  body: changeLines.join(' \n'),
+                  data: { type: 'new_transaction', txid: tx.txid },
+                },
+                trigger: null,
+                channelId: 'transaction-channel-id',
+              });
+            }
           }
         });
       }
