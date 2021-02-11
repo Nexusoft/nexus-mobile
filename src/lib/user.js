@@ -16,8 +16,7 @@ export async function refreshUserStatus() {
   const store = getStore();
   try {
     const status = await callAPI('users/get/status');
-    const state = store.getState();
-    if (selectUserIsConfirmed(state)) {
+    if (!status.confirmed) {
       try {
         await refreshGenesisTx();
       } catch (err) {
