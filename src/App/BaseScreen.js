@@ -7,7 +7,7 @@ import Text from 'components/Text';
 import InfoField from 'components/InfoField';
 import SvgIcon from 'components/SvgIcon';
 import { useTheme } from 'lib/theme';
-import { selectLoggedIn, selectUserIsUnconfirmed } from 'lib/user';
+import { selectLoggedIn, selectUserIsConfirmed } from 'lib/user';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef } from 'lib/navigation';
 import { getStore } from 'store';
