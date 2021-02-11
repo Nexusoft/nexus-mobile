@@ -102,13 +102,9 @@ export async function refreshUserAccount(address) {
 // Functions
 
 export async function login({ username, password, pin }) {
-  console.log('login');
   await callAPI('users/login/user', { username, password, pin });
-  console.log('logged in');
   await callAPI('users/unlock/user', { pin, notifications: true });
-  console.log('unclocked');
   await refreshUserStatus();
-  console.log('refreshed');
 }
 
 export async function logout() {
