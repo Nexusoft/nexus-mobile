@@ -83,30 +83,8 @@ export default function UnauthenticatedBase() {
           );
         })}
       </BottomTab.Navigator>
-      <View>
-        <Text
-          style={{ color: 'gray', position: 'absolute', top: -20, right: 40 }}
-        >
-          {'v' + version.toString()}
-        </Text>
-      </View>
     </View>
   );
-  //
-  //     <Formik
-  //       initialValues={{ username: '', password: '', pin: '' }}
-  //       onSubmit={async ({ username, password, pin }) => {
-  //         try {
-  //           await callAPI('users/login/user', { username, password, pin });
-  //           await refreshUserStatus();
-  //         } catch (err) {
-  //           showError(err && err.message);
-  //         }
-  //       }}
-  //       component={LoginForm}
-  //     />
-  //
-  // </View>
 }
 
 UnauthenticatedBase.stackOptions = ({ theme, route }) => {
@@ -117,7 +95,14 @@ UnauthenticatedBase.stackOptions = ({ theme, route }) => {
     {};
 
   return {
-    headerLeft: () => null,
+    headerLeft: (theme) => (
+      <Text
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        style={{ marginLeft: 10, opacity: 0.75 }}
+      >
+        v{version}
+      </Text>
+    ),
     headerRight: ({ tintColor }) => (
       <IconButton
         icon={({ size }) => (
