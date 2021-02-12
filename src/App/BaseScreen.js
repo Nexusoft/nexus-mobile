@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Clipboard } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ActivityIndicator, Button } from 'react-native-paper';
 
