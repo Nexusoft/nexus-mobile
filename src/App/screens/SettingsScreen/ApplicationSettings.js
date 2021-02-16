@@ -11,6 +11,7 @@ import { selectLoggedIn } from 'lib/user';
 import baseCurrencies from 'consts/baseCurrencies';
 import SettingItem from './SettingItem';
 import commonStyles from './styles';
+import formatNumber from 'utils/formatNumber';
 
 const styles = {
   ...commonStyles,
@@ -37,6 +38,10 @@ const themeOptions = [
 export default function ApplicationSettings() {
   const loggedIn = useSelector(selectLoggedIn);
   const settings = useSelector(selectSettings);
+  const pricePer = formatNumber(
+    useSelector(({ market: { price } }) => price),
+    { maximumFractionDigits: 3 }
+  );
 
   return (
     <>
@@ -72,7 +77,7 @@ export default function ApplicationSettings() {
               render={({ display, openSelect }) => (
                 <SettingItem
                   title="Base currency"
-                  description={display}
+                  description={`${display}  ${pricePer}/NXS`}
                   primary
                   onPress={openSelect}
                 />
