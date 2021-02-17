@@ -36,7 +36,9 @@ const themeOptions = [
 
 export default function ApplicationSettings() {
   const loggedIn = useSelector(selectLoggedIn);
-  const settings = useSelector(selectSettings);
+  const settings = useSelector(
+    selectSettings(['colorScheme', 'baseCurrency', 'hideBalances'])
+  );
 
   return (
     <>

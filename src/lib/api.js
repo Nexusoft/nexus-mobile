@@ -13,7 +13,15 @@ function getConfig() {
     externalCoreAPIPort,
     externalCoreAPIUser,
     externalCoreAPIPassword,
-  } = selectSettings(state);
+  } = selectSettings([
+    'coreMode',
+    'embeddedUser',
+    'embeddedPassword',
+    'externalCoreIP',
+    'externalCoreAPIPort',
+    'externalCoreAPIUser',
+    'externalCoreAPIPassword',
+  ])(state);
 
   return coreMode === 'embedded'
     ? {

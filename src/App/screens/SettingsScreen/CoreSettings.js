@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { TouchableRipple, Surface } from 'react-native-paper';
 
 import Text from 'components/Text';
-import { updateSettings, selectSettings } from 'lib/settings';
+import { updateSettings, selectSetting } from 'lib/settings';
 import { navigate } from 'lib/navigation';
 import { useTheme } from 'lib/theme';
 import { refreshCoreInfo } from 'lib/coreInfo';
@@ -38,7 +38,7 @@ const styles = {
 
 function CoreMode({ label, value }) {
   const theme = useTheme();
-  const { coreMode } = useSelector(selectSettings);
+  const coreMode = useSelector(selectSetting('coreMode'));
   const active = coreMode === value;
   const content = (
     <View
@@ -72,8 +72,8 @@ function CoreMode({ label, value }) {
 }
 
 export default function CoreSettings() {
-  const theme = useTheme();
-  const settings = useSelector(selectSettings);
+  // const theme = useTheme();
+  const coreMode = useSelector(selectSetting('coreMode'));
 
   return (
     <>
@@ -94,11 +94,11 @@ export default function CoreSettings() {
           onPress={() => {
             navigate('ExternalCoreConfig');
           }}
-          description={settings.coreMode === 'external' ? 'On' : 'Off'}
+          description={coreMode === 'external' ? 'On' : 'Off'}
           primary
         />
 
-        {settings.coreMode === 'embedded' && (
+        {coreMode === 'embedded' && (
           <>
             <SettingItem
               small
