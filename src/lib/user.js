@@ -40,12 +40,9 @@ export async function refreshUserAccounts() {
   try {
     const accounts = await callAPI('users/list/accounts');
     store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: accounts });
-    if (accounts.length == 0) {
+    if (accounts.length === 0) {
       // In a very rare case the sigchain is not fully downloaded, try again
-      setTimeout(() => {
-        refreshUserAccounts();
-      }, 500);
-      return;
+      setTimeout(refreshUserAccounts, 500);
     }
 
     return accounts;
