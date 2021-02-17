@@ -18,6 +18,9 @@ export const defaultSettings = {
   externalCoreAPIPort: '8080',
   externalCoreAPIUser: 'apiserver',
   externalCoreAPIPassword: 'password',
+
+  // Hidden
+  showContactsTip: true,
 };
 
 export async function loadSettings() {
@@ -37,8 +40,9 @@ export async function updateSettings(updates) {
       type: TYPE.UPDATE_SETTINGS,
       payload: updates,
     });
+    const settings = store.getState().settings;
 
-    const keyValuePairs = Object.entries(updates).map(([key, value]) => [
+    const keyValuePairs = Object.entries(settings).map(([key, value]) => [
       key,
       JSON.stringify(value),
     ]);
@@ -50,15 +54,16 @@ export async function updateSettings(updates) {
   }
 }
 
-export const selectSettings = memoize(
-  (state) =>
-    state &&
-    Object.entries(state.settings).reduce((settings, [key, value]) => {
-      settings[key] =
-        value === null || value === undefined ? defaultSettings[key] : value;
-      return settings;
-    }, {})
-);
+export const selectSettings = memoize((state) => {
+  if (!state) return null;
+  const settings = {};
+  Object.keys(defaultSettings).forEach((key) => {
+    const value = state.settings[key];
+    settings[key] =
+      value === null || value === undefined ? defaultSettings[key] : value;
+  });
+  return settings;
+});
 
 export const selectSetting = (key) => (state) => {
   const value = state.settings[key];
