@@ -14,12 +14,13 @@ import Contact from './Contact';
 const selectContacts = memoize(
   (contacts) =>
     contacts &&
-    Object.entries(contacts).map(([name, contact]) => ({ name, ...contact }))
+    Object.entries(contacts).map(([name, contact]) => ({ name, ...contact })),
+  (state) => [state?.contacts]
 );
 
 export default function ContactSelector({ setAddress, style }) {
   const [contactsOpen, setContactsOpen] = React.useState(false);
-  const contacts = useSelector((state) => selectContacts(state.contacts));
+  const contacts = useSelector(selectContacts);
   return (
     <>
       <IconButton

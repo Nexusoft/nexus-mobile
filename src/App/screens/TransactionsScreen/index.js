@@ -16,8 +16,10 @@ import TransactionIcon from 'icons/transaction.svg';
 // import Filters from './Filters';
 import Transaction from './Transaction';
 
-const selectTransactions = memoize((txMap) =>
-  Object.values(txMap).sort((tx1, tx2) => tx2.timestamp - tx1.timestamp)
+const selectTransactions = memoize(
+  (txMap) =>
+    Object.values(txMap).sort((tx1, tx2) => tx2.timestamp - tx1.timestamp),
+  (state) => [state?.transactions.txMap]
 );
 
 function useLoadMore() {
@@ -35,9 +37,7 @@ function useLoadMore() {
 
 export default function TransactionsScreen() {
   const loadedAll = useSelector((state) => state.transactions.loadedAll);
-  const transactions = useSelector((state) =>
-    selectTransactions(state.transactions.txMap)
-  );
+  const transactions = useSelector(selectTransactions);
   const [refreshing, refresh] = useRefresh(() =>
     loadTransactions({ reload: true })
   );
