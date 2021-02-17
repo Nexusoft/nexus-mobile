@@ -95,6 +95,10 @@ export default function BalanceSection() {
   const balance = (amount, formatOptions, currency = 'NXS') => {
     if (hideBalances) return '??? ' + currency;
     if (!balances) return 'N/A';
+    // VND doesn't have decimal digits
+    if (currency === 'VND') {
+      formatOptions.maximumFractionDigits = 0;
+    }
     return formatNumber(amount, formatOptions) + ' ' + currency;
   };
 
