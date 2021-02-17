@@ -100,10 +100,10 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
       </Surface>
 
       <Text sub style={styles.description}>
-        Manually connect to an external Nexus Core you run on another machine
-        instead of the internal Nexus Core delivered along with this app. Be
+        Manually connect to an external Nexus Core run on another machine
+        instead of the internal Nexus Core packaged along with this app. Be
         aware of possible version incompatibility between the app interface and
-        the Nexus Core
+        the external Nexus Core.
       </Text>
 
       {coreMode === 'external' && (
