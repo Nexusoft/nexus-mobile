@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, FlatList } from 'react-native';
-import { IconButton, FAB } from 'react-native-paper';
+import { IconButton, FAB, Button } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import Divider from 'components/Divider';
@@ -9,12 +9,28 @@ import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import { navigate } from 'lib/navigation';
 import { setContactSearch } from 'lib/ui';
+import { selectSetting, updateSettings } from 'lib/settings';
+import { useTheme, disabledColor } from 'lib/theme';
 import memoize from 'utils/memoize';
 import Contact from './Contact';
 
 const styles = {
   wrapper: {
     paddingBottom: 106,
+  },
+  descBox: ({ theme }) => ({
+    marginHorizontal: 20,
+    marginTop: 10,
+    marginBottom: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: disabledColor(theme.foreground),
+    borderRadius: 4,
+  }),
+  descText: {},
+  descButton: {
+    alignSelf: 'flex-end',
   },
   addBtn: {
     position: 'absolute',
@@ -72,7 +88,9 @@ function NoResults() {
 }
 
 export default function ContactsScreen() {
+  const theme = useTheme();
   const contacts = useSelector((state) => selectContacts(state.contacts));
+  const showContactsTip = useSelector(selectSetting('showContactsTip'));
   const search = useSelector((state) => state.ui.contactSearch);
   const filteredContacts =
     search && typeof search === 'string'
@@ -85,6 +103,25 @@ export default function ContactsScreen() {
       scroll={false}
       style={{ paddingVertical: 10 }}
     >
+      {showContactsTip && (
+        <View style={styles.descBox({ theme })}>
+          <Text sub style={styles.descText}>
+            Contacts are stored locally on this phone and not bound to any
+            individual user. Therefore, anyone who logs in to this app on this
+            phone would see the same contacts.
+          </Text>
+          <Button
+            compact
+            style={styles.descButton}
+            labelStyle={{ fontSize: 12 }}
+            onPress={() => {
+              updateSettings({ showContactsTip: false });
+            }}
+          >
+            I got it
+          </Button>
+        </View>
+      )}
       <FlatList
         data={filteredContacts}
         ItemSeparatorComponent={Divider}
