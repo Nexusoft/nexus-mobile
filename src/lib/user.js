@@ -1,6 +1,5 @@
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
-import { refreshGenesisTx } from 'lib/transactions';
 import { getStore } from 'store';
 
 // Store Selects
@@ -16,13 +15,6 @@ export async function refreshUserStatus() {
   const store = getStore();
   try {
     const status = await callAPI('users/get/status');
-    if (!status.confirmed) {
-      try {
-        await refreshGenesisTx();
-      } catch (err) {
-        console.error(err);
-      }
-    }
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     return status;
   } catch (err) {

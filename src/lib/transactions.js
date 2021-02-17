@@ -39,18 +39,19 @@ export async function loadTransactions({ reload } = { reload: false }) {
   });
 }
 
-export async function refreshGenesisTx() {
-  return await fetchTransaction({
-    where: [
-      {
-        field: 'type',
-        op: '=',
-        value: 'tritium first',
-      },
-    ],
-    limit: 1,
-  });
-}
+// Obsolete
+// export async function refreshGenesisTx() {
+//   return await fetchTransaction({
+//     where: [
+//       {
+//         field: 'type',
+//         op: '=',
+//         value: 'tritium first',
+//       },
+//     ],
+//     limit: 1,
+//   });
+// }
 
 const getBalanceChanges = (tx) =>
   tx.contracts
