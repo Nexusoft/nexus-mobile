@@ -1,41 +1,34 @@
 import { encode } from 'base-64';
 
 import { getStore } from 'store';
-import { selectSettings } from 'lib/settings';
+import { selectSetting } from 'lib/settings';
 
 function getConfig() {
   const state = getStore().getState();
-  const {
-    coreMode,
-    embeddedUser,
-    embeddedPassword,
-    externalCoreIP,
-    externalCoreAPIPort,
-    externalCoreAPIUser,
-    externalCoreAPIPassword,
-  } = selectSettings([
-    'coreMode',
-    'embeddedUser',
-    'embeddedPassword',
-    'externalCoreIP',
-    'externalCoreAPIPort',
-    'externalCoreAPIUser',
-    'externalCoreAPIPassword',
-  ])(state);
-
-  return coreMode === 'embedded'
-    ? {
-        ip: 'localhost',
-        port: '8080',
-        user: embeddedUser,
-        password: embeddedPassword,
-      }
-    : {
-        ip: externalCoreIP,
-        port: externalCoreAPIPort,
-        user: externalCoreAPIUser,
-        password: externalCoreAPIPassword,
-      };
+  const coreMode = selectSetting('coreMode')(state);
+  if (coreMode === 'embedded') {
+    const embeddedUser = selectSetting('embeddedUser')(state);
+    const embeddedPassword = selectSetting('embeddedPassword')(state);
+    return {
+      ip: 'localhost',
+      port: '8080',
+      user: embeddedUser,
+      password: embeddedPassword,
+    };
+  } else {
+    const externalCoreIP = selectSetting('externalCoreIP')(state);
+    const externalCoreAPIPort = selectSetting('externalCoreAPIPort')(state);
+    const externalCoreAPIUser = selectSetting('externalCoreAPIUser')(state);
+    const externalCoreAPIPassword = selectSetting('externalCoreAPIPassword')(
+      state
+    );
+    return {
+      ip: externalCoreIP,
+      port: externalCoreAPIPort,
+      user: externalCoreAPIUser,
+      password: externalCoreAPIPassword,
+    };
+  }
 }
 
 export async function callAPI(endpoint, params) {

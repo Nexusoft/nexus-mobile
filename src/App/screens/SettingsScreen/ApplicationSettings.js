@@ -6,7 +6,7 @@ import Divider from 'components/Divider';
 import Select from 'components/Select';
 import Text from 'components/Text';
 import Switch from 'components/Switch';
-import { updateSettings, selectSettings } from 'lib/settings';
+import { updateSettings, selectSetting } from 'lib/settings';
 import { selectLoggedIn } from 'lib/user';
 import baseCurrencies from 'consts/baseCurrencies';
 import SettingItem from './SettingItem';
@@ -37,9 +37,9 @@ const themeOptions = [
 
 export default function ApplicationSettings() {
   const loggedIn = useSelector(selectLoggedIn);
-  const { colorScheme, baseCurrency, hideBalances } = useSelector(
-    selectSettings(['colorScheme', 'baseCurrency', 'hideBalances'])
-  );
+  const colorScheme = useSelector(selectSetting('colorScheme'));
+  const baseCurrency = useSelector(selectSetting('baseCurrency'));
+  const hideBalances = useSelector(selectSetting('hideBalances'));
   const pricePer = formatNumber(
     useSelector(({ market: { price } }) => price),
     { maximumFractionDigits: baseCurrency === 'VND' ? 0 : 3 }

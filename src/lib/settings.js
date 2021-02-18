@@ -57,24 +57,11 @@ export async function updateSettings(updates) {
 }
 
 export const selectSetting = (key) => (state) => {
-  const value = state?.settings?.[key];
+  const value = state?.settings[key];
   return value === null || value === undefined ? defaultSettings[key] : value;
 };
 
-export const selectSettings = (keys) =>
-  memoize(
-    (userSettings) =>
-      userSettings &&
-      keys.reduce((settings, key) => {
-        const value = userSettings[key];
-        settings[key] =
-          value === null || value === undefined ? defaultSettings[key] : value;
-        return settings;
-      }, {}),
-    (state) => [state?.settings]
-  );
-
-export const selectAllSettings = memoize(
+export const selectSettings = memoize(
   (userSettings) =>
     userSettings &&
     Object.keys(defaultSettings).reduce((settings, key) => {
