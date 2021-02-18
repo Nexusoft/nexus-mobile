@@ -10,7 +10,7 @@ const styles = {
     backgroundColor: theme.dark ? theme.background : theme.primary,
   }),
   backPane: {
-    height: '30%',
+    height: '25%',
     paddingVertical: 25,
     paddingHorizontal: 20,
     justifyContent: 'center',
