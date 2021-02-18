@@ -35,6 +35,11 @@ const styles = {
   logo: {
     marginBottom: 30,
   },
+  rememberMe: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
 };
 
 function LoginForm({ handleSubmit, isSubmitting }) {
@@ -67,13 +72,7 @@ function LoginForm({ handleSubmit, isSubmitting }) {
         onPress={handleSubmit}
         label={isSubmitting ? 'Logging in' : 'Log in'}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+      <View style={styles.rememberMe}>
         <Text sub>Remember username</Text>
         <Switch.Formik name="rememberMe" />
       </View>

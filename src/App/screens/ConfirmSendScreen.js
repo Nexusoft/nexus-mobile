@@ -44,14 +44,14 @@ const styles = {
   },
   fromTo: {
     flex: 1,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   amount: {
     fontSize: 30,
   },
   label: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 5,
     alignSelf: 'center',
   },
   accountInfo: {
@@ -74,6 +74,7 @@ const styles = {
     fontSize: 15,
     textAlign: 'center',
   },
+  note: { textAlign: 'center', marginBottom: 20 },
   arrow: {
     paddingVertical: 20,
     alignSelf: 'center',
@@ -184,8 +185,11 @@ export default function ConfirmSendScreen({ route }) {
         {({ handleSubmit, isSubmitting }) => (
           <>
             <View style={styles.pinSection}>
+              <Text sub style={styles.note}>
+                Double check your transaction before confirming
+              </Text>
+
               <TextBox.Formik
-                autoFocus
                 mode="outlined"
                 name="pin"
                 label="Enter your PIN to confirm"
