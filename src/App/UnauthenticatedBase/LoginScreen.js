@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
-import Select from 'components/Switch';
+import Switch from 'components/Switch';
 import { useTheme } from 'lib/theme';
 import { login } from 'lib/user';
 import { showError } from 'lib/ui';
@@ -17,12 +17,15 @@ import Backdrop from './Backdrop';
 import { selectSetting, updateSettings } from 'lib/settings';
 
 const styles = {
+  wrapper: {
+    paddingBottom: 40,
+  },
   field: {
     marginBottom: 0,
   },
   loginBtn: {
     marginTop: 20,
-    marginBottom: 40,
+    marginBottom: 30,
   },
   heading: ({ theme }) => ({
     fontSize: 19,
@@ -34,9 +37,9 @@ const styles = {
   },
 };
 
-function LoginForm({ handleSubmit, isSubmitting, values, setFieldValue }) {
+function LoginForm({ handleSubmit, isSubmitting }) {
   return (
-    <View>
+    <View style={styles.wrapper}>
       <TextBox.Formik
         name="username"
         label="Username"
@@ -67,18 +70,12 @@ function LoginForm({ handleSubmit, isSubmitting, values, setFieldValue }) {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-around',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
-        <Text>Remember Username</Text>
-        <Select
-          name="rememberme"
-          label="Remember Me"
-          value={values.rememberme}
-          onChange={() => {
-            setFieldValue('rememberme', !values.rememberme);
-          }}
-        />
+        <Text sub>Remember username</Text>
+        <Switch.Formik name="rememberMe" />
       </View>
     </View>
   );
@@ -107,19 +104,19 @@ export default function LoginScreen() {
           username: savedUsername || '',
           password: '',
           pin: '',
-          rememberme: !!savedUsername,
+          rememberMe: !!savedUsername,
         }}
         validationSchema={yup.object().shape({
           username: yup.string().required('Required!'),
           password: yup.string().required('Required!'),
           pin: yup.string().required('Required!'),
-          rememberme: yup.bool(),
+          rememberMe: yup.bool(),
         })}
-        onSubmit={async ({ username, password, pin, rememberme }) => {
+        onSubmit={async ({ username, password, pin, rememberMe }) => {
           try {
             await login({ username, password, pin });
             updateSettings({
-              savedUsername: rememberme ? username : '',
+              savedUsername: rememberMe ? username : null,
             });
           } catch (err) {
             showError(err && err.message);

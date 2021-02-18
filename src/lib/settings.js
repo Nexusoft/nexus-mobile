@@ -9,8 +9,6 @@ export const defaultSettings = {
   colorScheme: 'auto', // auto | light | dark
   baseCurrency: 'USD',
   hideBalances: false,
-  savedUsername: '',
-  stayLoggedIn: false, // might not need this
 
   // Core
   coreMode: 'embedded',
@@ -23,6 +21,8 @@ export const defaultSettings = {
 
   // Hidden
   showContactsTip: true,
+  savedUsername: null,
+  stayLoggedIn: false, // might not need this
 };
 
 export async function loadSettings() {
