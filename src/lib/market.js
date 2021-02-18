@@ -27,6 +27,10 @@ export async function refreshMarketPrice() {
     }
   } catch (err) {
     console.error(err);
+    store.dispatch({
+      type: TYPE.UPDATE_MARKET_PRICE,
+      payload: null,
+    });
   } finally {
     timerId = setTimeout(refreshMarketPrice, 900000); // 15 minutes
   }
