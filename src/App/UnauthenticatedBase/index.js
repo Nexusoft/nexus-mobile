@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { IconButton, shadow, overlay, Button } from 'react-native-paper';
 
@@ -88,8 +89,7 @@ export default function UnauthenticatedBase() {
 }
 
 UnauthenticatedBase.stackOptions = ({ theme, route }) => {
-  const routeName =
-    route.state?.routes[route.state.index]?.name || defaultScreen;
+  const routeName = getFocusedRouteNameFromRoute(route) || defaultScreen;
   const { stackOptions } =
     screens.map((Screen) => Screen.nav).find((nav) => nav.name === routeName) ||
     {};
