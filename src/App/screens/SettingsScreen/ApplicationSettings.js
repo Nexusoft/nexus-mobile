@@ -37,12 +37,12 @@ const themeOptions = [
 
 export default function ApplicationSettings() {
   const loggedIn = useSelector(selectLoggedIn);
-  const settings = useSelector(
+  const { colorScheme, baseCurrency, hideBalances } = useSelector(
     selectSettings(['colorScheme', 'baseCurrency', 'hideBalances'])
   );
   const pricePer = formatNumber(
     useSelector(({ market: { price } }) => price),
-    { maximumFractionDigits: 3 }
+    { maximumFractionDigits: baseCurrency === 'VND' ? 0 : 3 }
   );
 
   return (
@@ -53,7 +53,7 @@ export default function ApplicationSettings() {
       <Surface style={styles.section}>
         <Select
           options={themeOptions}
-          value={settings.colorScheme}
+          value={colorScheme}
           updateValue={(colorScheme) => {
             updateSettings({ colorScheme });
           }}
@@ -72,7 +72,7 @@ export default function ApplicationSettings() {
             <Divider inset={20} />
             <Select
               options={baseCurrencies}
-              value={settings.baseCurrency}
+              value={baseCurrency}
               updateValue={(baseCurrency) => {
                 updateSettings({ baseCurrency });
               }}
@@ -92,7 +92,7 @@ export default function ApplicationSettings() {
               description="Hide balances on Overview screen"
               right={
                 <Switch
-                  value={settings.hideBalances}
+                  value={hideBalances}
                   onValueChange={(hideBalances) => {
                     updateSettings({ hideBalances });
                   }}
