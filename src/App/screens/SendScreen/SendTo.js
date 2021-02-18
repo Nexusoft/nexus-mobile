@@ -57,7 +57,7 @@ function findContactName(addr) {
   const contact = Object.entries(state.contacts).find(
     ([name, { address }]) => address === addr
   );
-  return contact && contact[0];
+  return contact?.[0];
 }
 
 const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
@@ -84,10 +84,21 @@ async function resolveNameOrAddress(nameOrAddress) {
     return {
       name: nameOrAddress,
       address: nameResult.register_address,
-      contactName: findContactName(nameResult.address),
+      contactName: findContactName(nameResult.register_address),
     };
   } catch (err) {
-    return null;
+    try {
+      const nameResult = await callAPI('names/get/name', {
+        name: `${nameOrAddress}:default`,
+      });
+      return {
+        name: `${nameOrAddress}:default`,
+        address: nameResult.register_address,
+        contactName: findContactName(nameResult.register_address),
+      };
+    } catch (err) {
+      return null;
+    }
   }
 }
 
