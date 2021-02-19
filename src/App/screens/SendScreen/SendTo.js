@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, LayoutAnimation } from 'react-native';
+import { View, LayoutAnimation } from 'react-native';
 import { Button, FAB, overlay } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -140,7 +140,7 @@ export default function SendTo({ account }) {
       }}
     >
       {({ handleSubmit, isSubmitting, setFieldValue }) => (
-        <ScrollView style={styles.wrapper({ theme })}>
+        <View style={styles.wrapper({ theme })}>
           <Text style={styles.heading}>Send to</Text>
 
           <View style={styles.section}>
@@ -215,7 +215,7 @@ export default function SendTo({ account }) {
             disabled={isSubmitting}
             label={isSubmitting ? 'Validating...' : 'Proceed'}
           />
-        </ScrollView>
+        </View>
       )}
     </Formik>
   );

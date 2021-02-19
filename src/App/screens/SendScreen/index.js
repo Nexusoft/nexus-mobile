@@ -9,7 +9,7 @@ export default function SendScreen({ route }) {
   const account = route.params?.account;
 
   return (
-    <ScreenBody scroll={false}>
+    <ScreenBody>
       <SendFrom account={account} />
       <SendTo account={account} />
       <ZeroConnectionsOverlay />
