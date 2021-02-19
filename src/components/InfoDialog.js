@@ -11,7 +11,11 @@ export default function InfoDialog({ message, onDismiss, ...rest }) {
   const theme = useTheme();
   return (
     <Portal>
-      <Dialog onDismiss={onDismiss} {...rest}>
+      <Dialog
+        style={{ height: 100, width: 100 }}
+        onDismiss={onDismiss}
+        {...rest}
+      >
         <Dialog.Title
           style={{
             color: theme.primary,
@@ -26,6 +30,7 @@ export default function InfoDialog({ message, onDismiss, ...rest }) {
           Info
         </Dialog.Title>
         <Dialog.Content>
+          <Text style={{ height: 1000, width: 1000 }}>asdasdas</Text>
           <Text>{message}</Text>
         </Dialog.Content>
         <Dialog.Actions>

@@ -26,7 +26,7 @@ import initStore from './initStore';
 
 import BackgroundTimer from 'react-native-background-timer';
 
-import { selectLoggedIn,refreshUserSync,refreshHeaders } from 'lib/user';
+import { selectLoggedIn, refreshUserSync, refreshHeaders } from 'lib/user';
 import { updateSettings } from 'lib/settings';
 
 import RNFS from 'react-native-fs';
@@ -74,12 +74,12 @@ async function checkPermissions() {
       shouldSetBadge: true,
     }),
   });
-  if (Platform.OS === 'android'){
+  if (Platform.OS === 'android') {
     //Only used for Android
     setNotificationChannelAsync('transaction-channel-id', {
       name: 'Transaction Channel',
       importance: AndroidImportance.HIGH,
-      description:' Notification Channel for incoming Transactions'
+      description: ' Notification Channel for incoming Transactions',
     });
   }
 }
@@ -107,13 +107,10 @@ function App() {
   );
 }
 
-// Possible issue in crossplatform solution, fallback to ios specific
-var iosBGTimerInterval = null;
-
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import sleep from 'utils/sleep';
-import { set } from 'react-native-reanimated';
+import { showOnboarding } from 'lib/ui';
 
 const BACKGROUND_FETCH_TASK = 'background-fetch';
 
@@ -130,26 +127,20 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 });
 
 const _handleAppStateChange = (nextAppState) => {
-    if (nextAppState == "background") {
-      if (Platform.OS === 'android') {
-        BackgroundTimer.runBackgroundTimer(() => { 
-          if (selectLoggedIn(getStore().getState()))
-            {
-              refreshCoreInfo();
-            }
-          },
-          25000);
-        
+  if (nextAppState == 'background') {
+    if (Platform.OS === 'android') {
+      BackgroundTimer.runBackgroundTimer(() => {
+        if (selectLoggedIn(getStore().getState())) {
+          refreshCoreInfo();
+        }
+      }, 25000);
+    } //ios
+    else {
+      if (!isInBG) {
+        isInBG = true;
+        registerIOSBackgroundTask();
       }
-      else //ios
-      {
-        if (!isInBG)
-        {
-          isInBG = true;
-          registerIOSBackgroundTask();
-        } 
-      }
-    
+    }
   } else {
     if (nextAppState == 'active') {
       if (Platform.OS === 'android') {
@@ -158,7 +149,7 @@ const _handleAppStateChange = (nextAppState) => {
       else {
         if (isInBG) {
           TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK).then(
-            async(isRegistered) => {
+            async (isRegistered) => {
               if (isRegistered) {
                 BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
                 await refreshCoreInfo();
@@ -214,28 +205,15 @@ export default function Root(props) {
           'ascii'
         );
         console.log(result);
-
+        updateSettings({ showOnboarding: true }); // temp
         updateSettings({
           embeddedUser: result.split('\n')[0].replace('apiuser=', ''),
           embeddedPassword: result.split('\n')[1].replace('apipassword=', ''),
         });
 
-        setTimeout(() => {
-          // Ugly
-          Platform.OS === 'android'
-            ? Alert.alert(
-                'Nexus Core Is Running',
-                'Nexus Core will continue to sync with the network in the background unless app is closed.',
-                [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-                { cancelable: false }
-              )
-            : Alert.alert(
-                'Nexus Core may lose sync',
-                'Currently IOS limits background activity, Nexus will attempt to resync in the background but it is not guaranteed.',
-                [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-                { cancelable: false }
-              );
-        }, 10000);
+        if (getStore().getState().settings.showOnboarding) {
+          showOnboarding();
+        }
         setLoadingComplete(true);
       } finally {
         //suppressed warning, should probably be refactored
