@@ -55,7 +55,6 @@ export default function SendFrom({ account }) {
               size={16}
               color={color}
               style={{ marginRight: 8 }}
-              disabled={!account.name}
             />
             <Text bold color={color} size={16} disabled={!account.name}>
               {account.name || 'Unnamed'}

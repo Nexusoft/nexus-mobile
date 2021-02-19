@@ -111,8 +111,8 @@ export default function ConfirmSendScreen({ route }) {
         </Text>
         <View style={styles.accountInfo}>
           <SvgIcon icon={WalletIcon} size={16} />
-          <Text bold style={styles.name}>
-            {account.name}
+          <Text bold style={styles.name} disabled={!account.name}>
+            {account.name || 'Unnamed'}
           </Text>
         </View>
         <View style={styles.addressBox({ theme })}>
