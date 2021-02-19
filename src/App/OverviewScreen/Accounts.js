@@ -77,12 +77,7 @@ function Account({ account }) {
         >
           <View style={styles.accInfo}>
             <View style={styles.accNameIcon}>
-              <SvgIcon
-                icon={WalletIcon}
-                size={14}
-                style={styles.accIcon}
-                disabled={!account.name}
-              />
+              <SvgIcon icon={WalletIcon} size={14} style={styles.accIcon} />
               <Text style={styles.accName} bold disabled={!account.name}>
                 {account.name || 'Unnamed'}
               </Text>
