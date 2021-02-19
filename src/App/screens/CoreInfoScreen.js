@@ -91,6 +91,12 @@ export default function CoreInfoScreen() {
         <Divider />
         <InfoField
           inline
+          label="Sync. progress"
+          value={coreInfo?.syncprogress + '%'}
+        />
+        <Divider />
+        <InfoField
+          inline
           label="Block height"
           value={
             coreInfo?.blocks
