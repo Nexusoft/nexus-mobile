@@ -182,7 +182,7 @@ export default function CreateUserScreen() {
             showError(
               err &&
                 err.message +
-                  '\n Your account was created but encountered an login error'
+                  '\n Your account has been created but encountered an error while loggin in'
             );
             return;
           }
