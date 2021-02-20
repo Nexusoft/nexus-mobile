@@ -118,7 +118,7 @@ function UnconfirmedUserBase() {
 
 function SynchronizingBase() {
   const theme = useTheme();
-  const percentage = useSelector((state) => state.core.info?.synccomplete);
+  const percentage = useSelector((state) => state.core.info?.syncprogress);
   return (
     <View style={styles.container({ theme })}>
       <ActivityIndicator

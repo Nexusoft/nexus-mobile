@@ -23,6 +23,7 @@ export const defaultSettings = {
   showContactsTip: true,
   savedUsername: null,
   stayLoggedIn: false, // might not need this
+  showOnboarding: true,
 };
 
 export async function loadSettings() {

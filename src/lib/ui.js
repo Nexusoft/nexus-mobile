@@ -65,6 +65,19 @@ export function showInfo(message) {
   });
 }
 
+export function showOnboarding() {
+  const store = getStore();
+  const id = newUID();
+  store.dispatch({
+    type: TYPE.OPEN_DIALOG,
+    payload: {
+      id,
+      type: 'onboard',
+      message: 'ONBOARDING',
+    },
+  });
+}
+
 export function confirm(options) {
   return new Promise((resolve) => {
     const store = getStore();
