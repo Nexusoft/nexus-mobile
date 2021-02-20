@@ -9,6 +9,7 @@ export const defaultSettings = {
   colorScheme: 'auto', // auto | light | dark
   baseCurrency: 'USD',
   hideBalances: false,
+  hideUnusedTrustAccount: true,
 
   // Core
   coreMode: 'embedded',

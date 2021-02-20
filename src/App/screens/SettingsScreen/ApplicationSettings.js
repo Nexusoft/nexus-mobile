@@ -40,6 +40,9 @@ export default function ApplicationSettings() {
   const colorScheme = useSelector(selectSetting('colorScheme'));
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const hideBalances = useSelector(selectSetting('hideBalances'));
+  const hideUnusedTrustAccount = useSelector(
+    selectSetting('hideUnusedTrustAccount')
+  );
   const pricePer = formatNumber(
     useSelector(({ market: { price } }) => price),
     { maximumFractionDigits: baseCurrency === 'VND' ? 0 : 3 }
@@ -95,6 +98,20 @@ export default function ApplicationSettings() {
                   value={hideBalances}
                   onValueChange={(hideBalances) => {
                     updateSettings({ hideBalances });
+                  }}
+                />
+              }
+            />
+
+            <Divider inset={20} />
+            <SettingItem
+              title="Hide unused trust account"
+              description="Hide trust account on Overview screen if account is not used"
+              right={
+                <Switch
+                  value={hideUnusedTrustAccount}
+                  onValueChange={(hideUnusedTrustAccount) => {
+                    updateSettings({ hideUnusedTrustAccount });
                   }}
                 />
               }
