@@ -11,7 +11,7 @@ import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
 import { showError } from 'lib/ui';
-import { login } from 'lib/user';
+import { login, setregistrationTxids } from 'lib/user';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 
@@ -164,11 +164,12 @@ export default function CreateUserScreen() {
         })}
         onSubmit={async ({ username, password, pin }) => {
           try {
-            await callAPI('users/create/user', {
+            const result = await callAPI('users/create/user', {
               username,
               password,
               pin,
             });
+            setregistrationTxids({ username, txid: result.hash });
           } catch (err) {
             showError(err && err.message);
             return;

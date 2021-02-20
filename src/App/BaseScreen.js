@@ -74,8 +74,7 @@ function DisconnectedBase() {
 function UnconfirmedUserBase() {
   const { username } = useSelector((state) => state.user.status);
   const theme = useTheme();
-  const txs = useSelector((state) => Object.values(state.transactions.txMap));
-  const txid = txs.find((tx) => tx.type === 'tritium first')?.txid;
+  const txid = useSelector((state) => state.user.registrationTxids[username]);
   const color = theme.dark ? theme.foreground : theme.onPrimary;
   return (
     <View style={styles.container({ theme })}>

@@ -100,3 +100,10 @@ export async function logout() {
   await callAPI('users/logout/user');
   await refreshUserStatus();
 }
+
+export function setregistrationTxids({ username, txid }) {
+  getStore().dispatch({
+    type: TYPE.SET_REGISTRATION_TXID,
+    payload: { username, txid },
+  });
+}
