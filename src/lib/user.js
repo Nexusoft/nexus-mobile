@@ -1,5 +1,6 @@
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
+import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
 
 // Store Selects
@@ -90,10 +91,22 @@ export async function refreshUserAccount(address) {
 
 // Functions
 
-export async function login({ username, password, pin }) {
+export async function login({
+  username,
+  password,
+  pin,
+  rememberMe,
+  keepLoggedIn,
+}) {
   await callAPI('users/login/user', { username, password, pin });
-  await callAPI('users/unlock/user', { pin, notifications: true });
-  await refreshUserStatus();
+  updateSettings({
+    savedUsername: rememberMe ? username : null,
+  });
+  await Promise.all([
+    callAPI('users/unlock/user', { pin, notifications: true }),
+    refreshUserStatus(),
+    rememberMe && keepLoggedIn ? callAPI('users/save/session', { pin }) : null,
+  ]);
 }
 
 export async function logout() {
@@ -101,7 +114,7 @@ export async function logout() {
   await refreshUserStatus();
 }
 
-export function setregistrationTxids({ username, txid }) {
+export function setRegistrationTxids({ username, txid }) {
   getStore().dispatch({
     type: TYPE.SET_REGISTRATION_TXID,
     payload: { username, txid },

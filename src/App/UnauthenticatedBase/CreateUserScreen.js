@@ -11,7 +11,7 @@ import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
 import { showError } from 'lib/ui';
-import { login, setregistrationTxids } from 'lib/user';
+import { login, setRegistrationTxids } from 'lib/user';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 
@@ -169,7 +169,7 @@ export default function CreateUserScreen() {
               password,
               pin,
             });
-            setregistrationTxids({ username, txid: result.hash });
+            setRegistrationTxids({ username, txid: result.hash });
           } catch (err) {
             showError(err && err.message);
             return;

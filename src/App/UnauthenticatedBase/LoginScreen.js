@@ -14,7 +14,7 @@ import { login } from 'lib/user';
 import { showError } from 'lib/ui';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
-import { selectSetting, updateSettings } from 'lib/settings';
+import { selectSetting } from 'lib/settings';
 
 const styles = {
   wrapper: {
@@ -35,14 +35,15 @@ const styles = {
   logo: {
     marginBottom: 30,
   },
-  rememberMe: {
+  options: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
 };
 
-function LoginForm({ handleSubmit, isSubmitting }) {
+function LoginForm({ handleSubmit, isSubmitting, values }) {
   return (
     <View style={styles.wrapper}>
       <TextBox.Formik
@@ -72,9 +73,15 @@ function LoginForm({ handleSubmit, isSubmitting }) {
         onPress={handleSubmit}
         label={isSubmitting ? 'Logging in' : 'Log in'}
       />
-      <View style={styles.rememberMe}>
+      <View style={styles.options}>
         <Text sub>Remember username</Text>
         <Switch.Formik name="rememberMe" />
+      </View>
+      <View style={styles.options}>
+        <Text sub={!!values.rememberMe} disabled={!values.rememberMe}>
+          Keep me logged in
+        </Text>
+        <Switch.Formik name="keepLoggedIn" disabled={!values.rememberMe} />
       </View>
     </View>
   );
@@ -104,19 +111,24 @@ export default function LoginScreen() {
           password: '',
           pin: '',
           rememberMe: !!savedUsername,
+          keepLoggedIn: false,
         }}
         validationSchema={yup.object().shape({
           username: yup.string().required('Required!'),
           password: yup.string().required('Required!'),
           pin: yup.string().required('Required!'),
           rememberMe: yup.bool(),
+          keepLoggedIn: yup.bool(),
         })}
-        onSubmit={async ({ username, password, pin, rememberMe }) => {
+        onSubmit={async ({
+          username,
+          password,
+          pin,
+          rememberMe,
+          keepLoggedIn,
+        }) => {
           try {
-            await login({ username, password, pin });
-            updateSettings({
-              savedUsername: rememberMe ? username : null,
-            });
+            await login({ username, password, pin, rememberMe, keepLoggedIn });
           } catch (err) {
             showError(err && err.message);
           }

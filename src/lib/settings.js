@@ -23,7 +23,6 @@ export const defaultSettings = {
   // Hidden
   showContactsTip: true,
   savedUsername: null,
-  stayLoggedIn: false, // might not need this
   showOnboarding: true,
 };
 
