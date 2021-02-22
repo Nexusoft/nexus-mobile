@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
+import Switch from 'components/Switch';
 import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
@@ -30,6 +31,12 @@ const styles = {
   }),
   logo: {
     marginBottom: 30,
+  },
+  options: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
 };
 
@@ -113,6 +120,16 @@ function CreateUserForm({ values, handleSubmit, isSubmitting }) {
         }}
         label={isSubmitting ? 'Creating user' : 'Create user'}
       />
+      <View style={styles.options}>
+        <Text sub>Remember username</Text>
+        <Switch.Formik name="rememberMe" />
+      </View>
+      <View style={styles.options}>
+        <Text sub={!!values.rememberMe} disabled={!values.rememberMe}>
+          Keep me logged in
+        </Text>
+        <Switch.Formik name="keepLoggedIn" disabled={!values.rememberMe} />
+      </View>
       <ConfirmUserDialog
         visible={confirming}
         onDismiss={() => {
@@ -147,7 +164,13 @@ export default function CreateUserScreen() {
       }
     >
       <Formik
-        initialValues={{ username: '', password: '', pin: '' }}
+        initialValues={{
+          username: '',
+          password: '',
+          pin: '',
+          rememberMe: false,
+          keepLoggedIn: false,
+        }}
         validationSchema={yup.object().shape({
           username: yup
             .string()
@@ -161,8 +184,16 @@ export default function CreateUserScreen() {
             .string()
             .required('Required!')
             .min(4, 'Must be at least 4 characters!'),
+          rememberMe: yup.bool(),
+          keepLoggedIn: yup.bool(),
         })}
-        onSubmit={async ({ username, password, pin }) => {
+        onSubmit={async ({
+          username,
+          password,
+          pin,
+          rememberMe,
+          keepLoggedIn,
+        }) => {
           try {
             const result = await callAPI('users/create/user', {
               username,
@@ -176,7 +207,7 @@ export default function CreateUserScreen() {
           }
           // Allow mempool login
           try {
-            await login({ username, password, pin });
+            await login({ username, password, pin, rememberMe, keepLoggedIn });
           } catch (err) {
             console.log(err);
             showError(
