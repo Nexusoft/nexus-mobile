@@ -234,16 +234,19 @@ const selectDefaultScreenStates = (() => {
     const connected = selectConnected(state);
     const unlocking = state.ui.unlockingWallet;
     const syncing = state.core.info?.synchronizing;
+    const loggedIn = selectLoggedIn(state);
     if (
       !cache ||
       connected !== cache.connected ||
       unlocking !== cache.unlocking ||
-      syncing !== cache.syncing
+      syncing !== cache.syncing ||
+      loggedIn !== cache.loggedIn
     ) {
       cache = {
         connected,
         unlocking,
         syncing,
+        loggedIn,
       };
     }
     return cache;
@@ -256,7 +259,7 @@ function useDefaultScreenFix() {
     const store = getStore();
     store.observe(
       selectDefaultScreenStates,
-      ({ connected, unlocking, syncing }) => {
+      ({ connected, unlocking, syncing, loggedIn }) => {
         if (
           navReadyRef.current &&
           connected &&
