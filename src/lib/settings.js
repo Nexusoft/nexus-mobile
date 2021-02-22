@@ -43,7 +43,7 @@ export async function updateSettings(updates) {
       type: TYPE.UPDATE_SETTINGS,
       payload: updates,
     });
-    const settings = store.getState().settings;
+    const { settings } = store.getState();
 
     const keyValuePairs = Object.entries(settings).map(([key, value]) => [
       key,

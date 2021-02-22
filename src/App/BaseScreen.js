@@ -17,6 +17,7 @@ import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { closeUnlockScreen } from 'lib/ui';
+import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
 import CopyIcon from 'icons/copy.svg';
 import UserIcon from 'icons/user.svg';
@@ -50,6 +51,7 @@ const styles = {
   submitBtn: {
     width: '100%',
     maxWidth: 250,
+    marginBottom: 60,
   },
 };
 
@@ -146,6 +148,17 @@ function UnlockingBase() {
         icon={(props) => <SvgIcon icon={UnlockIcon} {...props} />}
         label={loading ? 'Unlocking...' : 'Unlock wallet'}
       />
+      <Button
+        mode="text"
+        color={theme.dark ? theme.foreground : theme.onPrimary}
+        labelStyle={{ fontSize: 12 }}
+        onPress={() => {
+          updateSettings({ savedUsername: null });
+          closeUnlockScreen();
+        }}
+      >
+        Log in as another user
+      </Button>
     </View>
   );
 }
