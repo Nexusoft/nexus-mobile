@@ -213,19 +213,46 @@ function SynchronizingBase() {
   );
 }
 
+const selectDefaultScreenStates = (() => {
+  let cache = null;
+  return (state) => {
+    const connected = selectConnected(state);
+    const unlocking = state.ui.unlockingWallet;
+    const syncing = state.core.info?.synchronizing;
+    if (
+      !cache ||
+      connected !== cache.connected ||
+      unlocking !== cache.unlocking ||
+      syncing !== cache.syncing
+    ) {
+      cache = {
+        connected,
+        unlocking,
+        syncing,
+      };
+    }
+    return cache;
+  };
+})();
+
 // Fix default BottomTab screen being the first tab when login state changes
 function useDefaultScreenFix() {
   React.useEffect(() => {
     const store = getStore();
-    store.observe(selectLoggedIn, (loggedIn) => {
-      if (!navReadyRef.current) return;
-      const store = getStore();
-      const connected = selectConnected(store.getState());
-      if (!connected) return;
-      if (!loggedIn) {
-        navigate('Login');
+    store.observe(
+      selectDefaultScreenStates,
+      ({ connected, unlocking, syncing }) => {
+        if (
+          navReadyRef.current &&
+          connected &&
+          !syncing &&
+          !unlocking &&
+          !loggedIn
+        ) {
+          navigate('Login');
+        }
       }
-    });
+    );
   }, []);
 }
 
