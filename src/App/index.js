@@ -204,8 +204,6 @@ export default function Root(props) {
             : RNFS.DocumentDirectoryPath) + '/Nexus/nexus.conf',
           'ascii'
         );
-        console.log(result);
-        updateSettings({ showOnboarding: true }); // temp
         updateSettings({
           embeddedUser: result.split('\n')[0].replace('apiuser=', ''),
           embeddedPassword: result.split('\n')[1].replace('apipassword=', ''),
