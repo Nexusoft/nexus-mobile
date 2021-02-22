@@ -19,6 +19,22 @@ export async function refreshUserStatus() {
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     return status;
   } catch (err) {
+    try {
+      const {
+        settings: { savedUsername },
+      } = store.getState();
+      if (savedUsername) {
+        const { has } = await callAPI('users/has/session', {
+          username: savedUsername,
+        });
+        if (has) {
+          store.dispatch({ type: TYPE.OPEN_UNLOCK_SCREEN });
+          // await callAPI('users/load/session', { username: savedUsername });
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
     store.dispatch({ type: TYPE.LOGOUT });
     return null;
   }

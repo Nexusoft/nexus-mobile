@@ -142,3 +142,7 @@ export function setContactSearch(text) {
     payload: text,
   });
 }
+
+export function closeUnlockScreen() {
+  getStore().dispatch({ type: TYPE.CLOSE_UNLOCK_SCREEN });
+}

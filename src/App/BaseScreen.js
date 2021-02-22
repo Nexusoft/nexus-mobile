@@ -1,15 +1,22 @@
 import React from 'react';
-import { View, Clipboard } from 'react-native';
+import { View, Clipboard, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
-import { ActivityIndicator, Button } from 'react-native-paper';
+import { ActivityIndicator, Button, FAB } from 'react-native-paper';
 
 import Text from 'components/Text';
+import TextBox from 'components/TextBox';
 import InfoField from 'components/InfoField';
 import SvgIcon from 'components/SvgIcon';
 import { useTheme } from 'lib/theme';
-import { selectLoggedIn, selectUserIsConfirmed } from 'lib/user';
+import {
+  selectLoggedIn,
+  selectUserIsConfirmed,
+  refreshUserStatus,
+} from 'lib/user';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef } from 'lib/navigation';
+import { callAPI } from 'lib/api';
+import { closeUnlockScreen } from 'lib/ui';
 import { getStore } from 'store';
 import UnauthenticatedBase from './UnauthenticatedBase';
 import OverviewScreen from './OverviewScreen';
@@ -31,6 +38,16 @@ const styles = {
   creatingText: {
     marginTop: 40,
     textAlign: 'center',
+  },
+  pinInput: {
+    // fontSize: 18,
+    marginBottom: 30,
+    width: '100%',
+    maxWidth: 250,
+  },
+  submitBtn: {
+    width: '100%',
+    maxWidth: 250,
   },
 };
 
@@ -67,6 +84,51 @@ function DisconnectedBase() {
       >
         {refreshing ? 'Refreshing...' : 'Refresh'}
       </Button>
+    </View>
+  );
+}
+
+function UnlockingBase() {
+  const theme = useTheme();
+  const [pin, setPin] = React.useState('');
+  const [loading, setLoading] = React.useState('');
+  return (
+    <View style={styles.container({ theme })}>
+      <TextBox
+        mode="flat"
+        style={styles.pinInput}
+        background={theme.dark ? theme.background : theme.primary}
+        label="Enter your PIN"
+        value={pin}
+        onChangeText={setPin}
+        secure
+        keyboardType={
+          Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
+        }
+      />
+      <FAB
+        disabled={loading}
+        onPress={async () => {
+          setLoading(true);
+          try {
+            const {
+              settings: { savedUsername },
+            } = getStore().getState();
+            await callAPI('users/load/session', {
+              pin,
+              username: savedUsername,
+            });
+            await refreshUserStatus();
+            closeUnlockScreen();
+          } catch (err) {
+            setLoading(false);
+            console.error(err);
+          }
+        }}
+        loading={loading}
+        style={styles.submitBtn}
+        label={loading ? 'Unlocking...' : 'Unlock wallet'}
+      />
     </View>
   );
 }
@@ -178,6 +240,7 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
 
 export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
+  const unlocking = useSelector((state) => state.ui.unlockingWallet);
   const loggedIn = useSelector(selectLoggedIn);
   const syncing = useSelector((state) => state.core.info?.synchronizing);
   const confirmedUser = useSelector(selectUserIsConfirmed);
@@ -192,6 +255,8 @@ export default function BaseScreen({ route, navigation }) {
   if (!connected) return <DisconnectedBase />;
 
   if (syncing) return <SynchronizingBase />;
+
+  if (unlocking) return <UnlockingBase />;
 
   if (!loggedIn) return <UnauthenticatedBase />;
 
