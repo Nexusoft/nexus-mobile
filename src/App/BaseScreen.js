@@ -18,10 +18,10 @@ import { navigate, navReadyRef } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { closeUnlockScreen } from 'lib/ui';
 import { getStore } from 'store';
+import CopyIcon from 'icons/copy.svg';
+import UserIcon from 'icons/user.svg';
 import UnauthenticatedBase from './UnauthenticatedBase';
 import OverviewScreen from './OverviewScreen';
-
-import CopyIcon from 'icons/copy.svg';
 
 const styles = {
   container: ({ theme }) => ({
@@ -39,6 +39,7 @@ const styles = {
     marginTop: 40,
     textAlign: 'center',
   },
+  username: { marginTop: 10, marginBottom: 30, textAlign: 'center' },
   pinInput: {
     // fontSize: 18,
     marginBottom: 30,
@@ -92,12 +93,25 @@ function UnlockingBase() {
   const theme = useTheme();
   const [pin, setPin] = React.useState('');
   const [loading, setLoading] = React.useState('');
+  const savedUsername = useSelector((state) => state.settings.savedUsername);
   return (
     <View style={styles.container({ theme })}>
+      <SvgIcon
+        icon={UserIcon}
+        size={66}
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+      />
+      <Text
+        style={styles.username}
+        size={26}
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+      >
+        {savedUsername}
+      </Text>
       <TextBox
         mode="flat"
         style={styles.pinInput}
-        background={theme.dark ? theme.background : theme.primary}
+        background={theme.dark ? 'background' : 'primary'}
         label="Enter your PIN"
         value={pin}
         onChangeText={setPin}
@@ -111,9 +125,6 @@ function UnlockingBase() {
         onPress={async () => {
           setLoading(true);
           try {
-            const {
-              settings: { savedUsername },
-            } = getStore().getState();
             await callAPI('users/load/session', {
               pin,
               username: savedUsername,
@@ -126,7 +137,11 @@ function UnlockingBase() {
           }
         }}
         loading={loading}
-        style={styles.submitBtn}
+        color={theme.dark ? theme.onPrimary : theme.primary}
+        style={[
+          styles.submitBtn,
+          theme.dark ? undefined : { backgroundColor: theme.onPrimary },
+        ]}
         label={loading ? 'Unlocking...' : 'Unlock wallet'}
       />
     </View>
@@ -241,8 +256,8 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
 export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
   const unlocking = useSelector((state) => state.ui.unlockingWallet);
-  const loggedIn = useSelector(selectLoggedIn);
   const syncing = useSelector((state) => state.core.info?.synchronizing);
+  const loggedIn = useSelector(selectLoggedIn);
   const confirmedUser = useSelector(selectUserIsConfirmed);
 
   useDefaultScreenFix();
