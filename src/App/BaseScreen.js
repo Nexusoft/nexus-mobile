@@ -20,6 +20,7 @@ import { closeUnlockScreen } from 'lib/ui';
 import { getStore } from 'store';
 import CopyIcon from 'icons/copy.svg';
 import UserIcon from 'icons/user.svg';
+import UnlockIcon from 'icons/unlock.svg';
 import UnauthenticatedBase from './UnauthenticatedBase';
 import OverviewScreen from './OverviewScreen';
 
@@ -142,6 +143,7 @@ function UnlockingBase() {
           styles.submitBtn,
           theme.dark ? undefined : { backgroundColor: theme.onPrimary },
         ]}
+        icon={(props) => <SvgIcon icon={UnlockIcon} {...props} />}
         label={loading ? 'Unlocking...' : 'Unlock wallet'}
       />
     </View>
