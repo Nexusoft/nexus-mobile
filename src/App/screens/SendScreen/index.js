@@ -24,7 +24,7 @@ SendScreen.nav = {
   options: ({ route }) => ({
     headerTitle: ({ style, tintColor }) => (
       <HeaderTitle style={style} tintColor={tintColor}>
-        Send <TokenName bold account={route.params?.account} />
+        Send <TokenName bold account={route.params?.account} verbose />
       </HeaderTitle>
     ),
   }),
