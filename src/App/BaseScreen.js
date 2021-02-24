@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Clipboard, Platform } from 'react-native';
+import {
+  View,
+  Clipboard,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import { ActivityIndicator, Button, FAB } from 'react-native-paper';
 
@@ -98,68 +104,70 @@ function UnlockingBase() {
   const [loading, setLoading] = React.useState('');
   const savedUsername = useSelector((state) => state.settings.savedUsername);
   return (
-    <View style={styles.container({ theme })}>
-      <SvgIcon
-        icon={UserIcon}
-        size={66}
-        colorName={theme.dark ? 'foreground' : 'onPrimary'}
-      />
-      <Text
-        style={styles.username}
-        size={26}
-        colorName={theme.dark ? 'foreground' : 'onPrimary'}
-      >
-        {savedUsername}
-      </Text>
-      <TextBox
-        mode="flat"
-        style={styles.pinInput}
-        background={theme.dark ? 'background' : 'primary'}
-        label="Enter your PIN"
-        value={pin}
-        onChangeText={setPin}
-        secure
-        keyboardType={
-          Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
-        }
-      />
-      <FAB
-        disabled={loading}
-        onPress={async () => {
-          setLoading(true);
-          try {
-            await callAPI('users/load/session', {
-              pin,
-              username: savedUsername,
-            });
-            await refreshUserStatus();
-            closeUnlockScreen();
-          } catch (err) {
-            setLoading(false);
-            console.error(err);
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container({ theme })}>
+        <SvgIcon
+          icon={UserIcon}
+          size={66}
+          colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        />
+        <Text
+          style={styles.username}
+          size={26}
+          colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        >
+          {savedUsername}
+        </Text>
+        <TextBox
+          mode="flat"
+          style={styles.pinInput}
+          background={theme.dark ? 'background' : 'primary'}
+          label="Enter your PIN"
+          value={pin}
+          onChangeText={setPin}
+          secure
+          keyboardType={
+            Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
           }
-        }}
-        loading={loading}
-        color={theme.dark ? theme.onPrimary : theme.primary}
-        style={[
-          styles.submitBtn,
-          theme.dark ? undefined : { backgroundColor: theme.onPrimary },
-        ]}
-        icon={(props) => <SvgIcon icon={UnlockIcon} {...props} />}
-        label={loading ? 'Unlocking...' : 'Unlock wallet'}
-      />
-      <Button
-        mode="text"
-        color={theme.dark ? theme.foreground : theme.onPrimary}
-        labelStyle={{ fontSize: 12 }}
-        onPress={() => {
-          updateSettings({ savedUsername: null });
-          closeUnlockScreen();
-        }}
-      >
-        Log in as another user
-      </Button>
-    </View>
+        />
+        <FAB
+          disabled={loading}
+          onPress={async () => {
+            setLoading(true);
+            try {
+              await callAPI('users/load/session', {
+                pin,
+                username: savedUsername,
+              });
+              await refreshUserStatus();
+              closeUnlockScreen();
+            } catch (err) {
+              setLoading(false);
+              console.error(err);
+            }
+          }}
+          loading={loading}
+          color={theme.dark ? theme.onPrimary : theme.primary}
+          style={[
+            styles.submitBtn,
+            theme.dark ? undefined : { backgroundColor: theme.onPrimary },
+          ]}
+          icon={(props) => <SvgIcon icon={UnlockIcon} {...props} />}
+          label={loading ? 'Unlocking...' : 'Unlock wallet'}
+        />
+        <Button
+          mode="text"
+          color={theme.dark ? theme.foreground : theme.onPrimary}
+          labelStyle={{ fontSize: 12 }}
+          onPress={() => {
+            updateSettings({ savedUsername: null });
+            closeUnlockScreen();
+          }}
+        >
+          Log in as another user
+        </Button>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
