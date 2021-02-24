@@ -1,8 +1,8 @@
 import 'intl';
 import 'intl/locale-data/jsonp/en';
 import React from 'react';
-import { Provider as ReduxProvider, useSelector } from 'react-redux';
-import { AppState, Platform, UIManager, View, Alert } from 'react-native';
+import { Provider as ReduxProvider } from 'react-redux';
+import { AppState, Platform, UIManager, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import {
@@ -10,7 +10,6 @@ import {
   setNotificationHandler,
   setNotificationChannelAsync,
   AndroidImportance,
-  scheduleNotificationAsync,
 } from 'expo-notifications';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -27,7 +26,7 @@ import initStore from './initStore';
 import BackgroundTimer from 'react-native-background-timer';
 
 import { selectLoggedIn, refreshUserSync, refreshHeaders } from 'lib/user';
-import { loadSettings, selectSetting, updateSettings } from 'lib/settings';
+import { selectSetting, updateSettings } from 'lib/settings';
 
 import RNFS from 'react-native-fs';
 import { refreshCoreInfo } from 'lib/coreInfo';
