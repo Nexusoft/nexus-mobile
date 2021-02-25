@@ -60,7 +60,7 @@ const styles = {
     paddingVertical: 10,
   },
   accActionLabel: ({ theme }) => ({
-    fontSize: 11,
+    fontSize: 12,
     color: theme.dark ? theme.primary : theme.foreground,
   }),
 };
