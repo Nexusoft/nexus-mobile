@@ -68,9 +68,13 @@ function BalanceText(props) {
   );
 }
 
-export default function BalanceSection() {
+export default function BalanceSection({ filteredAccounts }) {
   const theme = useTheme();
-  const [expanded, setExpanded] = React.useState(false);
+  const [userExpanded, setUserExpanded] = React.useState(null);
+  const expanded =
+    filteredAccounts?.length === 1 && userExpanded === null
+      ? true
+      : !!userExpanded;
   const balances = useSelector((state) => state.user?.balances);
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const hideBalances = useSelector(selectSetting('hideBalances'));
@@ -107,7 +111,7 @@ export default function BalanceSection() {
       style={styles.wrapper}
       onPress={() => {
         LayoutAnimation.easeInEaseOut();
-        setExpanded(!expanded);
+        setUserExpanded(!expanded);
       }}
     >
       <>
