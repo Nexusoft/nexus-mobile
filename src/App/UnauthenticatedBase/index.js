@@ -1,10 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { IconButton, shadow, overlay } from 'react-native-paper';
+import { IconButton, shadow, overlay, Button } from 'react-native-paper';
 
 import Text from 'components/Text';
 import SvgIcon from 'components/SvgIcon';
+import CustomBottomTabBar from 'components/CustomBottomTabBar';
 import { useTheme, subColor } from 'lib/theme';
 import { navigate } from 'lib/navigation';
 import { flatHeader } from 'utils/styles';
@@ -16,6 +18,11 @@ import RecoveryScreen from './RecoveryScreen';
 
 const BottomTab = createBottomTabNavigator();
 const screens = [CreateUserScreen, LoginScreen, RecoveryScreen];
+const defaultScreen = 'Login';
+
+import { version, builddate } from '../../../package.json'; // not too happy about this
+
+import { scheduleNotificationAsync } from 'expo-notifications';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -36,27 +43,14 @@ const styles = {
   },
 };
 
-function ColoredText({ style, ...rest }) {
-  const theme = useTheme();
-  return (
-    <Text
-      style={[
-        { color: subColor(theme.dark ? theme.foreground : theme.onPrimary) },
-        style,
-      ]}
-      {...rest}
-    />
-  );
-}
-
 export default function UnauthenticatedBase() {
   const theme = useTheme();
-
   return (
     <View style={styles.wrapper({ theme })}>
       <BottomTab.Navigator
-        initialRouteName="Login"
+        initialRouteName={defaultScreen}
         shifting={false}
+        tabBar={(props) => <CustomBottomTabBar {...props} />}
         tabBarOptions={{
           activeTintColor: theme.foreground,
           inactiveTintColor: fade(theme.foreground, 0.5),
@@ -92,37 +86,37 @@ export default function UnauthenticatedBase() {
       </BottomTab.Navigator>
     </View>
   );
-  //
-  //     <Formik
-  //       initialValues={{ username: '', password: '', pin: '' }}
-  //       onSubmit={async ({ username, password, pin }) => {
-  //         try {
-  //           await sendAPI('users/login/user', { username, password, pin });
-  //           await refreshUserStatus();
-  //         } catch (err) {
-  //           showError(err && err.message);
-  //         }
-  //       }}
-  //       component={LoginForm}
-  //     />
-  //
-  // </View>
 }
 
-UnauthenticatedBase.stackOptions = ({ theme }) => ({
-  headerLeft: () => null,
-  headerRight: ({ tintColor }) => (
-    <IconButton
-      icon={({ size }) => (
-        <SvgIcon icon={SettingsIcon} size={size} color={tintColor} />
-      )}
-      color={tintColor}
-      size={25}
-      onPress={() => {
-        navigate('Settings');
-      }}
-    />
-  ),
-  headerStyle: flatHeader(theme),
-  headerTitle: '',
-});
+UnauthenticatedBase.stackOptions = ({ theme, route }) => {
+  const routeName = getFocusedRouteNameFromRoute(route) || defaultScreen;
+  const { stackOptions } =
+    screens.map((Screen) => Screen.nav).find((nav) => nav.name === routeName) ||
+    {};
+
+  return {
+    headerLeft: (theme) => (
+      <Text
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        style={{ marginLeft: 10, opacity: 0.75 }}
+      >
+        v{version}
+      </Text>
+    ),
+    headerRight: ({ tintColor }) => (
+      <IconButton
+        icon={({ size }) => (
+          <SvgIcon icon={SettingsIcon} size={size} color={tintColor} />
+        )}
+        color={tintColor}
+        size={25}
+        onPress={() => {
+          navigate('Settings');
+        }}
+      />
+    ),
+    headerStyle: flatHeader(theme),
+    headerTitle: '',
+    ...stackOptions,
+  };
+};

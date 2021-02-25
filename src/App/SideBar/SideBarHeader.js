@@ -13,7 +13,6 @@ import {
   Button,
 } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 
 import SvgIcon from 'components/SvgIcon';
@@ -30,6 +29,8 @@ import KeyIcon from 'icons/key.svg';
 import RecoveryIcon from 'icons/recovery.svg';
 import LogoutIcon from 'icons/logout.svg';
 import CopyIcon from 'icons/copy.svg';
+import UpArrowIcon from 'icons/chevron-up.svg';
+import DownArrowIcon from 'icons/chevron-down.svg';
 import MenuItem from './MenuItem';
 
 const styles = {
@@ -47,28 +48,32 @@ const styles = {
     justifyContent: 'center',
     paddingVertical: 10,
   },
-  userNameLine: ({ expanded }) => ({
+  userNameLine: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     marginBottom: 25,
-  }),
+  },
   userAvatarName: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexShrink: 1,
   },
   avatar: ({ theme }) => ({
     marginRight: 15,
     color: theme.dark ? theme.foreground : theme.onPrimary,
+    flexShrink: 0,
   }),
   userName: ({ theme }) => ({
     fontSize: 24,
     color: theme.dark ? theme.foreground : theme.onPrimary,
+    flexShrink: 1,
   }),
   expandIcon: ({ theme }) => ({
-    fontSize: 18,
     color: subColor(theme.dark ? theme.foreground : theme.onPrimary),
+    flexShrink: 0,
+    marginLeft: 10,
   }),
   userActions: ({ expanded }) => ({
     // setting height to 0 makes text have the stretch effect
@@ -185,18 +190,25 @@ export default function SideBarHeader({ navigation }) {
         }}
       >
         <View style={styles.userArea}>
-          <View style={styles.userNameLine({ expanded })}>
+          <View style={styles.userNameLine}>
             <View style={styles.userAvatarName}>
               <SvgIcon
                 style={styles.avatar({ theme })}
                 icon={UserIcon}
                 size={25}
               />
-              <Text style={styles.userName({ theme })}>{username}</Text>
+              <Text
+                ellipsizeMode="tail"
+                numberOfLines={expanded ? undefined : 1}
+                style={styles.userName({ theme })}
+              >
+                {username}
+              </Text>
             </View>
-            <Ionicons
+            <SvgIcon
+              size={12}
               style={styles.expandIcon({ theme })}
-              name={expanded ? 'ios-arrow-up' : 'ios-arrow-down'}
+              icon={expanded ? UpArrowIcon : DownArrowIcon}
             />
           </View>
 

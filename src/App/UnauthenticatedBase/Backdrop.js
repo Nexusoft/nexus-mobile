@@ -1,10 +1,8 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 import { shadow, overlay } from 'react-native-paper';
-
-import SvgIcon from 'components/SvgIcon';
+import { mix } from 'utils/color';
 import { useTheme } from 'lib/theme';
-import LogoIcon from 'icons/logo-full.svg';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -12,7 +10,7 @@ const styles = {
     backgroundColor: theme.dark ? theme.background : theme.primary,
   }),
   backPane: {
-    height: '30%',
+    height: '25%',
     paddingVertical: 25,
     paddingHorizontal: 20,
     justifyContent: 'center',
@@ -28,6 +26,12 @@ const styles = {
     elevation: 8,
     ...shadow(8),
   }),
+  /* TODO: Remove */
+  beta: ({ theme }) => ({
+    color: theme.background,
+    backgroundColor: mix('black', theme.primary, 0.9),
+    textAlign: 'center',
+  }),
 };
 
 export default function Backdrop({
@@ -39,8 +43,14 @@ export default function Backdrop({
   const theme = useTheme();
   return (
     <View style={[styles.wrapper({ theme }), style]} {...rest}>
+      <Text style={styles.beta({ theme })}>Beta</Text>
       <View style={styles.backPane}>{backdropContent}</View>
-      <ScrollView style={styles.frontPane({ theme })}>{children}</ScrollView>
+      <ScrollView
+        style={styles.frontPane({ theme })}
+        keyboardShouldPersistTaps="handled"
+      >
+        {children}
+      </ScrollView>
     </View>
   );
 }

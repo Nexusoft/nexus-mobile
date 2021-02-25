@@ -10,7 +10,7 @@ import SvgIcon from 'components/SvgIcon';
 import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { refreshUserStatus } from 'lib/user';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { showError } from 'lib/ui';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
@@ -19,8 +19,9 @@ const styles = {
   field: {
     marginBottom: 0,
   },
-  loginBtn: {
+  recoverBtn: {
     marginTop: 20,
+    marginBottom: 40,
   },
   heading: ({ theme }) => ({
     fontSize: 19,
@@ -116,7 +117,7 @@ function RecoveryForm({ values, handleSubmit, isSubmitting }) {
         style={styles.field}
       />
       <FAB
-        style={styles.loginBtn}
+        style={styles.recoverBtn}
         disabled={isSubmitting}
         loading={isSubmitting}
         onPress={handleSubmit}
@@ -175,7 +176,7 @@ export default function RecoveryScreen() {
         })}
         onSubmit={async ({ username, recovery, password, pin }) => {
           try {
-            await sendAPI('users/recover/user', {
+            await callAPI('users/recover/user', {
               username,
               recovery,
               password,
@@ -195,4 +196,7 @@ export default function RecoveryScreen() {
 RecoveryScreen.nav = {
   name: 'Recovery',
   title: 'Recover',
+  stackOptions: {
+    title: 'Recover',
+  },
 };

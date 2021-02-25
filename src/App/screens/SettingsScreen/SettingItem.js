@@ -1,10 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
-import { Ionicons } from '@expo/vector-icons';
 
 import Text from 'components/Text';
+import SvgIcon from 'components/SvgIcon';
 import { useTheme } from 'lib/theme';
+import RightArrowIcon from 'icons/chevron-right.svg';
 
 const styles = {
   setting: {
@@ -40,6 +41,8 @@ export default function SettingItem({
           <Text style={{ fontSize }}>{title}</Text>
           {!!description && (
             <Text
+              sub
+              colorName={primary ? 'primary' : undefined}
               style={[
                 styles.description,
                 primary ? { color: theme.primary } : null,
@@ -50,9 +53,10 @@ export default function SettingItem({
           )}
         </View>
         {right === 'arrow' ? (
-          <Ionicons
-            name="ios-arrow-forward"
-            style={{ fontSize, color: theme.foreground }}
+          <SvgIcon
+            size={fontSize * 0.66}
+            icon={RightArrowIcon}
+            color={theme.foreground}
           />
         ) : (
           right

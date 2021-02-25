@@ -4,7 +4,7 @@ import { IconButton } from 'react-native-paper';
 
 import SvgIcon from 'components/SvgIcon';
 import PasteIcon from 'icons/paste.svg';
-import ContactsSelector from './ContactsSelector';
+import ContactSelector from './ContactSelector';
 import QRScanner from './QRScanner';
 
 const styles = {
@@ -33,7 +33,7 @@ export default function AddressPicker({ pickContacts = true, setAddress }) {
         }}
       />
       {pickContacts && (
-        <ContactsSelector setAddress={setAddress} style={styles.button} />
+        <ContactSelector setAddress={setAddress} style={styles.button} />
       )}
       <QRScanner setAddress={setAddress} style={styles.button} />
     </View>

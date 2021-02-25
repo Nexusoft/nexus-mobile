@@ -11,16 +11,16 @@ import ReceiveScreen from './screens/ReceiveScreen';
 import SendScreen from './screens/SendScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import AccountsScreen from './screens/AccountsScreen';
-import TokensScreen from './screens/TokensScreen';
-import NamesScreen from './screens/NamesScreen';
-import NamespacesScreen from './screens/NamespacesScreen';
-import AssetsScreen from './screens/AssetsScreen';
+import ContactsScreen from './screens/ContactsScreen';
+import TransactionsScreen from './screens/TransactionsScreen';
+import RenameAccountScreen from './screens/RenameAccountScreen';
 import TransactionDetailsScreen from './screens/TransactionDetailsScreen';
 import AccountDetailsScreen from './screens/AccountDetailsScreen';
 import ContactDetailsScreen from './screens/ContactDetailsScreen';
 import NewAccountScreen from './screens/NewAccountScreen';
 import NewContactScreen from './screens/NewContactScreen';
 import ConfirmSendScreen from './screens/ConfirmSendScreen';
+import EmeddedCoreLogReaderScreen from './screens/EmeddedCoreLogReaderScreen';
 import ExternalCoreConfigScreen from './screens/ExternalCoreConfigScreen';
 import SetRecoveryScreen from './screens/SetRecoveryScreen';
 import ChangePasswordScreen from './screens/ChangePasswordScreen';
@@ -39,16 +39,16 @@ const screens = [
   SendScreen,
   SettingsScreen,
   AccountsScreen,
-  TokensScreen,
-  NamesScreen,
-  NamespacesScreen,
-  AssetsScreen,
+  ContactsScreen,
+  TransactionsScreen,
+  RenameAccountScreen,
   TransactionDetailsScreen,
   AccountDetailsScreen,
   ContactDetailsScreen,
   NewAccountScreen,
   NewContactScreen,
   ConfirmSendScreen,
+  EmeddedCoreLogReaderScreen,
   ExternalCoreConfigScreen,
   SetRecoveryScreen,
   ChangePasswordScreen,

@@ -12,18 +12,18 @@ import { goBack } from 'lib/navigation';
 import { showError } from 'lib/ui';
 import memoize from 'utils/memoize';
 
-const selectContactNames = memoize((contacts) => Object.keys(contacts));
-const selectContactAddresses = memoize((contacts) =>
-  Object.values(contacts).map((contact) => contact.address)
+const selectContactNames = memoize(
+  (contacts) => Object.keys(contacts),
+  (state) => [state?.contacts]
+);
+const selectContactAddresses = memoize(
+  (contacts) => Object.values(contacts).map((contact) => contact.address),
+  (state) => [state?.contacts]
 );
 
 export default function NewContactScreen() {
-  const contactNames = useSelector((state) =>
-    selectContactNames(state.contacts)
-  );
-  const contactAddresses = useSelector((state) =>
-    selectContactAddresses(state.contacts)
-  );
+  const contactNames = useSelector(selectContactNames);
+  const contactAddresses = useSelector(selectContactAddresses);
   return (
     <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
       <Formik
@@ -53,6 +53,7 @@ export default function NewContactScreen() {
         {({ isSubmitting, handleSubmit, setFieldValue }) => (
           <>
             <TextBox.Formik
+              autoFocus
               name="name"
               label="Contact name"
               autoCapitalize="words"

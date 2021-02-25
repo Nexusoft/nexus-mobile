@@ -1,27 +1,22 @@
 import React from 'react';
 
 import Divider from 'components/Divider';
-import TokenIcon from 'icons/token.svg';
-import NameIcon from 'icons/abc.svg';
-import NamespaceIcon from 'icons/abc-cube.svg';
-import AssetIcon from 'icons/asset.svg';
 import WalletIcon from 'icons/wallet.svg';
 import CoreIcon from 'icons/core.svg';
 import NexusIcon from 'icons/nexus.svg';
+import ContactsIcon from 'icons/address-book.svg';
+import TransactionIcon from 'icons/transaction.svg';
 import MenuItem from './MenuItem';
 
 export default function SideMenu() {
   return (
     <>
       <MenuItem linkTo="Accounts" icon={WalletIcon} label="Accounts" />
-      <MenuItem linkTo="Tokens" icon={TokenIcon} label="Tokens" comingSoon />
-      <MenuItem linkTo="Assets" icon={AssetIcon} label="Assets" comingSoon />
-      <MenuItem linkTo="Names" icon={NameIcon} label="Names" comingSoon />
+      <MenuItem linkTo="Contacts" icon={ContactsIcon} label="Contacts" />
       <MenuItem
-        linkTo="Namespaces"
-        icon={NamespaceIcon}
-        label="Namespaces"
-        comingSoon
+        linkTo="Transactions"
+        icon={TransactionIcon}
+        label="Transactions"
       />
       <Divider spacing={5} />
 

@@ -5,6 +5,8 @@ import ErrorDialog from 'components/ErrorDialog';
 import SuccessDialog from 'components/SuccessDialog';
 import InfoDialog from 'components/InfoDialog';
 import ConfirmationDialog from 'components/ConfirmationDialog';
+import PinDialog from 'components/PinDialog';
+import OnboardingDialog from 'components/OnboardingDialog';
 import { closeDialog } from 'lib/ui';
 
 // https://github.com/callstack/react-native-paper/blob/master/src/components/Modal.tsx#L48
@@ -15,12 +17,16 @@ const dialogTypes = {
   success: SuccessDialog,
   info: InfoDialog,
   confirmation: ConfirmationDialog,
+  pinConfirmation: PinDialog,
+  onboard: OnboardingDialog,
 };
 
 function Dialog({ id, type, ...rest }) {
   const [closing, setClosing] = React.useState(false);
   const dismiss = () => {
+    // First set visible={false} for dialog so it fades out
     setClosing(true);
+    // After fade out animation, remove the dialog
     setTimeout(() => {
       closeDialog(id);
     }, closeAnimationDuration);

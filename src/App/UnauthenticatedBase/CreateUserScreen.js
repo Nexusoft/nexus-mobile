@@ -1,20 +1,18 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Formik } from 'formik';
-import { FAB, Dialog, ActivityIndicator, Button } from 'react-native-paper';
+import { FAB, Dialog } from 'react-native-paper';
 import * as yup from 'yup';
 
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
+import Switch from 'components/Switch';
 import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
-import { sendAPI } from 'lib/api';
-import { showError, showSuccess } from 'lib/ui';
-import { navigate } from 'lib/navigation';
-import { selectLoggedIn } from 'lib/user';
-import { getStore } from 'store';
-import useMounted from 'utils/useMounted';
+import { callAPI } from 'lib/api';
+import { showError } from 'lib/ui';
+import { login, setRegistrationTxids } from 'lib/user';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 
@@ -24,6 +22,7 @@ const styles = {
   },
   submitBtn: {
     marginTop: 20,
+    marginBottom: 40,
   },
   heading: ({ theme }) => ({
     fontSize: 19,
@@ -33,13 +32,11 @@ const styles = {
   logo: {
     marginBottom: 30,
   },
-  creating: {
-    marginTop: 50,
-    verticalAlign: 'center',
-  },
-  creatingText: {
-    marginTop: 40,
-    textAlign: 'center',
+  options: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
 };
 
@@ -123,6 +120,16 @@ function CreateUserForm({ values, handleSubmit, isSubmitting }) {
         }}
         label={isSubmitting ? 'Creating user' : 'Create user'}
       />
+      <View style={styles.options}>
+        <Text sub>Remember username</Text>
+        <Switch.Formik name="rememberMe" />
+      </View>
+      <View style={styles.options}>
+        <Text sub={!!values.rememberMe} disabled={!values.rememberMe}>
+          Keep me logged in
+        </Text>
+        <Switch.Formik name="keepLoggedIn" disabled={!values.rememberMe} />
+      </View>
       <ConfirmUserDialog
         visible={confirming}
         onDismiss={() => {
@@ -138,66 +145,8 @@ function CreateUserForm({ values, handleSubmit, isSubmitting }) {
   );
 }
 
-function useRegistrationWatcher() {
-  const [registering, setRegistering] = React.useState(false);
-  const mounted = useMounted();
-  const watchUserRegistration = (username) => {
-    setRegistering(username);
-    const store = getStore();
-    const unobserve = store.observe(
-      (state) => state.core?.info?.blocks,
-      async (blocks) => {
-        if (blocks) {
-          const txs = await sendAPI('users/list/transactions', {
-            username,
-            order: 'asc',
-            limit: 1,
-            verbose: 'summary',
-          });
-          if (txs && txs[0]?.confirmations) {
-            unobserve();
-            const store = getStore();
-            const loggedIn = selectLoggedIn(store.getState());
-            showSuccess(
-              <Text>
-                User <Text bold>{username}</Text> has been registered on Nexus
-                blockchain!
-              </Text>,
-              {
-                getButtons: ({ onDismiss }) => (
-                  <>
-                    <Button mode="text" onPress={onDismiss}>
-                      Dismiss
-                    </Button>
-                    {!loggedIn && (
-                      <Button
-                        mode="text"
-                        onPress={() => {
-                          onDismiss();
-                          navigate('Login');
-                        }}
-                      >
-                        Log in
-                      </Button>
-                    )}
-                  </>
-                ),
-              }
-            );
-            if (mounted.current) {
-              setRegistering(null);
-            }
-          }
-        }
-      }
-    );
-  };
-  return [registering, watchUserRegistration];
-}
-
 export default function CreateUserScreen() {
   const theme = useTheme();
-  const [registering, watchUserRegistration] = useRegistrationWatcher();
 
   return (
     <Backdrop
@@ -214,43 +163,63 @@ export default function CreateUserScreen() {
         </>
       }
     >
-      {!!registering ? (
-        <View style={styles.creating}>
-          <ActivityIndicator animating color={theme.foreground} size="small" />
-          <Text style={styles.creatingText}>
-            User registration for <Text bold>{registering}</Text> is waiting to
-            be confirmed on Nexus blockchain...
-          </Text>
-        </View>
-      ) : (
-        <Formik
-          initialValues={{ username: '', password: '', pin: '' }}
-          validationSchema={yup.object().shape({
-            username: yup
-              .string()
-              .required('Required!')
-              .min(3, 'Must be at least 3 characters!'),
-            password: yup
-              .string()
-              .required('Required!')
-              .min(8, 'Must be at least 8 characters!'),
-            pin: yup
-              .string()
-              .required('Required!')
-              .min(4, 'Must be at least 4 characters!'),
-          })}
-          onSubmit={async ({ username, password, pin }) => {
-            try {
-              await sendAPI('users/create/user', { username, password, pin });
-            } catch (err) {
-              showError(err && err.message);
-              return;
-            }
-            watchUserRegistration(username);
-          }}
-          component={CreateUserForm}
-        />
-      )}
+      <Formik
+        initialValues={{
+          username: '',
+          password: '',
+          pin: '',
+          rememberMe: false,
+          keepLoggedIn: false,
+        }}
+        validationSchema={yup.object().shape({
+          username: yup
+            .string()
+            .required('Required!')
+            .min(3, 'Must be at least 3 characters!'),
+          password: yup
+            .string()
+            .required('Required!')
+            .min(8, 'Must be at least 8 characters!'),
+          pin: yup
+            .string()
+            .required('Required!')
+            .min(4, 'Must be at least 4 characters!'),
+          rememberMe: yup.bool(),
+          keepLoggedIn: yup.bool(),
+        })}
+        onSubmit={async ({
+          username,
+          password,
+          pin,
+          rememberMe,
+          keepLoggedIn,
+        }) => {
+          try {
+            const result = await callAPI('users/create/user', {
+              username,
+              password,
+              pin,
+            });
+            setRegistrationTxids({ username, txid: result.hash });
+          } catch (err) {
+            showError(err && err.message);
+            return;
+          }
+          // Allow mempool login
+          try {
+            await login({ username, password, pin, rememberMe, keepLoggedIn });
+          } catch (err) {
+            console.log(err);
+            showError(
+              err &&
+                err.message +
+                  '\n Your account has been created but encountered an error while loggin in'
+            );
+            return;
+          }
+        }}
+        component={CreateUserForm}
+      />
     </Backdrop>
   );
 }
@@ -258,4 +227,7 @@ export default function CreateUserScreen() {
 CreateUserScreen.nav = {
   name: 'CreateUser',
   title: 'Register',
+  stackOptions: {
+    title: 'Register',
+  },
 };

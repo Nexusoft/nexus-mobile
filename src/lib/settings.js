@@ -8,16 +8,22 @@ export const defaultSettings = {
   // Application
   colorScheme: 'auto', // auto | light | dark
   baseCurrency: 'USD',
+  hideBalances: false,
+  hideUnusedTrustAccount: true,
 
   // Core
   coreMode: 'embedded',
+  embeddedUser: 'apiserver',
+  embeddedPassword: 'password',
   externalCoreIP: '127.0.0.1',
-  externalCoreRPCPort: '9336',
-  externalCoreRPCUser: 'rpcserver',
-  externalCoreRPCPassword: 'password',
   externalCoreAPIPort: '8080',
   externalCoreAPIUser: 'apiserver',
   externalCoreAPIPassword: 'password',
+
+  // Hidden
+  showContactsTip: true,
+  savedUsername: null,
+  showOnboarding: true,
 };
 
 export async function loadSettings() {
@@ -37,8 +43,9 @@ export async function updateSettings(updates) {
       type: TYPE.UPDATE_SETTINGS,
       payload: updates,
     });
+    const { settings } = store.getState();
 
-    const keyValuePairs = Object.entries(updates).map(([key, value]) => [
+    const keyValuePairs = Object.entries(settings).map(([key, value]) => [
       key,
       JSON.stringify(value),
     ]);
@@ -50,12 +57,19 @@ export async function updateSettings(updates) {
   }
 }
 
+export const selectSetting = (key) => (state) => {
+  const value = state?.settings[key];
+  return value === null || value === undefined ? defaultSettings[key] : value;
+};
+
 export const selectSettings = memoize(
-  (state) =>
-    state &&
-    Object.entries(state.settings).reduce((settings, [key, value]) => {
+  (userSettings) =>
+    userSettings &&
+    Object.keys(defaultSettings).reduce((settings, key) => {
+      const value = userSettings[key];
       settings[key] =
         value === null || value === undefined ? defaultSettings[key] : value;
       return settings;
-    }, {})
+    }, {}),
+  (state) => [state?.settings]
 );

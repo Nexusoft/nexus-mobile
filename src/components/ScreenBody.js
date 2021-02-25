@@ -14,6 +14,7 @@ export default function ScreenBody({
   surface,
   primary,
   style,
+  refreshControl,
   ...rest
 }) {
   const theme = useTheme();
@@ -30,6 +31,7 @@ export default function ScreenBody({
             : null,
         ]}
         keyboardShouldPersistTaps={scroll ? 'handled' : undefined}
+        refreshControl={refreshControl}
       >
         <SafeAreaView style={{ flex: 1 }}>
           <View style={[{ flex: 1 }, style]} {...rest}>

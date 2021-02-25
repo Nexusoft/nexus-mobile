@@ -8,10 +8,11 @@ import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
-import PinDialog from 'components/PinDialog';
+import TokenName from 'components/TokenName';
+import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import { useTheme, disabledColor } from 'lib/theme';
 import { goBack } from 'lib/navigation';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { showNotification, showError } from 'lib/ui';
 import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
@@ -43,14 +44,14 @@ const styles = {
   },
   fromTo: {
     flex: 1,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   amount: {
     fontSize: 30,
   },
   label: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 5,
     alignSelf: 'center',
   },
   accountInfo: {
@@ -73,6 +74,7 @@ const styles = {
     fontSize: 15,
     textAlign: 'center',
   },
+  note: { textAlign: 'center', marginBottom: 20 },
   arrow: {
     paddingVertical: 20,
     alignSelf: 'center',
@@ -91,7 +93,6 @@ const styles = {
 export default function ConfirmSendScreen({ route }) {
   const theme = useTheme();
   const { account, recipient, amount, reference } = route.params || {};
-  const [confirmingPin, setConfirmingPin] = React.useState(false);
   return (
     <ScreenBody style={styles.wrapper} surface>
       <View style={styles.amountSection}>
@@ -99,7 +100,8 @@ export default function ConfirmSendScreen({ route }) {
           You're sending
         </Text>
         <Text style={styles.amount}>
-          {formatNumber(amount, { maximumFractionDigits: 6 })} NXS
+          {formatNumber(amount, { maximumFractionDigits: 6 })}{' '}
+          <TokenName account={account} />
         </Text>
       </View>
 
@@ -109,8 +111,8 @@ export default function ConfirmSendScreen({ route }) {
         </Text>
         <View style={styles.accountInfo}>
           <SvgIcon icon={WalletIcon} size={16} />
-          <Text bold style={styles.name}>
-            {account.name}
+          <Text bold style={styles.name} disabled={!account.name}>
+            {account.name || 'Unnamed'}
           </Text>
         </View>
         <View style={styles.addressBox({ theme })}>
@@ -147,7 +149,7 @@ export default function ConfirmSendScreen({ route }) {
           <Text style={styles.label} sub size={16}>
             Reference number
           </Text>
-          <Text style={styles.referenceNo}>942189</Text>
+          <Text style={styles.referenceNo}>{reference}</Text>
         </View>
       )}
 
@@ -170,7 +172,7 @@ export default function ConfirmSendScreen({ route }) {
           }
 
           try {
-            await sendAPI('finance/debit/account', params);
+            await callAPI('finance/debit/account', params);
           } catch (err) {
             showError(err && err.message);
             return;
@@ -183,6 +185,10 @@ export default function ConfirmSendScreen({ route }) {
         {({ handleSubmit, isSubmitting }) => (
           <>
             <View style={styles.pinSection}>
+              <Text sub style={styles.note}>
+                Double check your transaction before confirming
+              </Text>
+
               <TextBox.Formik
                 mode="outlined"
                 name="pin"
@@ -225,12 +231,7 @@ export default function ConfirmSendScreen({ route }) {
         )}
       </Formik>
 
-      <PinDialog
-        visible={confirmingPin}
-        onDismiss={() => {
-          setConfirmingPin(false);
-        }}
-      />
+      <ZeroConnectionsOverlay />
     </ScreenBody>
   );
 }

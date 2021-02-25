@@ -1,10 +1,12 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, RefreshControl } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
-import { sendAPI } from 'lib/api';
+
+import { callAPI } from 'lib/api';
+import useRefresh from 'utils/useRefresh';
 import TransactionDetails from './TransactionDetails';
 import ContractDetails from './ContractDetails';
 
@@ -22,17 +24,23 @@ export default function TransactionDetailsScreen({ route }) {
     params: { txid },
   } = route;
   const [transaction, setTransaction] = React.useState(null);
+  const loadTransaction = async () => {
+    const tx = await callAPI('ledger/get/transaction', {
+      txid,
+      verbose: 'summary',
+    });
+    setTransaction(tx);
+  };
+  const [refreshing, refresh] = useRefresh(loadTransaction);
   React.useEffect(() => {
-    (async () => {
-      const tx = await sendAPI('ledger/get/transaction', {
-        txid,
-        verbose: 'summary',
-      });
-      setTransaction(tx);
-    })();
+    loadTransaction();
   }, []);
   return (
-    <ScreenBody>
+    <ScreenBody
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+      }
+    >
       {transaction ? (
         <>
           <TransactionDetails transaction={transaction} />

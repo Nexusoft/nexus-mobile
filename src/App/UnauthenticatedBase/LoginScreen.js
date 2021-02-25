@@ -2,25 +2,30 @@ import React from 'react';
 import { View } from 'react-native';
 import { Formik } from 'formik';
 import { FAB } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
+import Switch from 'components/Switch';
 import { useTheme } from 'lib/theme';
-import { refreshUserStatus } from 'lib/user';
-import { sendAPI } from 'lib/api';
+import { login } from 'lib/user';
 import { showError } from 'lib/ui';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
+import { selectSetting } from 'lib/settings';
 
 const styles = {
+  wrapper: {
+    paddingBottom: 40,
+  },
   field: {
     marginBottom: 0,
   },
   loginBtn: {
     marginTop: 20,
-    marginBottom: 40,
+    marginBottom: 30,
   },
   heading: ({ theme }) => ({
     fontSize: 19,
@@ -30,11 +35,17 @@ const styles = {
   logo: {
     marginBottom: 30,
   },
+  options: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
 };
 
-function LoginForm({ handleSubmit, isSubmitting }) {
+function LoginForm({ handleSubmit, isSubmitting, values }) {
   return (
-    <View>
+    <View style={styles.wrapper}>
       <TextBox.Formik
         name="username"
         label="Username"
@@ -62,12 +73,23 @@ function LoginForm({ handleSubmit, isSubmitting }) {
         onPress={handleSubmit}
         label={isSubmitting ? 'Logging in' : 'Log in'}
       />
+      <View style={styles.options}>
+        <Text sub>Remember username</Text>
+        <Switch.Formik name="rememberMe" />
+      </View>
+      <View style={styles.options}>
+        <Text sub={!!values.rememberMe} disabled={!values.rememberMe}>
+          Keep me logged in
+        </Text>
+        <Switch.Formik name="keepLoggedIn" disabled={!values.rememberMe} />
+      </View>
     </View>
   );
 }
 
 export default function LoginScreen() {
   const theme = useTheme();
+  const savedUsername = useSelector(selectSetting('savedUsername'));
   return (
     <Backdrop
       backdropContent={
@@ -84,16 +106,29 @@ export default function LoginScreen() {
       }
     >
       <Formik
-        initialValues={{ username: '', password: '', pin: '' }}
+        initialValues={{
+          username: savedUsername || '',
+          password: '',
+          pin: '',
+          rememberMe: !!savedUsername,
+          keepLoggedIn: false,
+        }}
         validationSchema={yup.object().shape({
           username: yup.string().required('Required!'),
           password: yup.string().required('Required!'),
           pin: yup.string().required('Required!'),
+          rememberMe: yup.bool(),
+          keepLoggedIn: yup.bool(),
         })}
-        onSubmit={async ({ username, password, pin }) => {
+        onSubmit={async ({
+          username,
+          password,
+          pin,
+          rememberMe,
+          keepLoggedIn,
+        }) => {
           try {
-            await sendAPI('users/login/user', { username, password, pin });
-            await refreshUserStatus();
+            await login({ username, password, pin, rememberMe, keepLoggedIn });
           } catch (err) {
             showError(err && err.message);
           }
@@ -107,4 +142,7 @@ export default function LoginScreen() {
 LoginScreen.nav = {
   name: 'Login',
   title: 'Login',
+  stackOptions: {
+    title: 'Login',
+  },
 };

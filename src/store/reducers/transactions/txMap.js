@@ -4,6 +4,15 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case TYPE.RELOAD_TRANSACTIONS:
+      return (
+        action.payload.list &&
+        action.payload.list.reduce((map, tx) => {
+          map[tx.txid] = tx;
+          return map;
+        }, {})
+      );
+
     case TYPE.ADD_TRANSACTIONS:
       return (
         action.payload.list &&
@@ -19,7 +28,7 @@ export default (state = initialState, action) => {
     case TYPE.UPDATE_TRANSACTION:
       return {
         ...state,
-        [action.payload.txid]: action.payload,
+        [action.payload?.txid]: action.payload,
       };
 
     case TYPE.DISCONNECT_CORE:

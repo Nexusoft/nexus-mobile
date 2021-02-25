@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 import { mix, fade, darken } from 'utils/color';
 import memoize from 'utils/memoize';
-import { selectSettings } from 'lib/settings';
+import { selectSetting } from 'lib/settings';
 
 const darkColor = '#060606';
 const lightColor = '#ffffff';
@@ -107,7 +107,7 @@ const ThemeContext = React.createContext(darkTheme);
 export const ThemeProvider = ThemeContext.Provider;
 
 export function useDerivedTheme() {
-  const { colorScheme } = useSelector(selectSettings);
+  const colorScheme = useSelector(selectSetting('colorScheme'));
   const systemColorScheme = useColorScheme();
   if (
     colorScheme === 'dark' ||

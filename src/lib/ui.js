@@ -65,6 +65,19 @@ export function showInfo(message) {
   });
 }
 
+export function showOnboarding() {
+  const store = getStore();
+  const id = newUID();
+  store.dispatch({
+    type: TYPE.OPEN_DIALOG,
+    payload: {
+      id,
+      type: 'onboard',
+      message: 'ONBOARDING',
+    },
+  });
+}
+
 export function confirm(options) {
   return new Promise((resolve) => {
     const store = getStore();
@@ -79,6 +92,27 @@ export function confirm(options) {
         },
         onCancel: () => {
           resolve(false);
+        },
+        ...options,
+      },
+    });
+  });
+}
+
+export function confirmPin(options) {
+  return new Promise((resolve) => {
+    const store = getStore();
+    const id = newUID();
+    store.dispatch({
+      type: TYPE.OPEN_DIALOG,
+      payload: {
+        id,
+        type: 'pinConfirmation',
+        onConfirm: (pin) => {
+          resolve(pin);
+        },
+        onCancel: () => {
+          resolve(null);
         },
         ...options,
       },
@@ -107,4 +141,8 @@ export function setContactSearch(text) {
     type: TYPE.SEARCH_CONTACTS,
     payload: text,
   });
+}
+
+export function closeUnlockScreen() {
+  getStore().dispatch({ type: TYPE.CLOSE_UNLOCK_SCREEN });
 }

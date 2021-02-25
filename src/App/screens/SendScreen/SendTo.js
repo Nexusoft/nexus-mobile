@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, ScrollView, LayoutAnimation } from 'react-native';
+import { View, LayoutAnimation } from 'react-native';
 import { Button, FAB, overlay } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
+import TokenName from 'components/TokenName';
 import AddressPicker from 'components/AddressPicker';
-import { useTheme, disabledColor } from 'lib/theme';
-import { sendAPI } from 'lib/api';
+import { useTheme } from 'lib/theme';
+import { callAPI } from 'lib/api';
 import { navigate } from 'lib/navigation';
 import formatNumber from 'utils/formatNumber';
 import { getStore } from 'store';
@@ -56,7 +57,7 @@ function findContactName(addr) {
   const contact = Object.entries(state.contacts).find(
     ([name, { address }]) => address === addr
   );
-  return contact && contact[0];
+  return contact?.[0];
 }
 
 const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
@@ -65,7 +66,7 @@ async function resolveNameOrAddress(nameOrAddress) {
   if (!nameOrAddress) return null;
 
   if (base58Regex.test(nameOrAddress)) {
-    const addressResult = await sendAPI('system/validate/address', {
+    const addressResult = await callAPI('system/validate/address', {
       address: nameOrAddress,
     });
     if (addressResult.is_valid) {
@@ -79,14 +80,25 @@ async function resolveNameOrAddress(nameOrAddress) {
 
   // This is a name
   try {
-    const nameResult = await sendAPI('names/get/name', { name: nameOrAddress });
+    const nameResult = await callAPI('names/get/name', { name: nameOrAddress });
     return {
       name: nameOrAddress,
       address: nameResult.register_address,
-      contactName: findContactName(nameResult.address),
+      contactName: findContactName(nameResult.register_address),
     };
   } catch (err) {
-    return null;
+    try {
+      const nameResult = await callAPI('names/get/name', {
+        name: `${nameOrAddress}:default`,
+      });
+      return {
+        name: `${nameOrAddress}:default`,
+        address: nameResult.register_address,
+        contactName: findContactName(nameResult.register_address),
+      };
+    } catch (err) {
+      return null;
+    }
   }
 }
 
@@ -104,6 +116,11 @@ export default function SendTo({ account }) {
       validationSchema={yup.object().shape({
         nameOrAddress: yup.string().required('Required!'),
         amount: yup.number().typeError('Invalid!').min(0, 'Invalid!'),
+        reference: yup
+          .number()
+          .typeError('Invalid!')
+          .integer('Invalid!')
+          .min(0, 'Invalid!'),
       })}
       onSubmit={async (
         { nameOrAddress, amount, reference },
@@ -123,7 +140,7 @@ export default function SendTo({ account }) {
       }}
     >
       {({ handleSubmit, isSubmitting, setFieldValue }) => (
-        <ScrollView style={styles.wrapper({ theme })}>
+        <View style={styles.wrapper({ theme })}>
           <Text style={styles.heading}>Send to</Text>
 
           <View style={styles.section}>
@@ -147,7 +164,7 @@ export default function SendTo({ account }) {
               name="amount"
               mode="outlined"
               background={['surface', 2]}
-              label="Amount (NXS)"
+              label={`Amount (${TokenName.from({ account })})`}
               keyboardType="numeric"
             />
             <Button
@@ -159,7 +176,8 @@ export default function SendTo({ account }) {
               labelStyle={{ fontSize: 12 }}
             >
               Send all (
-              {formatNumber(account.balance, { maximumFractionDigits: 6 })} NXS)
+              {formatNumber(account.balance, { maximumFractionDigits: 6 })}{' '}
+              {TokenName.from({ account })})
             </Button>
           </View>
 
@@ -197,7 +215,7 @@ export default function SendTo({ account }) {
             disabled={isSubmitting}
             label={isSubmitting ? 'Validating...' : 'Proceed'}
           />
-        </ScrollView>
+        </View>
       )}
     </Formik>
   );

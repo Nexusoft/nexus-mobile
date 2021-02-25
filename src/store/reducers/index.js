@@ -5,7 +5,7 @@ import settings from './settings';
 import contacts from './contacts';
 import core from './core';
 import user from './user';
-import prices from './prices';
+import market from './market';
 import transactions from './transactions';
 
 export default function createRootReducer() {
@@ -15,7 +15,7 @@ export default function createRootReducer() {
     contacts,
     core,
     user,
-    prices,
+    market,
     transactions,
   });
 }

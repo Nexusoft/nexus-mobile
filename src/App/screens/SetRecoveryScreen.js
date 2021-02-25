@@ -10,7 +10,7 @@ import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
 import { refreshUserStatus } from 'lib/user';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { goBack } from 'lib/navigation';
 import { showError, showNotification } from 'lib/ui';
 import { disabledColor, useTheme } from 'lib/theme';
@@ -71,6 +71,7 @@ function ConfirmRecoveryDialog({ newRecovery, visible, onDismiss, onConfirm }) {
                 </Text>
               </View>
               <TextBox.Formik
+                autoFocus
                 multiline
                 name="recovery"
                 label="Re-enter new recovery phrase"
@@ -131,7 +132,7 @@ export default function SetRecoveryScreen() {
         })}
         onSubmit={async ({ password, pin, recovery, newRecovery }) => {
           try {
-            await sendAPI('users/update/user', {
+            await callAPI('users/update/user', {
               password,
               pin,
               recovery: hasRecoveryPhrase ? recovery : undefined,
@@ -173,7 +174,12 @@ export default function SetRecoveryScreen() {
                 </Text>
               </View>
 
-              <TextBox.Formik secure name="password" label="Password" />
+              <TextBox.Formik
+                secure
+                name="password"
+                label="Password"
+                autoFocus
+              />
               <TextBox.Formik secure name="pin" label="PIN" />
               {hasRecoveryPhrase && (
                 <TextBox.Formik

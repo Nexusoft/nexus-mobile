@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import Portal from 'components/Portal';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
-import { sendAPI } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { goBack } from 'lib/navigation';
 import { showError, showNotification } from 'lib/ui';
 
@@ -51,6 +51,7 @@ function ConfirmPasswordPinDialog({
           <Dialog visible={visible} onDismiss={onDismiss}>
             <Dialog.Content>
               <TextBox.Formik
+                autoFocus
                 secure
                 name="password"
                 label="Re-enter new password"
@@ -96,7 +97,7 @@ export default function ChangePasswordScreen() {
         })}
         onSubmit={async ({ password, pin, newPassword, newPin }) => {
           try {
-            await sendAPI('users/update/user', {
+            await callAPI('users/update/user', {
               password,
               pin,
               new_password: newPassword,
@@ -112,7 +113,12 @@ export default function ChangePasswordScreen() {
       >
         {({ isSubmitting, handleSubmit, values }) => (
           <>
-            <TextBox.Formik secure name="password" label="Current password" />
+            <TextBox.Formik
+              secure
+              name="password"
+              label="Current password"
+              autoFocus
+            />
             <TextBox.Formik secure name="pin" label="Current PIN" />
 
             <View style={styles.newCredentials}>

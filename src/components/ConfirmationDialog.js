@@ -35,7 +35,7 @@ export default function ConfirmationDialog({
             mode="text"
             onPress={() => {
               onCancel && onCancel();
-              onDismiss();
+              onDismiss && onDismiss();
             }}
             style={{ marginRight: 15 }}
           >
@@ -46,7 +46,7 @@ export default function ConfirmationDialog({
             color={danger ? theme.danger : undefined}
             onPress={() => {
               onConfirm && onConfirm();
-              onDismiss();
+              onDismiss && onDismiss();
             }}
           >
             {confirmLabel || 'Confirm'}
