@@ -36,12 +36,13 @@ export default function NewAccountScreen() {
           token: null,
           name: '',
         }}
-        onSubmit={async ({ name }) => {
+        onSubmit={async ({ name, token }) => {
           const pin = await confirmPin({ fee: name ? createLocalNameFee : 0 });
           if (pin !== null) {
             try {
               await callAPI('finance/create/account', {
                 name: name || undefined,
+                token: token?.address || undefined,
                 pin,
               });
               refreshUserAccounts();
