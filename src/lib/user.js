@@ -69,6 +69,18 @@ export async function refreshUserAccounts() {
   }
 }
 
+export async function refreshUserTokens() {
+  const store = getStore();
+  try {
+    const tokens = await callAPI('users/list/tokens');
+    store.dispatch({ type: TYPE.SET_USER_TOKENS, payload: tokens });
+    return tokens;
+  } catch (err) {
+    store.dispatch({ type: TYPE.CLEAR_USER_TOKENS });
+    return null;
+  }
+}
+
 export async function refreshUserSync() {
   try {
     const result = await callAPI('ledger/sync/sigchain');
