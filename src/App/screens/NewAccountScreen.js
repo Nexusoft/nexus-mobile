@@ -14,10 +14,15 @@ import { callAPI } from 'lib/api';
 import { refreshUserAccounts } from 'lib/user';
 import { goBack } from 'lib/navigation';
 import { createLocalNameFee } from 'lib/fees';
+import { useTheme, disabledColor } from 'lib/theme';
+import segmentAddress from 'utils/segmentAddress';
 
 const styles = {
   tokenSection: {
     marginBottom: 20,
+  },
+  tokenNameSelect: {
+    marginBottom: 5,
     paddingLeft: 12,
     flexDirection: 'row',
     alignItems: 'center',
@@ -25,9 +30,22 @@ const styles = {
   tokenLabel: {
     fontSize: 16,
   },
+  addressBox: ({ theme }) => ({
+    borderWidth: 1,
+    borderColor: disabledColor(theme.foreground),
+    borderRadius: 4,
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    marginBottom: 10,
+  }),
+  address: {
+    fontSize: 15,
+    textAlign: 'center',
+  },
 };
 
 export default function NewAccountScreen() {
+  const theme = useTheme();
   const [selectorOpen, setSelectorOpen] = React.useState(false);
   return (
     <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
@@ -56,19 +74,31 @@ export default function NewAccountScreen() {
         {({ handleSubmit, isSubmitting, values, setValues }) => (
           <>
             <View style={styles.tokenSection}>
-              <Text sub style={styles.tokenLabel}>
-                Account token:
-              </Text>
-              <Button
-                mode="text"
-                labelStyle={{ fontSize: 16 }}
-                onPress={() => {
-                  setSelectorOpen(true);
-                }}
-              >
-                {values.token ? TokenName.from({ token: values.token }) : 'NXS'}
-              </Button>
+              <View style={styles.tokenNameSelect}>
+                <Text sub style={styles.tokenLabel}>
+                  Account token:
+                </Text>
+                <Button
+                  mode="text"
+                  labelStyle={{ fontSize: 16 }}
+                  onPress={() => {
+                    setSelectorOpen(true);
+                  }}
+                >
+                  {values.token
+                    ? TokenName.from({ token: values.token })
+                    : 'NXS'}
+                </Button>
+              </View>
+              {!!values.token && (
+                <View style={styles.addressBox({ theme })}>
+                  <Text style={styles.address} mono>
+                    {segmentAddress(values.token.address)}
+                  </Text>
+                </View>
+              )}
             </View>
+
             <TextBox.Formik
               autoFocus
               name="name"
