@@ -40,7 +40,7 @@ const selectTokenOptions = memoize(
     if (selectedAnotherToken) {
       options.unshift(selectedToken);
     }
-    return [options, selectedAnotherToken];
+    return options;
   },
   (state, selectedToken) => [state.user.tokens, selectedToken]
 );
@@ -67,13 +67,17 @@ export default function TokenSelector({
     refreshUserTokens();
   }, []);
   const theme = useTheme();
-  const [options, selectedAnotherToken] = useSelector((state) =>
+  const options = useSelector((state) =>
     selectTokenOptions(state, selectedToken)
   );
   const [searching, setSearching] = React.useState(false);
-  const [inputValue, setInputValue] = React.useState(
-    selectedAnotherToken ? selectedToken.name || selectedToken.address : ''
-  );
+  const [inputValue, setInputValue] = React.useState('');
+
+  const submit = (token) => {
+    onDismiss();
+    selectToken(token);
+    setInputValue('');
+  };
 
   const search = async () => {
     if (!inputValue) return;
@@ -81,8 +85,7 @@ export default function TokenSelector({
     try {
       const token = await lookupToken(inputValue);
       if (token) {
-        onDismiss();
-        selectToken(token);
+        submit(token);
       } else {
         showError(
           'Invalid token name/address. Be aware that token name is case sensitive'
@@ -99,13 +102,7 @@ export default function TokenSelector({
         <Dialog.Title>Select token</Dialog.Title>
         <Dialog.ScrollArea>
           <ScrollView>
-            <RadioButton.Group
-              value={selectedToken}
-              onValueChange={(token) => {
-                onDismiss();
-                selectToken(token);
-              }}
-            >
+            <RadioButton.Group value={selectedToken} onValueChange={submit}>
               {options.map((token) => {
                 const selected =
                   (!selectedToken && !token) ||
