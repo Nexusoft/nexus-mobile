@@ -8,7 +8,8 @@ import { getStore } from 'store';
 export const selectLoggedIn = (state) => !!state.user.status;
 
 // Return user's confirmed status
-export const selectUserIsConfirmed = (state) => state.user?.status?.confirmed;
+export const selectUserIsConfirmed = (state) =>
+  state.user?.status?.confirmed !== false;
 
 // Refreshes
 
