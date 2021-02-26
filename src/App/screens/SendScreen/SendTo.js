@@ -12,6 +12,7 @@ import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
 import { navigate } from 'lib/navigation';
 import formatNumber from 'utils/formatNumber';
+import { addressRegex } from 'consts/regex';
 import { getStore } from 'store';
 
 const styles = {
@@ -60,12 +61,10 @@ function findContactName(addr) {
   return contact?.[0];
 }
 
-const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
-
 async function resolveNameOrAddress(nameOrAddress) {
   if (!nameOrAddress) return null;
 
-  if (base58Regex.test(nameOrAddress)) {
+  if (addressRegex.test(nameOrAddress)) {
     const addressResult = await callAPI('system/validate/address', {
       address: nameOrAddress,
     });
