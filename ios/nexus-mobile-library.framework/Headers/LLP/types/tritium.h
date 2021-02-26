@@ -66,31 +66,31 @@ namespace LLP
             enum
             {
                 /* Key Types. */
-                UINT256_T    = 0x20,
-                UINT512_T    = 0x21,
-                UINT1024_T   = 0x22,
-                STRING       = 0x23,
-                BYTES        = 0x24,
-                LOCATOR      = 0x25,
-                LASTINDEX    = 0x26, //sends a last index notify after list
+                UINT256_T     = 0x20,
+                UINT512_T     = 0x21,
+                UINT1024_T    = 0x22,
+                STRING        = 0x23,
+                BYTES         = 0x24,
+                LOCATOR       = 0x25,
+                LASTINDEX     = 0x26, //sends a last index notify after list
 
                 /* Object Types. */
-                BLOCK        = 0x30,
-                TRANSACTION  = 0x31,
-                TIMESEED     = 0x32,
-                BESTHEIGHT   = 0x33,
-                CHECKPOINT   = 0x34,
-                ADDRESS      = 0x35,
-                BESTCHAIN    = 0x36,
-                MEMPOOL      = 0x37,
-                SIGCHAIN     = 0x38,
-                MERKLE       = 0x39,
-                GENESIS      = 0x3a,
-                NOTIFICATION = 0x3b,
-                TRIGGER      = 0x3c,
-                REGISTER     = 0x3d,
-                P2PCONNECTION   = 0x3e,
-                PEERADDRESS  = 0x3f,
+                BLOCK         = 0x30,
+                TRANSACTION   = 0x31,
+                TIMESEED      = 0x32,
+                BESTHEIGHT    = 0x33,
+                CHECKPOINT    = 0x34,
+                ADDRESS       = 0x35,
+                BESTCHAIN     = 0x36,
+                MEMPOOL       = 0x37,
+                SIGCHAIN      = 0x38,
+                MERKLE        = 0x39,
+                GENESIS       = 0x3a,
+                NOTIFICATION  = 0x3b,
+                TRIGGER       = 0x3c,
+                REGISTER      = 0x3d,
+                P2PCONNECTION = 0x3e,
+                PEERADDRESS   = 0x3f,
             };
         }
 
@@ -106,7 +106,6 @@ namespace LLP
                 SYNC         = 0x42, //specify a sync block type
                 TRANSACTIONS = 0x43, //specify to send memory transactions first
                 CLIENT       = 0x44, //specify for blocks to be sent and received for clients
-                POOLSTAKE    = 0x45, //specify for pooled coinstake transactions
             };
         }
 
@@ -168,6 +167,20 @@ namespace LLP
         std::atomic<bool> fInitialized;
 
 
+        /** The current subscriptions. **/
+        std::atomic<uint16_t> nSubscriptions;
+
+
+        /** The current notifications. **/
+        std::atomic<uint16_t> nNotifications;
+
+
+        /** Sig chain genesis hashes / register addresses that the peer has subscribed to notifications for **/
+        std::vector<uint256_t> vNotifications;
+
+
+    public:
+
         /** Mutex for connected sessions. **/
         static std::mutex SESSIONS_MUTEX;
 
@@ -183,21 +196,6 @@ namespace LLP
         /** map of P2P request timestamps by source genesis hash. **/
         static std::map<uint256_t, uint64_t> mapP2PRequests;
 
-
-        /** The current subscriptions. **/
-        uint16_t nSubscriptions;
-
-
-        /** The current notifications. **/
-        uint16_t nNotifications;
-
-
-        /** Sig chain genesis hashes / register addresses that the peer has subscribed to notifications for **/
-        std::vector<uint256_t> vNotifications;
-        
-
-
-    public:
 
         /** Name
          *
@@ -541,9 +539,9 @@ namespace LLP
          *
          *  Handle relays of all events for LLP when processing block. The Tritium LLP subscribes to the Ledger::Notify instance
          *  to receive new block notifications via this callback method.
-         *  
+         *
          *  @param[in] hashBlock The hash of the block to relay.
-         * 
+         *
          **/
         static void RelayBlock(const uint1024_t& hashBlock);
 
@@ -551,12 +549,12 @@ namespace LLP
         /** SyncSigChain
          *
          *  Requests missing sig chain / event transactions for the given signature chain.
-         *  
+         *
          *  @param[in] pNode Pointer to the TritiumNode connection instance to push the message to.
          *  @param[in] hashGenesis The genesis hash of the sig chain to sync.
          *  @param[in] bWait  Flag indicating that the method should wait until the sig chain is downloaded before returning
          *  @param[in] bSyncEvents Flag indicating whether or not to also download events for the sig chain
-         * 
+         *
          **/
         static void SyncSigChain(LLP::TritiumNode* pNode, const uint256_t& hashGenesis, bool bWait, bool bSyncEvents);
 

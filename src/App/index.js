@@ -2,7 +2,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import React from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
-import { AppState, Platform, UIManager, View, Alert } from 'react-native';
+import { AppState, Platform, UIManager, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import {
@@ -10,7 +10,6 @@ import {
   setNotificationHandler,
   setNotificationChannelAsync,
   AndroidImportance,
-  scheduleNotificationAsync,
 } from 'expo-notifications';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -27,7 +26,7 @@ import initStore from './initStore';
 import BackgroundTimer from 'react-native-background-timer';
 
 import { selectLoggedIn, refreshUserSync, refreshHeaders } from 'lib/user';
-import { updateSettings } from 'lib/settings';
+import { selectSetting, updateSettings } from 'lib/settings';
 
 import RNFS from 'react-native-fs';
 import { refreshCoreInfo } from 'lib/coreInfo';
@@ -110,7 +109,7 @@ function App() {
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import sleep from 'utils/sleep';
-import { showOnboarding } from 'lib/ui';
+import { confirmPin, showOnboarding } from 'lib/ui';
 
 const BACKGROUND_FETCH_TASK = 'background-fetch';
 
@@ -197,21 +196,22 @@ export default function Root(props) {
           });
 
         await Promise.all([initStore(), loadResources()]);
-        console.log('no Store so getting settings');
+        //Reading Nexus.conf
         const result = await RNFS.readFile(
           (Platform.OS === 'android'
             ? RNFS.ExternalDirectoryPath
             : RNFS.DocumentDirectoryPath) + '/Nexus/nexus.conf',
           'ascii'
         );
-        console.log(result);
-        updateSettings({ showOnboarding: true }); // temp
         updateSettings({
           embeddedUser: result.split('\n')[0].replace('apiuser=', ''),
           embeddedPassword: result.split('\n')[1].replace('apipassword=', ''),
         });
 
-        if (getStore().getState().settings.showOnboarding) {
+        const showOnboard = selectSetting('showOnboarding')(
+          getStore().getState()
+        );
+        if (showOnboard) {
           showOnboarding();
         }
         setLoadingComplete(true);
