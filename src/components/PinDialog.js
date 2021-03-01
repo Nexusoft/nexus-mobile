@@ -24,6 +24,10 @@ export default function PinDialog({
   ...rest
 }) {
   const [pin, setPin] = React.useState('');
+  const submit = () => {
+    onConfirm?.(pin);
+    onDismiss?.();
+  };
   return (
     <Portal>
       <Dialog
@@ -45,6 +49,7 @@ export default function PinDialog({
             keyboardType={
               Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
             }
+            onSubmitEditing={submit}
           />
           {!!fee && <Text style={styles.feeText}>Fee: {fee} NXS</Text>}
           <Button
@@ -52,10 +57,7 @@ export default function PinDialog({
             icon={({ color, size }) => (
               <SvgIcon icon={LockIcon} color={color} size={size} />
             )}
-            onPress={() => {
-              onConfirm && onConfirm(pin);
-              onDismiss && onDismiss();
-            }}
+            onPress={submit}
           >
             Proceed
           </Button>

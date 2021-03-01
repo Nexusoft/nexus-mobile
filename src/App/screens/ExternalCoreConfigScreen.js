@@ -92,7 +92,6 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
           <Switch
             value={coreMode === 'external'}
             onValueChange={(value) => {
-              console.log('value', value);
               updateSettings({ coreMode: value ? 'external' : 'embedded' });
             }}
           />

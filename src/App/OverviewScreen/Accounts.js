@@ -14,7 +14,6 @@ import { selectSetting } from 'lib/settings';
 import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
 import useRefresh from 'utils/useRefresh';
-import memoize from 'utils/memoize';
 import WalletIcon from 'icons/wallet.svg';
 
 const styles = {
@@ -60,7 +59,7 @@ const styles = {
     paddingVertical: 10,
   },
   accActionLabel: ({ theme }) => ({
-    fontSize: 11,
+    fontSize: 12,
     color: theme.dark ? theme.primary : theme.foreground,
   }),
 };
@@ -120,16 +119,7 @@ function Account({ account }) {
 const refreshData = () =>
   Promise.all([refreshUserAccounts, refreshUserBalances, refreshMarketPrice]);
 
-export default function Accounts() {
-  const hideUnusedTrustAccount = useSelector(
-    selectSetting('hideUnusedTrustAccount')
-  );
-  const accounts = useSelector((state) => state.user.accounts);
-  const filteredAccounts = hideUnusedTrustAccount
-    ? accounts?.filter(
-        (account) => !(account.stake === 0 && account.balance === 0)
-      )
-    : accounts;
+export default function Accounts({ filteredAccounts }) {
   const [refreshing, refresh] = useRefresh(refreshData);
   return (
     <>

@@ -8,7 +8,8 @@ import { getStore } from 'store';
 export const selectLoggedIn = (state) => !!state.user.status;
 
 // Return user's confirmed status
-export const selectUserIsConfirmed = (state) => state.user?.status?.confirmed;
+export const selectUserIsConfirmed = (state) =>
+  state.user?.status?.confirmed !== false;
 
 // Refreshes
 
@@ -65,6 +66,18 @@ export async function refreshUserAccounts() {
     return accounts;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER_ACCOUNTS });
+    return null;
+  }
+}
+
+export async function refreshUserTokens() {
+  const store = getStore();
+  try {
+    const tokens = await callAPI('users/list/tokens');
+    store.dispatch({ type: TYPE.SET_USER_TOKENS, payload: tokens });
+    return tokens;
+  } catch (err) {
+    store.dispatch({ type: TYPE.CLEAR_USER_TOKENS });
     return null;
   }
 }

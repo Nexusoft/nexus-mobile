@@ -66,8 +66,8 @@ function ConfirmRecoveryDialog({ newRecovery, visible, onDismiss, onConfirm }) {
             <Dialog.Content>
               <View style={styles.msgBox({ theme })}>
                 <Text sub>
-                  Re-enter your recovery phrase to make sure you have saved your
-                  recovery phrase
+                  Re-enter your recovery phrase to make sure you have it backed
+                  up
                 </Text>
               </View>
               <TextBox.Formik
