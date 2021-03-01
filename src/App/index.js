@@ -2,7 +2,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import React from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
-import { AppState, Platform, UIManager, View } from 'react-native';
+import { AppState, Platform, UIManager, View, LogBox } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import {
@@ -30,6 +30,8 @@ import { selectSetting, updateSettings } from 'lib/settings';
 
 import RNFS from 'react-native-fs';
 import { refreshCoreInfo } from 'lib/coreInfo';
+
+LogBox.ignoreLogs(['Setting a timer']);
 
 // For using LayoutAnimation
 if (Platform.OS === 'android') {
