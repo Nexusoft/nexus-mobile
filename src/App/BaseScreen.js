@@ -22,7 +22,7 @@ import {
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef } from 'lib/navigation';
 import { callAPI } from 'lib/api';
-import { closeUnlockScreen } from 'lib/ui';
+import { closeUnlockScreen, showError } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
 import CopyIcon from 'icons/copy.svg';
@@ -143,7 +143,7 @@ function UnlockingBase() {
               closeUnlockScreen();
             } catch (err) {
               setLoading(false);
-              console.error(err);
+              showError(err?.message);
             }
           }}
           loading={loading}
