@@ -20,7 +20,7 @@ import {
   refreshUserStatus,
 } from 'lib/user';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
-import { navigate, navReadyRef } from 'lib/navigation';
+import { navigate, navReadyRef, navContainerRef } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { closeUnlockScreen, showError } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
@@ -270,6 +270,7 @@ function useDefaultScreenFix() {
       ({ connected, unlocking, syncing, loggedIn }) => {
         if (
           navReadyRef.current &&
+          navContainerRef.current?.getRootState() &&
           connected &&
           !syncing &&
           !unlocking &&
