@@ -31,6 +31,7 @@ import { selectSetting, updateSettings } from 'lib/settings';
 import RNFS from 'react-native-fs';
 import { refreshCoreInfo } from 'lib/coreInfo';
 
+// Ignore the warning for long timer
 LogBox.ignoreLogs(['Setting a timer']);
 
 // For using LayoutAnimation
