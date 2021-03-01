@@ -200,6 +200,8 @@ export default function ConfirmSendScreen({ route }) {
                     ? 'default'
                     : 'numbers-and-punctuation'
                 }
+                returnKeyType="send"
+                onSubmitEditing={handleSubmit}
               />
             </View>
 
