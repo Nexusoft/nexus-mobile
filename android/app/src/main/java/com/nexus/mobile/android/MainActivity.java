@@ -50,7 +50,6 @@ public class MainActivity extends ReactActivity {
 
     }
 
-
     // Possible change to OnStop ?
     @Override
     protected void onDestroy() {
