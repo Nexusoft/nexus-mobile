@@ -103,6 +103,22 @@ function UnlockingBase() {
   const [pin, setPin] = React.useState('');
   const [loading, setLoading] = React.useState('');
   const savedUsername = useSelector((state) => state.settings.savedUsername);
+
+  const unlock = async () => {
+    setLoading(true);
+    try {
+      await callAPI('users/load/session', {
+        pin,
+        username: savedUsername,
+      });
+      await refreshUserStatus();
+      closeUnlockScreen();
+    } catch (err) {
+      setLoading(false);
+      showError(err?.message);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container({ theme })}>
@@ -125,6 +141,7 @@ function UnlockingBase() {
           label="Enter your PIN"
           value={pin}
           onChangeText={setPin}
+          onSubmitEditing={unlock}
           secure
           keyboardType={
             Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
@@ -132,20 +149,7 @@ function UnlockingBase() {
         />
         <FAB
           disabled={loading}
-          onPress={async () => {
-            setLoading(true);
-            try {
-              await callAPI('users/load/session', {
-                pin,
-                username: savedUsername,
-              });
-              await refreshUserStatus();
-              closeUnlockScreen();
-            } catch (err) {
-              setLoading(false);
-              showError(err?.message);
-            }
-          }}
+          onPress={unlock}
           loading={loading}
           color={theme.dark ? theme.onPrimary : theme.primary}
           style={[
