@@ -1,9 +1,10 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { RadioButton, Dialog } from 'react-native-paper';
+import { RadioButton } from 'react-native-paper';
 import { useTheme } from 'lib/theme';
 
 import Portal from 'components/Portal';
+import Dialog from 'components/Dialog';
 import memoize from 'utils/memoize';
 
 // Converts different kinds of options into an array of `{value, display}` objects

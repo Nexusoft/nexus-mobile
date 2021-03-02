@@ -1,9 +1,10 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { TouchableRipple, Dialog } from 'react-native-paper';
+import { TouchableRipple } from 'react-native-paper';
 
 import Portal from 'components/Portal';
+import Dialog from 'components/Dialog';
 import Text from 'components/Text';
 import SvgIcon from 'components/SvgIcon';
 import Divider from 'components/Divider';

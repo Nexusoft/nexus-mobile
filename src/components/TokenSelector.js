@@ -1,16 +1,10 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
-import {
-  RadioButton,
-  Dialog,
-  Button,
-  Searchbar,
-  overlay,
-} from 'react-native-paper';
+import { RadioButton, Searchbar } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
-import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
+import Dialog from 'components/Dialog';
 import TokenName from 'components/TokenName';
 import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
@@ -22,7 +16,6 @@ import { showError } from 'lib/ui';
 const styles = {
   inputBox: {
     paddingVertical: 15,
-    // alignItems: 'stretch',
   },
   searchBar: ({ disabled }) =>
     disabled && {
@@ -118,10 +111,6 @@ export default function TokenSelector({
                       color: selected ? theme.primary : theme.foreground,
                     }}
                     status={selected ? 'checked' : 'unchecked'}
-                    // onPress={() => {
-                    //   selectToken(token);
-                    //   onDismiss();
-                    // }}
                   />
                 );
               })}

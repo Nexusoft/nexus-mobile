@@ -1,9 +1,10 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
-import { IconButton, Dialog } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 
 import Portal from 'components/Portal';
+import Dialog from 'components/Dialog';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import Divider from 'components/Divider';

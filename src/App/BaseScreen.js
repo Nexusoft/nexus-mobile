@@ -5,9 +5,11 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  BackHandler,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import { ActivityIndicator, Button, FAB } from 'react-native-paper';
+import { ActivityIndicator, Button, FAB, Snackbar } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
@@ -22,7 +24,7 @@ import {
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef, navContainerRef } from 'lib/navigation';
 import { callAPI } from 'lib/api';
-import { closeUnlockScreen, showError } from 'lib/ui';
+import { closeUnlockScreen, showError, showNotification } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
 import CopyIcon from 'icons/copy.svg';
@@ -33,7 +35,6 @@ import OverviewScreen from './OverviewScreen';
 
 const styles = {
   container: ({ theme }) => ({
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.dark ? theme.background : theme.primary,
@@ -61,11 +62,51 @@ const styles = {
   },
 };
 
+const doubleBackTime = 3000;
+function BaseScreenContainer({ unStyled, children }) {
+  const theme = useTheme();
+  const [lastBackPressed, setLastBackPressed] = React.useState(null);
+  const [snackbarVisible, setSnackbarVisible] = React.useState(false);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (Platform.OS === 'android') {
+        const handler = () => {
+          const now = Date.now();
+          if (!lastBackPressed || now - lastBackPressed > doubleBackTime) {
+            setLastBackPressed(now);
+            setSnackbarVisible(true);
+            return true;
+          }
+        };
+        BackHandler.addEventListener('hardwareBackPress', handler);
+        return () => {
+          BackHandler.removeEventListener('hardwareBackPress', handler);
+        };
+      }
+    }, [lastBackPressed, snackbarVisible])
+  );
+
+  return (
+    <View style={[!unStyled && styles.container({ theme }), { flex: 1 }]}>
+      {children}
+      <Snackbar
+        visible={snackbarVisible}
+        duration={doubleBackTime}
+        onDismiss={() => {
+          setSnackbarVisible(false);
+        }}
+      >
+        Press back again to close the app
+      </Snackbar>
+    </View>
+  );
+}
+
 function DisconnectedBase() {
   const theme = useTheme();
   const [refreshing, setRefreshing] = React.useState(false);
   return (
-    <View style={styles.container({ theme })}>
+    <BaseScreenContainer>
       <ActivityIndicator
         animating
         color={theme.dark ? theme.foreground : theme.onPrimary}
@@ -94,7 +135,7 @@ function DisconnectedBase() {
       >
         {refreshing ? 'Refreshing...' : 'Refresh'}
       </Button>
-    </View>
+    </BaseScreenContainer>
   );
 }
 
@@ -121,7 +162,7 @@ function UnlockingBase() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container({ theme })}>
+      <BaseScreenContainer>
         <SvgIcon
           icon={UserIcon}
           size={66}
@@ -170,7 +211,7 @@ function UnlockingBase() {
         >
           Log in as another user
         </Button>
-      </View>
+      </BaseScreenContainer>
     </TouchableWithoutFeedback>
   );
 }
@@ -181,7 +222,7 @@ function UnconfirmedUserBase() {
   const txid = useSelector((state) => state.user.registrationTxids[username]);
   const color = theme.dark ? theme.foreground : theme.onPrimary;
   return (
-    <View style={styles.container({ theme })}>
+    <BaseScreenContainer>
       <ActivityIndicator animating color={color} />
       <Text style={styles.creatingText} sub color={color} size={18}>
         User registration for{' '}
@@ -215,7 +256,7 @@ function UnconfirmedUserBase() {
         mono
         bordered
       />
-    </View>
+    </BaseScreenContainer>
   );
 }
 
@@ -223,7 +264,7 @@ function SynchronizingBase() {
   const theme = useTheme();
   const percentage = useSelector((state) => state.core.info?.syncprogress);
   return (
-    <View style={styles.container({ theme })}>
+    <BaseScreenContainer>
       <ActivityIndicator
         animating
         color={theme.dark ? theme.foreground : theme.onPrimary}
@@ -236,7 +277,7 @@ function SynchronizingBase() {
       >
         Synchronizing {percentage}%...
       </Text>
-    </View>
+    </BaseScreenContainer>
   );
 }
 
@@ -331,11 +372,20 @@ export default function BaseScreen({ route, navigation }) {
 
   if (unlocking) return <UnlockingBase />;
 
-  if (!loggedIn) return <UnauthenticatedBase />;
+  if (!loggedIn)
+    return (
+      <BaseScreenContainer unStyled>
+        <UnauthenticatedBase />
+      </BaseScreenContainer>
+    );
 
   if (!confirmedUser) return <UnconfirmedUserBase />;
 
-  return <OverviewScreen />;
+  return (
+    <BaseScreenContainer unStyled>
+      <OverviewScreen />
+    </BaseScreenContainer>
+  );
 }
 
 BaseScreen.nav = {
