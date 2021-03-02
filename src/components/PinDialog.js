@@ -1,7 +1,8 @@
 import React from 'react';
 import { Platform, View } from 'react-native';
-import { Button, Dialog } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 
+import Dialog from 'components/Dialog';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';

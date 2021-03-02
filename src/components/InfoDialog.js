@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Dialog } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { useTheme } from 'lib/theme';
 
 import Portal from 'components/Portal';
+import Dialog from 'components/Dialog';
 import Text from 'components/Text';
 import SvgIcon from 'components/SvgIcon';
 import InfoIcon from 'icons/info-circle.svg';

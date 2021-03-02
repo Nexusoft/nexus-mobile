@@ -1,10 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import { FAB, Dialog } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
 import Portal from 'components/Portal';
+import Dialog from 'components/Dialog';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
 import { callAPI } from 'lib/api';

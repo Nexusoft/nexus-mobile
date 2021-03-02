@@ -1,11 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
-import { FAB, Button, Dialog } from 'react-native-paper';
+import { FAB, Button } from 'react-native-paper';
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 
 import Portal from 'components/Portal';
+import Dialog from 'components/Dialog';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';

@@ -1,9 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Formik } from 'formik';
-import { FAB, Dialog } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
 import * as yup from 'yup';
 
+import Dialog from 'components/Dialog';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
