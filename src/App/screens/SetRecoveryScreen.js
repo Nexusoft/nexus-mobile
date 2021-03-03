@@ -236,7 +236,9 @@ export default function SetRecoveryScreen() {
               <TextBox.Formik
                 multiline
                 name="newRecovery"
-                label="New recovery phrase"
+                label={
+                  hasRecoveryPhrase ? 'New recovery phrase' : 'Recovery phrase'
+                }
               />
               <FAB
                 mode="contained"
