@@ -318,7 +318,7 @@ function useDefaultScreenFix() {
           navContainerRef.current?.getRootState() &&
           connected &&
           !syncing &&
-          !unlocking &&
+          unlocking === false &&
           !loggedIn
         ) {
           navigate('Login');

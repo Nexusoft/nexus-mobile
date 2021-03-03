@@ -1,6 +1,7 @@
 import * as TYPE from 'consts/actionTypes';
 
-const initialState = false;
+// null indicates that the wallet hasn't checked for user session yet
+const initialState = null;
 
 export default (state = initialState, action) => {
   switch (action.type) {
