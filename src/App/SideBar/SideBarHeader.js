@@ -27,6 +27,7 @@ import LogoutIcon from 'icons/logout.svg';
 import CopyIcon from 'icons/copy.svg';
 import UpArrowIcon from 'icons/chevron-up.svg';
 import DownArrowIcon from 'icons/chevron-down.svg';
+import WarningIcon from 'icons/warning-circle.svg';
 import MenuItem from './MenuItem';
 
 const styles = {
@@ -80,6 +81,11 @@ const styles = {
   userID: {
     paddingVertical: 12,
     paddingHorizontal: 20,
+  },
+  warningIcon: {
+    position: 'absolute',
+    top: 6,
+    right: 10,
   },
 };
 
@@ -206,6 +212,14 @@ export default function SideBarHeader({ navigation }) {
               style={styles.expandIcon({ theme })}
               icon={expanded ? UpArrowIcon : DownArrowIcon}
             />
+            {!hasRecoveryPhrase && !expanded && (
+              <SvgIcon
+                icon={WarningIcon}
+                style={styles.warningIcon}
+                size={12}
+                color={theme.danger}
+              />
+            )}
           </View>
 
           <View style={styles.userActions({ expanded })}>
@@ -239,6 +253,7 @@ export default function SideBarHeader({ navigation }) {
                   : 'Set recovery phrase'
               }
               linkTo="SetRecovery"
+              warning={!hasRecoveryPhrase}
             />
             <MenuItem
               small
