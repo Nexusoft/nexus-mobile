@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { IconButton, shadow, overlay, Button } from 'react-native-paper';
+import { IconButton, shadow, overlay } from 'react-native-paper';
 
 import Text from 'components/Text';
 import SvgIcon from 'components/SvgIcon';
@@ -15,14 +15,12 @@ import SettingsIcon from 'icons/settings.svg';
 import CreateUserScreen from './CreateUserScreen';
 import LoginScreen from './LoginScreen';
 import RecoveryScreen from './RecoveryScreen';
+import infoIcon from 'icons/info-circle-inverse.svg';
+import { version, builddate } from '../../../package.json'; // not too happy about this
 
 const BottomTab = createBottomTabNavigator();
 const screens = [CreateUserScreen, LoginScreen, RecoveryScreen];
 const defaultScreen = 'Login';
-
-import { version, builddate } from '../../../package.json'; // not too happy about this
-
-import { scheduleNotificationAsync } from 'expo-notifications';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -40,6 +38,13 @@ const styles = {
   },
   loginBtn: {
     marginTop: 10,
+  },
+  infoView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  versionText: {
+    opacity: 0.75,
   },
 };
 
@@ -93,15 +98,27 @@ UnauthenticatedBase.stackOptions = ({ theme, route }) => {
   const { stackOptions } =
     screens.map((Screen) => Screen.nav).find((nav) => nav.name === routeName) ||
     {};
-
   return {
-    headerLeft: (theme) => (
-      <Text
-        colorName={theme.dark ? 'foreground' : 'onPrimary'}
-        style={{ marginLeft: 10, opacity: 0.75 }}
-      >
-        v{version}
-      </Text>
+    headerLeft: ({ tintColor }) => (
+      <View style={styles.infoView}>
+        <IconButton
+          icon={({ size }) => (
+            <SvgIcon icon={infoIcon} size={size} color={tintColor} />
+          )}
+          color={tintColor}
+          size={20}
+          onPress={() => {
+            navigate('CoreInfo');
+          }}
+        />
+
+        <Text
+          colorName={theme.dark ? 'foreground' : 'onPrimary'}
+          style={styles.versionText}
+        >
+          v {version}
+        </Text>
+      </View>
     ),
     headerRight: ({ tintColor }) => (
       <IconButton
