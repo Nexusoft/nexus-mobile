@@ -161,9 +161,7 @@ export default function InfoDialog({ onDismiss, ...rest }) {
           renderDoneButton={() => (
             <SliderButton colorName="primary">Done</SliderButton>
           )}
-          renderSkipButton={() => (
-            <SliderButton sub={!theme.dark}>Skip</SliderButton>
-          )}
+          renderSkipButton={() => <SliderButton sub>Skip</SliderButton>}
           activeDotStyle={{ backgroundColor: theme.primary }}
           onSkip={close}
           onDone={close}
