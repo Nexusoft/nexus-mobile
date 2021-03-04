@@ -27,8 +27,8 @@ const screens = [
     title: 'How a Lite Node Works',
     body:
       'A Node running in Lite mode only communicates with other Full Nodes and only downloads the Headers of each block. This means that your node is limited in certain ways.' +
-      '\n\n•Lite Mode only downloads logged in sigchains, you must communicate with a full node in order to retrieve certain information.' +
-      '\n\n•Lite Mode does not support Staking, you can not relay blocks to other nodes.' +
+      '\n\n• Lite Mode only downloads logged in sigchains, you must communicate with a full node in order to retrieve certain information.' +
+      '\n\n• Lite Mode does not support Staking, you cannot relay blocks to other nodes.' +
       '\n\nUsers interested in those features should install our Desktop Wallet and enable Full Node.',
   },
   {
