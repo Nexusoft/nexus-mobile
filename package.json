@@ -33,6 +33,7 @@
     "react": "~17.0.1",
     "react-dom": "~17.0.1",
     "react-native": "~0.63.4",
+    "react-native-app-intro-slider": "^4.0.4",
     "react-native-background-timer": "^2.4.1",
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "~1.10.3",
