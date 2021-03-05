@@ -14,6 +14,7 @@ import SettingsIcon from 'icons/settings.svg';
 import BalanceSection from './BalanceSection';
 import Accounts from './Accounts';
 import MenuIcon from 'icons/menu.svg';
+import WarningIcon from 'icons/warning-circle.svg';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -29,6 +30,11 @@ const styles = {
     elevation: 8,
     ...shadow(8),
   }),
+  warningIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 8,
+  },
 };
 
 export default function OverviewScreen() {
@@ -49,6 +55,35 @@ export default function OverviewScreen() {
       <View style={styles.accountsPane({ theme })}>
         <Accounts filteredAccounts={filteredAccounts} />
       </View>
+    </View>
+  );
+}
+
+function SideMenuIcon({ tintColor, theme, navigation }) {
+  const hasRecoveryPhrase = useSelector(
+    (state) => !!state.user?.status?.recovery
+  );
+
+  return (
+    <View>
+      <IconButton
+        icon={({ size }) => (
+          <SvgIcon icon={MenuIcon} size={size} color={tintColor} />
+        )}
+        color={tintColor}
+        size={25}
+        onPress={() => {
+          navigation.openDrawer();
+        }}
+      />
+      {!hasRecoveryPhrase && (
+        <SvgIcon
+          style={styles.warningIcon}
+          icon={WarningIcon}
+          size={12}
+          color={theme.danger}
+        />
+      )}
     </View>
   );
 }
@@ -83,16 +118,7 @@ OverviewScreen.stackOptions = ({ theme, navigation }) => ({
     </View>
   ),
   headerLeft: ({ tintColor }) => (
-    <IconButton
-      icon={({ size }) => (
-        <SvgIcon icon={MenuIcon} size={size} color={tintColor} />
-      )}
-      color={tintColor}
-      size={25}
-      onPress={() => {
-        navigation.openDrawer();
-      }}
-    />
+    <SideMenuIcon tintColor={tintColor} theme={theme} navigation={navigation} />
   ),
   headerStyle: flatHeader(theme),
 });
