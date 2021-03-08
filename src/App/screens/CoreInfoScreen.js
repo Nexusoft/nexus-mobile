@@ -85,12 +85,6 @@ export default function CoreInfoScreen() {
         <Divider />
         <InfoField
           inline
-          label="Sync. complete"
-          value={coreInfo?.synccomplete + '%'}
-        />
-        <Divider />
-        <InfoField
-          inline
           label="Sync. progress"
           value={coreInfo?.syncprogress + '%'}
         />
