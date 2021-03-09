@@ -36,6 +36,14 @@ const screens = [
       '\n\nUsers interested in those features should install our Desktop Wallet and enable Full Node.',
   },
   {
+    key: 'security',
+    title: 'Account and Security',
+    body:
+      "With Nexus there is no need to have local keys or 'wallet.dat's , Username/Password/Pin are all stored on the chain and can be accessed from anywhere and from any platform." +
+      '\n\nYou can use the Recovery feature to retrieve credentials if the user forgets his password or pin. Set a passphrase with the Set Recovery option after logging in.' +
+      '\n\n\nNexus has post-quantum resistant technology that prevents a host of attack vectors, both on Desktop and Mobile.',
+  },
+  {
     key: 'beta',
     title: 'Beta',
     body:
