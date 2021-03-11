@@ -15,6 +15,7 @@ import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
+import AttentionIcon from 'components/AttentionIcon';
 import { useTheme, subColor } from 'lib/theme';
 import { logout } from 'lib/user';
 import { confirm, showNotification } from 'lib/ui';
@@ -27,7 +28,6 @@ import LogoutIcon from 'icons/logout.svg';
 import CopyIcon from 'icons/copy.svg';
 import UpArrowIcon from 'icons/chevron-up.svg';
 import DownArrowIcon from 'icons/chevron-down.svg';
-import WarningIcon from 'icons/warning-circle.svg';
 import MenuItem from './MenuItem';
 
 const styles = {
@@ -82,7 +82,7 @@ const styles = {
     paddingVertical: 12,
     paddingHorizontal: 20,
   },
-  warningIcon: {
+  attentionIcon: {
     position: 'absolute',
     top: 6,
     right: 10,
@@ -213,12 +213,7 @@ export default function SideBarHeader({ navigation }) {
               icon={expanded ? UpArrowIcon : DownArrowIcon}
             />
             {!hasRecoveryPhrase && !expanded && (
-              <SvgIcon
-                icon={WarningIcon}
-                style={styles.warningIcon}
-                size={12}
-                color={theme.danger}
-              />
+              <AttentionIcon style={styles.attentionIcon} />
             )}
           </View>
 

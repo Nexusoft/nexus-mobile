@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
+import AttentionIcon from 'components/AttentionIcon';
 import { navigate } from 'lib/navigation';
 import { useTheme } from 'lib/theme';
 import { selectSetting } from 'lib/settings';
@@ -14,7 +15,6 @@ import SettingsIcon from 'icons/settings.svg';
 import BalanceSection from './BalanceSection';
 import Accounts from './Accounts';
 import MenuIcon from 'icons/menu.svg';
-import WarningIcon from 'icons/warning-circle.svg';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -30,7 +30,7 @@ const styles = {
     elevation: 8,
     ...shadow(8),
   }),
-  warningIcon: {
+  attentionIcon: {
     position: 'absolute',
     top: 10,
     right: 8,
@@ -76,14 +76,7 @@ function SideMenuIcon({ tintColor, theme, navigation }) {
           navigation.openDrawer();
         }}
       />
-      {!hasRecoveryPhrase && (
-        <SvgIcon
-          style={styles.warningIcon}
-          icon={WarningIcon}
-          size={12}
-          color={theme.danger}
-        />
-      )}
+      {!hasRecoveryPhrase && <AttentionIcon style={styles.attentionIcon} />}
     </View>
   );
 }

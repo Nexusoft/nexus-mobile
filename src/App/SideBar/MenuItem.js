@@ -4,10 +4,10 @@ import { TouchableRipple } from 'react-native-paper';
 
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
+import AttentionIcon from 'components/AttentionIcon';
 import { navigate } from 'lib/navigation';
 import { useTheme, disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
-import WarningIcon from 'icons/warning-circle.svg';
 
 const styles = {
   item: ({ small, padded }) => ({
@@ -35,11 +35,6 @@ const styles = {
     overflow: 'hidden',
     textTransform: 'uppercase',
   }),
-  warningIcon: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-  },
 };
 
 export default function MenuItem({
@@ -85,9 +80,7 @@ export default function MenuItem({
         </View>
 
         {comingSoon && <Text style={styles.tag({ theme })}>Coming soon</Text>}
-        {warning && (
-          <SvgIcon icon={WarningIcon} size={12} color={theme.danger} />
-        )}
+        {warning && <AttentionIcon />}
       </View>
     </TouchableRipple>
   );
