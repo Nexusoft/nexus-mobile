@@ -15,6 +15,7 @@ import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
+import AttentionIcon from 'components/AttentionIcon';
 import { useTheme, subColor } from 'lib/theme';
 import { logout } from 'lib/user';
 import { confirm, showNotification } from 'lib/ui';
@@ -27,7 +28,6 @@ import LogoutIcon from 'icons/logout.svg';
 import CopyIcon from 'icons/copy.svg';
 import UpArrowIcon from 'icons/chevron-up.svg';
 import DownArrowIcon from 'icons/chevron-down.svg';
-import WarningIcon from 'icons/warning-circle.svg';
 import MenuItem from './MenuItem';
 
 const styles = {
@@ -82,14 +82,6 @@ const styles = {
     paddingVertical: 12,
     paddingHorizontal: 20,
   },
-  warningIcon: ({ theme }) => ({
-    position: 'absolute',
-    backgroundColor: theme.dark ? 'transparent' : 'white',
-    overflow: 'hidden',
-    borderRadius: 12 / 2,
-    top: 6,
-    right: 10,
-  }),
 };
 
 function UserIdDialog({ visible, onDismiss }) {
@@ -216,12 +208,7 @@ export default function SideBarHeader({ navigation }) {
               icon={expanded ? UpArrowIcon : DownArrowIcon}
             />
             {!hasRecoveryPhrase && !expanded && (
-              <SvgIcon
-                icon={WarningIcon}
-                style={styles.warningIcon({ theme })}
-                size={12}
-                color={theme.danger}
-              />
+              <AttentionIcon style={{ top: 6, right: 10 }} />
             )}
           </View>
 
