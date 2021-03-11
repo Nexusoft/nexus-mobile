@@ -30,11 +30,14 @@ const styles = {
     elevation: 8,
     ...shadow(8),
   }),
-  warningIcon: {
+  warningIcon: ({ theme }) => ({
     position: 'absolute',
+    backgroundColor: theme.dark ? 'transparent' : 'white',
+    overflow: 'hidden',
+    borderRadius: 12 / 2,
     top: 10,
     right: 8,
-  },
+  }),
 };
 
 export default function OverviewScreen() {
@@ -78,7 +81,7 @@ function SideMenuIcon({ tintColor, theme, navigation }) {
       />
       {!hasRecoveryPhrase && (
         <SvgIcon
-          style={styles.warningIcon}
+          style={styles.warningIcon({ theme })}
           icon={WarningIcon}
           size={12}
           color={theme.danger}

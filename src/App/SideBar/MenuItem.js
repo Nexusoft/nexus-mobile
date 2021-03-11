@@ -35,11 +35,11 @@ const styles = {
     overflow: 'hidden',
     textTransform: 'uppercase',
   }),
-  warningIcon: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-  },
+  warningIcon: ({ theme }) => ({
+    backgroundColor: theme.dark ? 'transparent' : 'white',
+    overflow: 'hidden',
+    borderRadius: 12 / 2,
+  }),
 };
 
 export default function MenuItem({
@@ -86,7 +86,12 @@ export default function MenuItem({
 
         {comingSoon && <Text style={styles.tag({ theme })}>Coming soon</Text>}
         {warning && (
-          <SvgIcon icon={WarningIcon} size={12} color={theme.danger} />
+          <SvgIcon
+            style={styles.warningIcon({ theme })}
+            icon={WarningIcon}
+            size={12}
+            color={theme.danger}
+          />
         )}
       </View>
     </TouchableRipple>

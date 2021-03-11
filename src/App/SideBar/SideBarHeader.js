@@ -82,11 +82,14 @@ const styles = {
     paddingVertical: 12,
     paddingHorizontal: 20,
   },
-  warningIcon: {
+  warningIcon: ({ theme }) => ({
     position: 'absolute',
+    backgroundColor: theme.dark ? 'transparent' : 'white',
+    overflow: 'hidden',
+    borderRadius: 12 / 2,
     top: 6,
     right: 10,
-  },
+  }),
 };
 
 function UserIdDialog({ visible, onDismiss }) {
@@ -215,7 +218,7 @@ export default function SideBarHeader({ navigation }) {
             {!hasRecoveryPhrase && !expanded && (
               <SvgIcon
                 icon={WarningIcon}
-                style={styles.warningIcon}
+                style={styles.warningIcon({ theme })}
                 size={12}
                 color={theme.danger}
               />
