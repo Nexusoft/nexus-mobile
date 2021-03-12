@@ -198,13 +198,19 @@ export default function SendScreen({ route }) {
   );
 }
 
-SendScreen.nav = {
+SendScreen.nav = ({ theme }) => ({
   name: 'Send',
   options: ({ route }) => ({
     headerTitle: ({ style, tintColor }) => (
       <HeaderTitle style={style} tintColor={tintColor}>
-        Send <TokenName bold account={route.params?.account} verbose />
+        Send{' '}
+        <TokenName
+          color={theme.dark ? theme.foreground : theme.onPrimary}
+          bold
+          account={route.params?.account}
+          verbose
+        />
       </HeaderTitle>
     ),
   }),
-};
+});
