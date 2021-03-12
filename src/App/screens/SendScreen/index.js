@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, LayoutAnimation } from 'react-native';
 import { HeaderTitle } from '@react-navigation/stack';
-import { FAB } from 'react-native-paper';
+import { FAB, overlay } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -11,6 +11,7 @@ import TokenName from 'components/TokenName';
 import SvgIcon from 'components/SvgIcon';
 import { navigate } from 'lib/navigation';
 import { callAPI } from 'lib/api';
+import { useTheme } from 'lib/theme';
 import { addressRegex } from 'consts/regex';
 import { getStore } from 'store';
 import SendIcon from 'icons/send.svg';
@@ -114,6 +115,7 @@ function useEndReached() {
 }
 
 export default function SendScreen({ route }) {
+  const theme = useTheme();
   const account = route.params?.account;
   const { endReached, scrollViewProps } = useEndReached();
 
@@ -153,7 +155,7 @@ export default function SendScreen({ route }) {
       {({ handleSubmit, isSubmitting, ...rest }) => (
         <ScreenBody scroll={false}>
           <ScrollView
-            style={{ flex: 1 }}
+            style={{ flex: 1, backgroundColor: overlay(2, theme.surface) }}
             scrollEventThrottle={160}
             {...scrollViewProps}
           >
@@ -174,6 +176,7 @@ export default function SendScreen({ route }) {
               right: 30,
               left: endReached ? 30 : undefined,
             }}
+            animated={false}
             mode="contained"
             onPress={handleSubmit}
             loading={isSubmitting}
