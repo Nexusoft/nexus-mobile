@@ -172,7 +172,7 @@ export default function SendScreen({ route }) {
           <FAB
             style={{
               position: 'absolute',
-              bottom: 10,
+              bottom: 15,
               right: 30,
               left: endReached ? 30 : undefined,
             }}
