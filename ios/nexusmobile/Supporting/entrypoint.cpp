@@ -50,9 +50,9 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
   SetupSignals();
   
   
-    ofstream myfile;
-    string folder = std::string(getenv("HOME")) + "/Documents/Nexus" ;
-    string fileLoc = std::string(folder + "/nexus.conf" );
+  ofstream myfile;
+  string folder = std::string(getenv("HOME")) + "/Documents/Nexus" ;
+  string fileLoc = std::string(folder + "/nexus.conf" );
   struct stat statbuf;
   cout << folder << endl;
   int isthere = stat(folder.c_str(), &statbuf);

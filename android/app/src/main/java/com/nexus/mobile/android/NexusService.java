@@ -49,7 +49,6 @@ public class NexusService extends Service {
                 random.nextBytes(bytes);
                 String userCreds[] = new String[]{Settings.Secure.getString(getBaseContext().getContentResolver(),
                         Settings.Secure.ANDROID_ID), Base64.getEncoder().encodeToString(bytes).replaceAll("([+/=])", "")};
-                Log.d("NEXUS", "User " + userCreds[0] + " : " + userCreds[1]);
 
                 MainActivity.startNexusCore(
                         getExternalFilesDir(null).getAbsolutePath(),
@@ -107,7 +106,6 @@ public class NexusService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d("NEXUS::SERVICE", "On Destroy Called");
         _nexuscore.stop();
         _servicethread = null;
         stopForeground(STOP_FOREGROUND_REMOVE);

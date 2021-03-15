@@ -76,7 +76,7 @@ function SideMenuIcon({ tintColor, theme, navigation }) {
           navigation.openDrawer();
         }}
       />
-      {!hasRecoveryPhrase && <AttentionIcon style={styles.attentionIcon} />}
+      {!false && <AttentionIcon style={styles.attentionIcon} />}
     </View>
   );
 }

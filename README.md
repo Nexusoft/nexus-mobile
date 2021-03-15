@@ -1,6 +1,6 @@
 # Nexus Wallet Mobile
 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/Nexusoft/NexusInterface)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/Nexusoft/nexus-mobile)
 
 [<img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg" height="50">](https://itunes.apple.com/us/app/nexus-mobile)
 [<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" height="50">](https://play.google.com/store/apps/details?id=io.nexus.wallet)
@@ -9,7 +9,9 @@ This is an React-Native app for Nexus. It is an example of what can comprise the
 
 If you would like to learn more about Nexus we encourage you to visit the [Nexus Website.](https://nexus.io/)
 
-If you are interested in USING the Nexus Mobile Wallet then please download the app from the respective App Store. Only clone this repo if you are interested in developing the wallet.
+Desktop wallet with full node support is available here, [Nexus Desktop Interface.](https://github.com/Nexusoft/NexusInterface)
+
+If you are interested in USING the Nexus Mobile Wallet then please download the app from the respective App Store. Only clone/checkout this repo if you are interested in developing the wallet.
 
 ## Build and Dev-server Instructions
 
@@ -30,7 +32,19 @@ Download and install Android Studios.
 
 Open the `android` folder.
 
-Since android pacakges are non static you must install an Android version of OpenSLL, you can get a precompiled [version here]()
+Since android pacakges are non static you must install an Android version of OpenSLL, you can get a precompiled [version here](https://teskalabs.com/blog/openssl-binary-distribution-for-developers-static-library)
+
+## Nexus Core
+
+Nexus Mobile runs in two layers, the React layer with the UI and the native layer that runs the core. For iOS this is in Objective-c++ and android, Java. Each platform has an entrypoint file that will interface with the native code and nexus's c++ compiled library.
+
+See the [Core Document for more.](/docs/nexus-core-entrypoint.md)
+
+## Lite Mode
+
+The mobile wallet only supports lite mode by default, removing the `-client=1` flag is not supported and may not behave correctly.
+
+Lite Mode differs from using a full node on your desktop by only downloading the block headers, and only the logged in sigchain. Consider the nexus network as a parent and a lite node as a child, you can only interface with the parent/s but can not interface with other children. Since you are not contributing to the network, you can not stake or get rewarded for keeping yourself live.
 
 ## License
 

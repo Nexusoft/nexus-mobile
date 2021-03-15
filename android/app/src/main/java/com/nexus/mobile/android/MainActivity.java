@@ -1,4 +1,4 @@
-package com.nexus.mobile.android;
+  package com.nexus.mobile.android;
 
 
 import android.app.NotificationManager;
@@ -49,7 +49,6 @@ public class MainActivity extends ReactActivity {
         System.loadLibrary("nexusmobilelib");
 
     }
-
 
     // Possible change to OnStop ?
     @Override

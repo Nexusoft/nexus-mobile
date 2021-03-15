@@ -1,26 +1,25 @@
 import React from 'react';
-import { View } from 'react-native';
 
 import SvgIcon from 'components/SvgIcon';
 import { useTheme } from 'lib/theme';
 import WarningIcon from 'icons/warning-circle.svg';
 
+const defaultStyle = ({ theme, size }) => ({
+  position: 'absolute',
+  backgroundColor: theme.onDanger,
+  overflow: 'hidden',
+  borderRadius: size / 2,
+});
+
 export default function AttentionIcon({ style, ...rest }) {
   const theme = useTheme();
+  const size = rest.size || 12;
   return (
-    <View style={[style]} {...rest}>
-      <View
-        style={{
-          position: 'absolute',
-          top: 1,
-          left: 1,
-          width: 10,
-          height: 10,
-          borderRadius: 5,
-          backgroundColor: theme.onDanger,
-        }}
-      />
-      <SvgIcon icon={WarningIcon} size={12} color={theme.danger} />
-    </View>
+    <SvgIcon
+      icon={WarningIcon}
+      style={{ ...defaultStyle({ theme, size }), ...style }}
+      size={size}
+      color={theme.danger}
+    />
   );
 }
