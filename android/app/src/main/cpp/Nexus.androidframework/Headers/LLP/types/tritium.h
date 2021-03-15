@@ -182,6 +182,10 @@ namespace LLP
     public:
 
         /** Mutex for connected sessions. **/
+        static std::mutex CLIENT_MUTEX;
+
+
+        /** Mutex for connected sessions. **/
         static std::mutex SESSIONS_MUTEX;
 
 
@@ -215,6 +219,10 @@ namespace LLP
 
         /** The block height at the start of the last sync session **/
         static std::atomic<uint32_t> nSyncStart;
+
+
+        /** The block height at the end of the last sync session **/
+        static std::atomic<uint32_t> nSyncStop;
 
 
         /** Tracks the time taken to synchronize  **/
@@ -314,7 +322,7 @@ namespace LLP
 
 
         /** This node's address, as seen by the peer **/
-        static LLP::BaseAddress thisAddress;
+        static memory::atomic<LLP::BaseAddress> addrThis;
 
 
         /** Event
