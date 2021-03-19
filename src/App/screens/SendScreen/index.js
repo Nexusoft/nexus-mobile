@@ -117,13 +117,14 @@ function useEndReached() {
 export default function SendScreen({ route }) {
   const theme = useTheme();
   const account = route.params?.account;
+  const sendTo = route.params?.sendTo;
   const { endReached, scrollViewProps } = useEndReached();
 
   return (
     <Formik
       initialValues={{
         amount: '',
-        nameOrAddress: '',
+        nameOrAddress: sendTo || '',
         reference: '',
       }}
       validationSchema={yup.object().shape({
