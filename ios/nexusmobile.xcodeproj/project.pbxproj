@@ -11,6 +11,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
+		6A1EC0282609882D005931AC /* RCTHTTPRequestHandler+acceptSelfSign.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1EC0272609882D005931AC /* RCTHTTPRequestHandler+acceptSelfSign.m */; };
 		6A668604251AC7B900901D27 /* nexus-mobile-library.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A668603251AC7B900901D27 /* nexus-mobile-library.framework */; };
 		6A83CA56253E4F1000F455C1 /* NexusCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A83CA55253E4F1000F455C1 /* NexusCore.m */; };
 		6AECDE8C2511442C00834A71 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AECDE842511442B00834A71 /* libssl.a */; };
@@ -43,6 +44,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = nexusmobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = main.m; path = nexusmobile/main.m; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-nexusmobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nexusmobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A1EC0272609882D005931AC /* RCTHTTPRequestHandler+acceptSelfSign.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RCTHTTPRequestHandler+acceptSelfSign.m"; sourceTree = "<group>"; };
 		6A668603251AC7B900901D27 /* nexus-mobile-library.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "nexus-mobile-library.framework"; sourceTree = "<group>"; };
 		6A83CA55253E4F1000F455C1 /* NexusCore.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = NexusCore.m; path = nexusmobile/NexusCore.m; sourceTree = "<group>"; };
 		6A83CA57253E4F4800F455C1 /* NexusCore.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = NexusCore.h; path = nexusmobile/NexusCore.h; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				6A1EC0272609882D005931AC /* RCTHTTPRequestHandler+acceptSelfSign.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -307,6 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				6A1EC0282609882D005931AC /* RCTHTTPRequestHandler+acceptSelfSign.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				6A83CA56253E4F1000F455C1 /* NexusCore.m in Sources */,
 				6AECDE8D2511442C00834A71 /* entrypoint.cpp in Sources */,
