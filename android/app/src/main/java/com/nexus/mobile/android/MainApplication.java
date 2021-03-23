@@ -2,32 +2,22 @@ package com.nexus.mobile.android;
 
 import android.app.Application;
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import com.rnfs.RNFSPackage;
-import com.ocetnik.timer.BackgroundTimerPackage;
+import com.facebook.react.modules.network.OkHttpClientProvider;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.nexus.mobile.android.generated.BasePackageList;
 
-import org.unimodules.adapters.react.ReactAdapterPackage;
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
 import org.unimodules.adapters.react.ReactModuleRegistryProvider;
-import org.unimodules.core.interfaces.Package;
-import org.unimodules.core.interfaces.SingletonModule;
-import expo.modules.constants.ConstantsPackage;
-import expo.modules.permissions.PermissionsPackage;
-import expo.modules.filesystem.FileSystemPackage;
+
 import expo.modules.updates.UpdatesController;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -88,7 +78,8 @@ public class MainApplication extends Application implements ReactApplication {
     if (!BuildConfig.DEBUG) {
       UpdatesController.initialize(this);
     }
-
+    // Install the Self Signed Cert override as the default Http Client
+    OkHttpClientProvider.setOkHttpClientFactory(new localhostClientFactory());
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 
