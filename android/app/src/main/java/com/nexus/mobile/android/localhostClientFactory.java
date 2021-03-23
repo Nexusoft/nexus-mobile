@@ -19,14 +19,14 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 
-
+// This file will implement the Android Http Client but accepting valid Self Signed Certs with no Master CA. 
 // Based off: https://stackoverflow.com/a/60116643
 public class localhostClientFactory implements OkHttpClientFactory {
-    private static final String TAG = "OkHttpClientFactory";
+    private static final String TAG = "NEXUS::LOCALHOST::OkHttpClientFactory";
     @Override
     public OkHttpClient createNewNetworkModuleClient() {
         try {
-            // Create a trust manager that does not validate certificate chains
+            // Create a new trust manager
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override

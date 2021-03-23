@@ -78,6 +78,7 @@ public class MainApplication extends Application implements ReactApplication {
     if (!BuildConfig.DEBUG) {
       UpdatesController.initialize(this);
     }
+    // Install the Self Signed Cert override as the default Http Client
     OkHttpClientProvider.setOkHttpClientFactory(new localhostClientFactory());
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
