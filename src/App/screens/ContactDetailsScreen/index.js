@@ -215,58 +215,61 @@ export default function ContactDetailsScreen({ navigation, route }) {
   const [editing, setEditing] = React.useState(false);
   const [selectingAccount, setSelectingAccount] = React.useState(false);
   const contact = route.params?.contact;
+
   return (
-    <ScreenBody style={styles.wrapper}>
-      {editing ? (
-        <Formik
-          initialValues={{
-            name: contact.name || '',
-            address: contact.address || '',
-          }}
-          validationSchema={yup.object().shape({
-            name: yup.string().required('Required!'),
-            address: yup.string().required('Required!'),
-          })}
-          onSubmit={async ({ name, address }) => {
-            try {
-              await updateContact(contact.name, { name, address });
-              navigation.setParams({ contact: { name, address } });
-              setEditing(false);
-            } catch (err) {
-              showError(err && err.message);
-            }
-          }}
-        >
-          {(props) => (
-            <EditMode
-              {...props}
-              endEditing={() => {
+    !!contact && (
+      <ScreenBody style={styles.wrapper}>
+        {editing ? (
+          <Formik
+            initialValues={{
+              name: contact.name || '',
+              address: contact.address || '',
+            }}
+            validationSchema={yup.object().shape({
+              name: yup.string().required('Required!'),
+              address: yup.string().required('Required!'),
+            })}
+            onSubmit={async ({ name, address }) => {
+              try {
+                await updateContact(contact.name, { name, address });
+                navigation.setParams({ contact: { name, address } });
                 setEditing(false);
-              }}
-            />
-          )}
-        </Formik>
-      ) : (
-        <DetailsMode
-          startEditing={() => {
-            setEditing(true);
+              } catch (err) {
+                showError(err && err.message);
+              }
+            }}
+          >
+            {(props) => (
+              <EditMode
+                {...props}
+                endEditing={() => {
+                  setEditing(false);
+                }}
+              />
+            )}
+          </Formik>
+        ) : (
+          <DetailsMode
+            startEditing={() => {
+              setEditing(true);
+            }}
+            selectAccount={() => {
+              setSelectingAccount(true);
+            }}
+          />
+        )}
+        <AccountSelector
+          visible={selectingAccount}
+          onDismiss={() => {
+            setSelectingAccount(false);
           }}
-          selectAccount={() => {
-            setSelectingAccount(true);
+          onSelectAccount={(account) => {
+            setSelectingAccount(false);
+            navigate('Send', { account, sendTo: contact.address });
           }}
         />
-      )}
-      <AccountSelector
-        visible={selectingAccount}
-        onDismiss={() => {
-          setSelectingAccount(false);
-        }}
-        onSelectAccount={(account) => {
-          setSelectingAccount(false);
-          navigate('Send', { account });
-        }}
-      />
-    </ScreenBody>
+      </ScreenBody>
+    )
   );
 }
 

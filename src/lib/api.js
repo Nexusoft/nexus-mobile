@@ -11,7 +11,7 @@ function getConfig() {
     const embeddedPassword = selectSetting('embeddedPassword')(state);
     return {
       ip: 'localhost',
-      port: '8080',
+      port: '7080',
       user: embeddedUser,
       password: embeddedPassword,
     };
@@ -33,9 +33,10 @@ function getConfig() {
 
 export async function callAPI(endpoint, params) {
   const config = getConfig();
-  const baseUrl = `http://${config.ip}:${config.port}`;
+  const baseUrl = `https://${config.ip}:${config.port}`;
   const response = await fetch(`${baseUrl}/${endpoint}`, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Basic ' + encode(`${config.user}:${config.password}`),

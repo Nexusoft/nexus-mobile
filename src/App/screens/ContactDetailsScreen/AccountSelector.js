@@ -54,7 +54,7 @@ export default function AccountSelector({ onSelectAccount, ...rest }) {
             style={styles.wrapper}
             data={accounts}
             ItemSeparatorComponent={() => <Divider inset={24} />}
-            keyExtractor={(contact) => contact.name}
+            keyExtractor={(contact) => contact.address}
             renderItem={({ item: account }) => (
               <TouchableRipple
                 onPress={() => {
