@@ -5,7 +5,6 @@
     "android": "npx react-native run-android",
     "ios": "npx react-native run-ios",
     "web": "expo start --web",
-    "postinstall": "patch-package",
     "test": "jest --watchAll"
   },
   "jest": {
@@ -31,7 +30,6 @@
     "formik": "^2.2.6",
     "intl": "^1.2.5",
     "moment": "^2.29.1",
-    "patch-package": "^6.4.7",
     "react": "~17.0.1",
     "react-dom": "~17.0.1",
     "react-native": "~0.63.4",
