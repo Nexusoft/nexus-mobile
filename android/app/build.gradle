@@ -133,8 +133,11 @@ def genVersionName = "${versionMajor}.${versionMinor}.${versionPatch}-${buildNum
 
 
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def openSSLDir = properties.getProperty('openssl.dir')
+def openSSLDir = null
+if (project.rootProject.file("local.properties").exists()) {
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+    openSSLDir = properties.getProperty('openssl.dir')
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
