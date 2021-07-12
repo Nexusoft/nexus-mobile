@@ -15,8 +15,9 @@ export async function loadTransactions({ reload } = { reload: false }) {
   const store = getStore();
   const {
     user: {
-      transactions: { filter, transactions: currentTransactions },
+      transactions: { transactions: currentTransactions },
     },
+    ui: { transactionsFilter },
   } = store.getState();
   const offset = reload ? 0 : currentTransactions.length;
 
