@@ -33,21 +33,25 @@ export default (state = initialState, action) => {
         },
       };
 
-    case TYPE.START_FETCHING_TXS:
+    case TYPE.START_FETCHING_TXS: {
+      const { reload } = action.payload;
       return {
         ...state,
         loading: true,
-        loaded: action.payload.reload ? 'none' : state.loaded,
-        transactions: action.payload.reload ? [] : state.transactions,
+        loaded: reload ? 'none' : state.loaded,
+        transactions: reload ? [] : state.transactions,
       };
+    }
 
-    case TYPE.FETCH_TXS_RESULT:
+    case TYPE.FETCH_TXS_RESULT: {
+      const { transactions, loadedAll } = action.payload;
       return {
         ...state,
         loading: false,
-        loaded: action.payload.loadedAll ? 'all' : 'partly',
-        transactions: action.payload.transactions,
+        loaded: loadedAll ? 'all' : 'partly',
+        transactions: [...transactions, state.transactions],
       };
+    }
 
     case TYPE.STOP_FETCHING_TXS:
       return {

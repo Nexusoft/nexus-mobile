@@ -14,29 +14,40 @@ const limit = 20;
 export async function loadTransactions({ reload } = { reload: false }) {
   const store = getStore();
   const {
-    transactions: { txMap },
-  } = store.getState();
-  const loadedTransactions = Object.values(txMap);
-  const offset = reload ? 0 : loadedTransactions.length;
-
-  const transactions = await callAPI('users/list/transactions', {
-    verbose: 'summary',
-    limit,
-    offset,
-  });
-  store.dispatch({
-    type: reload ? TYPE.RELOAD_TRANSACTIONS : TYPE.ADD_TRANSACTIONS,
-    payload: {
-      list: transactions,
-      endReached: transactions.length < limit,
+    user: {
+      transactions: { filter, transactions: currentTransactions },
     },
-  });
+  } = store.getState();
+  const offset = reload ? 0 : currentTransactions.length;
 
-  transactions.forEach((tx) => {
-    if (!isConfirmed(tx)) {
-      watchTransaction({ txid: tx.txid });
-    }
+  store.dispatch({
+    type: TYPE.START_FETCHING_TXS,
+    payload: { reload },
   });
+  try {
+    const transactions = await callAPI('users/list/transactions', {
+      verbose: 'summary',
+      limit,
+      offset,
+    });
+    store.dispatch({
+      type: TYPE.FETCH_TXS_RESULT,
+      payload: {
+        reload,
+        transactions,
+        loadedAll: transactions.length < limit,
+      },
+    });
+    transactions.forEach((tx) => {
+      if (!isConfirmed(tx)) {
+        watchTransaction({ txid: tx.txid });
+      }
+    });
+  } catch (err) {
+    store.dispatch({
+      type: TYPE.STOP_FETCHING_TXS,
+    });
+  }
 }
 
 // Obsolete
