@@ -10,6 +10,14 @@ import formatNumber from 'utils/formatNumber';
 
 export const isConfirmed = (tx) => !!tx.confirmations;
 
+function watchIfUnconfirmed(transactions) {
+  transactions?.forEach((tx) => {
+    if (!isConfirmed(tx)) {
+      watchTransaction({ txid: tx.txid });
+    }
+  });
+}
+
 const limit = 20;
 export async function loadTransactions({ reload } = { reload: false }) {
   const store = getStore();
@@ -39,11 +47,7 @@ export async function loadTransactions({ reload } = { reload: false }) {
         loadedAll: transactions.length < limit,
       },
     });
-    transactions.forEach((tx) => {
-      if (!isConfirmed(tx)) {
-        watchTransaction({ txid: tx.txid });
-      }
-    });
+    watchIfUnconfirmed(transactions);
   } catch (err) {
     store.dispatch({
       type: TYPE.STOP_FETCHING_TXS,
@@ -156,12 +160,9 @@ export function watchNewTransactions() {
             list: transactions,
           },
         });
+        watchIfUnconfirmed(transactions);
 
         transactions.forEach((tx) => {
-          if (!isConfirmed(tx)) {
-            watchTransaction({ txid: tx.txid });
-          }
-
           const changes = getBalanceChanges(tx);
           if (changes.length) {
             const changeLines = changes.map(
