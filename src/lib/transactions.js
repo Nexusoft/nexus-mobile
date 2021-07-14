@@ -10,10 +10,64 @@ import formatNumber from 'utils/formatNumber';
 
 export const isConfirmed = (tx) => !!tx.confirmations;
 
+let watchedIds = [];
+let unsubscribe = null;
+function startWatcher() {
+  unsubscribe = observeStore(
+    (state) => state,
+    async (state, oldState) => {
+      // Clear watcher if user is logged out or core is disconnected or user is switched
+      const genesis = state.user.status?.genesis;
+      const oldGenesis = oldState.user.status?.genesis;
+      if (!isLoggedIn(state) || genesis !== oldGenesis) {
+        unsubscribe?.();
+        unsubscribe = null;
+        watchedIds = [];
+      }
+
+      // Only refetch transaction each time there is a new block
+      const blocks = state.core.info?.blocks;
+      const oldBlocks = oldState.core.info?.blocks;
+      if (!blocks || blocks === oldBlocks) return;
+
+      // Fetch the updated transaction info
+      const transactions = await Promise.all([
+        watchedIds.map((txid) => fetchTransaction({ txid })),
+      ]);
+
+      for (const tx of transactions) {
+        if (isConfirmed(tx)) {
+          unwatchTransaction(tx.txid);
+          // Reload the account list
+          // so that the account balances (available & unconfirmed) are up-to-date
+          loadAccounts();
+        }
+      }
+    }
+  );
+}
+
+function watchTransaction(txid) {
+  if (!watchedIds.includes(txid)) {
+    watchedIds.push(txid);
+  }
+  if (!unsubscribe) {
+    startWatcher();
+  }
+}
+
+function unwatchTransaction(txid) {
+  watchedIds = watchedIds.filter((id) => id !== txid);
+  if (!watchedIds.length) {
+    unsubscribe?.();
+    unsubscribe = null;
+  }
+}
+
 function watchIfUnconfirmed(transactions) {
   transactions?.forEach((tx) => {
     if (!isConfirmed(tx)) {
-      watchTransaction({ txid: tx.txid });
+      watchTransaction(tx.txid);
     }
   });
 }
@@ -117,23 +171,6 @@ export async function fetchTransaction({ txid, where, limit }) {
     });
   }
   return tx;
-}
-
-function watchTransaction({ txid, where }) {
-  // Update everytime a new block is received
-  const unsubscribe = getStore().observe(
-    ({ core: { info } }) => info?.blocks,
-    async (blocks) => {
-      if (!blocks) return;
-      const tx = await fetchTransaction({ txid, where });
-      if (tx && isConfirmed(tx)) {
-        unsubscribe();
-        // Reload the account list
-        // so that the account balances (available & unconfirmed) are up-to-date
-        refreshUserAccounts();
-      }
-    }
-  );
 }
 
 export function watchNewTransactions() {
