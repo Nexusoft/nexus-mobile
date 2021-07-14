@@ -40,7 +40,7 @@ function startWatcher() {
           unwatchTransaction(tx.txid);
           // Reload the account list
           // so that the account balances (available & unconfirmed) are up-to-date
-          loadAccounts();
+          refreshUserAccounts();
         }
       }
     }
@@ -123,6 +123,75 @@ export async function loadTransactions({ reload } = { reload: false }) {
 //   });
 // }
 
+const getThresholdDate = (timeSpan) => {
+  const now = new Date();
+  switch (timeSpan) {
+    case 'week':
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+    case 'month':
+      return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+    case 'year':
+      return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+    default:
+      return null;
+  }
+};
+
+function filterTransactions(transactions) {
+  const {
+    ui: {
+      transactionsFilter: { accountQuery, tokenQuery, operation, timeSpan },
+    },
+    user: {
+      transactions: { loading, loaded },
+    },
+  } = store.getState();
+  if (loading || loaded === 'none' || !transactions) return [];
+
+  return transactions.filter((tx) => {
+    if (timeSpan) {
+      const pastDate = getThresholdDate(timeSpan);
+      if (pastDate && tx.timestamp * 1000 < pastDate.getTime()) {
+        return false;
+      }
+    }
+    if (
+      operation &&
+      !tx.contracts.some((contract) => contract.OP === operation)
+    ) {
+      return false;
+    }
+    if (
+      accountQuery &&
+      !tx.contracts.some(
+        (contract) =>
+          contract.from_name?.includes(accountQuery) ||
+          contract.from?.includes(accountQuery) ||
+          contract.to_name?.includes(accountQuery) ||
+          contract.to?.includes(accountQuery) ||
+          contract.account_name?.includes(accountQuery) ||
+          contract.account?.includes(accountQuery) ||
+          contract.destination?.includes(accountQuery) ||
+          contract.address?.includes(accountQuery)
+      )
+    ) {
+      return false;
+    }
+    if (
+      tokenQuery &&
+      !tx.contracts.some(
+        (contract) =>
+          contract.token_name?.includes(tokenQuery) ||
+          contract.token?.includes(tokenQuery)
+      )
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+}
+
 const getBalanceChanges = (tx) =>
   tx.contracts
     ? tx.contracts.reduce((changes, contract) => {
@@ -191,13 +260,6 @@ export function watchNewTransactions() {
           verbose: 'summary',
           limit: txCount - oldTxCount,
         });
-        getStore().dispatch({
-          type: TYPE.ADD_TRANSACTIONS,
-          payload: {
-            list: transactions,
-          },
-        });
-        watchIfUnconfirmed(transactions);
 
         transactions.forEach((tx) => {
           const changes = getBalanceChanges(tx);
@@ -221,6 +283,15 @@ export function watchNewTransactions() {
             }
           }
         });
+
+        const filteredTransactions = filterTransactions(transactions);
+        if (filteredTransactions.length) {
+          getStore().dispatch({
+            type: TYPE.ADD_TRANSACTIONS,
+            payload: filteredTransactions,
+          });
+          watchIfUnconfirmed(filteredTransactions);
+        }
       }
     }
   );
