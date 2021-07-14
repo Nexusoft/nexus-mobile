@@ -34,6 +34,26 @@ export default (state = initialState, action) => {
         loading: false,
       };
 
+    case TYPE.UPDATE_TRANSACTION:
+      if (loaded !== 'none') {
+        return {
+          ...state,
+          transactions: [action.payload, ...state.transactions],
+        };
+      } else {
+        return state;
+      }
+
+    case TYPE.ADD_TRANSACTIONS:
+      if (loaded !== 'none') {
+        return {
+          ...state,
+          transactions: [...action.payload, ...state.transactions],
+        };
+      } else {
+        return state;
+      }
+
     case TYPE.DISCONNECT_CORE:
     case TYPE.LOGOUT:
       return initialState;
