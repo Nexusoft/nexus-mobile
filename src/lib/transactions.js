@@ -72,7 +72,46 @@ function watchIfUnconfirmed(transactions) {
   });
 }
 
-const limit = 20;
+function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
+  const queries = [];
+  if (timeSpan) {
+    const pastDate = getThresholdDate(timeSpan);
+    if (pastDate) {
+      queries.push(`object.timespan>${pastDate.getTime() / 1000}`);
+    }
+  }
+  if (operation) {
+    queries.push(`object.contracts.OP=${operation}`);
+  }
+  if (tokenQuery) {
+    const buildTokenQuery = (field) =>
+      `object.contracts.${field}=*${tokenQuery}*`;
+    const tokenQueries = [
+      buildTokenQuery('token'),
+      buildTokenQuery('token_name'),
+    ];
+    queries.push(`(${tokenQueries.join(' OR ')})`);
+  }
+  if (accountQuery) {
+    const buildAccountQuery = (field) =>
+      `object.contracts.${field}=*${accountQuery}*`;
+    const accountQueries = [
+      buildAccountQuery('from'),
+      buildAccountQuery('from_name'),
+      buildAccountQuery('to'),
+      buildAccountQuery('to_name'),
+      buildAccountQuery('account'),
+      buildAccountQuery('account_name'),
+      buildAccountQuery('destination'),
+      buildAccountQuery('address'),
+    ];
+    queries.push(`(${accountQueries.join(' OR ')})`);
+  }
+
+  return queries.join(' AND ') || undefined;
+}
+
+const txCountPerPage = 20;
 export async function loadTransactions({ reload } = { reload: false }) {
   const store = getStore();
   const {
@@ -88,11 +127,16 @@ export async function loadTransactions({ reload } = { reload: false }) {
     payload: { reload },
   });
   try {
-    const transactions = await callAPI('users/list/transactions', {
+    const params = {
       verbose: 'summary',
-      limit,
+      limit: txCountPerPage,
       offset,
-    });
+    };
+    const query = buildQuery(transactionsFilter);
+    if (query) {
+      params.where = query;
+    }
+    const transactions = await callAPI('users/list/transactions', params);
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
