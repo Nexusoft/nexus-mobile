@@ -13,7 +13,7 @@ export default (state = initialState, action) => {
     case TYPE.TOGGLE_TXS_FILTER:
       return {
         ...state,
-        open: !state.txFilterOpen,
+        open: !state.open,
       };
 
     case TYPE.UPDATE_TRANSACTIONS_FILTER:

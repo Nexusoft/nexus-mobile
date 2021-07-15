@@ -8,6 +8,7 @@ import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Select from 'components/Select';
 import { toggleTransactionsFilter } from 'lib/ui';
+import { updateFilter } from 'lib/transactions';
 import { fade } from 'utils/color';
 
 const operations = [
@@ -28,7 +29,7 @@ const operations = [
 
 const opOptions = [
   {
-    value: 'all',
+    value: null,
     display: (
       <Text bold colorName="">
         All
@@ -43,7 +44,7 @@ const opOptions = [
 
 const timeOptions = [
   {
-    value: 'all',
+    value: null,
     display: (
       <Text bold colorName="">
         All
@@ -105,7 +106,13 @@ function FilterText(props) {
 }
 
 export default function Filters() {
-  const filterOpen = useSelector((state) => state.ui.txFilterOpen);
+  const {
+    open: filterOpen,
+    operation,
+    timeSpan,
+    accountQuery,
+    tokenQuery,
+  } = useSelector((state) => state.ui.transactionsFilter.open);
   const [op, setOp] = React.useState('all');
   const [time, setTime] = React.useState('all');
   const theme = useTheme();
@@ -115,8 +122,8 @@ export default function Filters() {
       <View style={styles.selectLine}>
         <Select
           options={opOptions}
-          value={op}
-          updateValue={setOp}
+          value={operation}
+          updateValue={(operation) => updateFilter({ operation })}
           render={({ display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
               <View style={styles.filterSelect}>
@@ -130,8 +137,8 @@ export default function Filters() {
         />
         <Select
           options={timeOptions}
-          value={time}
-          updateValue={setTime}
+          value={timeSpan}
+          updateValue={(timeSpan) => updateFilter({ timeSpan })}
           render={({ display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
               <View style={styles.filterSelect}>
@@ -149,22 +156,24 @@ export default function Filters() {
         style={styles.filterInput}
         background={theme.dark ? 'background' : 'primary'}
         dense
-        label="Account/token name"
+        label="Account name/address"
+        value={accountQuery}
+        onChangeText={(accountQuery) => updateFilter({ accountQuery })}
       />
       <TextBox
         style={styles.filterInput}
         background={theme.dark ? 'background' : 'primary'}
         dense
-        label="Account/token address"
+        label="Token name/address"
+        value={tokenQuery}
+        onChangeText={(tokenQuery) => updateFilter({ tokenQuery })}
       />
 
       <Button
         style={styles.apply}
         mode={theme.dark ? 'outlined' : 'contained'}
         color={theme.dark ? undefined : fade(theme.onPrimary, 0.2)}
-        onPress={() => {
-          toggleTransactionsFilter();
-        }}
+        onPress={toggleTransactionsFilter}
         labelStyle={{ fontSize: 12 }}
       >
         Apply filter

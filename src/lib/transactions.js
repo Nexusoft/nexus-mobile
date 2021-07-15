@@ -242,6 +242,13 @@ export async function fetchTransaction({ txid, where, limit }) {
   return tx;
 }
 
+export function updateFilter(updates) {
+  store.dispatch({
+    type: TYPE.UPDATE_TRANSACTIONS_FILTER,
+    payload: updates,
+  });
+}
+
 export function watchNewTransactions() {
   getStore().observe(
     (state) => state,
