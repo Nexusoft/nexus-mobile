@@ -8,43 +8,22 @@ import ScreenBody from 'components/ScreenBody';
 import Divider from 'components/Divider';
 // import SvgIcon from 'components/SvgIcon';
 import { loadTransactions } from 'lib/transactions';
-import { toggleTransactionsFilter } from 'lib/ui';
-import memoize from 'utils/memoize';
 import useRefresh from 'utils/useRefresh';
 import TransactionIcon from 'icons/transaction.svg';
 // import AdjustIcon from 'icons/adjust.svg';
 // import Filters from './Filters';
 import Transaction from './Transaction';
 
-const selectTransactions = memoize(
-  (txMap) =>
-    Object.values(txMap).sort((tx1, tx2) => tx2.timestamp - tx1.timestamp),
-  (state) => [state?.transactions.txMap]
-);
-
-function useLoadMore() {
-  const [loading, setLoading] = React.useState(false);
-  const loadMore = React.useCallback(async () => {
-    setLoading(true);
-    try {
-      await loadTransactions();
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-  return [loading, loadMore];
-}
-
 export default function TransactionsScreen() {
-  const loadedAll = useSelector((state) => state.transactions.loadedAll);
-  const transactions = useSelector(selectTransactions);
+  const { transactions, loading, loaded } = useSelector(
+    (state) => state.user.transactions
+  );
   const [refreshing, refresh] = useRefresh(() =>
     loadTransactions({ reload: true })
   );
-  const [loadingMore, loadMore] = useLoadMore();
   React.useEffect(() => {
-    if (!transactions.length && !loadedAll) {
-      loadMore();
+    if (loaded === 'none') {
+      loadTransactions();
     }
   }, []);
   return (
@@ -57,10 +36,10 @@ export default function TransactionsScreen() {
         ItemSeparatorComponent={Divider}
         keyExtractor={(tx) => tx.txid}
         renderItem={({ item }) => <Transaction transaction={item} />}
-        onEndReached={loadedAll ? undefined : loadMore}
+        onEndReached={loaded === 'all' ? undefined : loadTransactions}
         onEndReachedThreshold={0.1}
       />
-      {loadingMore && <ActivityIndicator />}
+      {loading && <ActivityIndicator />}
     </ScreenBody>
   );
 }
