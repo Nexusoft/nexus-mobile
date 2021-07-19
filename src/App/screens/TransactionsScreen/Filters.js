@@ -109,8 +109,6 @@ export default function Filters() {
   const { open, operation, timeSpan, accountQuery, tokenQuery } = useSelector(
     (state) => state.ui.transactionsFilter.open
   );
-  const [op, setOp] = React.useState('all');
-  const [time, setTime] = React.useState('all');
   const theme = useTheme();
 
   return (
