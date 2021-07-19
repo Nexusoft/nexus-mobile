@@ -106,19 +106,15 @@ function FilterText(props) {
 }
 
 export default function Filters() {
-  const {
-    open: filterOpen,
-    operation,
-    timeSpan,
-    accountQuery,
-    tokenQuery,
-  } = useSelector((state) => state.ui.transactionsFilter.open);
+  const { open, operation, timeSpan, accountQuery, tokenQuery } = useSelector(
+    (state) => state.ui.transactionsFilter.open
+  );
   const [op, setOp] = React.useState('all');
   const [time, setTime] = React.useState('all');
   const theme = useTheme();
 
   return (
-    <View style={styles.wrapper({ theme, expanded: filterOpen })}>
+    <View style={styles.wrapper({ theme, expanded: open })}>
       <View style={styles.selectLine}>
         <Select
           options={opOptions}

@@ -11,7 +11,7 @@ import { loadTransactions } from 'lib/transactions';
 import useRefresh from 'utils/useRefresh';
 import TransactionIcon from 'icons/transaction.svg';
 // import AdjustIcon from 'icons/adjust.svg';
-// import Filters from './Filters';
+import Filters from './Filters';
 import Transaction from './Transaction';
 
 export default function TransactionsScreen() {
@@ -28,7 +28,7 @@ export default function TransactionsScreen() {
   }, []);
   return (
     <ScreenBody surface scroll={false}>
-      {/* <Filters /> */}
+      <Filters />
       <FlatList
         refreshing={refreshing}
         onRefresh={refresh}
@@ -50,26 +50,25 @@ TransactionsScreen.nav = ({ txFilterOpen }) => ({
   stackOptions: {
     title: 'Transactions',
     headerTitle: 'Transactions',
-    // headerTitleAlign: 'left',
-    headerRight: undefined,
-    // ({ tintColor }) => (
-    //   <IconButton
-    //     icon={({ size }) => (
-    //       <SvgIcon icon={AdjustIcon} size={size} color={tintColor} />
-    //     )}
-    //     color={tintColor}
-    //     size={25}
-    //     onPress={() => {
-    //       toggleTransactionsFilter();
-    //     }}
-    //   />
-    // ),
+    headerTitleAlign: 'left',
+    headerRight: ({ tintColor }) => (
+      <IconButton
+        icon={({ size }) => (
+          <SvgIcon icon={AdjustIcon} size={size} color={tintColor} />
+        )}
+        color={tintColor}
+        size={25}
+        onPress={() => {
+          toggleTransactionsFilter();
+        }}
+      />
+    ),
   },
-  // listeners: {
-  //   blur: () => {
-  //     if (txFilterOpen) {
-  //       toggleTransactionsFilter();
-  //     }
-  //   },
-  // },
+  listeners: {
+    blur: () => {
+      if (txFilterOpen) {
+        toggleTransactionsFilter();
+      }
+    },
+  },
 });
