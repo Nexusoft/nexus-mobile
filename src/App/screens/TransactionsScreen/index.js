@@ -1,16 +1,16 @@
 import React from 'react';
 import { FlatList } from 'react-native';
-// import { IconButton } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import ScreenBody from 'components/ScreenBody';
 import Divider from 'components/Divider';
-// import SvgIcon from 'components/SvgIcon';
+import SvgIcon from 'components/SvgIcon';
 import { loadTransactions } from 'lib/transactions';
 import useRefresh from 'utils/useRefresh';
 import TransactionIcon from 'icons/transaction.svg';
-// import AdjustIcon from 'icons/adjust.svg';
+import AdjustIcon from 'icons/adjust.svg';
 import Filters from './Filters';
 import Transaction from './Transaction';
 
