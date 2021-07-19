@@ -10,6 +10,7 @@ import Select from 'components/Select';
 import { toggleTransactionsFilter } from 'lib/ui';
 import { updateFilter } from 'lib/transactions';
 import { fade } from 'utils/color';
+import debounced from 'utils/debounced';
 
 const operations = [
   'APPEND',
@@ -98,6 +99,15 @@ const styles = {
   },
 };
 
+const updateAccountQuery = debounced(
+  (accountQuery) => updateFilter({ accountQuery }),
+  1000
+);
+const updateTokenQuery = debounced(
+  (tokenQuery) => updateFilter({ tokenQuery }),
+  1000
+);
+
 function FilterText(props) {
   const theme = useTheme();
   return (
@@ -152,7 +162,7 @@ export default function Filters() {
         dense
         label="Account name/address"
         value={accountQuery}
-        onChangeText={(accountQuery) => updateFilter({ accountQuery })}
+        onChangeText={updateAccountQuery}
       />
       <TextBox
         style={styles.filterInput}
@@ -160,7 +170,7 @@ export default function Filters() {
         dense
         label="Token name/address"
         value={tokenQuery}
-        onChangeText={(tokenQuery) => updateFilter({ tokenQuery })}
+        onChangeText={updateTokenQuery}
       />
 
       <Button
