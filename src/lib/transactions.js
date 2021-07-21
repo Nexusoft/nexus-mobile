@@ -142,7 +142,7 @@ export async function loadTransactions({ reload } = { reload: false }) {
       payload: {
         reload,
         transactions,
-        loadedAll: transactions.length < limit,
+        loadedAll: transactions.length < txCountPerPage,
       },
     });
     watchIfUnconfirmed(transactions);
