@@ -75,6 +75,7 @@ export default function SendTo({ account, setFieldValue }) {
           background={['surface', 2]}
           label={`Amount (${TokenName.from({ account })})`}
           keyboardType="numeric"
+          autoCapitalize="none"
         />
         <Button
           mode="text"
