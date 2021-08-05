@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         loaded: loadedAll ? 'all' : 'partly',
-        transactions: [...transactions, state.transactions],
+        transactions: [...transactions, ...state.transactions],
       };
     }
 
@@ -34,15 +34,21 @@ export default (state = initialState, action) => {
         loading: false,
       };
 
-    case TYPE.UPDATE_TRANSACTION:
+    case TYPE.UPDATE_TRANSACTION: {
       if (loaded !== 'none') {
-        return {
-          ...state,
-          transactions: [action.payload, ...state.transactions],
-        };
-      } else {
-        return state;
+        const txid = action.payload?.txid;
+        const index = state.transactions.findIndex((tx) => tx.txid === txid);
+        if (txid && index >= 0) {
+          const newTransactions = [...state.transactions];
+          newTransactions.splice(index, 1, action.payload);
+          return {
+            ...state,
+            transactions: newTransactions,
+          };
+        }
       }
+      return state;
+    }
 
     case TYPE.ADD_TRANSACTIONS:
       if (loaded !== 'none') {
