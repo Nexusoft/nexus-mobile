@@ -8,6 +8,7 @@ import ScreenBody from 'components/ScreenBody';
 import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import { loadTransactions } from 'lib/transactions';
+import { toggleTransactionsFilter } from 'lib/ui';
 import useRefresh from 'utils/useRefresh';
 import TransactionIcon from 'icons/transaction.svg';
 import AdjustIcon from 'icons/adjust.svg';
@@ -47,7 +48,7 @@ export default function TransactionsScreen() {
 TransactionsScreen.nav = ({ txFilterOpen }) => ({
   name: 'Transactions',
   icon: TransactionIcon,
-  stackOptions: {
+  options: {
     title: 'Transactions',
     headerTitle: 'Transactions',
     headerTitleAlign: 'left',
