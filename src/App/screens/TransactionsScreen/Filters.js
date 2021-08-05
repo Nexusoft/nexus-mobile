@@ -117,7 +117,7 @@ function FilterText(props) {
 
 export default function Filters() {
   const { open, operation, timeSpan, accountQuery, tokenQuery } = useSelector(
-    (state) => state.ui.transactionsFilter.open
+    (state) => state.ui.transactionsFilter
   );
   const theme = useTheme();
 
