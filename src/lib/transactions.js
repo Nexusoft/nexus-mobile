@@ -189,7 +189,7 @@ function filterTransactions(transactions) {
     user: {
       transactions: { loading, loaded },
     },
-  } = store.getState();
+  } = getStore().getState();
   if (loading || loaded === 'none' || !transactions) return [];
 
   return transactions.filter((tx) => {
