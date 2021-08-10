@@ -287,7 +287,7 @@ export async function fetchTransaction({ txid, where, limit }) {
 }
 
 export function updateFilter(updates) {
-  store.dispatch({
+  getStore().dispatch({
     type: TYPE.UPDATE_TRANSACTIONS_FILTER,
     payload: updates,
   });
