@@ -7,10 +7,16 @@ import { TouchableRipple, Button, shadow } from 'react-native-paper';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Select from 'components/Select';
-import { toggleTransactionsFilter } from 'lib/ui';
+import SvgIcon from 'components/SvgIcon';
+import Divider from 'components/Divider';
+import { toggleTransactionsFilter, showOptions } from 'lib/ui';
 import { updateFilter } from 'lib/transactions';
+import { refreshUserTokens } from 'lib/user';
+import { disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
 import debounced from 'utils/debounced';
+import memoize from 'utils/memoize';
+import SelectIcon from 'icons/select.svg';
 
 const operations = [
   'APPEND',
@@ -97,6 +103,14 @@ const styles = {
   apply: {
     marginTop: 15,
   },
+  addressBox: ({ theme }) => ({
+    borderWidth: 1,
+    borderColor: disabledColor(theme.foreground),
+    borderRadius: 4,
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    marginTop: 12,
+  }),
 };
 
 const updateAccountQuery = debounced(
@@ -108,6 +122,48 @@ const updateTokenQuery = debounced(
   1000
 );
 
+const selectAccountOptions = memoize((accounts, contacts) => {
+  const accountsMap = {};
+  if (accounts) {
+    for (const account of accounts) {
+      const { address } = account;
+      if (address && !accountsMap[address]) {
+        accountsMap[address] = {
+          type: 'account',
+          address,
+          account,
+        };
+      }
+    }
+  }
+  if (contacts) {
+    for (const [name, { address }] of Object.keys(contacts)) {
+      if (address && !accountsMap[address]) {
+        accountsMap[address] = {
+          type: 'contact',
+          address,
+          name,
+        };
+      }
+    }
+  }
+  return Object.values(accountsMap).map(({ type, address, account, name }) => ({
+    value: address,
+    display:
+      type === 'account' ? (
+        <span>
+          {account.name || <em>{__('Unnamed account')}</em>}{' '}
+          <span className="dim">{address}</span>
+        </span>
+      ) : (
+        <span>
+          {name}
+          {label ? ' - ' + label : ''} <span className="dim">{address}</span>
+        </span>
+      ),
+  }));
+});
+
 function FilterText(props) {
   const theme = useTheme();
   return (
@@ -115,11 +171,30 @@ function FilterText(props) {
   );
 }
 
+function Option({ label, address }) {
+  const theme = useTheme();
+  return (
+    <View>
+      <Text bold>{label}</Text>
+      <View style={styles.addressBox({ theme })}>
+        <Text style={styles.address} mono>
+          {segmentAddress(address)}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
 export default function Filters() {
   const { open, operation, timeSpan, accountQuery, tokenQuery } = useSelector(
     (state) => state.ui.transactionsFilter
   );
+  // const accountOptions = useSelector(selectAccountOptions);
+  const tokens = useSelector((state) => state.user.tokens);
   const theme = useTheme();
+  React.useEffect(() => {
+    refreshUserTokens();
+  }, []);
 
   return (
     <View style={styles.wrapper({ theme, expanded: open })}>
@@ -171,6 +246,24 @@ export default function Filters() {
         label="Token name/address"
         value={tokenQuery}
         onChangeText={updateTokenQuery}
+        right={
+          <TouchableRipple
+            onPress={() => {
+              showOptions({
+                title: 'Select a token',
+                options: tokens,
+                renderOption: (token) => (
+                  <Option label={token.name} address={token.address} />
+                ),
+                keyExtractor: (token) => token.address,
+                ItemSeparatorComponent: Divider,
+                onSelect: (token) => updateTokenQuery(token.address),
+              });
+            }}
+          >
+            <SvgIcon size={12} icon={SelectIcon} />
+          </TouchableRipple>
+        }
       />
 
       <Button
