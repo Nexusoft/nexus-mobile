@@ -67,6 +67,7 @@ const InnerTextBox = React.forwardRef(
       value,
       onChangeText,
       style,
+      right,
       ...rest
     },
     ref
@@ -113,6 +114,7 @@ const InnerTextBox = React.forwardRef(
             </View>
           </TouchableWithoutFeedback>
         )}
+        {right}
       </View>
     );
   }
@@ -124,6 +126,7 @@ export default function TextBox({
   dense,
   clearButton = true,
   background,
+  right,
   style,
   ...rest
 }) {
@@ -149,7 +152,7 @@ export default function TextBox({
       style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
       render={(props) => (
         <InnerTextBox
-          {...{ mode, secure, dense, clearButton }}
+          {...{ mode, secure, dense, clearButton, right }}
           iconColor={adaptedTheme.foreground}
           {...props}
         />
