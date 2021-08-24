@@ -12,7 +12,7 @@ import Divider from 'components/Divider';
 import TokenName from 'components/TokenName';
 import { toggleTransactionsFilter, showOptions } from 'lib/ui';
 import { updateFilter } from 'lib/transactions';
-import { refreshUserTokens } from 'lib/user';
+import { refreshUserTokens, refreshUserAccounts } from 'lib/user';
 import { disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
 import debounced from 'utils/debounced';
@@ -165,6 +165,26 @@ const selectAccountOptions = memoize((accounts, contacts) => {
   }));
 });
 
+const selectKnownTokens = memoize(
+  (userTokens, accounts) => {
+    userTokens = userTokens || [];
+    const tokens = [{ address: '0', name: 'NXS' }, ...userTokens];
+    for (const account of accounts) {
+      if (
+        account.token !== '0' &&
+        !userTokens.some((token) => token.address === account.token)
+      ) {
+        tokens.push({
+          name: account.ticker || account.token_name,
+          address: account.token,
+        });
+      }
+    }
+    return tokens;
+  },
+  (state) => [state.user.tokens, state.user.accounts]
+);
+
 function FilterText(props) {
   const theme = useTheme();
   return (
@@ -191,10 +211,11 @@ export default function Filters() {
     (state) => state.ui.transactionsFilter
   );
   // const accountOptions = useSelector(selectAccountOptions);
-  const tokens = useSelector((state) => state.user.tokens);
+  const tokens = useSelector(selectKnownTokens);
   const theme = useTheme();
   React.useEffect(() => {
     refreshUserTokens();
+    refreshUserAccounts();
   }, []);
 
   return (
