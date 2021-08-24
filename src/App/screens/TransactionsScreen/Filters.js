@@ -15,7 +15,6 @@ import { updateFilter } from 'lib/transactions';
 import { refreshUserTokens, refreshUserAccounts } from 'lib/user';
 import { disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
-import debounced from 'utils/debounced';
 import memoize from 'utils/memoize';
 import SelectIcon from 'icons/select.svg';
 
@@ -114,15 +113,6 @@ const styles = {
   }),
 };
 
-const updateAccountQuery = debounced(
-  (accountQuery) => updateFilter({ accountQuery }),
-  1000
-);
-const updateTokenQuery = debounced(
-  (tokenQuery) => updateFilter({ tokenQuery }),
-  1000
-);
-
 const selectAccountOptions = memoize((accounts, contacts) => {
   const accountsMap = {};
   if (accounts) {
@@ -169,7 +159,7 @@ const selectKnownTokens = memoize(
   (userTokens, accounts) => {
     userTokens = userTokens || [];
     const tokens = [{ address: '0', name: 'NXS' }, ...userTokens];
-    for (const account of accounts) {
+    for (const account of accounts || []) {
       if (
         account.token !== '0' &&
         !userTokens.some((token) => token.address === account.token)
@@ -210,6 +200,8 @@ export default function Filters() {
   const { open, operation, timeSpan, accountQuery, tokenQuery } = useSelector(
     (state) => state.ui.transactionsFilter
   );
+  const [accountInput, setAccountInput] = React.useState(accountQuery);
+  const [tokenInput, setTokenInput] = React.useState(tokenQuery);
   // const accountOptions = useSelector(selectAccountOptions);
   const tokens = useSelector(selectKnownTokens);
   const theme = useTheme();
@@ -258,16 +250,22 @@ export default function Filters() {
         background={theme.dark ? 'background' : 'primary'}
         dense
         label="Account name/address"
-        value={accountQuery}
-        onChangeText={updateAccountQuery}
+        value={accountInput}
+        onChangeText={setAccountInput}
+        onEndEditing={() => {
+          updateFilter({ accountQuery: accountInput });
+        }}
       />
       <TextBox
         style={styles.filterInput}
         background={theme.dark ? 'background' : 'primary'}
         dense
         label="Token name/address"
-        value={tokenQuery}
-        onChangeText={updateTokenQuery}
+        value={tokenInput}
+        onChangeText={setTokenInput}
+        onEndEditing={() => {
+          updateFilter({ tokenQuery: tokenInput });
+        }}
         right={
           <TouchableRipple
             onPress={() => {
@@ -279,7 +277,10 @@ export default function Filters() {
                 ),
                 keyExtractor: (token) => token.address,
                 ItemSeparatorComponent: Divider,
-                onSelect: (token) => updateTokenQuery(token.address),
+                onSelect: (token) => {
+                  setTokenInput(token.address);
+                  updateFilter({ tokenQuery: token.address });
+                },
               });
             }}
           >
