@@ -2,13 +2,14 @@ import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'lib/theme';
-import { TouchableRipple, Button, shadow } from 'react-native-paper';
+import { TouchableRipple, Button, shadow, List } from 'react-native-paper';
 
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Select from 'components/Select';
 import SvgIcon from 'components/SvgIcon';
 import Divider from 'components/Divider';
+import TokenName from 'components/TokenName';
 import { toggleTransactionsFilter, showOptions } from 'lib/ui';
 import { updateFilter } from 'lib/transactions';
 import { refreshUserTokens } from 'lib/user';
@@ -253,7 +254,7 @@ export default function Filters() {
                 title: 'Select a token',
                 options: tokens,
                 renderOption: (token) => (
-                  <Option label={token.name} address={token.address} />
+                  <List.Item title={TokenName.from({ token })} />
                 ),
                 keyExtractor: (token) => token.address,
                 ItemSeparatorComponent: Divider,
