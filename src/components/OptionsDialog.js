@@ -30,7 +30,10 @@ export default function OptionsDialog({
               renderItem={({ item: option, index }) => (
                 <TouchableRipple
                   onPress={() => {
-                    onSelect?.(option);
+                    const preventClosing = onSelect?.(option);
+                    if (preventClosing !== false) {
+                      onDismiss?.();
+                    }
                   }}
                 >
                   {renderOption(option, index)}
