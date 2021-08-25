@@ -113,66 +113,57 @@ const styles = {
   }),
 };
 
-const selectAccountOptions = memoize((accounts, contacts) => {
-  const accountsMap = {};
-  if (accounts) {
-    for (const account of accounts) {
-      const { address } = account;
-      if (address && !accountsMap[address]) {
-        accountsMap[address] = {
-          type: 'account',
-          address,
-          account,
-        };
-      }
+const selectKnownTokens = memoize((userTokens, accounts) => {
+  userTokens = userTokens || [];
+  const tokens = [{ address: '0', name: 'NXS' }, ...userTokens];
+  for (const account of accounts || []) {
+    const tokenAddress = account.token;
+    if (
+      tokenAddress !== '0' &&
+      !userTokens.some((token) => token.address === tokenAddress)
+    ) {
+      tokens.push({
+        name: account.ticker || account.token_name,
+        address: tokenAddress,
+      });
     }
   }
-  if (contacts) {
-    for (const [name, { address }] of Object.keys(contacts)) {
-      if (address && !accountsMap[address]) {
-        accountsMap[address] = {
-          type: 'contact',
-          address,
-          name,
-        };
-      }
-    }
-  }
-  return Object.values(accountsMap).map(({ type, address, account, name }) => ({
-    value: address,
-    display:
-      type === 'account' ? (
-        <span>
-          {account.name || <em>{__('Unnamed account')}</em>}{' '}
-          <span className="dim">{address}</span>
-        </span>
-      ) : (
-        <span>
-          {name}
-          {label ? ' - ' + label : ''} <span className="dim">{address}</span>
-        </span>
-      ),
-  }));
+  return tokens;
 });
 
-const selectKnownTokens = memoize(
-  (userTokens, accounts) => {
-    userTokens = userTokens || [];
-    const tokens = [{ address: '0', name: 'NXS' }, ...userTokens];
-    for (const account of accounts || []) {
-      if (
-        account.token !== '0' &&
-        !userTokens.some((token) => token.address === account.token)
-      ) {
-        tokens.push({
-          name: account.ticker || account.token_name,
-          address: account.token,
-        });
-      }
+const selectContactList = memoize(
+  (contacts) =>
+    contacts &&
+    Object.entries(contacts).map(([name, { address }]) => ({ name, address }))
+);
+
+const selectAddressOptions = memoize(
+  (accounts, userTokens, contacts) => {
+    const sections = [];
+
+    if (accounts) {
+      sections.push({
+        key: 'accounts',
+        data: accounts,
+      });
     }
-    return tokens;
+
+    sections.push({
+      key: 'tokens',
+      data: selectKnownTokens(userTokens, accounts),
+    });
+
+    const contactList = selectContactList(contacts);
+    if (contactList?.length) {
+      sections.push({
+        key: 'contacts',
+        data: contactList,
+      });
+    }
+
+    return sections;
   },
-  (state) => [state.user.tokens, state.user.accounts]
+  ({ contacts, user: { tokens, accounts } }) => [accounts, tokens, contacts]
 );
 
 function FilterText(props) {
