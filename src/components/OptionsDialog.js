@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, ScrollView } from 'react-native';
+import { FlatList, SectionList } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
 import Dialog from 'components/Dialog';
@@ -9,6 +9,7 @@ const defaultRenderList = (items) => items;
 const defaultKeyExtractor = (item, index) => String(index);
 
 export default function OptionsDialog({
+  sectioned,
   title,
   options,
   renderList = defaultRenderList,
@@ -19,15 +20,17 @@ export default function OptionsDialog({
   onSelect,
   ...rest
 }) {
+  const ListComponent = sectioned ? SectionList : FlatList;
   return (
     <Portal>
       <Dialog visible onDismiss={onDismiss} {...rest}>
         {!!title && <Dialog.Title>{title}</Dialog.Title>}
         <Dialog.ScrollArea>
           {renderList(
-            <FlatList
+            <ListComponent
+              sections={options}
               data={options}
-              renderItem={({ item: option, index }) => (
+              renderItem={({ item: option, index, section }) => (
                 <TouchableRipple
                   onPress={() => {
                     const preventClosing = onSelect?.(option);
@@ -36,7 +39,7 @@ export default function OptionsDialog({
                     }
                   }}
                 >
-                  {renderOption(option, index)}
+                  {renderOption(option, { index, section })}
                 </TouchableRipple>
               )}
               ItemSeparatorComponent={ItemSeparatorComponent}
