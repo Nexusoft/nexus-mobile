@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { View, TextInput, TouchableOpacity } from 'react-native';
 import {
   TextInput as PaperTextInput,
   HelperText,
@@ -84,7 +84,7 @@ const InnerTextBox = React.forwardRef(
           {...rest}
         />
         {!!value && !!secure && (
-          <TouchableWithoutFeedback
+          <TouchableOpacity
             delayPressIn={0}
             delayPressOut={0}
             onPressIn={() => {
@@ -101,10 +101,10 @@ const InnerTextBox = React.forwardRef(
                 color={iconColor}
               />
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         )}
         {!!value && !!clearButton && (
-          <TouchableWithoutFeedback
+          <TouchableOpacity
             onPress={() => {
               onChangeText && onChangeText('');
             }}
@@ -112,9 +112,20 @@ const InnerTextBox = React.forwardRef(
             <View style={styles.icon({ mode, dense })}>
               <SvgIcon sub icon={ClearIcon} size={16} color={iconColor} />
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         )}
-        {right}
+        {right && (
+          <TouchableOpacity onPress={right.onPress}>
+            <View style={styles.icon({ mode, dense })}>
+              <SvgIcon
+                sub
+                icon={right.icon}
+                size={right.iconSize || 16}
+                color={iconColor}
+              />
+            </View>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }
