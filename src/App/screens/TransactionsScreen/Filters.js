@@ -7,7 +7,6 @@ import { TouchableRipple, Button, shadow, List } from 'react-native-paper';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Select from 'components/Select';
-import SvgIcon from 'components/SvgIcon';
 import Divider from 'components/Divider';
 import TokenName from 'components/TokenName';
 import { toggleTransactionsFilter, showOptions } from 'lib/ui';
@@ -17,6 +16,7 @@ import { disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
 import memoize from 'utils/memoize';
 import SelectIcon from 'icons/select.svg';
+import DownArrowIcon from 'icons/chevron-down.svg';
 
 const operations = [
   'APPEND',
@@ -266,27 +266,25 @@ export default function Filters() {
         onEndEditing={() => {
           updateFilter({ tokenQuery: tokenInput });
         }}
-        right={
-          <TouchableRipple
-            onPress={() => {
-              showOptions({
-                title: 'Select a token',
-                options: tokens,
-                renderOption: (token) => (
-                  <List.Item title={TokenName.from({ token })} />
-                ),
-                keyExtractor: (token) => token.address,
-                ItemSeparatorComponent: Divider,
-                onSelect: (token) => {
-                  setTokenInput(token.address);
-                  updateFilter({ tokenQuery: token.address });
-                },
-              });
-            }}
-          >
-            <SvgIcon size={12} icon={SelectIcon} />
-          </TouchableRipple>
-        }
+        right={{
+          onPress: () => {
+            showOptions({
+              title: 'Select a token',
+              options: tokens,
+              renderOption: (token) => (
+                <List.Item title={TokenName.from({ token })} />
+              ),
+              keyExtractor: (token) => token.address,
+              ItemSeparatorComponent: Divider,
+              onSelect: (token) => {
+                setTokenInput(token.address);
+                updateFilter({ tokenQuery: token.address });
+              },
+            });
+          },
+          icon: DownArrowIcon,
+          iconSize: 12,
+        }}
       />
 
       <Button
