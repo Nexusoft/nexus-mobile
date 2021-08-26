@@ -191,6 +191,7 @@ export default function Filters() {
   const { open, operation, timeSpan, addressQuery } = useSelector(
     (state) => state.ui.transactionsFilter
   );
+  const searchOptions = useSelector(selectSearchOptions);
   const [addressInput, setAddressInput] = React.useState(addressQuery);
   React.useEffect(() => {
     refreshUserTokens();
@@ -243,7 +244,7 @@ export default function Filters() {
           updateFilter({ addressQuery: addressInput });
         }}
         right={{
-          onPress: showSearchOptions,
+          onPress: () => showSearchOptions(searchOptions),
           icon: DownArrowIcon,
           iconSize: 12,
         }}
