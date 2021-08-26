@@ -4,8 +4,7 @@ const initialState = {
   open: false,
   operation: null,
   timeSpan: null,
-  accountQuery: '',
-  tokenQuery: '',
+  addressQuery: '',
 };
 
 export default (state = initialState, action) => {

@@ -72,7 +72,7 @@ function watchIfUnconfirmed(transactions) {
   });
 }
 
-function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
+function buildQuery({ addressQuery, operation, timeSpan }) {
   const queries = [];
   if (timeSpan) {
     const pastDate = getThresholdDate(timeSpan);
@@ -83,29 +83,18 @@ function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
   if (operation) {
     queries.push(`object.contracts.OP=${operation}`);
   }
-  if (tokenQuery) {
-    const buildTokenQuery = (field) =>
-      `object.contracts.${field}=*${tokenQuery}*`;
-    const tokenQueries = [
+  if (addressQuery) {
+    const buildAddressQuery = (field) =>
+      `object.contracts.${field}=*${addressQuery}*`;
+    const addressQueries = [
       buildTokenQuery('token'),
-      buildTokenQuery('token_name'),
+      buildAddressQuery('from'),
+      buildAddressQuery('to'),
+      buildAddressQuery('account'),
+      buildAddressQuery('destination'),
+      buildAddressQuery('address'),
     ];
-    queries.push(`(${tokenQueries.join(' OR ')})`);
-  }
-  if (accountQuery) {
-    const buildAccountQuery = (field) =>
-      `object.contracts.${field}=*${accountQuery}*`;
-    const accountQueries = [
-      buildAccountQuery('from'),
-      buildAccountQuery('from_name'),
-      buildAccountQuery('to'),
-      buildAccountQuery('to_name'),
-      buildAccountQuery('account'),
-      buildAccountQuery('account_name'),
-      buildAccountQuery('destination'),
-      buildAccountQuery('address'),
-    ];
-    queries.push(`(${accountQueries.join(' OR ')})`);
+    queries.push(`(${addressQueries.join(' OR ')})`);
   }
 
   return queries.join(' AND ') || undefined;
@@ -184,7 +173,7 @@ const getThresholdDate = (timeSpan) => {
 function filterTransactions(transactions) {
   const {
     ui: {
-      transactionsFilter: { accountQuery, tokenQuery, operation, timeSpan },
+      transactionsFilter: { addressQuery, operation, timeSpan },
     },
     user: {
       transactions: { loading, loaded },
@@ -206,27 +195,15 @@ function filterTransactions(transactions) {
       return false;
     }
     if (
-      accountQuery &&
+      addressQuery &&
       !tx.contracts.some(
         (contract) =>
-          contract.from_name?.includes(accountQuery) ||
-          contract.from?.includes(accountQuery) ||
-          contract.to_name?.includes(accountQuery) ||
-          contract.to?.includes(accountQuery) ||
-          contract.account_name?.includes(accountQuery) ||
-          contract.account?.includes(accountQuery) ||
-          contract.destination?.includes(accountQuery) ||
-          contract.address?.includes(accountQuery)
-      )
-    ) {
-      return false;
-    }
-    if (
-      tokenQuery &&
-      !tx.contracts.some(
-        (contract) =>
-          contract.token_name?.includes(tokenQuery) ||
-          contract.token?.includes(tokenQuery)
+          contract.token?.includes(addressQuery) ||
+          contract.from?.includes(addressQuery) ||
+          contract.to?.includes(addressQuery) ||
+          contract.account?.includes(addressQuery) ||
+          contract.destination?.includes(addressQuery) ||
+          contract.address?.includes(addressQuery)
       )
     ) {
       return false;
