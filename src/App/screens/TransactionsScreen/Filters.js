@@ -7,7 +7,6 @@ import { TouchableRipple, Button, shadow, List } from 'react-native-paper';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Select from 'components/Select';
-import Divider from 'components/Divider';
 import TokenName from 'components/TokenName';
 import { toggleTransactionsFilter, showOptions } from 'lib/ui';
 import { updateFilter } from 'lib/transactions';
@@ -142,20 +141,20 @@ const selectSearchOptions = memoize(
 
     if (accounts) {
       sections.push({
-        key: 'accounts',
+        key: 'Accounts',
         data: accounts,
       });
     }
 
     sections.push({
-      key: 'tokens',
+      key: 'Tokens',
       data: selectKnownTokens(userTokens, accounts),
     });
 
     const contactList = selectContactList(contacts);
     if (contactList?.length) {
       sections.push({
-        key: 'contacts',
+        key: 'Contacts',
         data: contactList,
       });
     }
@@ -237,9 +236,9 @@ export default function Filters() {
         style={styles.filterInput}
         background={theme.dark ? 'background' : 'primary'}
         dense
-        label="Account/token address"
         value={addressInput}
         onChangeText={setAddressInput}
+        label="Search for account/token address"
         onEndEditing={() => {
           updateFilter({ addressQuery: addressInput });
         }}
