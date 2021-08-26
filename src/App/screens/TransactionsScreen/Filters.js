@@ -9,7 +9,7 @@ import TextBox from 'components/TextBox';
 import Select from 'components/Select';
 import TokenName from 'components/TokenName';
 import { toggleTransactionsFilter, showOptions } from 'lib/ui';
-import { updateFilter } from 'lib/transactions';
+import { updateFilter, loadTransactions } from 'lib/transactions';
 import { refreshUserTokens, refreshUserAccounts } from 'lib/user';
 import { disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
@@ -264,7 +264,10 @@ export default function Filters() {
         style={styles.apply}
         mode={theme.dark ? 'outlined' : 'contained'}
         color={theme.dark ? undefined : fade(theme.onPrimary, 0.2)}
-        onPress={toggleTransactionsFilter}
+        onPress={() => {
+          loadTransactions({ reload: true });
+          toggleTransactionsFilter();
+        }}
         labelStyle={{ fontSize: 12 }}
       >
         Apply filter
