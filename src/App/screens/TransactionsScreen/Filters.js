@@ -15,7 +15,6 @@ import { refreshUserTokens, refreshUserAccounts } from 'lib/user';
 import { disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
 import memoize from 'utils/memoize';
-import SelectIcon from 'icons/select.svg';
 import DownArrowIcon from 'icons/chevron-down.svg';
 
 const operations = [
