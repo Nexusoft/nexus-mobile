@@ -1,9 +1,10 @@
 import React from 'react';
 import { FlatList, SectionList } from 'react-native';
-import { TouchableRipple } from 'react-native-paper';
+import { TouchableRipple, List } from 'react-native-paper';
 
 import Dialog from 'components/Dialog';
 import Portal from 'components/Portal';
+import Divider from 'components/Divider';
 
 const defaultRenderList = (items) => items;
 const defaultKeyExtractor = (item, index) => String(index);
@@ -14,7 +15,6 @@ export default function OptionsDialog({
   options,
   renderList = defaultRenderList,
   renderOption,
-  ItemSeparatorComponent,
   keyExtractor = defaultKeyExtractor,
   onDismiss,
   onSelect,
@@ -42,8 +42,18 @@ export default function OptionsDialog({
                   {renderOption(option, { index, section })}
                 </TouchableRipple>
               )}
-              ItemSeparatorComponent={ItemSeparatorComponent}
+              SectionSeparatorComponent={Divider}
               keyExtractor={keyExtractor}
+              renderSectionHeader={
+                sectioned
+                  ? ({ section }) => (
+                      <List.Subheader style={{ marginTop: 20 }}>
+                        {section.key}
+                      </List.Subheader>
+                    )
+                  : undefined
+              }
+              stickySectionHeadersEnabled
             />
           )}
         </Dialog.ScrollArea>
