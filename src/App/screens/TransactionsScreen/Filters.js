@@ -136,7 +136,7 @@ const selectContactList = memoize(
     Object.entries(contacts).map(([name, { address }]) => ({ name, address }))
 );
 
-const selectAddressOptions = memoize(
+const selectSearchOptions = memoize(
   (accounts, userTokens, contacts) => {
     const sections = [];
 
@@ -172,29 +172,26 @@ function FilterText(props) {
   );
 }
 
-function Option({ label, address }) {
-  const theme = useTheme();
-  return (
-    <View>
-      <Text bold>{label}</Text>
-      <View style={styles.addressBox({ theme })}>
-        <Text style={styles.address} mono>
-          {segmentAddress(address)}
-        </Text>
-      </View>
-    </View>
-  );
+function showSearchOptions(options) {
+  showOptions({
+    sectioned: true,
+    options: options,
+    renderOption: (item) => <List.Item title={TokenName.from({ token })} />,
+    keyExtractor: (item) => item.address,
+    ItemSeparatorComponent: Divider,
+    onSelect: (item) => {
+      setTokenInput(item.address);
+      updateFilter({ addressQuery: item.address });
+    },
+  });
 }
 
 export default function Filters() {
-  const { open, operation, timeSpan, accountQuery, tokenQuery } = useSelector(
+  const theme = useTheme();
+  const { open, operation, timeSpan, addressQuery } = useSelector(
     (state) => state.ui.transactionsFilter
   );
-  const [accountInput, setAccountInput] = React.useState(accountQuery);
-  const [tokenInput, setTokenInput] = React.useState(tokenQuery);
-  // const accountOptions = useSelector(selectAccountOptions);
-  const tokens = useSelector(selectKnownTokens);
-  const theme = useTheme();
+  const [addressInput, setAddressInput] = React.useState(addressQuery);
   React.useEffect(() => {
     refreshUserTokens();
     refreshUserAccounts();
@@ -239,39 +236,14 @@ export default function Filters() {
         style={styles.filterInput}
         background={theme.dark ? 'background' : 'primary'}
         dense
-        label="Account name/address"
-        value={accountInput}
-        onChangeText={setAccountInput}
+        label="Account/token address"
+        value={addressInput}
+        onChangeText={setAddressInput}
         onEndEditing={() => {
-          updateFilter({ accountQuery: accountInput });
-        }}
-      />
-      <TextBox
-        style={styles.filterInput}
-        background={theme.dark ? 'background' : 'primary'}
-        dense
-        label="Token name/address"
-        value={tokenInput}
-        onChangeText={setTokenInput}
-        onEndEditing={() => {
-          updateFilter({ tokenQuery: tokenInput });
+          updateFilter({ addressQuery: addressInput });
         }}
         right={{
-          onPress: () => {
-            showOptions({
-              title: 'Select a token',
-              options: tokens,
-              renderOption: (token) => (
-                <List.Item title={TokenName.from({ token })} />
-              ),
-              keyExtractor: (token) => token.address,
-              ItemSeparatorComponent: Divider,
-              onSelect: (token) => {
-                setTokenInput(token.address);
-                updateFilter({ tokenQuery: token.address });
-              },
-            });
-          },
+          onPress: showSearchOptions,
           icon: DownArrowIcon,
           iconSize: 12,
         }}
