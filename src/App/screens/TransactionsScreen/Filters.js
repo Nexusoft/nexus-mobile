@@ -171,31 +171,42 @@ function FilterText(props) {
   );
 }
 
-function showSearchOptions(options) {
-  showOptions({
-    sectioned: true,
-    options: options,
-    renderOption: (item) => <List.Item title={TokenName.from({ token })} />,
-    keyExtractor: (item) => item.address,
-    ItemSeparatorComponent: Divider,
-    onSelect: (item) => {
-      setTokenInput(item.address);
-      updateFilter({ addressQuery: item.address });
-    },
-  });
-}
-
 export default function Filters() {
   const theme = useTheme();
   const { open, operation, timeSpan, addressQuery } = useSelector(
     (state) => state.ui.transactionsFilter
   );
   const searchOptions = useSelector(selectSearchOptions);
-  const [addressInput, setAddressInput] = React.useState(addressQuery);
+  const [searchInput, setSearchInput] = React.useState(addressQuery);
   React.useEffect(() => {
     refreshUserTokens();
     refreshUserAccounts();
   }, []);
+
+  const showSearchOptions = () =>
+    showOptions({
+      sectioned: true,
+      options: searchOptions,
+      renderOption: (option, { section }) => {
+        switch (section.key) {
+          case 'Accounts':
+            return (
+              <List.Item
+                title={option.name || <Text disabled>Unnamed account</Text>}
+              />
+            );
+          case 'Tokens':
+            return <List.Item title={<TokenName token={option} verbose />} />;
+          case 'Contacts':
+            return <List.Item title={option.name} />;
+        }
+      },
+      keyExtractor: (option) => option.address,
+      onSelect: (option) => {
+        setSearchInput(option.address);
+        updateFilter({ addressQuery: option.address });
+      },
+    });
 
   return (
     <View style={styles.wrapper({ theme, expanded: open })}>
@@ -236,14 +247,14 @@ export default function Filters() {
         style={styles.filterInput}
         background={theme.dark ? 'background' : 'primary'}
         dense
-        value={addressInput}
-        onChangeText={setAddressInput}
         label="Search for account/token address"
+        value={searchInput}
+        onChangeText={setSearchInput}
         onEndEditing={() => {
-          updateFilter({ addressQuery: addressInput });
+          updateFilter({ addressQuery: searchInput });
         }}
         right={{
-          onPress: () => showSearchOptions(searchOptions),
+          onPress: showSearchOptions,
           icon: DownArrowIcon,
           iconSize: 12,
         }}
