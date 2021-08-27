@@ -137,6 +137,7 @@ export default function TextBox({
   dense,
   clearButton = true,
   background,
+  leftIcon,
   rightButton,
   style,
   ...rest
@@ -161,6 +162,14 @@ export default function TextBox({
       autoCapitalize="none"
       keyboardAppearance={theme.dark ? 'dark' : 'light'}
       style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
+      left={
+        leftIcon ? (
+          <PaperTextInput.Icon
+            color={adaptedTheme.foreground}
+            name={leftIcon}
+          />
+        ) : undefined
+      }
       render={(props) => (
         <InnerTextBox
           {...{ mode, secure, dense, clearButton, rightButton }}
