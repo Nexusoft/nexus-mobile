@@ -67,7 +67,7 @@ const InnerTextBox = React.forwardRef(
       value,
       onChangeText,
       style,
-      right,
+      rightButton,
       ...rest
     },
     ref
@@ -114,13 +114,13 @@ const InnerTextBox = React.forwardRef(
             </View>
           </TouchableOpacity>
         )}
-        {right && (
-          <TouchableOpacity onPress={right.onPress}>
+        {rightButton && (
+          <TouchableOpacity onPress={rightButton.onPress}>
             <View style={styles.icon({ mode, dense })}>
               <SvgIcon
                 sub
-                icon={right.icon}
-                size={right.iconSize || 16}
+                icon={rightButton.icon}
+                size={rightButton.iconSize || 16}
                 color={iconColor}
               />
             </View>
@@ -137,7 +137,7 @@ export default function TextBox({
   dense,
   clearButton = true,
   background,
-  right,
+  rightButton,
   style,
   ...rest
 }) {
@@ -163,7 +163,7 @@ export default function TextBox({
       style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
       render={(props) => (
         <InnerTextBox
-          {...{ mode, secure, dense, clearButton, right }}
+          {...{ mode, secure, dense, clearButton, rightButton }}
           iconColor={adaptedTheme.foreground}
           {...props}
         />

@@ -261,12 +261,12 @@ export default function Filters() {
         onEndEditing={() => {
           updateFilter({ addressQuery: searchInput });
         }}
-        right={{
         left={
           <TextInput.Icon
             name={() => <SvgIcon sub icon={SearchIcon} size={14} />}
           />
         }
+        rightButton={{
           onPress: showSearchOptions,
           icon: DownArrowIcon,
           iconSize: 12,
