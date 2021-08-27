@@ -2,18 +2,26 @@ import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'lib/theme';
-import { TouchableRipple, Button, shadow, List } from 'react-native-paper';
+import {
+  TouchableRipple,
+  Button,
+  shadow,
+  List,
+  TextInput,
+} from 'react-native-paper';
 
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Select from 'components/Select';
 import TokenName from 'components/TokenName';
+import SvgIcon from 'components/SvgIcon';
 import { toggleTransactionsFilter, showOptions } from 'lib/ui';
 import { updateFilter, loadTransactions } from 'lib/transactions';
 import { refreshUserTokens, refreshUserAccounts } from 'lib/user';
 import { disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
 import memoize from 'utils/memoize';
+import SearchIcon from 'icons/search.svg';
 import DownArrowIcon from 'icons/chevron-down.svg';
 
 const operations = [
@@ -254,6 +262,11 @@ export default function Filters() {
           updateFilter({ addressQuery: searchInput });
         }}
         right={{
+        left={
+          <TextInput.Icon
+            name={() => <SvgIcon sub icon={SearchIcon} size={14} />}
+          />
+        }
           onPress: showSearchOptions,
           icon: DownArrowIcon,
           iconSize: 12,
