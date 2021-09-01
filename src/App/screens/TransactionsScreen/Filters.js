@@ -2,13 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'lib/theme';
-import {
-  TouchableRipple,
-  Button,
-  shadow,
-  List,
-  TextInput,
-} from 'react-native-paper';
+import { TouchableRipple, Button, shadow, List } from 'react-native-paper';
 
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
