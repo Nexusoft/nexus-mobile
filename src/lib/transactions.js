@@ -87,7 +87,7 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
     const buildAddressQuery = (field) =>
       `object.contracts.${field}=*${addressQuery}*`;
     const addressQueries = [
-      buildTokenQuery('token'),
+      buildAddressQuery('token'),
       buildAddressQuery('from'),
       buildAddressQuery('to'),
       buildAddressQuery('account'),
