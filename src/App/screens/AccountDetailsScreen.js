@@ -107,6 +107,7 @@ export default function AccountDetailsScreen({ route }) {
             inline
             label="Token name"
             value={
+              account.ticker ||
               account.token_name || (
                 <Text disabled style={{ marginRight: 10 }}>
                   Unnamed
