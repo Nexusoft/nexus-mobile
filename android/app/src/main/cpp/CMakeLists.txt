@@ -59,7 +59,7 @@ string(REPLACE "include" "lib" OPENSSL_LIBRARIES_DIR ${OPENSSL_INCLUDE_DIR})
 SET(OPENSSL_LIBRARIES "ssl" "crypto")
 
 # build application's shared lib
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++17")
 set(CMAKE_SHARED_LINKER_FLAGS "-Wall -v -Wl ")
 
 # Link openssl to project
