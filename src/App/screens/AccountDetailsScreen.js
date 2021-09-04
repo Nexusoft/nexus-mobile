@@ -141,10 +141,10 @@ export default function AccountDetailsScreen({ route }) {
           <InfoField
             compact
             inline
-            label="Pending balance"
+            label="Unclaimed balance"
             value={
               <Text>
-                {account.pending} <TokenName account={account} />
+                {account.unclaimed} <TokenName account={account} />
               </Text>
             }
           />

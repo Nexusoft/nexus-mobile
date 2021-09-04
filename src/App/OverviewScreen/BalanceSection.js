@@ -91,7 +91,7 @@ export default function BalanceSection({ filteredAccounts }) {
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const hideBalances = useSelector(selectSetting('hideBalances'));
   const price = useSelector(({ market: { price } }) => price);
-  const { available, pending, unconfirmed, stake, immature } =
+  const { available, unclaimed, unconfirmed, stake, immature } =
     nxsBalances || {};
   React.useEffect(() => {
     refreshMarketPrice();
@@ -162,8 +162,8 @@ export default function BalanceSection({ filteredAccounts }) {
             <BalanceText>{renderBalance(stake)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Pending</BalanceText>
-            <BalanceText>{renderBalance(pending)}</BalanceText>
+            <BalanceText>Unclaimed</BalanceText>
+            <BalanceText>{renderBalance(unclaimed)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Unconfirmed</BalanceText>
@@ -177,7 +177,7 @@ export default function BalanceSection({ filteredAccounts }) {
             <BalanceText>Total</BalanceText>
             <BalanceText>
               {renderBalance(
-                available + stake + pending + unconfirmed + immature
+                available + stake + unclaimed + unconfirmed + immature
               )}
             </BalanceText>
           </View>
