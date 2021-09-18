@@ -127,7 +127,7 @@ export default function ContactsScreen() {
       <FlatList
         data={filteredContacts}
         ItemSeparatorComponent={Divider}
-        keyExtractor={(contact) => contact.name}
+        keyExtractor={(contact) => contact.address}
         renderItem={({ item }) => <Contact contact={item} />}
         ListEmptyComponent={contacts?.length ? NoResults : NoContacts}
       />

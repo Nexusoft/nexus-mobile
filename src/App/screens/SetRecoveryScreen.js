@@ -166,12 +166,12 @@ export default function SetRecoveryScreen() {
                 <Text>
                   Recovery phrase can be used to recover your account and set
                   new password and PIN in the event that you lose or forget
-                  them.{' '}
-                  <Text bold>
-                    Save this new recovery phrase in a safe place
-                  </Text>
-                  , because if you lose your recovery phrase, there will be{' '}
-                  <Text bold>no way</Text> to recover it.
+                  them.
+                </Text>
+                <Text style={{ marginTop: 5 }}>
+                  <Text bold>Save your recovery phrase in a safe place</Text>,
+                  because if you lose it, there will be <Text bold>no way</Text>{' '}
+                  to recover it.
                 </Text>
               </View>
 
@@ -236,7 +236,9 @@ export default function SetRecoveryScreen() {
               <TextBox.Formik
                 multiline
                 name="newRecovery"
-                label="New recovery phrase"
+                label={
+                  hasRecoveryPhrase ? 'New recovery phrase' : 'Recovery phrase'
+                }
               />
               <FAB
                 mode="contained"

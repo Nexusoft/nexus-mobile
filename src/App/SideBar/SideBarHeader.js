@@ -15,6 +15,7 @@ import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
+import AttentionIcon from 'components/AttentionIcon';
 import { useTheme, subColor } from 'lib/theme';
 import { logout } from 'lib/user';
 import { confirm, showNotification } from 'lib/ui';
@@ -80,6 +81,11 @@ const styles = {
   userID: {
     paddingVertical: 12,
     paddingHorizontal: 20,
+  },
+  attentionIcon: {
+    position: 'absolute',
+    top: 6,
+    right: 10,
   },
 };
 
@@ -206,6 +212,9 @@ export default function SideBarHeader({ navigation }) {
               style={styles.expandIcon({ theme })}
               icon={expanded ? UpArrowIcon : DownArrowIcon}
             />
+            {!hasRecoveryPhrase && !expanded && (
+              <AttentionIcon style={styles.attentionIcon} />
+            )}
           </View>
 
           <View style={styles.userActions({ expanded })}>
@@ -239,6 +248,7 @@ export default function SideBarHeader({ navigation }) {
                   : 'Set recovery phrase'
               }
               linkTo="SetRecovery"
+              warning={!hasRecoveryPhrase}
             />
             <MenuItem
               small

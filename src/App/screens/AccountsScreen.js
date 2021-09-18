@@ -7,11 +7,14 @@ import { useSelector } from 'react-redux';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
 import ScreenBody from 'components/ScreenBody';
+import SvgIcon from 'components/SvgIcon';
+import TokenName from 'components/TokenName';
 import { navigate } from 'lib/navigation';
 import { refreshUserAccounts } from 'lib/user';
 import { disabledColor } from 'lib/theme';
 import segmentAddress from 'utils/segmentAddress';
 import useRefresh from 'utils/useRefresh';
+import WalletIcon from 'icons/wallet.svg';
 
 const styles = {
   wrapper: {
@@ -20,6 +23,19 @@ const styles = {
   account: {
     paddingVertical: 20,
     paddingHorizontal: 30,
+  },
+  accBasic: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginRight: 10,
+  },
+  accNameIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  accIcon: {
+    marginRight: 8,
   },
   accName: {
     fontSize: 16,
@@ -65,9 +81,19 @@ export default function AccountsScreen() {
               }}
             >
               <View style={styles.account}>
-                <Text style={styles.accName} bold disabled={!account.name}>
-                  {account.name || 'Unnamed'}
-                </Text>
+                <View style={styles.accBasic}>
+                  <View style={styles.accNameIcon}>
+                    <SvgIcon
+                      icon={WalletIcon}
+                      size={14}
+                      style={styles.accIcon}
+                    />
+                    <Text style={styles.accName} bold disabled={!account.name}>
+                      {account.name || 'Unnamed'}
+                    </Text>
+                  </View>
+                  <TokenName bold disabled account={account} />
+                </View>
                 <View style={styles.addressBox({ theme })}>
                   <Text style={styles.address} mono>
                     {segmentAddress(account.address)}

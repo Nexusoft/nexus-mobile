@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
+import AttentionIcon from 'components/AttentionIcon';
 import { navigate } from 'lib/navigation';
 import { useTheme } from 'lib/theme';
 import { selectSetting } from 'lib/settings';
@@ -29,6 +30,11 @@ const styles = {
     elevation: 8,
     ...shadow(8),
   }),
+  attentionIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 8,
+  },
 };
 
 export default function OverviewScreen() {
@@ -49,6 +55,28 @@ export default function OverviewScreen() {
       <View style={styles.accountsPane({ theme })}>
         <Accounts filteredAccounts={filteredAccounts} />
       </View>
+    </View>
+  );
+}
+
+function SideMenuIcon({ tintColor, theme, navigation }) {
+  const hasRecoveryPhrase = useSelector(
+    (state) => !!state.user?.status?.recovery
+  );
+
+  return (
+    <View>
+      <IconButton
+        icon={({ size }) => (
+          <SvgIcon icon={MenuIcon} size={size} color={tintColor} />
+        )}
+        color={tintColor}
+        size={25}
+        onPress={() => {
+          navigation.openDrawer();
+        }}
+      />
+      {!hasRecoveryPhrase && <AttentionIcon style={styles.attentionIcon} />}
     </View>
   );
 }
@@ -83,16 +111,7 @@ OverviewScreen.stackOptions = ({ theme, navigation }) => ({
     </View>
   ),
   headerLeft: ({ tintColor }) => (
-    <IconButton
-      icon={({ size }) => (
-        <SvgIcon icon={MenuIcon} size={size} color={tintColor} />
-      )}
-      color={tintColor}
-      size={25}
-      onPress={() => {
-        navigation.openDrawer();
-      }}
-    />
+    <SideMenuIcon tintColor={tintColor} theme={theme} navigation={navigation} />
   ),
   headerStyle: flatHeader(theme),
 });
