@@ -3,18 +3,19 @@ PODS:
   - CocoaAsyncSocket (7.6.5)
   - CocoaLibEvent (1.0.0)
   - DoubleConversion (1.1.6)
-  - EXApplication (2.4.1):
+  - EXApplication (3.0.0):
     - UMCore
-  - EXBackgroundFetch (8.6.0):
+  - EXBackgroundFetch (9.0.0):
     - UMCore
     - UMTaskManagerInterface
-  - EXBarCodeScanner (9.1.0):
+  - EXBarCodeScanner (10.0.0):
+    - UMBarCodeScannerInterface
     - UMCore
     - UMImageLoaderInterface
     - UMPermissionsInterface
     - ZXingObjC/OneD
     - ZXingObjC/PDF417
-  - EXConstants (9.3.5):
+  - EXConstants (10.0.1):
     - UMConstantsInterface
     - UMCore
   - EXErrorRecovery (1.4.0):
@@ -22,7 +23,7 @@ PODS:
   - EXFileSystem (9.3.0):
     - UMCore
     - UMFileSystemInterface
-  - EXFont (8.4.0):
+  - EXFont (9.0.0):
     - UMCore
     - UMFontInterface
   - EXImageLoader (1.3.0):
@@ -37,7 +38,7 @@ PODS:
     - UMCore
     - UMPermissionsInterface
     - UMTaskManagerInterface
-  - EXNotifications (0.8.2):
+  - EXNotifications (0.9.0):
     - UMCore
     - UMPermissionsInterface
   - EXPermissions (10.0.0):
@@ -45,21 +46,21 @@ PODS:
     - UMPermissionsInterface
   - EXSecureStore (9.3.0):
     - UMCore
-  - EXSplashScreen (0.8.1):
+  - EXSplashScreen (0.9.0):
     - React-Core
     - UMCore
   - EXSQLite (8.5.0):
     - UMCore
     - UMFileSystemInterface
-  - EXTaskManager (8.6.0):
+  - EXTaskManager (9.0.0):
     - UMAppLoader
     - UMConstantsInterface
     - UMCore
     - UMTaskManagerInterface
-  - EXUpdates (0.4.1):
+  - EXUpdates (0.4.2):
     - React-Core
     - UMCore
-  - EXWebBrowser (8.6.0):
+  - EXWebBrowser (9.0.0):
     - UMCore
   - FBLazyVector (0.63.4)
   - FBReactNativeSpec (0.63.4):
@@ -362,15 +363,15 @@ PODS:
     - React
   - RNFS (2.16.6):
     - React
-  - RNGestureHandler (1.9.0):
+  - RNGestureHandler (1.10.3):
     - React-Core
   - RNReanimated (1.13.2):
     - React-Core
-  - RNScreens (2.16.1):
+  - RNScreens (2.18.0):
     - React-Core
   - RNSVG (12.1.0):
     - React
-  - UMAppLoader (1.4.0)
+  - UMAppLoader (2.0.0)
   - UMBarCodeScannerInterface (5.4.0)
   - UMCameraInterface (5.4.0)
   - UMConstantsInterface (5.4.0)
@@ -398,7 +399,7 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - EXApplication (from `../node_modules/expo-application/ios`)
+  - EXApplication (from `../node_modules/expo-notifications/node_modules/expo-application/ios`)
   - EXBackgroundFetch (from `../node_modules/expo-background-fetch/ios`)
   - EXBarCodeScanner (from `../node_modules/expo-barcode-scanner/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
@@ -470,7 +471,7 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
-  - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
+  - UMAppLoader (from `../node_modules/expo-task-manager/node_modules/unimodules-app-loader/ios`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
   - UMConstantsInterface (from `../node_modules/unimodules-constants-interface/ios`)
@@ -505,7 +506,7 @@ EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXApplication:
-    :path: "../node_modules/expo-application/ios"
+    :path: "../node_modules/expo-notifications/node_modules/expo-application/ios"
   EXBackgroundFetch:
     :path: "../node_modules/expo-background-fetch/ios"
   EXBarCodeScanner:
@@ -607,7 +608,7 @@ EXTERNAL SOURCES:
   RNSVG:
     :path: "../node_modules/react-native-svg"
   UMAppLoader:
-    :path: "../node_modules/unimodules-app-loader/ios"
+    :path: "../node_modules/expo-task-manager/node_modules/unimodules-app-loader/ios"
   UMBarCodeScannerInterface:
     :path: "../node_modules/unimodules-barcode-scanner-interface/ios"
   UMCameraInterface:
@@ -640,25 +641,25 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
   DoubleConversion: cde416483dac037923206447da6e1454df403714
-  EXApplication: b61d007b4f23ab6aa3d7fe1f517ffd81ed962749
-  EXBackgroundFetch: 53cff3089c4155a0891b713284f633792d930893
-  EXBarCodeScanner: f10b02ea35e310fb9ade93f1c59e7aab50215e85
-  EXConstants: 5874c3bf65601ce96049412e6e5f43d198c1cdaf
+  EXApplication: cd4581362d999ae3568209aa157b3f30dbfa923b
+  EXBackgroundFetch: 56f9b46a3b8609a8933721da80c2cb2eae3e9042
+  EXBarCodeScanner: 11af9159186aa4e6e64b2f2e35edb32e8355ae9d
+  EXConstants: b9227b692f380c0b94cc483528dbe2974cd8e904
   EXErrorRecovery: 595048e4ae93a70716b195f2ebc1849d63e0ee3f
   EXFileSystem: 7c4397042d9a3ae47e6c53c0ce0229d4b4204851
-  EXFont: 0f005a50e7d6d30b61e4680069c4025b9feeffe4
+  EXFont: 87df0024767574709454d955ef896077663e7dd6
   EXImageLoader: b9f8ac1b2d9bcf9d929a6daf487c70b8425ea7d4
   EXKeepAwake: cb0641970ea9c9a35759a5e3be23eca7e0c83b70
   EXLinearGradient: e082a9b5ec21532b98acba28ee988f9e70b50119
   EXLocation: 5689bbf163581eefb70978130611ec25d027bcf3
-  EXNotifications: 75f3b025722eb3908551ba7b873cda3ee2215b9d
+  EXNotifications: f288a341da9135efe017e9f3db268c3b6f23855e
   EXPermissions: 55cadfd11547c07a5390ba7eea63bd998a71018d
   EXSecureStore: 7cda998bd7c150b28021cb9c85b0747daa6a5ab5
-  EXSplashScreen: 5bd1d445b1c5fc883fa2f5612633defc48759273
+  EXSplashScreen: 1d97ad60f1bbe461c99229f5245a3b529cb30cb2
   EXSQLite: 98f4062e567a2facc80aa6a064be88fa1a9476b6
-  EXTaskManager: 71d4282b64fc729cff8ce8f2bb414a592108a4e3
-  EXUpdates: 82b87323deef92651a130a0f38abd67d970604ab
-  EXWebBrowser: 3f399979a5514f6efac7b41ae00ac71a61defb90
+  EXTaskManager: e5cf01ca5c3f4c34e0bcb7f17820407b29fac05c
+  EXUpdates: 060bc885bc697acaf3b0a4606508ce909d91571d
+  EXWebBrowser: db987c633e3fb16842f6b12058a50350443b3fba
   FBLazyVector: 3bb422f41b18121b71783a905c10e58606f7dc3e
   FBReactNativeSpec: f2c97f2529dd79c083355182cc158c9f98f4bd6e
   Flipper: 6c1f484f9a88d30ab3e272800d53688439e50f69
@@ -695,11 +696,11 @@ SPEC CHECKSUMS:
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
-  RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
+  RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
-  RNScreens: 45c457af3d2ee9e08fc01e70da87e653d46b1198
+  RNScreens: f0d7a2a440a8ba9f4574ca1ddb3368f473891be4
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
-  UMAppLoader: 515d02d30e29cf05bbe58f77c59f896840cc5895
+  UMAppLoader: caf7c3de7e9870be40aaf53adac077ac126cfa18
   UMBarCodeScannerInterface: 77a5bebdc21106979a363bb057c4fbb46aacc171
   UMCameraInterface: 123f7ebc3f6d0915afd369f7133bf29231ed418b
   UMConstantsInterface: e4358999ee6aeb248ba9584a6fbb409ae3ac36f8
@@ -716,6 +717,6 @@ SPEC CHECKSUMS:
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 7d25b008017405122005b964819220084c570792
+PODFILE CHECKSUM: 87f19e4e701d45a2edc800e1c5a889dd85e658dc
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1
