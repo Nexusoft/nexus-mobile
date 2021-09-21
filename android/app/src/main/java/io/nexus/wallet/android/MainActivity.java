@@ -1,4 +1,4 @@
-package com.nexus.mobile.android;
+package io.nexus.wallet.android;
 
 
 import android.app.NotificationManager;

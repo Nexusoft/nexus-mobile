@@ -1,4 +1,4 @@
-package com.nexus.mobile.android.generated;
+package io.nexus.wallet.android.generated;
 
 import java.util.Arrays;
 import java.util.List;
