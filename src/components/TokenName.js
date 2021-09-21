@@ -10,17 +10,26 @@ const getToken = ({ token, account, contract }) => {
 
 const trimAddress = (address) => (address ? address.substring(0, 3) + '…' : '');
 
-export default function TokenName({ token, account, contract, ...rest }) {
+const nameText = ({ name, address, verbose }) =>
+  name || trimAddress(address) + (verbose && !name ? ' token' : '');
+
+export default function TokenName({
+  token,
+  account,
+  contract,
+  verbose = false,
+  ...rest
+}) {
   const { name, address } = getToken({ token, account, contract });
 
   return (
     <Text sub={!name} {...rest}>
-      {name || trimAddress(address)}
+      {nameText({ name, address, verbose })}
     </Text>
   );
 }
 
-TokenName.from = ({ token, account, contract }) => {
+TokenName.from = ({ token, account, contract, verbose = false }) => {
   const { name, address } = getToken({ token, account, contract });
-  return name || trimAddress(address);
+  return nameText({ name, address, verbose });
 };

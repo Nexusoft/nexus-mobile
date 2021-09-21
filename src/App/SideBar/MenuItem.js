@@ -4,6 +4,7 @@ import { TouchableRipple } from 'react-native-paper';
 
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
+import AttentionIcon from 'components/AttentionIcon';
 import { navigate } from 'lib/navigation';
 import { useTheme, disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
@@ -45,6 +46,7 @@ export default function MenuItem({
   small,
   padded,
   comingSoon,
+  warning,
 }) {
   const theme = useTheme();
   return (
@@ -78,6 +80,7 @@ export default function MenuItem({
         </View>
 
         {comingSoon && <Text style={styles.tag({ theme })}>Coming soon</Text>}
+        {warning && <AttentionIcon />}
       </View>
     </TouchableRipple>
   );

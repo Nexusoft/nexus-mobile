@@ -27,6 +27,10 @@ void* PosixThreadMainRoutine(void* data)
           strdup("-verbose=0"),
           strdup("-manager=1"),
           strdup("-timeout=30"),
+             strdup("-ssl=1"),
+             strdup("-apissl=1"),
+             strdup("-apisslport=7080"),
+             strdup("-apisslrequired"),
           strdup("-connect=node1.nexusoft.io"),
           strdup("-connect=node2.nexusoft.io"),
           strdup("-connect=node3.nexusoft.io"),
@@ -35,7 +39,7 @@ void* PosixThreadMainRoutine(void* data)
      };
      const char *com = [userCre[0] UTF8String];
     const char *command = [userCre[1] UTF8String];
-     startNexus(8, my_argv,strdup(com),strdup(command));
+     startNexus(12, my_argv,strdup(com),strdup(command));
     return NULL;
 }
 

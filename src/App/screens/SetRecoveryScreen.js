@@ -1,11 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
-import { FAB, Button, Dialog } from 'react-native-paper';
+import { FAB, Button } from 'react-native-paper';
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 
 import Portal from 'components/Portal';
+import Dialog from 'components/Dialog';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
@@ -66,8 +67,8 @@ function ConfirmRecoveryDialog({ newRecovery, visible, onDismiss, onConfirm }) {
             <Dialog.Content>
               <View style={styles.msgBox({ theme })}>
                 <Text sub>
-                  Re-enter your recovery phrase to make sure you have saved your
-                  recovery phrase
+                  Re-enter your recovery phrase to make sure you have it backed
+                  up
                 </Text>
               </View>
               <TextBox.Formik
@@ -165,12 +166,12 @@ export default function SetRecoveryScreen() {
                 <Text>
                   Recovery phrase can be used to recover your account and set
                   new password and PIN in the event that you lose or forget
-                  them.{' '}
-                  <Text bold>
-                    Save this new recovery phrase in a safe place
-                  </Text>
-                  , because if you lose your recovery phrase, there will be{' '}
-                  <Text bold>no way</Text> to recover it.
+                  them.
+                </Text>
+                <Text style={{ marginTop: 5 }}>
+                  <Text bold>Save your recovery phrase in a safe place</Text>,
+                  because if you lose it, there will be <Text bold>no way</Text>{' '}
+                  to recover it.
                 </Text>
               </View>
 
@@ -235,7 +236,9 @@ export default function SetRecoveryScreen() {
               <TextBox.Formik
                 multiline
                 name="newRecovery"
-                label="New recovery phrase"
+                label={
+                  hasRecoveryPhrase ? 'New recovery phrase' : 'Recovery phrase'
+                }
               />
               <FAB
                 mode="contained"

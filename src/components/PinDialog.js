@@ -1,7 +1,8 @@
 import React from 'react';
 import { Platform, View } from 'react-native';
-import { Button, Dialog } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 
+import Dialog from 'components/Dialog';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
@@ -24,6 +25,10 @@ export default function PinDialog({
   ...rest
 }) {
   const [pin, setPin] = React.useState('');
+  const submit = () => {
+    onConfirm?.(pin);
+    onDismiss?.();
+  };
   return (
     <Portal>
       <Dialog
@@ -45,6 +50,7 @@ export default function PinDialog({
             keyboardType={
               Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
             }
+            onSubmitEditing={submit}
           />
           {!!fee && <Text style={styles.feeText}>Fee: {fee} NXS</Text>}
           <Button
@@ -52,10 +58,7 @@ export default function PinDialog({
             icon={({ color, size }) => (
               <SvgIcon icon={LockIcon} color={color} size={size} />
             )}
-            onPress={() => {
-              onConfirm && onConfirm(pin);
-              onDismiss && onDismiss();
-            }}
+            onPress={submit}
           >
             Proceed
           </Button>

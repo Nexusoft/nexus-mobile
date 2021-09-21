@@ -6,19 +6,16 @@ import {
   StyleSheet,
   Clipboard,
 } from 'react-native';
-import {
-  IconButton,
-  TouchableRipple,
-  Dialog,
-  Button,
-} from 'react-native-paper';
+import { IconButton, TouchableRipple, Button } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { useSelector } from 'react-redux';
 
+import Dialog from 'components/Dialog';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
+import AttentionIcon from 'components/AttentionIcon';
 import { useTheme, subColor } from 'lib/theme';
 import { logout } from 'lib/user';
 import { confirm, showNotification } from 'lib/ui';
@@ -85,6 +82,11 @@ const styles = {
     paddingVertical: 12,
     paddingHorizontal: 20,
   },
+  attentionIcon: {
+    position: 'absolute',
+    top: 6,
+    right: 10,
+  },
 };
 
 function UserIdDialog({ visible, onDismiss }) {
@@ -92,7 +94,7 @@ function UserIdDialog({ visible, onDismiss }) {
   const userID = useSelector((state) => state.user.status?.genesis);
   return (
     <Portal>
-      <Dialog visible={visible} onDismiss={onDismiss}>
+      <Dialog visible={visible} onDismiss={onDismiss} bla="bloooo">
         <Dialog.Title>User ID</Dialog.Title>
         <Dialog.Content>
           <TextBox
@@ -210,6 +212,9 @@ export default function SideBarHeader({ navigation }) {
               style={styles.expandIcon({ theme })}
               icon={expanded ? UpArrowIcon : DownArrowIcon}
             />
+            {!hasRecoveryPhrase && !expanded && (
+              <AttentionIcon style={styles.attentionIcon} />
+            )}
           </View>
 
           <View style={styles.userActions({ expanded })}>
@@ -243,6 +248,7 @@ export default function SideBarHeader({ navigation }) {
                   : 'Set recovery phrase'
               }
               linkTo="SetRecovery"
+              warning={!hasRecoveryPhrase}
             />
             <MenuItem
               small
