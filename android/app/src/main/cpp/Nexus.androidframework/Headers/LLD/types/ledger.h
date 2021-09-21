@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -689,11 +689,12 @@ namespace LLD
          *  Checks if a genesis transaction exists.
          *
          *  @param[in] hashGenesis The genesis ID to check for.
+         *  @param[in] nFlags The flags to determine what state to check for.
          *
          *  @return True if the genesis exists, false otherwise.
          *
          **/
-        bool HasGenesis(const uint256_t& hashGenesis);
+        bool HasGenesis(const uint256_t& hashGenesis, const uint8_t nFlags = TAO::Ledger::FLAGS::BLOCK);
 
 
         /** WriteGenesis
@@ -720,6 +721,18 @@ namespace LLD
          *
          **/
         bool ReadGenesis(const uint256_t& hashGenesis, uint512_t& hashTx);
+
+
+        /** EraseGenesis
+         *
+         *  Erases a genesis-id from disk.
+         *
+         *  @param[in] hashGenesis The genesis ID to check for.
+         *
+         *  @return True if the genesis exists, false otherwise.
+         *
+         **/
+        bool EraseGenesis(const uint256_t& hashGenesis);
 
 
         /** MemoryBegin

@@ -82,7 +82,9 @@ project.ext.react = [
 ]
 
 apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
+apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/expo-constants/scripts/get-app-config-android.gradle"
+apply from: "../../node_modules/expo-updates/scripts/create-manifest-android.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -124,15 +126,18 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 def versionMajor = 0
 def versionMinor = 8
 def versionPatch = 2
-def buildNumber = 1
+def buildNumber = 6
 
 def genVersionCode = versionMajor * 10000000 + versionMinor * 100000 + versionPatch * 1000 + buildNumber
 def genVersionName = "${versionMajor}.${versionMinor}.${versionPatch}-${buildNumber}"
 
 
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def openSSLDir = properties.getProperty('openssl.dir')
+def openSSLDir = null
+if (project.rootProject.file("local.properties").exists()) {
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+    openSSLDir = properties.getProperty('openssl.dir')
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
