@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -12,8 +12,6 @@
 ____________________________________________________________________________________________*/
 
 #pragma once
-#ifndef NEXUS_LLP_INCLUDE_PERMISSIONS_H
-#define NEXUS_LLP_INCLUDE_PERMISSIONS_H
 
 #include <cstdint>
 #include <string>
@@ -30,6 +28,4 @@ ________________________________________________________________________________
  *  @return Returns true if address is permissable, false otherwise.
  *
  **/
-bool CheckPermissions(const std::string &strAddress, uint16_t nPort);
-
-#endif
+bool CheckPermissions(const std::string &strAddress, const uint16_t nPort);

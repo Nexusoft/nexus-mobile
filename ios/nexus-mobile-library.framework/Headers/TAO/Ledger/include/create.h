@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -44,10 +44,11 @@ namespace TAO
          *  @param[in] user The signature chain to generate this tx
          *  @param[in] pin The pin number to generate with.
          *  @param[out] tx The traansaction object being created
+         *  @param[in] nScheme The key scheme to be used.
          *
          **/
         bool CreateTransaction(const memory::encrypted_ptr<TAO::Ledger::SignatureChain>& user, const SecureString& pin,
-                               TAO::Ledger::Transaction& tx);
+                               TAO::Ledger::Transaction& tx, const uint8_t nScheme = TAO::Ledger::SIGNATURE::RESERVED);
 
 
         /** CreateProducer

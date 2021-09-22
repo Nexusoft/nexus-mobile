@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -246,7 +246,7 @@ namespace TAO
 
             /** Operator Overload <<
              *
-             *  Serializes data into vchOperations
+             *  Serializes data into vchState
              *
              *  @param[in] obj The object to serialize into ledger data
              *
@@ -262,7 +262,7 @@ namespace TAO
 
             /** Operator Overload >>
              *
-             *  Serializes data into vchOperations
+             *  Serializes data into vchState
              *
              *  @param[out] obj The object to de-serialize from ledger data
              *

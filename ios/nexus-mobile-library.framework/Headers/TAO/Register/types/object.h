@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -117,14 +117,14 @@ namespace TAO
             bool Parse();
 
 
-            /** GetFieldNames
+            /** ListFields
              *
-             *  Get a list of field names for this Object.
+             *  Get a list of variable names for this Object.
              *
              *  @return Vector of field name strings.
              *
              **/
-            std::vector<std::string> GetFieldNames() const;
+            std::vector<std::string> ListFields() const;
 
 
             /** Type
@@ -153,16 +153,16 @@ namespace TAO
             bool Check(const std::string& strName, const uint8_t nType, bool fMutable) const;
 
 
-            /** CheckName
+            /** Check
              *
-             *  Check the name exists in the object register without checking type.
+             *  Check that given field name exists in the object.
              *
              *  @param[in] strName The name of the field to check
              *
              *  @return True if the field exist in the Object.
              *
              **/
-            bool CheckName(const std::string& strName) const;
+            bool Check(const std::string& strName) const;
 
 
             /** Size

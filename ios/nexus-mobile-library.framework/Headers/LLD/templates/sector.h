@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -241,7 +241,7 @@ namespace LLD
          *
          **/
         template<typename Key>
-        bool Erase(const Key& key)
+        bool Erase(const Key& key, bool fKeychainOnly = false)
         {
             if(nFlags & FLAGS::READONLY)
                 return debug::error("Erase called on database in read-only mode");
@@ -268,7 +268,7 @@ namespace LLD
                 }
             }
 
-            return Delete(ssKey.Bytes());
+            return (fKeychainOnly ? pSectorKeys->Erase(ssKey.Bytes()) : Delete(ssKey.Bytes()));
         }
 
 

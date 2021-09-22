@@ -2,7 +2,7 @@
 
 			(c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-			(c) Copyright The Nexus Developers 2014 - 2019
+			(c) Copyright The Nexus Developers 2014 - 2021
 
 			Distributed under the MIT software license, see the accompanying
 			file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -16,6 +16,9 @@ ________________________________________________________________________________
 #define NEXUS_LLC_INCLUDE_RANDOM_H
 
 #include <limits>
+#include <random>
+#include <algorithm>
+
 #include <LLC/types/uint1024.h>
 
 namespace LLC
@@ -101,6 +104,16 @@ namespace LLC
     uint1024_t GetRand1024();
 
 
+    /** Handle a random shuffle. **/
+    template< class RandomIt>
+    void random_shuffle(RandomIt tBegin, RandomIt tEnd)
+    {
+        /* Create random number generator. */
+        std::random_device rng;
+        std::mt19937 urng(rng());
+
+        std::shuffle(tBegin, tEnd, urng);
+    }
 }
 
 #endif

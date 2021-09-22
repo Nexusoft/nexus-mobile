@@ -142,160 +142,158 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
         }
 
 
-        /* Read the configuration file. Pass argc and argv for possible -datadir setting */
-        config::ReadConfigFile(config::mapArgs, config::mapMultiArgs, argc, argv);
+    /* Read the configuration file. Pass argc and argv for possible -datadir setting */
+    config::ReadConfigFile(config::mapArgs, config::mapMultiArgs, argc, argv);
 
 
-        /* Parse out the parameters */
-        config::ParseParameters(argc, argv);
+    /* Parse out the parameters */
+    config::ParseParameters(argc, argv);
 
 
-        /* Once we have read in the CLI paramters and config file, cache the args into global variables*/
-        config::CacheArgs();
+    /* Once we have read in the CLI paramters and config file, cache the args into global variables*/
+    config::CacheArgs();
 
 
-        /* Initalize the debug logger. */
-        debug::Initialize();
+    /* Initalize the debug logger. */
+    debug::Initialize();
 
 
-        /* Handle Commandline switch */
-        for(int i = 1; i < argc; ++i)
+    /* Handle Commandline switch */
+    for(int i = 1; i < argc; ++i)
+    {
+        if(!convert::IsSwitchChar(argv[i][0]))
         {
-            if(!convert::IsSwitchChar(argv[i][0]))
-            {
-                int nRet = 0;
+            int nRet = 0;
 
-                /* As a helpful shortcut, if the method name includes a "/" then we will assume it is meant for the API
-                   since none of the RPC commands support a "/" in the method name */
-                bool fIsAPI = false;
+            /* As a helpful shortcut, if the method name includes a "/" then we will assume it is meant for the API
+               since none of the RPC commands support a "/" in the method name */
+            bool fIsAPI = false;
 
-                std::string endpoint = std::string(argv[i]);
-                std::string::size_type pos = endpoint.find('/');
-                if(pos != endpoint.npos || config::GetBoolArg(std::string("-api")))
-                    fIsAPI = true;
+            std::string endpoint = std::string(argv[i]);
+            std::string::size_type pos = endpoint.find('/');
+            if(pos != endpoint.npos || config::GetBoolArg(std::string("-api")))
+                fIsAPI = true;
 
-                if(fIsAPI)
-                    nRet = TAO::API::CommandLineAPI(argc, argv, i);
-                else
-                    nRet = TAO::API::CommandLineRPC(argc, argv, i);
-
-                return env->NewStringUTF(0);
-            }
-        }
-
-
-        /* Log the startup information now. */
-        debug::LogStartup(argc, argv);
-
-
-        /* Run the process as Daemon RPC/LLP Server if Flagged. */
-        if(config::fDaemon)
-        {
-            debug::log(0, FUNCTION, "-daemon flag enabled. Running in background");
-            Daemonize();
-        }
-
-
-        /* Create directories if they don't exist yet. */
-        if(!::filesystem::exists(config::GetDataDir()) &&
-           ::filesystem::create_directory(config::GetDataDir()))
-        {
-            debug::log(0, FUNCTION, "Generated Path ", config::GetDataDir());
-        }
-
-
-        /* Check for failures or shutdown. */
-        bool fFailed = config::fShutdown.load();
-        if(!fFailed)
-        {
-            /* Initialize LLD. */
-            LLD::Initialize();
-
-
-            /* Initialize ChainState. */
-            TAO::Ledger::ChainState::Initialize();
-
-
-            /* Initialize dispatch relays. */
-            TAO::Ledger::Dispatch::Initialize();
-
-
-            /* Initialize the Lower Level Protocol. */
-            LLP::Initialize();
-
-
-            /* Startup performance metric. */
-            debug::log(0, FUNCTION, "Started up in ", timer.ElapsedMilliseconds(), "ms");
-
-
-            /* Set the initialized flags. */
-            config::fInitialized.store(true);
-
-
-            /* Initialize generator thread. */
-            std::thread thread;
-            if(config::fHybrid.load())
-                thread = std::thread(TAO::Ledger::ThreadGenerator);
-
-
-            /* Wait for shutdown. */
-            if(!config::GetBoolArg(std::string("-gdb")))
-            {
-                std::mutex SHUTDOWN_MUTEX;
-                std::unique_lock<std::mutex> SHUTDOWN_LOCK(SHUTDOWN_MUTEX);
-                SHUTDOWN.wait(SHUTDOWN_LOCK, []{ return config::fShutdown.load(); });
-            }
-
-
-                /* GDB mode waits for keyboard input to initiate clean shutdown. */
+            if(fIsAPI)
+                nRet = TAO::API::CommandLineAPI(argc, argv, i);
             else
-            {
-                getchar();
-                config::fShutdown = true;
-            }
+                nRet = TAO::API::CommandLineRPC(argc, argv, i);
 
-
-            /* Stop stake minter if running. Minter ignores request if not running, so safe to just call both */
-            TAO::Ledger::StakeMinter::GetInstance().Stop();
-
-
-            /* Wait for the private condition. */
-            if(config::fHybrid.load())
-            {
-                TAO::Ledger::PRIVATE_CONDITION.notify_all();
-                thread.join();
-            }
-
-
-            /* Shutdown dispatch. */
-            TAO::Ledger::Dispatch::Shutdown();
+            return env->NewStringUTF(0);
         }
+    }
 
 
-        /* Shutdown metrics. */
-        timer.Reset();
+    /* Log the startup information now. */
+    debug::LogStartup(argc, argv);
 
 
-        /* Shutdown network subsystem. */
-        LLP::Shutdown();
+    /* Run the process as Daemon RPC/LLP Server if Flagged. */
+    if(config::fDaemon)
+    {
+        debug::log(0, FUNCTION, "-daemon flag enabled. Running in background");
+        Daemonize();
+    }
 
 
-        /* Shutdown the API subsystems. */
-        TAO::API::Shutdown();
+    /* Create directories if they don't exist yet. */
+    if(!::filesystem::exists(config::GetDataDir()) &&
+        ::filesystem::create_directory(config::GetDataDir()))
+    {
+        debug::log(0, FUNCTION, "Generated Path ", config::GetDataDir());
+    }
 
 
-        /* Shutdown LLL sub-systems. */
-        LLD::Shutdown();
+    /* Check for failures or shutdown. */
+    bool fFailed = config::fShutdown.load();
+    if(!fFailed)
+    {
+        /* Initialize LLD. */
+        LLD::Initialize();
 
+
+        /* Initialize ChainState. */
+        TAO::Ledger::ChainState::Initialize();
+
+
+        /* Initialize dispatch relays. */
+        TAO::Ledger::Dispatch::Initialize();
+
+
+        /* Initialize the Lower Level Protocol. */
+        LLP::Initialize();
 
 
         /* Startup performance metric. */
-        debug::log(0, FUNCTION, "Closed in ", timer.ElapsedMilliseconds(), "ms");
+        debug::log(0, FUNCTION, "Started up in ", timer.ElapsedMilliseconds(), "ms");
 
 
-        /* Close the debug log file once and for all. */
-        debug::Shutdown();
+        /* Set the initialized flags. */
+        config::fInitialized.store(true);
 
+
+        /* Initialize generator thread. */
+        std::thread thread;
+        if(config::fHybrid.load())
+            thread = std::thread(TAO::Ledger::ThreadGenerator);
+
+
+        /* Wait for shutdown. */
+        if(!config::GetBoolArg(std::string("-gdb")))
+        {
+            std::mutex SHUTDOWN_MUTEX;
+            std::unique_lock<std::mutex> SHUTDOWN_LOCK(SHUTDOWN_MUTEX);
+            SHUTDOWN.wait(SHUTDOWN_LOCK, []{ return config::fShutdown.load(); });
+        }
+
+
+        /* GDB mode waits for keyboard input to initiate clean shutdown. */
+        else
+        {
+            getchar();
+            config::fShutdown = true;
+        }
+
+
+        /* Stop stake minter if running. Minter ignores request if not running, so safe to just call both */
+        TAO::Ledger::StakeMinter::GetInstance().Stop();
+
+
+        /* Wait for the private condition. */
+        if(config::fHybrid.load())
+        {
+            TAO::Ledger::PRIVATE_CONDITION.notify_all();
+            thread.join();
+        }
+
+
+        /* Shutdown dispatch. */
+        TAO::Ledger::Dispatch::Shutdown();
+    }
+
+
+    /* Shutdown metrics. */
+    timer.Reset();
+
+
+    /* Shutdown network subsystem. */
+    LLP::Shutdown();
+
+
+    /* Shutdown the API subsystems. */
+    TAO::API::Shutdown();
+
+
+    /* Shutdown LLL sub-systems. */
+    LLD::Shutdown();
+
+
+    /* Startup performance metric. */
+    debug::log(0, FUNCTION, "Closed in ", timer.ElapsedMilliseconds(), "ms");
+
+
+    /* Close the debug log file once and for all. */
+    debug::Shutdown();
 
 
         unsetenv("HOME");
@@ -311,6 +309,21 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
             Shutdown();
             return 0;
         }
+    }
+
+    JNIEXPORT jint JNICALL
+    Java_com_nexus_mobile_android_MainActivity_CloseListenSocket(JNIEnv *env, jobject thiz)
+    {
+
+        //LLP::CloseListening();
+        return 0;
+    }
+
+    JNIEXPORT jint  JNICALL
+    Java_com_nexus_mobile_android_MainActivity_OpenListenSocket(JNIEnv *env, jobject thiz)
+    {
+        //LLP::OpenListening();
+        return 0;
     }
 
 

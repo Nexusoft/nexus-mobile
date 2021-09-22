@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -91,7 +91,7 @@ namespace LLP
          *  @return The json object to respond with.
          *
          **/
-        json::json JSONReply(const json::json& jsonResponse, const json::json& jsonError, const json::json& jsonID);
+        encoding::json JSONReply(const encoding::json& jsonResponse, const encoding::json& jsonError, const encoding::json& jsonID);
 
 
         /** ErrorReply
@@ -103,7 +103,7 @@ namespace LLP
          *
          *
          **/
-        void ErrorReply(const json::json& jsonError, const json::json& jsonID);
+        void ErrorReply(const encoding::json& jsonError, const encoding::json& jsonID);
 
 
         /** Authorized

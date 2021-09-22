@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.nexus.mobile.android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.nexus.wallet.android">
   <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -14,6 +14,7 @@
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
   <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/app_icon" android:roundIcon="@mipmap/app_icon_round" android:allowBackup="true" android:theme="@style/AppTheme" android:usesCleartextTraffic="true">
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="url"/>
     <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="38.0.0"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="NEVER"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>
@@ -28,7 +29,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="nexuswallet"/>
-        <data android:scheme="com.nexus.mobile.android"/>
+        <data android:scheme="io.nexus.wallet.android"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>

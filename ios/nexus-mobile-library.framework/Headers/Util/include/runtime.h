@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -30,7 +30,7 @@ extern std::atomic<int32_t> UNIFIED_AVERAGE_OFFSET;
 
 
 namespace runtime
-{
+{    
 
     /** timestamp
      *
@@ -72,6 +72,10 @@ namespace runtime
      **/
     inline uint32_t maxdrift()
     {
+        #ifdef UNIT_TESTS
+        return 1000000;
+        #endif
+
         /* Check if before version 8 time-lock. */
         if(unifiedtimestamp() < TAO::Ledger::StartBlockTimelock(8))
             return 10;
@@ -320,7 +324,7 @@ namespace runtime
             catch(const std::exception& e){ }
             return 0;
         #endif
-        
+
     }
 }
 

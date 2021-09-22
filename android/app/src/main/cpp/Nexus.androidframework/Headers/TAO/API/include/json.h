@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -90,18 +90,6 @@ namespace TAO::API
     __attribute__((pure)) encoding::json ContractToJSON(const TAO::Operation::Contract& rContract,
                                                         const uint32_t nContract, const uint32_t nVerbose = 0);
 
-
-    /** OrderToJSON
-     *
-     *  Converts an order for marketplace into formatted JSON.
-     *
-     *  @param[in] rContract The contract to de-serialize
-     *  @param[in] pairMarket The market pair ordering.
-     *
-     *  @return the formatted JSON object
-     *
-     **/
-    __attribute__((pure)) encoding::json OrderToJSON(const TAO::Operation::Contract& rContract, const std::pair<uint256_t, uint256_t>& pairMarket);
 
     /** RegisterToJSON
      *

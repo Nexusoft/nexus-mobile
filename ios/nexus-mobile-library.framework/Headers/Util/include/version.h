@@ -2,7 +2,7 @@
 
 			(c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-			(c) Copyright The Nexus Developers 2014 - 2019
+			(c) Copyright The Nexus Developers 2014 - 2021
 
 			Distributed under the MIT software license, see the accompanying
 			file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -53,6 +53,33 @@ namespace version
 	extern const std::string CLIENT_DATE;
 
 
+	/** get_version
+	 *
+	 *  Convert version values into aggregated version.
+	 *
+	 *  @param[in] nMajor The major version number, i.e. the leftmost value
+	 *  @param[in] nMinor The minor version number, i.e. the center value
+	 *  @param[in] nPatch The patch version number, i.e. the rightmost value
+	 *
+	 *  @return aggregated version as unsigned integer.
+	 *
+	 **/
+	__attribute__((const)) inline uint32_t get_version(const uint32_t nMajor, const uint32_t nMinor, const uint32_t nPatch = 0)
+	{
+		return (10000 * nMajor) + (100 * nMinor) + nPatch;
+	}
+
+
+	/** version_string
+	 *
+	 *  Decompose a integer version into string value.
+	 *
+	 *  @param[in] nVersion The version to decompose
+	 *
+	 *  @return string representation of version.
+	 *
+	 **/
+	__attribute__((const)) std::string version_string(const uint32_t nVersion);
 }
 
 #endif

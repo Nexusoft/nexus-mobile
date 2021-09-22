@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -272,7 +272,7 @@ namespace LLP
         void Relay(const MessageType& message, Args&&... args)
         {
             DataStream ssData(SER_NETWORK, MIN_PROTO_VERSION);
-            message_args(ssData, std::forward<Args>(args)...);
+            ((ssData << args), ...);
 
             /* Push the relay message to outbound queue. */
             RELAY->push(std::make_pair(message, ssData));

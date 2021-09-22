@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -93,19 +93,6 @@ namespace LLP
          *
          **/
         bool Authorized(std::map<std::string, std::string>& mapHeaders);
-
-
-        /** QuerystringToJSON
-         *
-         *  Parses the querystring and coverts it to a json object of key=value pairs
-         *
-         *  @param[in] strQuerystring The querystring to parse.
-         *  @param[in] strMethod The API method being called.
-         *
-         *  @return The json object of parameters
-         *
-         **/
-        json::json QuerystringToJSON(const std::string& strQuerystring, const std::string& strMethod);
 
     };
 }

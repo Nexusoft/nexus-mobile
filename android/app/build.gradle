@@ -82,7 +82,9 @@ project.ext.react = [
 ]
 
 apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
+apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/expo-constants/scripts/get-app-config-android.gradle"
+apply from: "../../node_modules/expo-updates/scripts/create-manifest-android.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -122,8 +124,8 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 def versionMajor = 0
-def versionMinor = 8
-def versionPatch = 2
+def versionMinor = 9
+def versionPatch = 0
 def buildNumber = 1
 
 def genVersionCode = versionMajor * 10000000 + versionMinor * 100000 + versionPatch * 1000 + buildNumber
@@ -169,7 +171,7 @@ android {
         externalNativeBuild {
             cmake {
                 abiFilters "arm64-v8a", "x86_64"
-                cppFlags "-std=c++14"
+                cppFlags "-std=c++17"
                 arguments '-DANDROID_STL=c++_static', '-DOPENSSL_ROOT_DIR=' + openSSLDir
             }
         }

@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -19,7 +19,7 @@ namespace LLP
 {
 
     /* Events for LLP packet processing. */
-    namespace EVENTS
+    struct EVENTS
     {
         enum
         {
@@ -31,11 +31,11 @@ namespace LLP
             FAILED         = 5,
             PROCESSED      = 6,
         };
-    }
+    };
 
 
     /* Disonnect reason flags */
-    namespace DISCONNECT
+    struct DISCONNECT
     {
         enum
         {
@@ -49,11 +49,7 @@ namespace LLP
             BUFFER        = 14,
             TIMEOUT_WRITE = 15,
         };
-    }
-
-
-
-
+    };
 }
 
 #endif

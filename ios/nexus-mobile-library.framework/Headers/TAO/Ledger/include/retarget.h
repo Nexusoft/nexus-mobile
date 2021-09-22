@@ -2,7 +2,7 @@
 
             (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2021
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -55,6 +55,19 @@ namespace TAO
          *
          **/
         void GetChainTimes(uint32_t nAge, uint32_t& nDays, uint32_t& nHours, uint32_t& nMinutes);
+
+
+        /** GetAverageTimespan
+         *
+         *  Gets the average timespan of given number of blocks.
+         *
+         *  @param[in] rBlock The block state to search from.
+         *  @param[in] nMaximum The total blocks to search back.
+         *
+         *  @return the new weighted time.
+         *
+         **/
+        uint64_t GetAverageTimespan(const BlockState& rBlock, const uint32_t nMaximum = 1440);
 
 
         /** GetWeightedTimes
