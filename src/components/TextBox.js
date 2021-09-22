@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { View, TextInput, TouchableOpacity } from 'react-native';
 import {
   TextInput as PaperTextInput,
   HelperText,
@@ -67,6 +67,7 @@ const InnerTextBox = React.forwardRef(
       value,
       onChangeText,
       style,
+      rightButton,
       ...rest
     },
     ref
@@ -83,7 +84,7 @@ const InnerTextBox = React.forwardRef(
           {...rest}
         />
         {!!value && !!secure && (
-          <TouchableWithoutFeedback
+          <TouchableOpacity
             delayPressIn={0}
             delayPressOut={0}
             onPressIn={() => {
@@ -100,10 +101,10 @@ const InnerTextBox = React.forwardRef(
                 color={iconColor}
               />
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         )}
         {!!value && !!clearButton && (
-          <TouchableWithoutFeedback
+          <TouchableOpacity
             onPress={() => {
               onChangeText && onChangeText('');
             }}
@@ -111,7 +112,19 @@ const InnerTextBox = React.forwardRef(
             <View style={styles.icon({ mode, dense })}>
               <SvgIcon sub icon={ClearIcon} size={16} color={iconColor} />
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
+        )}
+        {rightButton && (
+          <TouchableOpacity onPress={rightButton.onPress}>
+            <View style={styles.icon({ mode, dense })}>
+              <SvgIcon
+                sub
+                icon={rightButton.icon}
+                size={rightButton.iconSize || 16}
+                color={iconColor}
+              />
+            </View>
+          </TouchableOpacity>
         )}
       </View>
     );
@@ -124,6 +137,8 @@ export default function TextBox({
   dense,
   clearButton = true,
   background,
+  leftIcon,
+  rightButton,
   style,
   ...rest
 }) {
@@ -147,9 +162,17 @@ export default function TextBox({
       autoCapitalize="none"
       keyboardAppearance={theme.dark ? 'dark' : 'light'}
       style={[mode !== 'outlined' && { backgroundColor: 'transparent' }, style]}
+      left={
+        leftIcon ? (
+          <PaperTextInput.Icon
+            color={adaptedTheme.foreground}
+            name={leftIcon}
+          />
+        ) : undefined
+      }
       render={(props) => (
         <InnerTextBox
-          {...{ mode, secure, dense, clearButton }}
+          {...{ mode, secure, dense, clearButton, rightButton }}
           iconColor={adaptedTheme.foreground}
           {...props}
         />

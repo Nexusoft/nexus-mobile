@@ -120,6 +120,19 @@ export function confirmPin(options) {
   });
 }
 
+export function showOptions(props) {
+  const store = getStore();
+  const id = newUID();
+  store.dispatch({
+    type: TYPE.OPEN_DIALOG,
+    payload: {
+      id,
+      type: 'options',
+      ...props,
+    },
+  });
+}
+
 export function closeDialog(id) {
   const store = getStore();
   store.dispatch({
