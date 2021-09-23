@@ -55,7 +55,7 @@ jint JNI_Onload(JavaVM* vm, void* reserved) {
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject thiz, jstring homepath, jstring apiUser ,jstring apiPassword , jobjectArray params) {
+Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject thiz, jstring homepath, jstring apiUser ,jstring apiPassword , jobjectArray params) {
     {
         const char *res;
         const char *inApiUser;
@@ -302,7 +302,7 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
 }
 
     JNIEXPORT jint JNICALL
-    Java_com_nexus_mobile_android_MainActivity_ShutDownNexusCore(JNIEnv *env, jobject thiz)
+    Java_io_nexus_wallet_android_MainActivity_ShutDownNexusCore(JNIEnv *env, jobject thiz)
     {
         {
             LOG_D("### Set Shutdown Flag");
@@ -314,13 +314,12 @@ Java_com_nexus_mobile_android_MainActivity_startNexusCore(JNIEnv *env, jobject t
     JNIEXPORT jint JNICALL
     Java_com_nexus_mobile_android_MainActivity_CloseListenSocket(JNIEnv *env, jobject thiz)
     {
-
         //LLP::CloseListening();
         return 0;
     }
 
     JNIEXPORT jint  JNICALL
-    Java_com_nexus_mobile_android_MainActivity_OpenListenSocket(JNIEnv *env, jobject thiz)
+    Java_io_nexus_wallet_android_MainActivity_OpenListenSocket(JNIEnv *env, jobject thiz)
     {
         //LLP::OpenListening();
         return 0;
