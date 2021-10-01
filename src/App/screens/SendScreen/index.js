@@ -34,7 +34,7 @@ async function resolveNameOrAddress(nameOrAddress) {
     const addressResult = await callAPI('system/validate/address', {
       address: nameOrAddress,
     });
-    if (addressResult.is_valid) {
+    if (addressResult.valid) {
       // This is a Nexus address
       return {
         address: nameOrAddress,
