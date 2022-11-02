@@ -31,10 +31,10 @@ void* PosixThreadMainRoutine(void* data)
              strdup("-apissl=1"),
              strdup("-apisslport=7080"),
              strdup("-apisslrequired"),
-          strdup("-connect=node1.nexusoft.io"),
-          strdup("-connect=node2.nexusoft.io"),
-          strdup("-connect=node3.nexusoft.io"),
-          strdup("-connect=node4.nexusoft.io"),
+          strdup("-connect=node1.nexus.io"),
+          strdup("-connect=node2.nexus.io"),
+          strdup("-connect=node3.nexus.io"),
+          strdup("-connect=node4.nexus.io"),
           NULL
      };
      const char *com = [userCre[0] UTF8String];
