@@ -231,7 +231,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(':react-native-fs')
     //noinspection GradleDynamicVersion
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.facebook.react:react-native:0.63.5!!"  // From node_modules //Fix for RN0.71.rc0 mess up. TODO: remove
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation "com.android.support:support-compat:28.0.0"
     implementation project(':react-native-background-timer')
