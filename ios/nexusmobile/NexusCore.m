@@ -27,19 +27,22 @@ void* PosixThreadMainRoutine(void* data)
           strdup("-verbose=0"),
           strdup("-manager=1"),
           strdup("-timeout=30"),
-             strdup("-ssl=1"),
-             strdup("-apissl=1"),
-             strdup("-apisslport=7080"),
-             strdup("-apisslrequired"),
-          strdup("-connect=node1.nexus.io"),
-          strdup("-connect=node2.nexus.io"),
-          strdup("-connect=node3.nexus.io"),
-          strdup("-connect=node4.nexus.io"),
+          strdup("-ssl=1"),
+          strdup("-apissl=1"),
+          strdup("-apisslport=7080"),
+          strdup("-apisslrequired"),
+            strdup("-connect=node1.nexus.io"),
+            strdup("-connect=node2.nexus.io"),
+            strdup("-connect=node3.nexus.io"),
+            strdup("-connect=node4.nexus.io"),
+            strdup("-connect=lite1.nexenture.xyz"),
+            strdup("-connect=lite2.nexenture.xyz"),
+            strdup("-connect=lite3.nexenture.xyz"),
           NULL
      };
      const char *com = [userCre[0] UTF8String];
     const char *command = [userCre[1] UTF8String];
-     startNexus(12, my_argv,strdup(com),strdup(command));
+     startNexus(16, my_argv,strdup(com),strdup(command));
     return NULL;
 }
 
