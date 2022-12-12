@@ -210,7 +210,6 @@ export default function CreateUserScreen() {
           try {
             await login({ username, password, pin, rememberMe, keepLoggedIn });
           } catch (err) {
-            console.log(err);
             showError(
               err &&
                 err.message +

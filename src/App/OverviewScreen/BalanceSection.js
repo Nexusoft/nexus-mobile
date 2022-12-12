@@ -12,6 +12,7 @@ import { refreshMarketPrice } from 'lib/market';
 import { selectSetting } from 'lib/settings';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
+import memoize from 'utils/memoize';
 import UpArrowIcon from 'icons/chevron-up.svg';
 import DownArrowIcon from 'icons/chevron-down.svg';
 
@@ -61,6 +62,17 @@ const styles = {
   },
 };
 
+const selectBalances = memoize(
+  (balances) => {
+    if (!balances) return [undefined, undefined];
+    const nxsIndex = balances.findIndex(({ token }) => token === '0');
+    const tokenBalances = [...balances];
+    const [nxsBalances] = tokenBalances.splice(nxsIndex, 1);
+    return [nxsBalances, tokenBalances];
+  },
+  ({ user: { balances } }) => [balances]
+);
+
 function BalanceText(props) {
   const theme = useTheme();
   return (
@@ -75,11 +87,12 @@ export default function BalanceSection({ filteredAccounts }) {
     filteredAccounts?.length === 1 && userExpanded === null
       ? true
       : !!userExpanded;
-  const balances = useSelector((state) => state.user?.balances);
+  const [nxsBalances] = useSelector(selectBalances);
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const hideBalances = useSelector(selectSetting('hideBalances'));
   const price = useSelector(({ market: { price } }) => price);
-  const { available, pending, unconfirmed, stake, immature } = balances || {};
+  const { available, unclaimed, unconfirmed, stake, immature } =
+    nxsBalances || {};
   React.useEffect(() => {
     refreshMarketPrice();
   }, []);
@@ -96,9 +109,9 @@ export default function BalanceSection({ filteredAccounts }) {
       return unobserve;
     }, [])
   );
-  const balance = (amount, formatOptions, currency = 'NXS') => {
+  const renderBalance = (amount, formatOptions, currency = 'NXS') => {
     if (hideBalances) return '??? ' + currency;
-    if (!balances) return 'N/A';
+    if (!nxsBalances) return 'N/A';
     // VND doesn't have decimal digits
     if (currency === 'VND') {
       formatOptions.maximumFractionDigits = 0;
@@ -118,12 +131,12 @@ export default function BalanceSection({ filteredAccounts }) {
         <View style={styles.brief}>
           <BalanceText style={styles.balanceLabel}>Balance</BalanceText>
           <BalanceText style={styles.balance}>
-            {balance(available + stake, { maximumFractionDigits: 2 })}
+            {renderBalance(available + stake, { maximumFractionDigits: 2 })}
           </BalanceText>
-          {!!price && !!balances && (
+          {!!price && !!nxsBalances && (
             <BalanceText style={styles.fiatValue} sub>
               ≈ 
-              {balance(
+              {renderBalance(
                 (available + stake) * price,
                 {
                   maximumFractionDigits: 2,
@@ -142,28 +155,30 @@ export default function BalanceSection({ filteredAccounts }) {
         <View style={styles.subBalances({ expanded })}>
           <View style={styles.subBalance}>
             <BalanceText>Available</BalanceText>
-            <BalanceText>{balance(available)}</BalanceText>
+            <BalanceText>{renderBalance(available)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Staking (locked)</BalanceText>
-            <BalanceText>{balance(stake)}</BalanceText>
+            <BalanceText>{renderBalance(stake)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Pending</BalanceText>
-            <BalanceText>{balance(pending)}</BalanceText>
+            <BalanceText>Unclaimed</BalanceText>
+            <BalanceText>{renderBalance(unclaimed)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Unconfirmed</BalanceText>
-            <BalanceText>{balance(unconfirmed)}</BalanceText>
+            <BalanceText>{renderBalance(unconfirmed)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Immature</BalanceText>
-            <BalanceText>{balance(immature)}</BalanceText>
+            <BalanceText>{renderBalance(immature)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
             <BalanceText>Total</BalanceText>
             <BalanceText>
-              {balance(available + stake + pending + unconfirmed + immature)}
+              {renderBalance(
+                available + stake + unclaimed + unconfirmed + immature
+              )}
             </BalanceText>
           </View>
         </View>

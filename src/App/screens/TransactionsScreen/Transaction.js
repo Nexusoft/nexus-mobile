@@ -47,7 +47,7 @@ function Transaction({ transaction }) {
         </View>
 
         <View style={styles.contracts}>
-          {transaction.contracts.map((contract, i) => (
+          {transaction.contracts?.map((contract, i) => (
             <React.Fragment key={i}>
               {i !== 0 && <Divider />}
               <Contract contract={contract} />

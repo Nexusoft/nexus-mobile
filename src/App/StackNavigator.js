@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Platform, KeyboardAvoidingView } from 'react-native';
 import {
   createStackNavigator,
@@ -58,6 +59,7 @@ const screens = [
 
 export default function StackNavigator({ navigation }) {
   const theme = useTheme();
+  const txFilterOpen = useSelector((state) => state.ui.transactionsFilter.open);
   React.useEffect(() => {
     const store = getStore();
     store.observe(selectLoggedIn, (loggedIn) => {
@@ -102,7 +104,7 @@ export default function StackNavigator({ navigation }) {
         {screens.map((Screen) => {
           const { name, options } =
             typeof Screen.nav === 'function'
-              ? Screen.nav({ theme })
+              ? Screen.nav({ theme, txFilterOpen })
               : Screen.nav;
 
           return (

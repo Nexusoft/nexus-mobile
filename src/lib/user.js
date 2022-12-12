@@ -56,7 +56,7 @@ export async function refreshUserBalances() {
 export async function refreshUserAccounts() {
   const store = getStore();
   try {
-    const accounts = await callAPI('users/list/accounts');
+    const accounts = await callAPI('finance/list/accounts');
     store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: accounts });
     if (accounts.length === 0) {
       // In a very rare case the sigchain is not fully downloaded, try again
@@ -73,7 +73,7 @@ export async function refreshUserAccounts() {
 export async function refreshUserTokens() {
   const store = getStore();
   try {
-    const tokens = await callAPI('users/list/tokens');
+    const tokens = await callAPI('finance/list/tokens');
     store.dispatch({ type: TYPE.SET_USER_TOKENS, payload: tokens });
     return tokens;
   } catch (err) {

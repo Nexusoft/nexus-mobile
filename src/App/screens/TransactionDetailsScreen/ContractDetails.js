@@ -19,7 +19,15 @@ export default function ContractDetails({ contract }) {
         {Object.entries(contract).map(([key, value], i) => (
           <React.Fragment key={key}>
             {i !== 0 && <Divider />}
-            <InfoField compact label={key} value={value} />
+            <InfoField
+              compact
+              label={key}
+              value={
+                value && typeof value === 'object'
+                  ? JSON.stringify(value, null, 2)
+                  : value
+              }
+            />
           </React.Fragment>
         ))}
       </Surface>

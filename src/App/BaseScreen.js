@@ -330,7 +330,7 @@ function useDefaultScreenFix() {
 
 function useDynamicNavOptions({ loggedIn, route, navigation }) {
   const theme = useTheme();
-  const txFilterOpen = useSelector((state) => state.ui.txFilterOpen);
+  const txFilterOpen = useSelector((state) => state.ui.transactionsFilter.open);
   const contactSearch = useSelector((state) => state.ui.contactSearch);
   React.useLayoutEffect(() => {
     if (loggedIn) {
