@@ -177,7 +177,7 @@ export default function RecoveryScreen() {
         })}
         onSubmit={async ({ username, recovery, password, pin }) => {
           try {
-            await callAPI('users/recover/user', {
+            await callAPI('profiles/recover/master', {
               username,
               recovery,
               password,

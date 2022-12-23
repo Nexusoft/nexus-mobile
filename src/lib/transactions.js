@@ -127,7 +127,7 @@ export async function loadTransactions({ reload } = { reload: false }) {
     if (query) {
       params.where = query;
     }
-    const transactions = await callAPI('users/list/transactions', params);
+    const transactions = await callAPI('ledger/list/transactions', params);
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
@@ -238,7 +238,7 @@ const getBalanceChanges = (tx) =>
 export async function fetchTransaction({ txid, where, limit }) {
   let tx;
   if (where) {
-    const txs = await callAPI('users/list/transactions', {
+    const txs = await callAPI('ledger/list/transactions', {
       verbose: 'summary',
       limit,
       where,
@@ -280,7 +280,7 @@ export function watchNewTransactions() {
         typeof oldTxCount === 'number' &&
         !wasSyncing
       ) {
-        const transactions = await callAPI('users/list/transactions', {
+        const transactions = await callAPI('ledger/list/transactions', {
           verbose: 'summary',
           limit: txCount - oldTxCount,
         });

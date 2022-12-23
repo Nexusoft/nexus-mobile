@@ -98,7 +98,7 @@ export default function ChangePasswordScreen() {
         })}
         onSubmit={async ({ password, pin, newPassword, newPin }) => {
           try {
-            await callAPI('users/update/user', {
+            await callAPI('profiles/update/credentials', {
               password,
               pin,
               new_password: newPassword,

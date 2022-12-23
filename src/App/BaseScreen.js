@@ -148,7 +148,7 @@ function UnlockingBase() {
   const unlock = async () => {
     setLoading(true);
     try {
-      await callAPI('users/load/session', {
+      await callAPI('sessions/load/local', {
         pin,
         username: savedUsername,
       });

@@ -16,7 +16,7 @@ export const selectUserIsConfirmed = (state) =>
 export async function refreshUserStatus() {
   const store = getStore();
   try {
-    const status = await callAPI('users/get/status');
+    const status = await callAPI('sessions/status/local');
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     return status;
   } catch (err) {
@@ -127,19 +127,19 @@ export async function login({
   rememberMe,
   keepLoggedIn,
 }) {
-  await callAPI('users/login/user', { username, password, pin });
+  await callAPI('sessions/create/local', { username, password, pin });
   updateSettings({
     savedUsername: rememberMe ? username : null,
   });
   await Promise.all([
-    callAPI('users/unlock/user', { pin, notifications: true }),
+    callAPI('sessions/unlock/local', { pin, notifications: true }),
     refreshUserStatus(),
-    rememberMe && keepLoggedIn ? callAPI('users/save/session', { pin }) : null,
+    rememberMe && keepLoggedIn ? callAPI('sessions/save/local', { pin }) : null,
   ]);
 }
 
 export async function logout() {
-  await callAPI('users/logout/user');
+  await callAPI('sessions/terminate/local');
   await refreshUserStatus();
 }
 

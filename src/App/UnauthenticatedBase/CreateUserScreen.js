@@ -196,7 +196,7 @@ export default function CreateUserScreen() {
           keepLoggedIn,
         }) => {
           try {
-            const result = await callAPI('users/create/user', {
+            const result = await callAPI('profiles/create/master', {
               username,
               password,
               pin,
