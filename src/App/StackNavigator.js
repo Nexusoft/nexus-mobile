@@ -76,8 +76,8 @@ export default function StackNavigator({ navigation }) {
     >
       <Stack.Navigator
         initialRouteName="Base"
-        headerMode="screen"
         screenOptions={{
+          headerMode: 'screen',
           headerStyle: {
             backgroundColor: theme.dark ? theme.surface : theme.primary,
             elevation: 4,
