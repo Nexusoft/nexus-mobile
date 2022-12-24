@@ -30,6 +30,8 @@ namespace config
     extern std::map<std::string, std::vector<std::string> > mapMultiArgs;
     extern std::map<uint16_t, std::vector<std::string> > mapIPFilters;
 
+    extern std::atomic<uint64_t> nTransactionActivation;
+
 
     extern std::atomic<bool> fShutdown;
     extern std::atomic<bool> fDebug;
@@ -55,7 +57,7 @@ namespace config
     extern uint256_t hashNetworkOwner;
 
     /* Declare our arguments mutex. */
-    extern std::mutex ARGS_MUTEX;
+    extern std::recursive_mutex ARGS_MUTEX;
 
 
     /** InterpretNegativeSetting

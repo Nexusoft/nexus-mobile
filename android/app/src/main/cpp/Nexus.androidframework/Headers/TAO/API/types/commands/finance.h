@@ -145,5 +145,32 @@ namespace TAO::API
          **/
         encoding::json SetStake(const encoding::json& jParams, const bool fHelp);
 
+
+        /** Void
+         *
+         *  Voids a transaction, if transaction is returned or sent to individual but wishes to cancel this method can be used as
+         *  long as the conditional contract allows it.
+         *
+         *  @param[in] jParams The parameters from the API call.
+         *  @param[in] fHelp Trigger for help data.
+         *
+         *  @return The return object in JSON.
+         *
+         **/
+        encoding::json Void(const encoding::json& jParams, const bool fHelp);
+
+
+        /** AccountToJSON
+         *
+         *  Returns the JSON representation of an account, either trust or account
+         *
+         *  @param[in] rObject The state register containing the invoice data
+         *  @param[in] hashRegister The register address of the invoice state register
+         *
+         *  @return the invoice JSON
+         *
+         **/
+        static encoding::json AccountToJSON(const TAO::Register::Object& rObject, const uint256_t& hashRegister);
+
     };
 }
