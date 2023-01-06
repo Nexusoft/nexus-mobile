@@ -55,6 +55,7 @@ export default function UnauthenticatedBase() {
       <BottomTab.Navigator
         initialRouteName={defaultScreen}
         shifting={false}
+        backBehavior="history"
         tabBar={(props) => <CustomBottomTabBar {...props} />}
         screenOptions={{
           headerShown: false,
