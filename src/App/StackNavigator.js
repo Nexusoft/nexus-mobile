@@ -1,11 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Platform, KeyboardAvoidingView } from 'react-native';
-import {
-  createStackNavigator,
-  Header,
-  HeaderBackground,
-} from '@react-navigation/stack';
+import { createStackNavigator, Header } from '@react-navigation/stack';
+import { HeaderBackground } from '@react-navigation/elements';
 import { shadow } from 'react-native-paper';
 
 import ReceiveScreen from './screens/ReceiveScreen';
