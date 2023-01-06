@@ -68,6 +68,9 @@ export default function UnauthenticatedBase() {
           labelStyle: { marginBottom: 5, textTransform: 'uppercase' },
           labelPosition: 'beside-icon',
         }}
+        screenOptions={{
+          headerShown: false,
+        }}
       >
         {screens.map((Screen) => {
           const { name, title, listeners, options } =
