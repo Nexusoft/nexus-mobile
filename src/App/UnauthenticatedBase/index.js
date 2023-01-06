@@ -84,6 +84,7 @@ export default function UnauthenticatedBase() {
               options={{
                 title: title || name,
                 tabBarLabel: title || name,
+                tabBarIcon: () => null,
                 ...options,
               }}
             />
