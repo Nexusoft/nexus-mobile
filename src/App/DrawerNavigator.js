@@ -25,12 +25,16 @@ export default function DrawerNavigator() {
       theme={navTheme}
     >
       <Drawer.Navigator
-        hideStatusBar={false}
         drawerContent={(props) => <SideBar {...props} />}
         sceneContainerStyle={{
           backgroundColor: theme.dark ? undefined : theme.primary,
         }}
-        edgeWidth={loggedIn ? undefined : 0}
+        screenOptions={{
+          headerShown: false,
+          drawerType: 'front',
+          drawerHideStatusBarOnOpen: false,
+          swipeEnabled: !!loggedIn,
+        }}
       >
         <Drawer.Screen name="StackNav" component={StackNavigator} />
       </Drawer.Navigator>
