@@ -258,12 +258,12 @@ int shutdownNexus()
 
 int closeListening()
 {
-  LLP::CloseListening();
+  //LLP::closeListening();
   return 0;
 }
 
 int openListening()
 {
-  LLP::OpenListening();
+  //LLP::openListening();
   return 0;
 }
