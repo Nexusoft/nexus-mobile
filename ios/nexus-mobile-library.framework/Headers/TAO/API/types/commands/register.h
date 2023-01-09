@@ -14,6 +14,7 @@ ________________________________________________________________________________
 #pragma once
 
 #include <TAO/API/types/base.h>
+#include <TAO/API/types/commands.h>
 
 /* Global TAO namespace. */
 namespace TAO::API
@@ -60,6 +61,32 @@ namespace TAO::API
         }
 
 
+        /** Import
+         *
+         *  Import objects of an API instance, indexed by our name.
+         *
+         **/
+        template<typename Type>
+        void Import()
+        {
+            /* Get our typename from static type instance. */
+            const std::string& strAPI = Type::Name();
+
+            /* Grab objects by this class's instance converted by typename. */
+            Import(strAPI);
+        }
+
+
+        /** Import
+         *
+         *  Import objects of an API instance, indexed by our name.
+         *
+         *  @param[in] strAPI The api instance string to use.
+         *
+         **/
+        void Import(const std::string& strAPI);
+
+
         /** Get
          *
          *  Get any register in the global scope
@@ -86,16 +113,29 @@ namespace TAO::API
         encoding::json List(const encoding::json& jParams, const bool fHelp);
 
 
-        /** AccountToJSON
+        /** History
          *
-         *  Returns the JSON representation of an account, either trust or account
+         *  Gets a history of register states over the course of its lifetime.
          *
-         *  @param[in] rObject The state register containing the invoice data
-         *  @param[in] hashRegister The register address of the invoice state register
+         *  @param[in] jParams The input parameters to the command.
+         *  @param[in] fHelp Flag to determine if help was requested for command.
          *
-         *  @return the invoice JSON
+         *  @return the json list of given object(s).
          *
          **/
-        static encoding::json AccountToJSON(const TAO::Register::Object& rObject, const uint256_t& hashRegister);
+        encoding::json History(const encoding::json& jParams, const bool fHelp);
+
+
+        /** Transactions
+         *
+         *  Lists all transactions of supported type in any scope.
+         *
+         *  @param[in] jParams The parameters from the API call.
+         *  @param[in] fHelp Trigger for help data.
+         *
+         *  @return The return object in JSON.
+         *
+         **/
+        encoding::json Transactions(const encoding::json& jParams, const bool fHelp);
     };
 }

@@ -31,6 +31,7 @@ ________________________________________________________________________________
 
 namespace LLP
 {
+
     /** TritiumNode
      *
      *  A Node that processes packets and messages for the Tritium Server
@@ -43,6 +44,16 @@ namespace LLP
         /** Actions invoke behavior in remote node. **/
         struct ACTION
         {
+            /** Limit for maximum items that can be requested per packet. **/
+            static const uint32_t GET_MAX_ITEMS = 100;
+
+            /** Limit for maximum notifications that can be broadcast per packet. **/
+            static const uint32_t NOTIFY_MAX_ITEMS = 100;
+
+            /** Limit for maximum subscriptions that can be requested per packet. **/
+            static const uint32_t SUBSCRIBE_MAX_ITEMS = 16;
+
+            /* Message enumeration values. */
             enum : MessagePacket::message_t
             {
                 RESERVED     = 0,
@@ -95,7 +106,6 @@ namespace LLP
                 NOTIFICATION  = 0x3b,
                 TRIGGER       = 0x3c,
                 REGISTER      = 0x3d,
-                P2PCONNECTION = 0x3e,
             };
         };
 
@@ -111,6 +121,8 @@ namespace LLP
                 SYNC         = 0x42, //specify a sync block type
                 TRANSACTIONS = 0x43, //specify to send memory transactions first
                 CLIENT       = 0x44, //specify for blocks to be sent and received for clients
+                REGISTER     = 0x45, //specify that a register is being received and should only keep memory of it.
+                DEPENDANT    = 0x46, //specify that a transaction is a dependant and therfore only process the ledger layer.
             };
         };
 
@@ -145,7 +157,7 @@ namespace LLP
                 LASTINDEX       = (1 << 7),
                 BESTCHAIN       = (1 << 8),
                 SIGCHAIN        = (1 << 9),
-                NOTIFICATION    = (1 << 10),
+                REGISTER        = (1 << 10),
             };
         };
 
@@ -189,14 +201,6 @@ namespace LLP
 
         /** Set for connected session. **/
         static std::map<uint64_t, std::pair<uint32_t, uint32_t>> mapSessions;
-
-
-        /** Mutex for controlling access to the p2p requests map. **/
-        static std::mutex P2P_REQUESTS_MUTEX;
-
-
-        /** map of P2P request timestamps by source genesis hash. **/
-        static std::map<uint256_t, uint64_t> mapP2PRequests;
 
 
         /** Name
@@ -433,16 +437,14 @@ namespace LLP
         static DataStream GetAuth(bool fAuth);
 
 
-        /** SessionActive
+        /** Syncing
          *
-         *  Determine whether a session is connected.
-         *
-         *  @param[in] nSession The session to check for
+         *  Determine whether a node is syncing.
          *
          *  @return true if session is connected.
          *
          **/
-        static bool SessionActive(const uint64_t nSession);
+        static bool Syncing();
 
 
         /** GetNode
@@ -539,19 +541,6 @@ namespace LLP
             pNode->Release(LLP::TritiumNode::RESPONSE::COMPLETED);
 
         }
-
-
-        /** SyncSigChain
-         *
-         *  Requests missing sig chain / event transactions for the given signature chain.
-         *
-         *  @param[in] pNode Pointer to the TritiumNode connection instance to push the message to.
-         *  @param[in] hashGenesis The genesis hash of the sig chain to sync.
-         *  @param[in] bWait  Flag indicating that the method should wait until the sig chain is downloaded before returning
-         *  @param[in] bSyncEvents Flag indicating whether or not to also download events for the sig chain
-         *
-         **/
-        static void SyncSigChain(LLP::TritiumNode* pNode, const uint256_t& hashGenesis, bool bWait, bool bSyncEvents);
 
 
         /** Sync

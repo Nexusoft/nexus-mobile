@@ -91,6 +91,20 @@ namespace TAO::API
                                                         const uint32_t nContract, const uint32_t nVerbose = 0);
 
 
+    /** ConditionToJSON
+     *
+     *  Converts a serialized contract condition stream to formattted JSON
+     *
+     *  @param[in] rContract The contract to de-serialize
+     *  @param[in] nContract the id of the contract within the transaction
+     *  @param[in] nVerbose The verbose output level.
+     *
+     *  @return the formatted JSON object
+     *
+     **/
+    __attribute__((pure)) std::string ConditionToJSON(const TAO::Operation::Contract& rContract, const uint32_t nVerbose = 0);
+
+
     /** RegisterToJSON
      *
      *  Converts an Object Register to formattted JSON with no external lookups
@@ -101,8 +115,8 @@ namespace TAO::API
      *  @return the formatted JSON object
      *
      **/
-    __attribute__((const)) encoding::json RegisterToJSON(const TAO::Register::Object& object,
-                                                         const TAO::Register::Address& hashRegister = 0);
+    __attribute__((const)) encoding::json RegisterToJSON(const TAO::Register::Object& rObject,
+                                                         const TAO::Register::Address& hashRegister = uint256_t(0));
 
 
     /** MembersToJSON
@@ -114,7 +128,7 @@ namespace TAO::API
      *
      *
      **/
-    void MembersToJSON(const TAO::Register::Object& object, encoding::json &jRet);
+    void MembersToJSON(const TAO::Register::Object& rObject, encoding::json &jRet);
 
 
     /** StateToJSON
@@ -152,8 +166,9 @@ namespace TAO::API
      *  @return True if the object type is what was specified.
      *
      **/
-    __attribute__((pure)) encoding::json StandardToJSON(const encoding::json& jParams, const TAO::Register::Object& rObject,
-                                                        const uint256_t& hashRegister = 0);
+    __attribute__((pure)) encoding::json StandardToJSON(const encoding::json& jParams,
+                                                        const TAO::Register::Object& rObject,
+                                                        const TAO::Register::Address& hashRegister = uint256_t(0));
 
 
     /** ChannelToJSON

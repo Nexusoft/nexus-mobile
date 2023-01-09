@@ -38,9 +38,11 @@ namespace TAO
             /* Bitmask of actions that can be performed on the sigchain when unlocked  */
             uint8_t nUnlockedActions;
 
+
             /** The PIN to unlock a signature chain. **/
             SecureString strPIN;
-            
+
+
         public:
 
             /* Enumeration of allowable actions that can be performed on an unlocked signature chain */
@@ -179,6 +181,21 @@ namespace TAO
             }
 
 
+            /** Update
+             *
+             *  Update the PIN and actions internal values.
+             *
+             *  @param[in] strUpdated The PIN secure string to add.
+             *  @param[in] nUpdatedActions The enum to determine what actions are allowed.
+             *
+             **/
+            void Update(const SecureString& strUpdated, const uint8_t nUpdatedActions)
+            {
+                strPIN           = strUpdated;
+                nUnlockedActions = nUpdatedActions;
+            }
+
+
             /** Encrypt
              *
              *  Special method for encrypting specific data types inside class.
@@ -195,7 +212,7 @@ namespace TAO
              *  Provides access to the current unlocked actions set on this PIN
              *
              **/
-            uint8_t UnlockedActions()
+            uint8_t UnlockedActions() const
             {
                 return nUnlockedActions;
             }
