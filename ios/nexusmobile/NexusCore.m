@@ -35,11 +35,12 @@ void* PosixThreadMainRoutine(void* data)
           strdup("-connect=node2.nexusoft.io"),
           strdup("-connect=node3.nexusoft.io"),
           strdup("-connect=node4.nexusoft.io"),
+          strdup("-noterminateauth=1"),
           NULL
      };
      const char *com = [userCre[0] UTF8String];
     const char *command = [userCre[1] UTF8String];
-     startNexus(12, my_argv,strdup(com),strdup(command));
+     startNexus(13, my_argv,strdup(com),strdup(command));
     return NULL;
 }
 
