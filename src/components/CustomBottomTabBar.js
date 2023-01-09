@@ -20,11 +20,11 @@ export default function CustomBottomTabBar({ style, ...rest }) {
     const handleKeyboardHide = () => {
       setHidden(false);
     };
-    Keyboard.addListener(showEvent, handleKeyboardShow);
-    Keyboard.addListener(hideEvent, handleKeyboardHide);
+    const showListener = Keyboard.addListener(showEvent, handleKeyboardShow);
+    const hideListener = Keyboard.addListener(hideEvent, handleKeyboardHide);
     return () => {
-      Keyboard.removeListener(showEvent, handleKeyboardShow);
-      Keyboard.removeListener(hideEvent, handleKeyboardHide);
+      showListener.remove();
+      hideListener.remove();
     };
   }, []);
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, LayoutAnimation } from 'react-native';
-import { HeaderTitle } from '@react-navigation/stack';
+import { HeaderTitle } from '@react-navigation/elements';
 import { FAB, overlay } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';

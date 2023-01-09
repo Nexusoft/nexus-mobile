@@ -56,14 +56,18 @@ export async function refreshUserBalances() {
 export async function refreshUserAccounts() {
   const store = getStore();
   try {
-    const accounts = await callAPI('finance/list/accounts');
-    store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: accounts });
-    if (accounts.length === 0) {
+    const [trust, accounts] = await Promise.all([
+      callAPI('finance/list/trust'),
+      callAPI('finance/list/account'),
+    ]);
+    if (!accounts?.length && !trust.length) {
       // In a very rare case the sigchain is not fully downloaded, try again
       setTimeout(refreshUserAccounts, 500);
     }
 
-    return accounts;
+    const allAccounts = trust.concat(accounts);
+    store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: allAccounts });
+    return allAccounts;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER_ACCOUNTS });
     return null;
@@ -107,7 +111,12 @@ export async function refreshHeaders() {
 export async function refreshUserAccount(address) {
   const store = getStore();
   try {
-    const account = await callAPI('finance/get/account', { address });
+    let account = null;
+    try {
+      account = await callAPI('finance/get/account', { address });
+    } catch (err) {
+      account = await callAPI('finance/get/trust', { address });
+    }
     store.dispatch({
       type: TYPE.SET_USER_ACCOUNT,
       payload: { address, account },
