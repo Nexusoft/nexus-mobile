@@ -111,7 +111,12 @@ export async function refreshHeaders() {
 export async function refreshUserAccount(address) {
   const store = getStore();
   try {
-    const account = await callAPI('finance/get/account', { address });
+    let account = null;
+    try {
+      account = await callAPI('finance/get/account', { address });
+    } catch (err) {
+      account = await callAPI('finance/get/trust', { address });
+    }
     store.dispatch({
       type: TYPE.SET_USER_ACCOUNT,
       payload: { address, account },
