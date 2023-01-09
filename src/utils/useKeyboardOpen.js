@@ -10,11 +10,11 @@ export default function useKeyboardOpen() {
     const onHide = () => {
       setKeyboardOpen(false);
     };
-    Keyboard.addListener('keyboardDidShow', onShow);
-    Keyboard.addListener('keyboardDidHide', onHide);
+    const showListener = Keyboard.addListener('keyboardDidShow', onShow);
+    const hideListener = Keyboard.addListener('keyboardDidHide', onHide);
     return () => {
-      Keyboard.removeListener('keyboardDidShow', onShow);
-      Keyboard.removeListener('keyboardDidHide', onHide);
+      showListener.remove();
+      hideListener.remove();
     };
   }, []);
   return keyboardOpen;
