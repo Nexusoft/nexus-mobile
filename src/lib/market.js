@@ -11,7 +11,7 @@ export async function refreshMarketPrice() {
     const baseCurrency = selectSetting('baseCurrency')(store.getState());
 
     const response = await fetch(
-      `https://nexus-wallet-server-nndj.onrender.com/market-data?base_currency=${baseCurrency}`
+      `https://nexus-wallet-server.onrender.com/market-data?base_currency=${baseCurrency}`
     );
     const data = await response.json();
 
