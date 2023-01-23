@@ -25,7 +25,7 @@ export async function refreshUserStatus() {
         settings: { savedUsername },
       } = store.getState();
       if (savedUsername) {
-        const { has } = await callAPI('session/status/local', {
+        const { has } = await callAPI('sessions/status/local', {
           username: savedUsername,
         });
         if (has) {
