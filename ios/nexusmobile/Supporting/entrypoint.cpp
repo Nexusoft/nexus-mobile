@@ -111,25 +111,17 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     /* Handle Commandline switch */
     for(int i = 1; i < argc; ++i)
     {
+        /* Handle for commandline API/RPC */
         if(!convert::IsSwitchChar(argv[i][0]))
         {
-            int nRet = 0;
+            /* As a helpful shortcut, if the method name includes a "/" then we will assume it is meant for the API. */
+            const std::string strEndpoint = std::string(argv[i]);
 
-            /* As a helpful shortcut, if the method name includes a "/" then we will assume it is meant for the API
-               since none of the RPC commands support a "/" in the method name */
-            bool fIsAPI = false;
+            /* Handle for API if symbol detected. */
+            if(strEndpoint.find('/') != strEndpoint.npos || config::GetBoolArg(std::string("-api")))
+                return TAO::API::CommandLineAPI(argc, argv, i);
 
-            std::string endpoint = std::string(argv[i]);
-            std::string::size_type pos = endpoint.find('/');
-            if(pos != endpoint.npos || config::GetBoolArg(std::string("-api")))
-                fIsAPI = true;
-
-            if(fIsAPI)
-                nRet = TAO::API::CommandLineAPI(argc, argv, i);
-            else
-                nRet = TAO::API::CommandLineRPC(argc, argv, i);
-
-            return nRet;
+            return TAO::API::CommandLineRPC(argc, argv, i);
         }
     }
 
@@ -162,12 +154,20 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
         LLD::Initialize();
 
 
+        /* Initialize dispatch relays. */
+        TAO::Ledger::Dispatch::Initialize();
+
+
         /* Initialize ChainState. */
         TAO::Ledger::ChainState::Initialize();
 
 
-        /* Initialize dispatch relays. */
-        TAO::Ledger::Dispatch::Initialize();
+        /* Check for reindexing entries. */
+        LLD::Logical->IndexRegisters();
+
+
+        /* Check for reindexing entries. */
+        LLD::Register->IndexAddress();
 
 
         /* Initialize the Lower Level Protocol. */
@@ -226,12 +226,12 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     timer.Reset();
 
 
-    /* Shutdown network subsystem. */
-    LLP::Shutdown();
-
-
     /* Shutdown the API subsystems. */
     TAO::API::Shutdown();
+
+
+    /* Shutdown network subsystem. */
+    LLP::Shutdown();
 
 
     /* Shutdown LLL sub-systems. */
