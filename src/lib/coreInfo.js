@@ -25,7 +25,7 @@ export async function refreshCoreInfo() {
     clearTimeout(timerId);
     const coreInfo = await getInfo();
     if (
-      (coreInfo?.synchronizing && coreInfo?.clientmode) ||
+      (coreInfo?.synchronizing && coreInfo?.litemode) ||
       coreInfo?.connections === 0
     ) {
       // Refresh quicker so that sync percentage is updated more frequently

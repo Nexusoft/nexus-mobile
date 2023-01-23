@@ -59,7 +59,7 @@ export default function CoreInfoScreen() {
         <InfoField
           inline
           label="Lite mode"
-          value={coreInfo?.clientmode ? 'Yes' : 'No'}
+          value={coreInfo?.litemode ? 'Yes' : 'No'}
         />
       </Surface>
 
