@@ -47,11 +47,14 @@ namespace LLP
             /** Limit for maximum items that can be requested per packet. **/
             static const uint32_t GET_MAX_ITEMS = 100;
 
+
             /** Limit for maximum notifications that can be broadcast per packet. **/
             static const uint32_t NOTIFY_MAX_ITEMS = 100;
 
+
             /** Limit for maximum subscriptions that can be requested per packet. **/
             static const uint32_t SUBSCRIBE_MAX_ITEMS = 16;
+
 
             /* Message enumeration values. */
             enum : MessagePacket::message_t
@@ -67,7 +70,6 @@ namespace LLP
                 VERSION      = 0x15,
                 SUBSCRIBE    = 0x16,
                 UNSUBSCRIBE  = 0x17,
-                VALIDATE     = 0x18,
 
                 /* Protocol. */
                 PING         = 0x1a,
@@ -138,7 +140,6 @@ namespace LLP
                 UNSUBSCRIBED = 0x53, //let node know it was unsubscribed successfully
                 AUTHORIZED   = 0x54,
                 COMPLETED    = 0x55, //let node know an event was completed
-                VALIDATED    = 0x56,
             };
         };
 
@@ -186,7 +187,7 @@ namespace LLP
 
 
         /** Sig chain genesis hashes / register addresses that the peer has subscribed to notifications for **/
-        std::vector<uint256_t> vNotifications;
+        std::set<uint256_t> setSubscriptions;
 
 
     public:
@@ -539,7 +540,6 @@ namespace LLP
 
             /* Cleanup our event trigger. */
             pNode->Release(LLP::TritiumNode::RESPONSE::COMPLETED);
-
         }
 
 

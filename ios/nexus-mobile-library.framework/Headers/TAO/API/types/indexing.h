@@ -146,6 +146,28 @@ namespace TAO::API
         static void InitializeThread();
 
 
+        /** IndexDependant
+         *
+         *  Index legacy transaction level events for logged in sessions.
+         *
+         *  @param[in] hash The txid of the transactioun
+         *  @param[in] tx The transaction to index events for.
+         *
+         **/
+        static void IndexDependant(const uint512_t& hashTx, const Legacy::Transaction& tx);
+
+
+        /** IndexDependant
+         *
+         *  Index tritium transaction level events for logged in sessions.
+         *
+         *  @param[in] hash The txid of the transactioun
+         *  @param[in] tx The transaction to index events for.
+         *
+         **/
+        static void IndexDependant(const uint512_t& hash, const TAO::Ledger::Transaction& tx);
+
+
         /** Shutdown
          *
          *  Shuts down the current indexing systems.
