@@ -23,7 +23,7 @@
     "expo": "^46.0.19",
     "expo-asset": "~8.7.0",
     "expo-background-fetch": "^10.0.1",
-    "expo-barcode-scanner": "^11.4.0",
+    "expo-barcode-scanner": "^11.2.2",
     "expo-constants": "^13.0.1",
     "expo-font": "^10.0.0",
     "expo-notifications": "~0.16.0",
