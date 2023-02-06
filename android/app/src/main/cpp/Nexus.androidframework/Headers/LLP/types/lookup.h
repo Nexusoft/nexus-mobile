@@ -164,6 +164,10 @@ namespace LLP
         template<typename... Args>
         void BlockingLookup(const uint32_t nTimeout, const uint8_t nMsg, Args&&... args)
         {
+            /* Check for shutdown. */
+            if(config::fShutdown.load())
+                return;
+
             /* Create our trigger nonce. */
             const uint64_t nRequestID = LLC::GetRand();
 
@@ -176,7 +180,7 @@ namespace LLP
             AddTrigger(RESPONSE::MERKLE, &REQUEST_TRIGGER);
 
             /* Process the event. */
-            REQUEST_TRIGGER.wait_for_nonce(nRequestID, nTimeout);
+            REQUEST_TRIGGER.wait_for_timeout(nRequestID, nTimeout);
 
             /* Cleanup our event trigger. */
             Release(RESPONSE::MERKLE);

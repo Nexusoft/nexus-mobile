@@ -331,6 +331,14 @@ namespace LLP
         void DisconnectAll();
 
 
+        /** NotifyTriggers
+         *
+         *  Release all pending triggers from BlockingMessages
+         *
+         **/
+        void NotifyTriggers();
+
+
         /** NotifyEvent
          *
          *  Tell the server an event has occured to wake up thread if it is sleeping. This can be used to orchestrate communication
