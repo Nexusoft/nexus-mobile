@@ -9,7 +9,9 @@
 #include "entrypoint.hpp"
 #include <LLC/include/random.h>
 #include <iostream>
+#include <fstream>
 #include <sys/stat.h>
+#include <boost/filesystem.hpp>
 #include <LLP/include/global.h>
 #include <LLP/include/port.h>
 #include <LLP/types/apinode.h>
@@ -43,49 +45,96 @@ using namespace std;
 
 int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword)
 {
-  
-
-  /* Setup the timer timer. */
-  runtime::timer timer;
-  timer.Start();
+    /* Setup the timer timer. */
+    runtime::timer timer;
+    timer.Start();
 
 
-  /* Handle all the signals with signal handler method. */
-  SetupSignals();
-  
-  
-  ofstream myfile;
-  string folder = std::string(getenv("HOME")) + "/Documents/Nexus" ;
-  string fileLoc = std::string(folder + "/nexus.conf" );
-  struct stat statbuf;
-  cout << folder << endl;
-  int isthere = stat(folder.c_str(), &statbuf);
-  cout << isthere << endl;
-  if ( isthere < 0)
-  {
-    mode_t m = S_IRWXU | S_IRWXG | S_IRWXO;
-                int status = mkdir(folder.c_str(), m);
-         cout << status << endl;
-  }
-  int confthere = stat(fileLoc.c_str(), &statbuf);
-  cout << confthere << endl;
-    cout << fileLoc << endl;
-    myfile.open (fileLoc, std::fstream::in | std::fstream::out | std::fstream::app);
-    if (confthere < 0)
+    /* Handle all the signals with signal handler method. */
+    SetupSignals();
+    
+    
+    ofstream nxsConfFile;
+    struct stat statbuf;
+    string nxsFolder = std::string(getenv("HOME")) + "/Documents/Nexus" ;
+    string nxsPolicy = std::string(nxsFolder + "/db-policies.txt" );
+    string nxsConf = std::string(nxsFolder + "/nexus.conf" );
+    fstream nxsPolicyFile;
+    int nxsPolicyExists = stat(nxsPolicy.c_str(), &statbuf);
+    int nxsFolderExists = stat(nxsFolder.c_str(), &statbuf);
+    int nxsConfExists = stat(nxsConf.c_str(), &statbuf);
+    if (nxsPolicyExists < 0)
+    {
+      // If No policy is there but the nexus folder is, then we need to delete
+      if (nxsConfExists >= 0)
+      {
+        cout << "Deleting DB" << endl;
+        cout << boost::filesystem::remove_all(nxsFolder + "/client") << endl;
+      }
+    }
+    
+    int CURRENT_DB_POLICY = 1;
+    
+    nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
+    
+    if (nxsPolicyFile.is_open())
+    {
+      cout << "Open success" << endl;
+    }
+
+    std::string line;
+    std::vector<std::string> nxsPolicyFileLines;
+    
+    while (std::getline(nxsPolicyFile, line))
+    {
+       nxsPolicyFileLines.push_back(line);
+    }
+    nxsPolicyFile.clear();
+    nxsPolicyFile.seekg(0);
+    if ( nxsPolicyFileLines.size() > 0 )
+    {
+      
+      string dbpolicy = nxsPolicyFileLines[0];
+      cout <<"DB POLICY: " << dbpolicy << endl;
+      int dbpolicynumber = int(dbpolicy.back() - '0');
+      if (dbpolicynumber < CURRENT_DB_POLICY)
+      {
+        cout << "Deleting DB" << endl;
+        cout << boost::filesystem::remove_all(nxsFolder + "/client") << endl;
+        
+      }
+    }
+
+    //TODO: Replace with vector write
+    nxsPolicyFile << "dbpolicy:" << std::to_string(CURRENT_DB_POLICY) << '\n';
+    nxsPolicyFile.close();
+    
+    cout << nxsFolder << endl;
+    cout << nxsFolderExists << endl;
+    if ( nxsFolderExists < 0)
+    {
+      mode_t m = S_IRWXU | S_IRWXG | S_IRWXO;
+      int status = mkdir(nxsFolder.c_str(), m);
+      cout << status << endl;
+    }
+
+    cout << nxsConfExists << endl;
+    cout << nxsConf << endl;
+    nxsConfFile.open (nxsConf, std::fstream::in | std::fstream::out | std::fstream::app);
+    if (nxsConfExists < 0)
     {
       cout << "!! WRITING FILE" << endl;
         // If file does not exist, write to it.
         string fileContent = "apiuser=" + string(inApiUserName) + "\napipassword=" + string(inApiPassword);
-        myfile << fileContent;
-      
-            
+        nxsConfFile << fileContent;
     }
     else
     {
       cout << "File Exists" << endl;
     
     }
-    myfile.close();
+
+    nxsConfFile.close();
     
     for (int i = 0; i < argc; i++) {
         printf("argv[%d] = %s\n", i, argv[i]);
@@ -180,7 +229,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
 
         /* Set the initialized flags. */
         config::fInitialized.store(true);
-
+ 
 
         /* Initialize generator thread. */
         std::thread thread;

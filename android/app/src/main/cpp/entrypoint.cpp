@@ -4,7 +4,9 @@
 
 #include <LLC/include/random.h>
 #include <iostream>
+#include <fstream>
 #include <sys/stat.h>
+#include <boost/filesystem.hpp>
 #include <LLP/include/global.h>
 #include <LLP/include/port.h>
 #include <LLP/types/apinode.h>
@@ -99,27 +101,77 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         LOG_D("Home Env: %s", std::string(getenv("HOME")).c_str());
 
         ofstream nexusConfFile;
-        string folder = std::string(getenv("HOME")) + "/Nexus";
-        string fileLoc = std::string(folder + "/nexus.conf");
-
-        LOG_D("Nexus Folder: %s", folder.c_str());
-        LOG_D("Nexus Conf Location: %s", fileLoc.c_str());
-
+        fstream nxsPolicyFile;
         struct stat statbuf;
-        int isthere = stat(folder.c_str(), &statbuf);
-        LOG_D("Is Nexus Folder Already there? : %d", isthere);
-        if (isthere < 0) {
+        string nxsFolder = std::string(getenv("HOME")) + "/Nexus";
+        string nxsPolicy = std::string(nxsFolder + "/db-policies.txt" );
+        string nxsConf = std::string(nxsFolder + "/nexus.conf");
+
+        LOG_D("Nexus Folder: %s", nxsFolder.c_str());
+        LOG_D("Nexus Conf Location: %s", nxsConf.c_str());
+
+        int nxsPolicyExists = stat(nxsPolicy.c_str(), &statbuf);
+        int nxsFolderExists = stat(nxsFolder.c_str(), &statbuf);
+        int nxsConfExists = stat(nxsConf.c_str(), &statbuf);
+
+        LOG_D("Is Nexus Folder Already there? : %d", nxsFolderExists);
+        LOG_D("Is Nexus Conf There? : %d", nxsConfExists);
+        LOG_D("NXS POLICY FOund? : %d", nxsPolicyExists);
+
+        int CURRENT_DB_POLICY = 1;
+
+        nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
+
+        if (nxsPolicyExists < 0)
+        {
+            // If No policy is there but the nexus folder is, then we need to delete
+            if (nxsConfExists >= 0)
+            {
+                LOG_D("Deleting DB");
+                boost::filesystem::remove_all(nxsFolder + "/client");
+            }
+        }
+        else {
+
+
+            if (nxsPolicyFile.is_open()) {
+                LOG_D("Open success");
+            }
+
+            std::string line;
+            std::vector<std::string> nxsPolicyFileLines;
+
+            while (std::getline(nxsPolicyFile, line)) {
+                nxsPolicyFileLines.push_back(line);
+            }
+            nxsPolicyFile.clear();
+            nxsPolicyFile.seekg(0);
+            if (nxsPolicyFileLines.size() > 0) {
+                string dbpolicy = nxsPolicyFileLines[0];
+                LOG_D("DB POLICY: %s",dbpolicy.c_str());
+                int dbpolicynumber = int(dbpolicy.back() - '0');
+                if (dbpolicynumber < CURRENT_DB_POLICY) {
+                    LOG_D("Deleting DB");
+                    boost::filesystem::remove_all(nxsFolder + "/client");
+                }
+            }
+        }
+
+        //TODO: Replace with vector write
+        nxsPolicyFile << "dbpolicy:" << std::to_string(CURRENT_DB_POLICY) << '\n';
+        nxsPolicyFile.close();
+
+        if (nxsFolderExists < 0) {
             mode_t m = S_IRWXU | S_IRWXG | S_IRWXO;
             int status = mkdir((std::string(getenv("HOME"))).c_str(), m);
             LOG_D("Make Home Directory Status: %d", status);
-            status = mkdir(folder.c_str(), m);
+            status = mkdir(nxsFolder.c_str(), m);
             LOG_D("Make Nexus Folder Status: %d", status);
         }
-        int confthere = stat(fileLoc.c_str(), &statbuf);
-        LOG_D("Is Nexus Conf There? : %d", confthere);
 
-        nexusConfFile.open(fileLoc, std::fstream::in | std::fstream::out | std::fstream::app);
-        if (confthere < 0) {
+
+        nexusConfFile.open(nxsConf, std::fstream::in | std::fstream::out | std::fstream::app);
+        if (nxsConfExists < 0) {
             LOG_D("!! WRITING FILE");
             // If file does not exist, write to it.
             string fileContent = "apiuser=" + string(inApiUser) +"\napipassword=" + string(inApiPassword);
