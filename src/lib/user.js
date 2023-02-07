@@ -34,6 +34,10 @@ export async function refreshUserStatus() {
         }
       }
     } catch (err) {
+      if (err.code == -11) { // If session is not found, then removed the saved user name. 
+        updateSettings({ savedUsername: null });
+        return null;
+      }
       console.error(err);
     }
     store.dispatch({ type: TYPE.LOGOUT });
