@@ -132,6 +132,7 @@ def genVersionName = "${versionMajor}.${versionMinor}.${versionPatch}-${buildNum
 
 Properties properties = new Properties()
 def openSSLDir = null
+def boostDir = file("../../node_modules/expo-modules-core/android/build/third-party-ndk/boost/boost_1_76_0/").toString() // 1_76 needs to be dynamic incase it changes
 if (project.rootProject.file("local.properties").exists()) {
     properties.load(project.rootProject.file("local.properties").newDataInputStream())
     openSSLDir = properties.getProperty('openssl.dir')
@@ -170,7 +171,7 @@ android {
             cmake {
                 abiFilters "arm64-v8a", "x86_64"
                 cppFlags "-std=c++17"
-                arguments '-DANDROID_STL=c++_static', '-DOPENSSL_ROOT_DIR=' + openSSLDir
+                arguments '-DANDROID_STL=c++_static', '-DOPENSSL_ROOT_DIR=' + openSSLDir , '-DBOOST_INCLUDE_DIR=' + boostDir
             }
         }
     }
