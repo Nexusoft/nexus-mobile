@@ -113,12 +113,20 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         int nxsPolicyExists = stat(nxsPolicy.c_str(), &statbuf);
         int nxsFolderExists = stat(nxsFolder.c_str(), &statbuf);
         int nxsConfExists = stat(nxsConf.c_str(), &statbuf);
+        int CURRENT_DB_POLICY = 1;
 
         LOG_D("Is Nexus Folder Already there? : %d", nxsFolderExists);
         LOG_D("Is Nexus Conf There? : %d", nxsConfExists);
         LOG_D("NXS POLICY FOund? : %d", nxsPolicyExists);
 
-        int CURRENT_DB_POLICY = 1;
+        if (nxsFolderExists < 0) {
+            mode_t m = S_IRWXU | S_IRWXG | S_IRWXO;
+            int status = mkdir((std::string(getenv("HOME"))).c_str(), m);
+            LOG_D("Make Home Directory Status: %d", status);
+            status = mkdir(nxsFolder.c_str(), m);
+            LOG_D("Make Nexus Folder Status: %d", status);
+        }
+        
 
         nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
 
@@ -160,14 +168,6 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         //TODO: Replace with vector write
         nxsPolicyFile << "dbpolicy:" << std::to_string(CURRENT_DB_POLICY) << '\n';
         nxsPolicyFile.close();
-
-        if (nxsFolderExists < 0) {
-            mode_t m = S_IRWXU | S_IRWXG | S_IRWXO;
-            int status = mkdir((std::string(getenv("HOME"))).c_str(), m);
-            LOG_D("Make Home Directory Status: %d", status);
-            status = mkdir(nxsFolder.c_str(), m);
-            LOG_D("Make Nexus Folder Status: %d", status);
-        }
 
 
         nexusConfFile.open(nxsConf, std::fstream::in | std::fstream::out | std::fstream::app);
