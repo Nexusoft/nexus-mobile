@@ -5,7 +5,7 @@ import { getStore } from 'store';
 
 // Store Selects
 
-export const selectLoggedIn = (state) => !!state.user.status;
+export const selectLoggedIn = (state) => !!state.user.status.genesis;
 
 // Return user's confirmed status
 export const selectUserIsConfirmed = (state) =>
@@ -141,6 +141,16 @@ export async function login({
   keepLoggedIn,
 }) {
   await callAPI('sessions/create/local', { username, password, pin });
+  let finishedIndexing = false;
+  while (!finishedIndexing) { // This checks if the account has finished indexing after downloading the sigchain, consider revising this. 
+    let status = await callAPI('sessions/status/local');
+    finishedIndexing = !status.indexing;
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+  getStore().dispatch({
+    type: TYPE.SET_USERNAME,
+    payload: { username },
+  });
   updateSettings({
     savedUsername: rememberMe ? username : null,
   });
