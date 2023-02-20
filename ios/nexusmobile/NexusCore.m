@@ -24,24 +24,23 @@ void* PosixThreadMainRoutine(void* data)
            char *my_argv[] = {
              NULL,
           strdup("-client=1"),
-          strdup("-verbose=0"),
-          strdup("-manager=1"),
+          strdup("-verbose=1"),
+          strdup("-manager=0"),
           strdup("-timeout=30"),
              strdup("-ssl=1"),
              strdup("-apissl=1"),
              strdup("-apisslport=7080"),
-             strdup("-apisslrequired"),
-          strdup("-connect=node1.nexusoft.io"),
-          strdup("-connect=node2.nexusoft.io"),
-          strdup("-connect=node3.nexusoft.io"),
-          strdup("-connect=node4.nexusoft.io"),
-          strdup("-noterminateauth=1"),
+             strdup("-apisslrequired=1"),
+          strdup("-connect=node2.nexus.io"),
+             strdup("-noterminateauth=1"),
           NULL
      };
      const char *com = [userCre[0] UTF8String];
     const char *command = [userCre[1] UTF8String];
-     startNexus(13, my_argv,strdup(com),strdup(command));
-    return NULL;
+     startNexus(11, my_argv,strdup(com),strdup(command));
+  
+  return NULL;
+  
 }
 
 // Start Nexus Core by launching a separate thread

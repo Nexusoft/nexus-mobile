@@ -89,6 +89,9 @@ ________________________________________________________________________________
 
 #define FUNCTION ANSI_COLOR_FUNCTION, __PRETTY_FUNCTION__, ANSI_COLOR_RESET, " : "
 
+//forward declaration from LLD/include/global.h global ACID handler
+namespace LLD { void TxnAbort(const uint8_t nFlags); }
+
 namespace debug
 {
 
@@ -216,6 +219,33 @@ namespace debug
 
             debug::log(0, ANSI_COLOR_BRIGHT_RED, "ERROR: ", ANSI_COLOR_RESET, args...);
         }
+        return false;
+    }
+
+
+    /** abort
+     *
+     *  Safe constant format debugging failure. This function aborts a transaction if failed.
+     *
+     *  @param[in] nFlags The transaction flags we are aborting
+     *  @param[in] args The variadic template arguments in.
+     *
+     *  @return Returns false always. (Assumed to return an error.)
+     *
+     **/
+    template<class... Args>
+    bool abort(const uint8_t nFlags, Args&&... args)
+    {
+        if(fLogError)
+        {
+            strLastError = safe_printstr(args...);
+
+            debug::log(0, ANSI_COLOR_BRIGHT_RED, "ABORT: ", ANSI_COLOR_RESET, args...);
+        }
+
+        /* Abort our transaction here. */
+        LLD::TxnAbort(nFlags);
+
         return false;
     }
 

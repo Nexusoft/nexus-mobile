@@ -380,12 +380,24 @@ namespace TAO::API
          *
          *  Get the last time that session was accessed
          *
-         *  @param[in] jParams The parameters to check against.
+         *  @param[in] hashSession The session identifier to check accessed with.
          *
          *  @return the timestamp of last session access
          *
          **/
         static uint64_t Accessed(const encoding::json& jParams);
+
+
+        /** Accessed
+         *
+         *  Get the last time that session was accessed
+         *
+         *  @param[in] jParams The parameters to check against.
+         *
+         *  @return the timestamp of last session access
+         *
+         **/
+        static uint64_t Accessed(const uint256_t& hashSession);
 
 
         /** Indexing
@@ -434,7 +446,20 @@ namespace TAO::API
          *  @return true if the PIN is unlocked for given actions.
          *
          **/
-        static bool Unlocked(const encoding::json& jParams, uint8_t &nRequestedActions);
+        static bool UnlockStatus(const encoding::json& jParams, uint8_t &nRequestedActions);
+
+
+        /** Unloacked
+         *
+         *  Determine if a sigchain is unlocked for given actions.
+         *
+         *  @param[in] jParams The incoming paramters to parse
+         *  @param[in] nRequestedActions The actions requested for PIN unlock.
+         *
+         *  @return true if the PIN is unlocked for given actions.
+         *
+         **/
+        static bool Unlocked(const uint8_t nRequestedActions, const encoding::json& jParams);
 
 
         /** Unloacked

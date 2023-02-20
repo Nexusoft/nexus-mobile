@@ -63,6 +63,16 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     int nxsPolicyExists = stat(nxsPolicy.c_str(), &statbuf);
     int nxsFolderExists = stat(nxsFolder.c_str(), &statbuf);
     int nxsConfExists = stat(nxsConf.c_str(), &statbuf);
+    int CURRENT_DB_POLICY = 1;
+
+    if ( nxsFolderExists < 0)
+    {
+      mode_t m = S_IRWXU | S_IRWXG | S_IRWXO;
+      int status = mkdir(nxsFolder.c_str(), m);
+      cout << status << endl;
+    }
+
+    nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
     if (nxsPolicyExists < 0)
     {
       // If No policy is there but the nexus folder is, then we need to delete
@@ -72,36 +82,35 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
         cout << boost::filesystem::remove_all(nxsFolder + "/client") << endl;
       }
     }
-    
-    int CURRENT_DB_POLICY = 1;
-    
-    nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
-    
-    if (nxsPolicyFile.is_open())
-    {
-      cout << "Open success" << endl;
-    }
-
-    std::string line;
-    std::vector<std::string> nxsPolicyFileLines;
-    
-    while (std::getline(nxsPolicyFile, line))
-    {
-       nxsPolicyFileLines.push_back(line);
-    }
-    nxsPolicyFile.clear();
-    nxsPolicyFile.seekg(0);
-    if ( nxsPolicyFileLines.size() > 0 )
+    else
     {
       
-      string dbpolicy = nxsPolicyFileLines[0];
-      cout <<"DB POLICY: " << dbpolicy << endl;
-      int dbpolicynumber = int(dbpolicy.back() - '0');
-      if (dbpolicynumber < CURRENT_DB_POLICY)
+      if (nxsPolicyFile.is_open())
       {
-        cout << "Deleting DB" << endl;
-        cout << boost::filesystem::remove_all(nxsFolder + "/client") << endl;
+        cout << "Open success" << endl;
+      }
+
+      std::string line;
+      std::vector<std::string> nxsPolicyFileLines;
+      
+      while (std::getline(nxsPolicyFile, line))
+      {
+        nxsPolicyFileLines.push_back(line);
+      }
+      nxsPolicyFile.clear();
+      nxsPolicyFile.seekg(0);
+      if ( nxsPolicyFileLines.size() > 0 )
+      {
         
+        string dbpolicy = nxsPolicyFileLines[0];
+        cout <<"DB POLICY: " << dbpolicy << endl;
+        int dbpolicynumber = int(dbpolicy.back() - '0');
+        if (dbpolicynumber < CURRENT_DB_POLICY)
+        {
+          cout << "Deleting DB" << endl;
+          cout << boost::filesystem::remove_all(nxsFolder + "/client") << endl;
+          
+        }
       }
     }
 
@@ -111,13 +120,6 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     
     cout << nxsFolder << endl;
     cout << nxsFolderExists << endl;
-    if ( nxsFolderExists < 0)
-    {
-      mode_t m = S_IRWXU | S_IRWXG | S_IRWXO;
-      int status = mkdir(nxsFolder.c_str(), m);
-      cout << status << endl;
-    }
-
     cout << nxsConfExists << endl;
     cout << nxsConf << endl;
     nxsConfFile.open (nxsConf, std::fstream::in | std::fstream::out | std::fstream::app);
