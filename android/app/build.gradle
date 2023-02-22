@@ -153,9 +153,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
 
     defaultConfig {
         applicationId 'io.nexus.wallet'
@@ -191,6 +188,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file(properties.getProperty("RELEASE_STORE_FILE"))
+            storePassword properties.getProperty("RELEASE_STORE_PASSWORD")
+            keyAlias properties.getProperty("RELEASE_KEY_ALIAS")
+            keyPassword properties.getProperty("RELEASE_KEY_PASSWORD")
+
+            v2SigningEnabled true
+        }
     }
     buildTypes {
         debug {
@@ -199,7 +204,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
