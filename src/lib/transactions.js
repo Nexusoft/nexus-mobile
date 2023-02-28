@@ -127,7 +127,7 @@ export async function loadTransactions({ reload } = { reload: false }) {
     if (query) {
       params.where = query;
     }
-    const transactions = await callAPI('ledger/list/transactions', params);
+    const transactions = await callAPI('profiles/transactions/master', params);
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {

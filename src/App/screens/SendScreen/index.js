@@ -48,7 +48,7 @@ async function resolveNameOrAddress(nameOrAddress) {
     const nameResult = await callAPI('names/get/name', { name: nameOrAddress });
     return {
       name: nameOrAddress,
-      address: nameResult.register_address,
+      address: nameResult.address,
       contactName: findContactName(nameResult.register_address),
     };
   } catch (err) {

@@ -50,7 +50,8 @@ const Account = ({ name, address }) =>
 const creditFrom = (contract) => {
   switch (contract.for) {
     case 'DEBIT':
-      return <Account name={contract.from_name} address={contract.from} />;
+      return contract.from ? <Account name={contract.from.name} address={contract.from.address} /> :
+      <Account name={contract.to.name} address={contract.to.address}/>; //If no from then these are return credits
 
     case 'LEGACY':
       return <Text>Legacy transaction</Text>;
@@ -153,10 +154,10 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Debit</Text>
           <Text sub> from </Text>
-          <Account name={contract.from_name} address={contract.from} />
+          <Account name={contract.from.name} address={contract.from.address} />
           {'\n'}
           <Text sub>to </Text>
-          <Account name={contract.to_name} address={contract.to} />
+          <Account name={contract.to.name} address={contract.to.address} />
         </Text>
       );
     }
@@ -166,7 +167,7 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Credit</Text>
           <Text sub> to </Text>
-          <Account name={contract.to_name} address={contract.to} />
+          <Account name={contract.to.name} address={contract.to.address} />
           {'\n'}
           <Text sub>from </Text>
           {creditFrom(contract)}
@@ -205,7 +206,7 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Fee</Text>
           <Text sub> from </Text>
-          <Account name={contract.from_name} address={contract.from} />
+          <Account name={contract.from.name} address={contract.from.address} />
         </Text>
       );
     }
@@ -215,10 +216,10 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Legacy</Text>
           <Text sub> debit from </Text>
-          <Account name={contract.from_name} address={contract.from} />
+          <Account name={contract.from.name} address={contract.from.address} />
           {'\n'}
           <Text sub>to </Text>
-          <Account address={contract.to} />
+          <Account address={contract.to.address} />
         </Text>
       );
     }

@@ -98,15 +98,6 @@ export default function CoreInfoScreen() {
               Tempe, Arizona, United States Of America
             </Text>
           </View>
-
-          <View style={styles.paragraph}>
-            <Text bold style={styles.center}>
-              Nexus Embassy Australia
-            </Text>
-            <Text style={styles.center}>
-              Sydney, New South Wales, Australia
-            </Text>
-          </View>
         </View>
 
         <View style={styles.section}>
