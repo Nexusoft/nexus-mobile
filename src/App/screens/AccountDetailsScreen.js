@@ -204,7 +204,8 @@ export default function AccountDetailsScreen({ route }) {
               Receive
             </Button>
             <Divider vertical inset={10} />
-            {account.name !== 'default' && (
+            {!account.name.endsWith(':default') &&
+             !account.name.endsWith(':trust')   && (
               <Button
                 style={styles.action}
                 mode="text"
