@@ -10,7 +10,11 @@
   "jest": {
     "preset": "jest-expo"
   },
+  "resolutions": {
+    "react-native-gradle-plugin": "0.71.4"
+  },
   "dependencies": {
+    "react-native-gradle-plugin": "0.71.4",
     "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-navigation/bottom-tabs": "^6.5.2",
     "@react-navigation/drawer": "^6.5.6",
@@ -68,7 +72,7 @@
   },
   "private": true,
   "name": "nexus-mobile",
-  "version": "0.9.0-1",
-  "builddate": "Sept, 20th 2021",
-  "builddatecore": "Sept, 13th 2021"
+  "version": "0.9.0-2",
+  "builddate": "Feb, 27th 2023",
+  "builddatecore": "Feb, 27th 2023"
 }

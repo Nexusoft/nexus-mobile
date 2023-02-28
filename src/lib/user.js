@@ -25,12 +25,11 @@ export async function refreshUserStatus() {
         settings: { savedUsername },
       } = store.getState();
       if (savedUsername) {
-        const { has } = await callAPI('sessions/status/local', {
+        const {saved} = await callAPI('sessions/status/local', {
           username: savedUsername,
         });
-        if (has) {
+        if (saved) {
           store.dispatch({ type: TYPE.OPEN_UNLOCK_SCREEN });
-          // await callAPI('users/load/session', { username: savedUsername });
         }
       }
     } catch (err) {
@@ -162,7 +161,16 @@ export async function login({
 }
 
 export async function logout() {
-  await callAPI('sessions/terminate/local');
+  const store = getStore();
+  const {
+    user: {
+      status: { 
+        saved
+      }
+    }
+  } = store.getState();
+
+  await callAPI('sessions/terminate/local', saved ? {clear:1} : null);
   await refreshUserStatus();
 }
 

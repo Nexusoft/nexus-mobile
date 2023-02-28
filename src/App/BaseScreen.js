@@ -24,7 +24,7 @@ import {
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef, navContainerRef } from 'lib/navigation';
 import { callAPI } from 'lib/api';
-import { closeUnlockScreen, showError, showNotification } from 'lib/ui';
+import { closeUnlockScreen, saveUsernameToUI, showError, showNotification } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
 import CopyIcon from 'icons/copy.svg';
@@ -153,6 +153,7 @@ function UnlockingBase() {
         username: savedUsername,
       });
       await refreshUserStatus();
+      saveUsernameToUI(savedUsername);
       closeUnlockScreen();
     } catch (err) {
       setLoading(false);
