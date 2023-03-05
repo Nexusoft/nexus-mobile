@@ -19,7 +19,7 @@ ________________________________________________________________________________
 
 #include <TAO/Ledger/types/transaction.h>
 #include <TAO/Ledger/types/tritium.h>
-#include <TAO/Ledger/types/sigchain.h>
+#include <TAO/Ledger/types/credentials.h>
 
 #include <Util/include/allocators.h>
 
@@ -44,10 +44,11 @@ namespace TAO
          *  @param[in] user The signature chain to generate this tx
          *  @param[in] pin The pin number to generate with.
          *  @param[out] tx The traansaction object being created
+         *  @param[in] nScheme The key scheme to be used.
          *
          **/
-        bool CreateTransaction(const memory::encrypted_ptr<TAO::Ledger::SignatureChain>& user, const SecureString& pin,
-                               TAO::Ledger::Transaction& tx);
+        bool CreateTransaction(const memory::encrypted_ptr<TAO::Ledger::Credentials>& user, const SecureString& pin,
+                               TAO::Ledger::Transaction& tx, const uint8_t nScheme = TAO::Ledger::SIGNATURE::BRAINPOOL);
 
 
         /** CreateProducer
@@ -64,7 +65,7 @@ namespace TAO
          *  @param[in] pCoinbaseRecipients The coinbase recipients, if any.
          *
          **/
-        bool CreateProducer(const memory::encrypted_ptr<TAO::Ledger::SignatureChain>& user, const SecureString& pin,
+        bool CreateProducer(const memory::encrypted_ptr<TAO::Ledger::Credentials>& user, const SecureString& pin,
                                TAO::Ledger::Transaction& tx,
                                const TAO::Ledger::BlockState& stateBest,
                                const uint32_t nBlockVersion,
@@ -113,7 +114,7 @@ namespace TAO
          *  @param[in] pCoinbaseRecipients The coinbase recipients, if any.
          *
          **/
-        bool CreateBlock(const memory::encrypted_ptr<TAO::Ledger::SignatureChain>& user, const SecureString& pin,
+        bool CreateBlock(const memory::encrypted_ptr<TAO::Ledger::Credentials>& user, const SecureString& pin,
                          const uint32_t nChannel, TAO::Ledger::TritiumBlock& block, const uint64_t nExtraNonce = 0,
                          Legacy::Coinbase *pCoinbaseRecipients = nullptr);
 
@@ -132,7 +133,7 @@ namespace TAO
          *  @param[in] fGenesis Set true if staking for Genesis, false if staking for Trust
          *
          **/
-        bool CreateStakeBlock(const memory::encrypted_ptr<TAO::Ledger::SignatureChain>& user, const SecureString& pin,
+        bool CreateStakeBlock(const memory::encrypted_ptr<TAO::Ledger::Credentials>& user, const SecureString& pin,
                               TAO::Ledger::TritiumBlock& block, const bool fGenesis = false);
 
 

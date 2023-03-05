@@ -16,6 +16,7 @@ ________________________________________________________________________________
 #define NEXUS_LLP_INCLUDE_PORT_H
 
 #include <cstdint>
+
 #include <Util/include/args.h>
 
 #ifdef WIN32
@@ -36,12 +37,16 @@ ________________________________________________________________________________
 #define MAINNET_TIME_LLP_PORT 9324
 #endif
 
+#ifndef MAINNET_LOOKUP_LLP_PORT
+#define MAINNET_LOOKUP_LLP_PORT 9889
+#endif
+
 #ifndef MAINNET_API_PORT
 #define MAINNET_API_PORT 8080
 #endif
 
 #ifndef MAINNET_API_SSL_PORT
-#define MAINNET_API_SSL_PORT 7080
+#define MAINNET_API_SSL_PORT 8443
 #endif
 
 #ifndef MAINNET_RPC_PORT
@@ -80,12 +85,16 @@ ________________________________________________________________________________
 #define TESTNET_TIME_LLP_PORT 8329
 #endif
 
+#ifndef TESTNET_LOOKUP_LLP_PORT
+#define TESTNET_LOOKUP_LLP_PORT 8889
+#endif
+
 #ifndef TESTNET_API_PORT
-#define TESTNET_API_PORT 8080
+#define TESTNET_API_PORT 7080
 #endif
 
 #ifndef TESTNET_API_SSL_PORT
-#define TESTNET_API_SSL_PORT 7080
+#define TESTNET_API_SSL_PORT 7443
 #endif
 
 #ifndef TESTNET_RPC_PORT
@@ -111,18 +120,90 @@ ________________________________________________________________________________
 
 namespace LLP
 {
-    /** GetTimePort
+
+    /** GetAPIPort
      *
-     *  Get the Unified time LLP Port for Nexus.
-     *
-     *  @param[in] fTestnet Flag for if port is a testnet port
+     *  Get the API LLP Port for Nexus.
      *
      *  @return Returns a 16-bit port number for core mainnet or testnet.
      *
      **/
-    inline uint16_t GetTimePort(const bool fTestnet = config::fTestNet.load())
+    inline uint16_t GetAPIPort(const bool fSSL = false)
     {
-        return static_cast<uint16_t>(fTestnet ? TESTNET_TIME_LLP_PORT : MAINNET_TIME_LLP_PORT);
+        /* Check for SSL port. */
+        if(fSSL)
+        {
+            return static_cast<uint16_t>
+            (
+                config::GetArg(std::string("-apisslport"),
+                config::fTestNet.load() ?
+                    TESTNET_API_SSL_PORT :
+                    MAINNET_API_SSL_PORT)
+            );
+        }
+
+        return static_cast<uint16_t>
+        (
+            config::GetArg(std::string("-apiport"),
+            config::fTestNet.load() ?
+                TESTNET_API_PORT :
+                MAINNET_API_PORT)
+        );
+    }
+
+
+    /** GetRPCPort
+     *
+     *  Get the RPC LLP Port for Nexus.
+     *
+     *  @return Returns a 16-bit port number for core mainnet or testnet.
+     *
+     **/
+    inline uint16_t GetRPCPort()
+    {
+        return static_cast<uint16_t>
+        (
+            config::GetArg(std::string("-rpcport"),
+            config::fTestNet.load() ?
+                TESTNET_RPC_PORT :
+                MAINNET_RPC_PORT)
+        );
+    }
+
+
+    /** GetTimePort
+     *
+     *  Get the Unified time LLP Port for Nexus.
+     *
+     *  @return Returns a 16-bit port number for core mainnet or testnet.
+     *
+     **/
+    inline uint16_t GetTimePort()
+    {
+        return static_cast<uint16_t>
+        (
+            config::fTestNet.load() ?
+                TESTNET_TIME_LLP_PORT :
+                MAINNET_TIME_LLP_PORT
+        );
+    }
+
+
+    /** GetLookupPort
+     *
+     *  Get the lookup LLP port for Nexus.
+     *
+     *  @return Returns a 16-bit port number for core mainnet or testnet.
+     *
+     **/
+    inline uint16_t GetLookupPort()
+    {
+        return static_cast<uint16_t>
+        (
+            config::fTestNet.load() ?
+                TESTNET_LOOKUP_LLP_PORT :
+                MAINNET_LOOKUP_LLP_PORT
+        );
     }
 
 
@@ -130,14 +211,18 @@ namespace LLP
      *
      *  Get the Main Mining LLP Port for Nexus.
      *
-     *  @param[in] fTestnet Flag for if port is a testnet port
-     *
      *  @return Returns a 16-bit port number for mining mainnet or testnet.
      *
      **/
-    inline uint16_t GetMiningPort(const bool fTestnet = config::fTestNet.load())
+    inline uint16_t GetMiningPort()
     {
-        return static_cast<uint16_t>(config::GetArg(std::string("-miningport"), fTestnet ? TESTNET_MINING_LLP_PORT : MAINNET_MINING_LLP_PORT));
+        return static_cast<uint16_t>
+        (
+            config::GetArg(std::string("-miningport"),
+            config::fTestNet.load() ?
+                TESTNET_MINING_LLP_PORT :
+                MAINNET_MINING_LLP_PORT)
+        );
     }
 
 
@@ -145,17 +230,17 @@ namespace LLP
      *
      *  Get the Main Message LLP Port for Nexus Tritium.
      *
-     *  @param[in] fTestnet Flag for if port is a testnet port
-     *
      *  @return Returns a 16-bit port number for Nexus Tritium mainnet or testnet.
      *
      **/
-    inline uint16_t GetDefaultPort(const bool fTestnet = config::fTestNet.load())
+    inline uint16_t GetDefaultPort()
     {
-        return static_cast<uint16_t>(config::GetArg(std::string("-serverport"), fTestnet ? (TRITIUM_TESTNET_PORT + (config::GetArg("-testnet", 0) - 1)) : TRITIUM_MAINNET_PORT));
+        return static_cast<uint16_t>
+        (
+            config::GetArg(std::string("-port"),
+            config::fTestNet.load() ?
+                (TRITIUM_TESTNET_PORT + (config::GetArg("-testnet", 0) - 1)) : TRITIUM_MAINNET_PORT));
     }
-
-
 }
 
 #endif

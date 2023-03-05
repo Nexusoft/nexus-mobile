@@ -10,48 +10,203 @@ import formatNumber from 'utils/formatNumber';
 
 export const isConfirmed = (tx) => !!tx.confirmations;
 
-const limit = 20;
-export async function loadTransactions({ reload } = { reload: false }) {
-  const store = getStore();
-  const {
-    transactions: { txMap },
-  } = store.getState();
-  const loadedTransactions = Object.values(txMap);
-  const offset = reload ? 0 : loadedTransactions.length;
+let watchedIds = [];
+let unsubscribe = null;
+function startWatcher() {
+  unsubscribe = observeStore(
+    (state) => state,
+    async (state, oldState) => {
+      // Clear watcher if user is logged out or core is disconnected or user is switched
+      const genesis = state.user.status?.genesis;
+      const oldGenesis = oldState.user.status?.genesis;
+      if (!isLoggedIn(state) || genesis !== oldGenesis) {
+        unsubscribe?.();
+        unsubscribe = null;
+        watchedIds = [];
+      }
 
-  const transactions = await callAPI('users/list/transactions', {
-    verbose: 'summary',
-    limit,
-    offset,
-  });
-  store.dispatch({
-    type: reload ? TYPE.RELOAD_TRANSACTIONS : TYPE.ADD_TRANSACTIONS,
-    payload: {
-      list: transactions,
-      endReached: transactions.length < limit,
-    },
-  });
+      // Only refetch transaction each time there is a new block
+      const blocks = state.core.info?.blocks;
+      const oldBlocks = oldState.core.info?.blocks;
+      if (!blocks || blocks === oldBlocks) return;
 
-  transactions.forEach((tx) => {
+      // Fetch the updated transaction info
+      const transactions = await Promise.all([
+        watchedIds.map((txid) => fetchTransaction({ txid })),
+      ]);
+
+      for (const tx of transactions) {
+        if (isConfirmed(tx)) {
+          unwatchTransaction(tx.txid);
+          // Reload the account list
+          // so that the account balances (available & unconfirmed) are up-to-date
+          refreshUserAccounts();
+        }
+      }
+    }
+  );
+}
+
+function watchTransaction(txid) {
+  if (!watchedIds.includes(txid)) {
+    watchedIds.push(txid);
+  }
+  if (!unsubscribe) {
+    startWatcher();
+  }
+}
+
+function unwatchTransaction(txid) {
+  watchedIds = watchedIds.filter((id) => id !== txid);
+  if (!watchedIds.length) {
+    unsubscribe?.();
+    unsubscribe = null;
+  }
+}
+
+function watchIfUnconfirmed(transactions) {
+  transactions?.forEach((tx) => {
     if (!isConfirmed(tx)) {
-      watchTransaction({ txid: tx.txid });
+      watchTransaction(tx.txid);
     }
   });
 }
 
-// Obsolete
-// export async function refreshGenesisTx() {
-//   return await fetchTransaction({
-//     where: [
-//       {
-//         field: 'type',
-//         op: '=',
-//         value: 'tritium first',
-//       },
-//     ],
-//     limit: 1,
-//   });
-// }
+function buildQuery({ addressQuery, operation, timeSpan }) {
+  const queries = [];
+  if (timeSpan) {
+    const pastDate = getThresholdDate(timeSpan);
+    if (pastDate) {
+      queries.push(`object.timespan>${pastDate.getTime() / 1000}`);
+    }
+  }
+  if (operation) {
+    queries.push(`object.contracts.OP=${operation}`);
+  }
+  if (addressQuery) {
+    const buildAddressQuery =
+      addressQuery === '0'
+        ? (field) => `object.contracts.${field}=0`
+        : (field) => `object.contracts.${field}=*${addressQuery}*`;
+    const addressQueries = [
+      buildAddressQuery('token'),
+      buildAddressQuery('from'),
+      buildAddressQuery('to'),
+      buildAddressQuery('account'),
+      buildAddressQuery('destination'),
+      buildAddressQuery('address'),
+    ];
+    queries.push(`(${addressQueries.join(' OR ')})`);
+  }
+
+  return queries.join(' AND ') || undefined;
+}
+
+const txCountPerPage = 20;
+export async function loadTransactions({ reload } = { reload: false }) {
+  const store = getStore();
+  const {
+    user: {
+      transactions: { transactions: currentTransactions },
+    },
+    ui: { transactionsFilter },
+  } = store.getState();
+  const offset = reload ? 0 : currentTransactions.length;
+
+  store.dispatch({
+    type: TYPE.START_FETCHING_TXS,
+    payload: { reload },
+  });
+  try {
+    const params = {
+      verbose: 'summary',
+      limit: txCountPerPage,
+      offset,
+    };
+    const query = buildQuery(transactionsFilter);
+    if (query) {
+      params.where = query;
+    }
+    const transactions = await callAPI('profiles/transactions/master', params);
+    store.dispatch({
+      type: TYPE.FETCH_TXS_RESULT,
+      payload: {
+        reload,
+        transactions,
+        loadedAll: transactions.length < txCountPerPage,
+      },
+    });
+    watchIfUnconfirmed(transactions);
+  } catch (err) {
+    store.dispatch({
+      type: TYPE.STOP_FETCHING_TXS,
+    });
+  }
+}
+
+const getThresholdDate = (timeSpan) => {
+  const now = new Date();
+  switch (timeSpan) {
+    case 'week':
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+    case 'month':
+      return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+    case 'year':
+      return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+    default:
+      return null;
+  }
+};
+
+function filterTransactions(transactions) {
+  const {
+    ui: {
+      transactionsFilter: { addressQuery, operation, timeSpan },
+    },
+    user: {
+      transactions: { loading, loaded },
+    },
+  } = getStore().getState();
+  if (loading || loaded === 'none' || !transactions) return [];
+
+  return transactions.filter((tx) => {
+    if (timeSpan) {
+      const pastDate = getThresholdDate(timeSpan);
+      if (pastDate && tx.timestamp * 1000 < pastDate.getTime()) {
+        return false;
+      }
+    }
+    if (
+      operation &&
+      !tx.contracts.some((contract) => contract.OP === operation)
+    ) {
+      return false;
+    }
+    if (addressQuery) {
+      if (addressQuery === '0') {
+        if (!tx.contracts.some((contract) => contract.token === '0')) {
+          return false;
+        }
+      } else {
+        if (
+          !tx.contracts.some(
+            (contract) =>
+              contract.token?.includes(addressQuery) ||
+              contract.from?.includes(addressQuery) ||
+              contract.to?.includes(addressQuery) ||
+              contract.account?.includes(addressQuery) ||
+              contract.destination?.includes(addressQuery) ||
+              contract.address?.includes(addressQuery)
+          )
+        ) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  });
+}
 
 const getBalanceChanges = (tx) =>
   tx.contracts
@@ -59,8 +214,9 @@ const getBalanceChanges = (tx) =>
         const sign = getDeltaSign(contract);
         if (sign && contract.amount) {
           let change = changes.find(
-            contract.token_name
-              ? (change) => change.token_name === contract.token_name
+            contract.ticker || contract.token_name
+              ? (change) =>
+                  change.ticker === contract.ticker || contract.token_name
               : (change) => change.token === contract.token
           );
           if (change) {
@@ -68,7 +224,7 @@ const getBalanceChanges = (tx) =>
               change.amount + (sign === '-' ? -1 : 1) * contract.amount;
           } else {
             change = {
-              token_name: contract.token_name,
+              ticker: contract.ticker || contract.token_name,
               token: contract.token,
               amount: (sign === '-' ? -1 : 1) * contract.amount,
             };
@@ -82,7 +238,7 @@ const getBalanceChanges = (tx) =>
 export async function fetchTransaction({ txid, where, limit }) {
   let tx;
   if (where) {
-    const txs = await callAPI('users/list/transactions', {
+    const txs = await callAPI('ledger/list/transactions', {
       verbose: 'summary',
       limit,
       where,
@@ -103,21 +259,11 @@ export async function fetchTransaction({ txid, where, limit }) {
   return tx;
 }
 
-function watchTransaction({ txid, where }) {
-  // Update everytime a new block is received
-  const unsubscribe = getStore().observe(
-    ({ core: { info } }) => info?.blocks,
-    async (blocks) => {
-      if (!blocks) return;
-      const tx = await fetchTransaction({ txid, where });
-      if (tx && isConfirmed(tx)) {
-        unsubscribe();
-        // Reload the account list
-        // so that the account balances (available & unconfirmed) are up-to-date
-        refreshUserAccounts();
-      }
-    }
-  );
+export function updateFilter(updates) {
+  getStore().dispatch({
+    type: TYPE.UPDATE_TRANSACTIONS_FILTER,
+    payload: updates,
+  });
 }
 
 export function watchNewTransactions() {
@@ -134,22 +280,12 @@ export function watchNewTransactions() {
         typeof oldTxCount === 'number' &&
         !wasSyncing
       ) {
-        const transactions = await callAPI('users/list/transactions', {
+        const transactions = await callAPI('ledger/list/transactions', {
           verbose: 'summary',
           limit: txCount - oldTxCount,
         });
-        getStore().dispatch({
-          type: TYPE.ADD_TRANSACTIONS,
-          payload: {
-            list: transactions,
-          },
-        });
 
         transactions.forEach((tx) => {
-          if (!isConfirmed(tx)) {
-            watchTransaction({ txid: tx.txid });
-          }
-
           const changes = getBalanceChanges(tx);
           if (changes.length) {
             const changeLines = changes.map(
@@ -171,6 +307,15 @@ export function watchNewTransactions() {
             }
           }
         });
+
+        const filteredTransactions = filterTransactions(transactions);
+        if (filteredTransactions.length) {
+          getStore().dispatch({
+            type: TYPE.ADD_TRANSACTIONS,
+            payload: filteredTransactions,
+          });
+          watchIfUnconfirmed(filteredTransactions);
+        }
       }
     }
   );

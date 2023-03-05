@@ -55,18 +55,20 @@ export default function UnauthenticatedBase() {
       <BottomTab.Navigator
         initialRouteName={defaultScreen}
         shifting={false}
+        backBehavior="history"
         tabBar={(props) => <CustomBottomTabBar {...props} />}
-        tabBarOptions={{
-          activeTintColor: theme.foreground,
-          inactiveTintColor: fade(theme.foreground, 0.5),
-          style: {
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: theme.foreground,
+          tabBarInactiveTintColor: fade(theme.foreground, 0.5),
+          tabBarStyle: {
             paddingTop: 5,
             elevation: 4,
             ...shadow(4),
             backgroundColor: overlay(2, theme.surface),
           },
-          labelStyle: { marginBottom: 5, textTransform: 'uppercase' },
-          labelPosition: 'beside-icon',
+          tabBarLabelStyle: { marginBottom: 5, textTransform: 'uppercase' },
+          tabBarLabelPosition: 'beside-icon',
         }}
       >
         {screens.map((Screen) => {
@@ -83,6 +85,7 @@ export default function UnauthenticatedBase() {
               options={{
                 title: title || name,
                 tabBarLabel: title || name,
+                tabBarIcon: () => null,
                 ...options,
               }}
             />

@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import * as TYPE from 'consts/actionTypes';
 import { getStore } from 'store';

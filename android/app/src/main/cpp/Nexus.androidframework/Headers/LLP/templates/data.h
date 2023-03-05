@@ -22,7 +22,7 @@ ________________________________________________________________________________
 #include <LLP/templates/events.h>
 
 #include <Util/include/mutex.h>
-#include <Util/include/memory.h>
+#include <Util/types/lock_unique_ptr.h>
 
 #include <Util/templates/datastream.h>
 
@@ -81,11 +81,11 @@ namespace LLP
 
 
         /* Vector to store Connections. */
-        memory::atomic_ptr< std::vector< std::shared_ptr<ProtocolType>> > CONNECTIONS;
+        util::atomic::lock_unique_ptr<std::vector< std::shared_ptr<ProtocolType>>> CONNECTIONS;
 
 
         /** Queu to process outbound relay messages. **/
-        memory::atomic_ptr< std::queue<std::pair<typename ProtocolType::message_t, DataStream>> > RELAY;
+        util::atomic::lock_unique_ptr<std::queue<std::pair<typename ProtocolType::message_t, DataStream>>> RELAY;
 
 
         /** The condition for thread sleeping. **/
@@ -105,8 +105,8 @@ namespace LLP
 
 
         /** Default Constructor. **/
-        DataThread<ProtocolType>(uint32_t nID, bool ffDDOSIn, uint32_t rScore, uint32_t cScore,
-                                 uint32_t nTimeout, bool fMeter = false);
+        DataThread<ProtocolType>(const uint32_t nID, const bool ffDDOSIn, const uint32_t rScore, const uint32_t cScore,
+                                 const uint32_t nTimeout, const bool fMeter = false);
 
 
         /** Default Destructor. **/
@@ -236,6 +236,21 @@ namespace LLP
         }
 
 
+        /** NewConnection
+         *
+         *  Establishes a new connection and adds it to current Data Thread and returns the active connection pointer.
+         *
+         *  @param[in] addr Address class instnace containing the IP address and port for the connection.
+         *  @param[in] DDOS The pointer to the DDOS filter to add to the connection.
+         *  @param[in] fSSL Flag indicating if this connection should use SSL
+         *  @param[in] args variadic args to forward to the LLP protocol constructor
+         *
+         *  @return Returns true if successfully added, false otherwise.
+         *
+         **/
+        bool NewConnection(const BaseAddress &addr, DDOS_Filter* DDOS, const bool& fSSL, std::shared_ptr<ProtocolType> &pNodeRet);
+
+
         /** DisconnectAll
          *
          *  Disconnects all connections by issuing a DISCONNECT::FORCE event message
@@ -243,6 +258,14 @@ namespace LLP
          *
          **/
         void DisconnectAll();
+
+
+        /** NotifyTriggers
+         *
+         *  Release all pending triggers from BlockingMessages
+         *
+         **/
+        void NotifyTriggers();
 
 
         /** Thread
@@ -272,7 +295,7 @@ namespace LLP
         void Relay(const MessageType& message, Args&&... args)
         {
             DataStream ssData(SER_NETWORK, MIN_PROTO_VERSION);
-            message_args(ssData, std::forward<Args>(args)...);
+            ((ssData << args), ...);
 
             /* Push the relay message to outbound queue. */
             RELAY->push(std::make_pair(message, ssData));
@@ -312,6 +335,16 @@ namespace LLP
          *
          **/
         void NotifyEvent();
+
+
+        /** Disconnect
+         *
+         *  Disconnects given connection from current Data Thread.
+         *
+         *  @param[in] nIndex The index of the connection to remove.
+         *
+         **/
+        void Disconnect(const uint32_t nIndex);
 
 
       private:

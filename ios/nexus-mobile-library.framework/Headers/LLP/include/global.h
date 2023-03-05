@@ -21,18 +21,23 @@ ________________________________________________________________________________
 #include <LLP/templates/server.h>
 
 #include <LLP/types/apinode.h>
+#include <LLP/types/lookup.h>
 #include <LLP/types/rpcnode.h>
 #include <LLP/types/miner.h>
-#include <LLP/types/p2p.h>
 
 namespace LLP
 {
+    /** Track our hostname so we don't have to call system every request. **/
+    extern std::string strHostname;
+
+
+    /** List of LLP Server Instances. **/
     extern Server<TritiumNode>*  TRITIUM_SERVER;
+    extern Server<LookupNode>*   LOOKUP_SERVER;
     extern Server<TimeNode>*     TIME_SERVER;
     extern Server<APINode>*      API_SERVER;
     extern Server<RPCNode>*      RPC_SERVER;
-    extern std::atomic<Server<Miner>*>        MINING_SERVER;
-    extern Server<P2PNode>*      P2P_SERVER;
+    extern Server<Miner>*        MINING_SERVER;
 
 
     /** Current session identifier. **/
@@ -47,65 +52,20 @@ namespace LLP
     bool Initialize();
 
 
+    /** Release
+     *
+     *  Release the LLP active triggers.
+     *
+     **/
+    void Release();
+
+
     /** Shutdown
      *
      *  Shutdown the LLP.
      *
      **/
     void Shutdown();
-
-    /** CloseListening
-     *
-     *  Closes the listening sockets on all running servers.
-     *
-     **/
-    void CloseListening();
-
-
-    /** OpenListening
-     *
-     *  Restarts the listening sockets on all running servers.
-     *
-     **/
-    void OpenListening();
-
-
-    /** CreateMiningServer
-     *
-     *  Creates and returns the mining server.
-     *
-     **/
-    Server<Miner>* CreateMiningServer();
-
-
-    /** CreateTimeServer
-     *
-     *  Helper for creating the Time server.
-     *
-     *  @return Returns the server.
-     *
-     **/
-    Server<TimeNode>* CreateTimeServer();
-
-
-    /** CreateRPCServer
-     *
-     *  Helper for creating the RPC server.
-     *
-     *  @return Returns a new RPC server.
-     *
-     **/
-    Server<RPCNode>* CreateRPCServer();
-
-
-    /** CreateAPIServer
-     *
-     *  Helper for creating the API server.
-     *
-     *  @return Returns a new API server.
-     *
-     **/
-    Server<APINode>* CreateAPIServer();
 
 
     /** MakeConnections
@@ -119,168 +79,51 @@ namespace LLP
     void MakeConnections(Server<ProtocolType> *pServer)
     {
         /* -connect means try to establish a connection first. */
-        if(config::mapMultiArgs["-connect"].size() > 0)
+        if(config::HasArg("-connect"))
         {
+            RECURSIVE(config::ARGS_MUTEX);
+
             /* Add connections and resolve potential DNS lookups. */
-            for(const auto& address : config::mapMultiArgs["-connect"])
+            for(const auto& rAddress : config::mapMultiArgs["-connect"])
             {
                 /* Flag indicating connection was successful */
                 bool fConnected = false;
-                
+
                 /* First attempt SSL if configured */
                 if(pServer->SSLEnabled())
-                   fConnected = pServer->AddConnection(address, pServer->GetPort(true), true, true);
+                   fConnected = pServer->AddConnection(rAddress, pServer->GetPort(true), true, true);
 
                 /* If SSL connection failed or was not attempted and SSL is not required, attempt on the non-SSL port */
                 if(!fConnected && !pServer->SSLRequired())
-                    fConnected = pServer->AddConnection(address, pServer->GetPort(false), false, true);
+                    fConnected = pServer->AddConnection(rAddress, pServer->GetPort(false), false, true);
             }
         }
 
         /* -addnode means add to address manager and let it make connections. */
-        if(config::mapMultiArgs["-addnode"].size() > 0)
+        if(config::HasArg("-addnode"))
         {
+            RECURSIVE(config::ARGS_MUTEX);
+
             /* Add nodes and resolve potential DNS lookups. */
-            for(const auto& node : config::mapMultiArgs["-addnode"])
-                pServer->AddNode(node, true);
+            for(const auto& rNode : config::mapMultiArgs["-addnode"])
+                pServer->AddNode(rNode, true);
         }
     }
 
 
-    /** CreateTAOServer
+    /** Shutdown
      *
-     *  Helper for creating Legacy/Tritium Servers.
+     *  Performs a shutdown and cleanup of resources on a server if it exists.
      *
-     *  we can change the name of this if we want since Legacy is not a part of
-     *  the TAO framework. I just think it's a future proof name :)
-     *
-     *  @param[in] port The unique port for the server type
-     *  @param[in] port The SSL port for the server type
-     *
-     *  @return Returns a templated server.
+     *  pServer The potential server.
      *
      **/
     template <class ProtocolType>
-    Server<ProtocolType>* CreateTAOServer(uint16_t nPort, uint16_t nSSLPort)
+    void Release(Server<ProtocolType> *pServer)
     {
-        LLP::ServerConfig config;
-
-        /* The port this server listens on. */
-        config.nPort =  nPort;
-
-        /* The SSL port this server listens on. */
-        config.nSSLPort =  nSSLPort;
-
-        /* The total data I/O threads. */
-        config.nMaxThreads = static_cast<uint16_t>(config::GetArg(std::string("-threads"), 8));
-
-        /* The timeout value (default: 30 seconds). */
-        config.nTimeout = static_cast<uint32_t>(config::GetArg(std::string("-timeout"), 120));
-
-        /* The DDOS if enabled. */
-        config.fDDOS = config::GetBoolArg(std::string("-ddos"), false);
-
-        /* The connection score (total connections per second). */
-        config.nDDOSCScore = static_cast<uint32_t>(config::GetArg(std::string("-cscore"), 1));
-
-        /* The request score (total packets per second.) */
-        config.nDDOSRScore = static_cast<uint32_t>(config::GetArg(std::string("-rscore"), 2000));
-
-        /* The DDOS moving average timespan (default: 20 seconds). */
-        config.nDDOSTimespan = static_cast<uint32_t>(config::GetArg(std::string("-timespan"), 20));
-
-        /* Flag to determine if server should listen. */
-        config.fListen = (config::fClient.load() ? false : config::GetBoolArg(std::string("-listen"), true));
-
-        /* Flag to determine if server should allow remote connections. */
-        config.fRemote = true;
-
-        /* Flag to determine if meters should be active. */
-        config.fMeter = config::GetBoolArg(std::string("-meters"), false);
-
-        /* Flag to determine if the connection manager should try new connections. */
-        config.fManager = config::GetBoolArg(std::string("-manager"), true);
-        
-        /* Default sleep */
-        config.nManagerInterval = 1000;
-        
-        /* Enable SSL if configured */
-        config.fSSL = config::GetBoolArg(std::string("-ssl"), false) || config::GetBoolArg(std::string("-sslrequired"), false);
-
-        /* Require SSL if configured */
-        config.fSSLRequired = config::GetBoolArg(std::string("-sslrequired"), false);
-
-        /* Max outgoing connections */
-        config.nMaxIncoming = static_cast<uint32_t>(config::GetArg(std::string("-maxincoming"), 84));
-
-        /* Max connections */
-        config.nMaxConnections = static_cast<uint32_t>(config::GetArg(std::string("-maxconnections"), 100));
-
-        /* Create the new server object. */
-        return new Server<ProtocolType>(config);
-    }
-
-
-    /** CreateP2PServer
-     *
-     *  Helper for creating P2P Servers.
-     *
-     *  @param[in] port The unique port for the server type
-     *  @param[in] port The SSL port for the server type
-     *
-     *  @return Returns a templated server.
-     *
-     **/
-    template <class ProtocolType>
-    Server<ProtocolType>* CreateP2PServer(uint16_t nPort, uint16_t nSSLPort)
-    {
-        LLP::ServerConfig config;
-
-        /* The port this server listens on. */
-        config.nPort =  nPort;
-
-        /* The SSL port this server listens on. */
-        config.nSSLPort =  nSSLPort;
-
-        /* The total data I/O threads. */
-        config.nMaxThreads = static_cast<uint16_t>(config::GetArg(std::string("-threads"), 8));
-
-        /* The timeout value (default: 30 seconds). */
-        config.nTimeout = static_cast<uint32_t>(config::GetArg(std::string("-timeout"), 120));
-
-        /* The DDOS if enabled. */
-        config.fDDOS = config::GetBoolArg(std::string("-ddos"), false);
-
-        /* The connection score (total connections per second). */
-        config.nDDOSCScore = static_cast<uint32_t>(config::GetArg(std::string("-cscore"), 1));
-
-        /* The request score (total packets per second.) */
-        config.nDDOSRScore = static_cast<uint32_t>(config::GetArg(std::string("-rscore"), 2000));
-
-        /* The DDOS moving average timespan (default: 20 seconds). */
-        config.nDDOSTimespan = static_cast<uint32_t>(config::GetArg(std::string("-timespan"), 20));
-
-        /* Flag to determine if server should listen. */
-        config.fListen = true;
-
-        /* Flag to determine if server should allow remote connections. */
-        config.fRemote = true;
-
-        /* Flag to determine if meters should be active. */
-        config.fMeter = config::GetBoolArg(std::string("-meters"), false);
-
-        /* Never use connection manager */
-        config.fManager = false;
-        
-        /* Enable SSL if configured */
-        config.fSSL = config::GetBoolArg(std::string("-p2pssl"), false) || config::GetBoolArg(std::string("-p2psslrequired"), false);
-
-        /* Require SSL if configured */
-        config.fSSLRequired = config::GetBoolArg(std::string("-p2psslrequired"), false);
-
-        /* Create the new server object. */
-        return new Server<ProtocolType>(config);
-
+        /* Check if we need to release triggers first. */
+        if(pServer)
+            pServer->NotifyTriggers();
     }
 
 
@@ -294,13 +137,9 @@ namespace LLP
     template <class ProtocolType>
     void Shutdown(Server<ProtocolType> *pServer)
     {
+        /* Next we need to delete our server. */
         if(pServer)
-        {
-            pServer->Shutdown();
             delete pServer;
-
-            debug::log(0, FUNCTION, ProtocolType::Name());
-        }
     }
 
 }

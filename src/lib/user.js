@@ -5,7 +5,7 @@ import { getStore } from 'store';
 
 // Store Selects
 
-export const selectLoggedIn = (state) => !!state.user.status;
+export const selectLoggedIn = (state) => !!state.user.status.genesis;
 
 // Return user's confirmed status
 export const selectUserIsConfirmed = (state) =>
@@ -16,7 +16,7 @@ export const selectUserIsConfirmed = (state) =>
 export async function refreshUserStatus() {
   const store = getStore();
   try {
-    const status = await callAPI('users/get/status');
+    const status = await callAPI('sessions/status/local');
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     return status;
   } catch (err) {
@@ -25,15 +25,18 @@ export async function refreshUserStatus() {
         settings: { savedUsername },
       } = store.getState();
       if (savedUsername) {
-        const { has } = await callAPI('users/has/session', {
+        const {saved} = await callAPI('sessions/status/local', {
           username: savedUsername,
         });
-        if (has) {
+        if (saved) {
           store.dispatch({ type: TYPE.OPEN_UNLOCK_SCREEN });
-          // await callAPI('users/load/session', { username: savedUsername });
         }
       }
     } catch (err) {
+      if (err.code == -11) { // If session is not found, then removed the saved user name. 
+        updateSettings({ savedUsername: null });
+        return null;
+      }
       console.error(err);
     }
     store.dispatch({ type: TYPE.LOGOUT });
@@ -56,14 +59,18 @@ export async function refreshUserBalances() {
 export async function refreshUserAccounts() {
   const store = getStore();
   try {
-    const accounts = await callAPI('users/list/accounts');
-    store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: accounts });
-    if (accounts.length === 0) {
+    const [trust, accounts] = await Promise.all([
+      callAPI('finance/list/trust'),
+      callAPI('finance/list/account'),
+    ]);
+    if (!accounts?.length && !trust.length) {
       // In a very rare case the sigchain is not fully downloaded, try again
       setTimeout(refreshUserAccounts, 500);
     }
 
-    return accounts;
+    const allAccounts = trust.concat(accounts);
+    store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: allAccounts });
+    return allAccounts;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER_ACCOUNTS });
     return null;
@@ -73,7 +80,7 @@ export async function refreshUserAccounts() {
 export async function refreshUserTokens() {
   const store = getStore();
   try {
-    const tokens = await callAPI('users/list/tokens');
+    const tokens = await callAPI('finance/list/tokens');
     store.dispatch({ type: TYPE.SET_USER_TOKENS, payload: tokens });
     return tokens;
   } catch (err) {
@@ -107,7 +114,12 @@ export async function refreshHeaders() {
 export async function refreshUserAccount(address) {
   const store = getStore();
   try {
-    const account = await callAPI('finance/get/account', { address });
+    let account = null;
+    try {
+      account = await callAPI('finance/get/account', { address });
+    } catch (err) {
+      account = await callAPI('finance/get/trust', { address });
+    }
     store.dispatch({
       type: TYPE.SET_USER_ACCOUNT,
       payload: { address, account },
@@ -127,19 +139,38 @@ export async function login({
   rememberMe,
   keepLoggedIn,
 }) {
-  await callAPI('users/login/user', { username, password, pin });
+  await callAPI('sessions/create/local', { username, password, pin });
+  let finishedIndexing = false;
+  while (!finishedIndexing) { // This checks if the account has finished indexing after downloading the sigchain, consider revising this. 
+    let status = await callAPI('sessions/status/local');
+    finishedIndexing = !status.indexing;
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+  getStore().dispatch({
+    type: TYPE.SET_USERNAME,
+    payload: { username },
+  });
   updateSettings({
     savedUsername: rememberMe ? username : null,
   });
   await Promise.all([
-    callAPI('users/unlock/user', { pin, notifications: true }),
+    callAPI('sessions/unlock/local', { pin, notifications: true }),
     refreshUserStatus(),
-    rememberMe && keepLoggedIn ? callAPI('users/save/session', { pin }) : null,
+    rememberMe && keepLoggedIn ? callAPI('sessions/save/local', { pin }) : null,
   ]);
 }
 
 export async function logout() {
-  await callAPI('users/logout/user');
+  const store = getStore();
+  const {
+    user: {
+      status: { 
+        saved
+      }
+    }
+  } = store.getState();
+
+  await callAPI('sessions/terminate/local', saved ? {clear:1} : null);
   await refreshUserStatus();
 }
 

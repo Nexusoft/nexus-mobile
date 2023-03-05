@@ -1,10 +1,8 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Platform, KeyboardAvoidingView } from 'react-native';
-import {
-  createStackNavigator,
-  Header,
-  HeaderBackground,
-} from '@react-navigation/stack';
+import { createStackNavigator, Header } from '@react-navigation/stack';
+import { HeaderBackground } from '@react-navigation/elements';
 import { shadow } from 'react-native-paper';
 
 import ReceiveScreen from './screens/ReceiveScreen';
@@ -58,6 +56,7 @@ const screens = [
 
 export default function StackNavigator({ navigation }) {
   const theme = useTheme();
+  const txFilterOpen = useSelector((state) => state.ui.transactionsFilter.open);
   React.useEffect(() => {
     const store = getStore();
     store.observe(selectLoggedIn, (loggedIn) => {
@@ -74,8 +73,8 @@ export default function StackNavigator({ navigation }) {
     >
       <Stack.Navigator
         initialRouteName="Base"
-        headerMode="screen"
         screenOptions={{
+          headerMode: 'screen',
           headerStyle: {
             backgroundColor: theme.dark ? theme.surface : theme.primary,
             elevation: 4,
@@ -102,7 +101,7 @@ export default function StackNavigator({ navigation }) {
         {screens.map((Screen) => {
           const { name, options } =
             typeof Screen.nav === 'function'
-              ? Screen.nav({ theme })
+              ? Screen.nav({ theme, txFilterOpen })
               : Screen.nav;
 
           return (

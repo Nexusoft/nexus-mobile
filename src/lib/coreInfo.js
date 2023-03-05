@@ -8,7 +8,6 @@ async function getInfo() {
   const store = getStore();
   try {
     const coreInfo = await callAPI('system/get/info');
-    console.log(coreInfo);
     store.dispatch({ type: TYPE.SET_CORE_INFO, payload: coreInfo });
     return coreInfo;
   } catch (err) {
@@ -26,7 +25,7 @@ export async function refreshCoreInfo() {
     clearTimeout(timerId);
     const coreInfo = await getInfo();
     if (
-      (coreInfo?.synchronizing && coreInfo?.clientmode) ||
+      (coreInfo?.synchronizing && coreInfo?.litemode) ||
       coreInfo?.connections === 0
     ) {
       // Refresh quicker so that sync percentage is updated more frequently

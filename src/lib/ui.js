@@ -120,6 +120,19 @@ export function confirmPin(options) {
   });
 }
 
+export function showOptions(props) {
+  const store = getStore();
+  const id = newUID();
+  store.dispatch({
+    type: TYPE.OPEN_DIALOG,
+    payload: {
+      id,
+      type: 'options',
+      ...props,
+    },
+  });
+}
+
 export function closeDialog(id) {
   const store = getStore();
   store.dispatch({
@@ -145,4 +158,11 @@ export function setContactSearch(text) {
 
 export function closeUnlockScreen() {
   getStore().dispatch({ type: TYPE.CLOSE_UNLOCK_SCREEN });
+}
+
+export function saveUsernameToUI(savedUsername) {
+  getStore().dispatch({
+    type: TYPE.SET_USERNAME,
+    payload: { username: savedUsername },
+  });
 }

@@ -5,13 +5,13 @@ import { selectSetting } from './settings';
 
 let timerId = null;
 export async function refreshMarketPrice() {
+  const store = getStore();
   try {
     clearTimeout(timerId);
-    const store = getStore();
     const baseCurrency = selectSetting('baseCurrency')(store.getState());
 
     const response = await fetch(
-      `https://nexus-wallet-external-services.herokuapp.com/market-price?base_currency=${baseCurrency}`
+      `https://nexus-wallet-server.onrender.com/market-data?base_currency=${baseCurrency}`
     );
     const data = await response.json();
 

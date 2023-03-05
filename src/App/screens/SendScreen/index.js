@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, LayoutAnimation } from 'react-native';
-import { HeaderTitle } from '@react-navigation/stack';
+import { HeaderTitle } from '@react-navigation/elements';
 import { FAB, overlay } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -34,7 +34,7 @@ async function resolveNameOrAddress(nameOrAddress) {
     const addressResult = await callAPI('system/validate/address', {
       address: nameOrAddress,
     });
-    if (addressResult.is_valid) {
+    if (addressResult.valid) {
       // This is a Nexus address
       return {
         address: nameOrAddress,
@@ -48,7 +48,7 @@ async function resolveNameOrAddress(nameOrAddress) {
     const nameResult = await callAPI('names/get/name', { name: nameOrAddress });
     return {
       name: nameOrAddress,
-      address: nameResult.register_address,
+      address: nameResult.address,
       contactName: findContactName(nameResult.register_address),
     };
   } catch (err) {

@@ -44,11 +44,11 @@ namespace LLP
     {
 
         /** Mutex for thread synchronization. **/
-        mutable std::mutex SOCKET_MUTEX;
+        mutable std::recursive_mutex SOCKET_MUTEX;
 
 
         /* SSL object */
-        SSL *pSSL;
+        SSL* pSSL;
 
     protected:
 

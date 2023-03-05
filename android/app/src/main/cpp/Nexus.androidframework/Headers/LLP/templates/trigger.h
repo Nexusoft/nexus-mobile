@@ -110,10 +110,51 @@ namespace LLP
 
             /* Clear the stream and unpack args. */
             ssArgs.clear();
-            message_args(ssArgs, std::forward<Args>(args)...);
+            ((ssArgs << args), ...);
 
             /* Reset read pointer. */
             ssArgs.Reset();
+        }
+
+
+        /** wait_for_timeout
+         *
+         *  Wait until designated nonce has been fired with a trigger.
+         *
+         *  @param[in] nTriggerNonce The nonce to wait for in trigger response.
+         *
+         **/
+        bool wait_for_timeout(const uint64_t nTriggerNonce, const uint64_t nTimeout = 10000)
+        {
+            /* Create the mutex for the condition variable. */
+            std::mutex REQUEST_MUTEX;
+            std::unique_lock<std::mutex> REQUEST_LOCK(REQUEST_MUTEX);
+
+            /* Wait for trigger to complete. */
+            return CONDITION.wait_for(REQUEST_LOCK, std::chrono::milliseconds(nTimeout),
+            [this, nTriggerNonce]
+            {
+                /* Break out if shutdown. */
+                if(config::fShutdown.load())
+                    return true;
+
+                LOCK(TRIGGER_MUTEX);
+
+                /* Reset the stream. */
+                ssArgs.Reset();
+                if(ssArgs.size() == 0)
+                    return false;
+
+                /* Check for genesis. */
+                uint64_t nNonce = 0;
+                ssArgs >> nNonce;
+
+                /* Check the nonce for trigger. */
+                if(nNonce == nTriggerNonce)
+                    return true;
+
+                return false;
+            });
         }
 
 
@@ -124,16 +165,20 @@ namespace LLP
          *  @param[in] nTriggerNonce The nonce to wait for in trigger response.
          *
          **/
-        bool wait_for_nonce(const uint64_t nTriggerNonce, const uint64_t nTimeout = 10000)
+        void wait_for_nonce(const uint64_t nTriggerNonce)
         {
             /* Create the mutex for the condition variable. */
             std::mutex REQUEST_MUTEX;
             std::unique_lock<std::mutex> REQUEST_LOCK(REQUEST_MUTEX);
 
             /* Wait for trigger to complete. */
-            return CONDITION.wait_for(REQUEST_LOCK, std::chrono::milliseconds(nTimeout),
+            CONDITION.wait(REQUEST_LOCK,
             [this, nTriggerNonce]
             {
+                /* Break out if shutdown. */
+                if(config::fShutdown.load())
+                    return true;
+
                 LOCK(TRIGGER_MUTEX);
 
                 /* Reset the stream. */

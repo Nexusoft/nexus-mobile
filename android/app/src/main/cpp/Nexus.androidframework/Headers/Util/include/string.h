@@ -12,13 +12,12 @@
 ____________________________________________________________________________________________*/
 
 #pragma once
-#ifndef NEXUS_UTIL_INCLUDE_STRING_H
-#define NEXUS_UTIL_INCLUDE_STRING_H
 
 #include <vector>
 #include <string>
 #include <cstdint>
 
+#include <set>
 
 /** ParseString
  *
@@ -31,6 +30,19 @@ ________________________________________________________________________________
  *
  **/
 void ParseString(const std::string& str, char c, std::vector<std::string>& v);
+
+
+/** ParseString
+ *
+ *  Parses a string and tokenizes it into substrings based on the character delimiter.
+ *
+ *  @param[in] str The string to parse.
+ *  @param[in] c The character delimiter.
+ *
+ *  @param[out] v The set to store the tokens into.
+ *
+ **/
+void ParseString(const std::string& str, char c, std::set<std::string>& v, bool fTrim = false);
 
 
 /** ReplaceAll
@@ -90,66 +102,40 @@ bool ParseMoney(const char* pszIn, int64_t& nRet, int64_t COIN_SIZE = 1000000, i
 bool ParseMoney(const std::string& str, int64_t& nRet);
 
 
-/** Split
- *
- *  Split a string into it's components by delimiter.
- *
- *  @param[in] strInput The input string.
- *  @param[in] strDelimiter The delimeter to seperate at.
- *
- *  @return The vector of the tokenized strings.
- *
- **/
-std::vector<std::string> Split(const std::string& strInput, char strDelimiter);
-
-
-/** Split
- *
- *  Split a string into it's components by delimiter.
- *
- *  @param[in] strInput The input string.
- *  @param[in] strDelimiter The delimeter to seperate at.
- *
- *  @return The vector of the tokenized strings.
- *
- **/
-std::vector<std::string> Split(const std::string& strInput, const std::string& strDelimiter);
-
-
 /** ltrim
 *
 *  Trims spaces from the left of a std::string.
 *
-*  @param[in] s The string to be trimmed.
+*  @param[in] strValue The string to be trimmed.
 *
 *  @return The string with all leading spaces removed.
 *
 **/
-std::string &ltrim(std::string &s);
+std::string ltrim(std::string strValue);
 
 
 /** rtrim
 *
 *  Trims spaces from the right of a std::string.
 *
-*  @param[in] s The string to be trimmed.
+*  @param[in] strValue The string to be trimmed.
 *
 *  @return The string with all trailing spaces removed.
 *
 **/
-std::string &rtrim(std::string &s);
+std::string rtrim(std::string strValue);
 
 
 /** trim
 *
 *  Trims spaces from both ends of a std::string.
 *
-*  @param[in] s The string to be trimmed.
+*  @param[in] strValue The string to be trimmed.
 *
 *  @return The string with all leading and trailing spaces removed.
 *
 **/
-std::string &trim(std::string &s);
+std::string trim(std::string strValue);
 
 
 /** EqualsNoCase
@@ -201,6 +187,3 @@ bool IsAllDigit(const std::string& strIn);
 *
 **/
 bool IsUINT64(const std::string& strIn);
-
-
-#endif

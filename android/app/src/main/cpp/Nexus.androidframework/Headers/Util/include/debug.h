@@ -66,8 +66,18 @@ ________________________________________________________________________________
 #define ANSI_COLOR_FUNCTION "\u001b[1m"
 #endif
 
+//this macro is for creating nice formatting on console logs
 #define VALUE(data) data
 
+//this macro will dump a variable name to a string for use in debugging
+#define VAR_NAME(a) \
+    debug::safe_printstr(#a)
+
+//this macro is used for dumping data structures
+#define VARIABLE(a) \
+    ANSI_COLOR_FUNCTION, VAR_NAME(a), ANSI_COLOR_RESET, " = ", a
+
+//this macro will dump node related information to the console
 #define NODE debug::print_node(this)
 
 //ANSI_COLOR_FUNCTION, " Node", ANSI_COLOR_RESET " : ", "\u001b[1m", GetAddress().ToStringIP(), ANSI_COLOR_RESET, " "
@@ -79,14 +89,18 @@ ________________________________________________________________________________
 
 #define FUNCTION ANSI_COLOR_FUNCTION, __PRETTY_FUNCTION__, ANSI_COLOR_RESET, " : "
 
+//forward declaration from LLD/include/global.h global ACID handler
+namespace LLD { void TxnAbort(const uint8_t nFlags); }
+
 namespace debug
 {
 
     extern std::mutex DEBUG_MUTEX;
     extern std::ofstream ssFile;
     extern thread_local std::string strLastError;
+    extern thread_local std::string strLastException;
 
-    /* Flag indicating that errors should be logged for this thread (defaults to true). This allows calling code to temporarily 
+    /* Flag indicating that errors should be logged for this thread (defaults to true). This allows calling code to temporarily
        disable error logging for a given thread. */
     extern thread_local bool fLogError;
 
@@ -130,38 +144,6 @@ namespace debug
     void LogStartup(int argc, char** argv);
 
 
-    /** print_args
-     *
-     *  Overload for varadaic templates.
-     *
-     *  @param[out] s The stream being written to.
-     *  @param[in] head The object being written to stream.
-     *
-     **/
-    template<class Head>
-    void print_args(std::ostream& s, Head&& head)
-    {
-        s << std::forward<Head>(head);
-    }
-
-
-    /** print_args
-     *
-     *  Handle for variadic template pack
-     *
-     *  @param[out] s The stream being written to.
-     *  @param[in] head The object being written to stream.
-     *  @param[in] tail The variadic parameters.
-     *
-     **/
-    template<class Head, class... Tail>
-    void print_args(std::ostream& s, Head&& head, Tail&&... tail)
-    {
-        s << std::forward<Head>(head);
-        print_args(s, std::forward<Tail>(tail)...);
-    }
-
-
     /** safe_printstr
      *
      *  Safe handle for writing objects into a string.
@@ -175,7 +157,7 @@ namespace debug
     std::string safe_printstr(Args&&... args)
     {
         std::ostringstream ss;
-        print_args(ss, std::forward<Args>(args)...);
+        ((ss << args), ...);
 
         return ss.str();
     }
@@ -187,7 +169,7 @@ namespace debug
      *  Encapsulated log for improved compile time. Not thread safe.
      *
      **/
-     void log_(time_t &timestamp, std::string &debug_str);
+     void _log(const time_t& nTimestamp, const std::string& strDebug);
 
 
     /** log
@@ -200,7 +182,7 @@ namespace debug
      *
      **/
     template<class... Args>
-    void log(uint32_t nLevel, Args&&... args)
+    void log(const uint32_t nLevel, Args&&... args)
     {
         /* Don't write if log level is below set level. */
         if(config::nVerbose < nLevel)
@@ -210,12 +192,11 @@ namespace debug
         LOCK(DEBUG_MUTEX);
 
         /* Get the debug string and log file. */
-        std::string debug = safe_printstr(args...);
+        std::string strDebug = safe_printstr(args...);
 
         /* Get the timestamp. */
-        time_t timestamp = std::time(nullptr);
-
-        log_(timestamp, debug);
+        time_t nTimestamp = std::time(nullptr);
+        _log(nTimestamp, strDebug);
     }
 
 
@@ -236,9 +217,70 @@ namespace debug
         {
             strLastError = safe_printstr(args...);
 
-            log(0, ANSI_COLOR_BRIGHT_RED, "ERROR: ", ANSI_COLOR_RESET, args...);
+            debug::log(0, ANSI_COLOR_BRIGHT_RED, "ERROR: ", ANSI_COLOR_RESET, args...);
         }
         return false;
+    }
+
+
+    /** abort
+     *
+     *  Safe constant format debugging failure. This function aborts a transaction if failed.
+     *
+     *  @param[in] nFlags The transaction flags we are aborting
+     *  @param[in] args The variadic template arguments in.
+     *
+     *  @return Returns false always. (Assumed to return an error.)
+     *
+     **/
+    template<class... Args>
+    bool abort(const uint8_t nFlags, Args&&... args)
+    {
+        if(fLogError)
+        {
+            strLastError = safe_printstr(args...);
+
+            debug::log(0, ANSI_COLOR_BRIGHT_RED, "ABORT: ", ANSI_COLOR_RESET, args...);
+        }
+
+        /* Abort our transaction here. */
+        LLD::TxnAbort(nFlags);
+
+        return false;
+    }
+
+
+    /** warning
+     *
+     *  Safe constant format debugging warning logs.
+     *  Dumps to console or to log file.
+     *
+     *  @param[in] args The variadic template arguments in.
+     *
+     *  @return Returns false always. (Assumed to return an error.)
+     *
+     **/
+    template<class... Args>
+    void warning(Args&&... args)
+    {
+        debug::log(0, ANSI_COLOR_BRIGHT_YELLOW, "WARNING: ", ANSI_COLOR_RESET, args...);
+    }
+
+
+    /** notice
+     *
+     *  Safe constant format debugging notice logs.
+     *  Dumps to console or to log file.
+     *
+     *  @param[in] args The variadic template arguments in.
+     *
+     *  @return Returns false always. (Assumed to return an error.)
+     *
+     **/
+    template<class... Args>
+    void notice(Args&&... args)
+    {
+        debug::log(0, ANSI_COLOR_BRIGHT_YELLOW, "NOTICE: ", ANSI_COLOR_RESET, args...);
     }
 
 
@@ -271,9 +313,13 @@ namespace debug
      *
      **/
     template<class... Args>
-    bool success(Args&&... args)
+    bool success(const uint32_t nLevel, Args&&... args)
     {
-        log(0, ANSI_COLOR_BRIGHT_GREEN, "SUCCESS: ", ANSI_COLOR_RESET, args...);
+        /* Don't write if log level is below set level. */
+        if(config::nVerbose < nLevel)
+            return true;
+
+        log(nLevel, ANSI_COLOR_BRIGHT_GREEN, "SUCCESS: ", ANSI_COLOR_RESET, args...);
 
         return true;
     }
@@ -351,13 +397,9 @@ namespace debug
     void InitializeLog(int argc, char** argv);
 
 
-    /** GetFilesize
+    /** GetLastError
      *
-     *  Gets the size of the file in bytes.
-     *
-     *  Gets the last error string logged via debug::error and clears the last error
-     *
-     *  @return The last error string logged via debug::error
+     *  Get the last error denoted by the thread local variable strLastError
      *
      **/
     std::string GetLastError();

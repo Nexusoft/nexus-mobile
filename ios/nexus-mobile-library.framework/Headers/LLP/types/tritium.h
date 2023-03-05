@@ -31,12 +31,37 @@ ________________________________________________________________________________
 
 namespace LLP
 {
-    namespace Tritium
+
+    /** TritiumNode
+     *
+     *  A Node that processes packets and messages for the Tritium Server
+     *
+     **/
+    class TritiumNode : public BaseConnection<MessagePacket>
     {
+    public: //encapsulate protocol messages inside node class
+
         /** Actions invoke behavior in remote node. **/
-        namespace ACTION
+        struct ACTION
         {
-            enum
+            /** Limit for maximum items that can be requested per packet. **/
+            static const uint32_t GET_MAX_ITEMS = 100;
+
+
+            /** Limit for maximum notifications that can be broadcast per packet. **/
+            static const uint32_t NOTIFY_MAX_ITEMS = 100;
+
+
+            /** Limit for maximum event notifications that can be broadcast per packet. **/
+            static const uint32_t LIST_NOTIFICATIONS_MAX_ITEMS = 100;
+
+
+            /** Limit for maximum subscriptions that can be requested per packet. **/
+            static const uint32_t SUBSCRIBE_MAX_ITEMS = 100;
+
+
+            /* Message enumeration values. */
+            enum : MessagePacket::message_t
             {
                 RESERVED     = 0,
 
@@ -49,21 +74,19 @@ namespace LLP
                 VERSION      = 0x15,
                 SUBSCRIBE    = 0x16,
                 UNSUBSCRIBE  = 0x17,
-                VALIDATE     = 0x18,
-                REQUEST      = 0x19,
 
                 /* Protocol. */
                 PING         = 0x1a,
                 PONG         = 0x1b
 
             };
-        }
+        };
 
 
         /** Types are objects that can be sent in packets. **/
-        namespace TYPES
+        struct TYPES
         {
-            enum
+            enum : MessagePacket::message_t
             {
                 /* Key Types. */
                 UINT256_T     = 0x20,
@@ -89,16 +112,14 @@ namespace LLP
                 NOTIFICATION  = 0x3b,
                 TRIGGER       = 0x3c,
                 REGISTER      = 0x3d,
-                P2PCONNECTION = 0x3e,
-                PEERADDRESS   = 0x3f,
             };
-        }
+        };
 
 
         /** Specifiers describe object type in greater detail. **/
-        namespace SPECIFIER
+        struct SPECIFIER
         {
-            enum
+            enum : MessagePacket::message_t
             {
                 /* Specifier. */
                 LEGACY       = 0x40, //specify for legacy data types
@@ -106,14 +127,16 @@ namespace LLP
                 SYNC         = 0x42, //specify a sync block type
                 TRANSACTIONS = 0x43, //specify to send memory transactions first
                 CLIENT       = 0x44, //specify for blocks to be sent and received for clients
+                REGISTER     = 0x45, //specify that a register is being received and should only keep memory of it.
+                DEPENDANT    = 0x46, //specify that a transaction is a dependant and therfore only process the ledger layer.
             };
-        }
+        };
 
 
         /** Status returns available states. **/
-        namespace RESPONSE
+        struct RESPONSE
         {
-            enum
+            enum : MessagePacket::message_t
             {
                 ACCEPTED     = 0x50,
                 REJECTED     = 0x51,
@@ -121,15 +144,14 @@ namespace LLP
                 UNSUBSCRIBED = 0x53, //let node know it was unsubscribed successfully
                 AUTHORIZED   = 0x54,
                 COMPLETED    = 0x55, //let node know an event was completed
-                VALIDATED    = 0x56,
             };
-        }
+        };
 
 
         /** Subscription flags. */
-        namespace SUBSCRIPTION
+        struct SUBSCRIPTION
         {
-            enum
+            enum : MessagePacket::message_t
             {
                 BLOCK           = (1 << 1),
                 TRANSACTION     = (1 << 2),
@@ -140,20 +162,13 @@ namespace LLP
                 LASTINDEX       = (1 << 7),
                 BESTCHAIN       = (1 << 8),
                 SIGCHAIN        = (1 << 9),
-                NOTIFICATION    = (1 << 10),
+                REGISTER        = (1 << 10),
             };
-        }
-
-    } // end namespace Tritium
+        };
 
 
-    /** TritiumNode
-     *
-     *  A Node that processes packets and messages for the Tritium Server
-     *
-     **/
-    class TritiumNode : public BaseConnection<MessagePacket>
-    {
+    private:
+
 
         /** State of if this node has logged in to remote node. **/
         std::atomic<bool> fLoggedIn;
@@ -176,7 +191,7 @@ namespace LLP
 
 
         /** Sig chain genesis hashes / register addresses that the peer has subscribed to notifications for **/
-        std::vector<uint256_t> vNotifications;
+        std::set<uint256_t> setSubscriptions;
 
 
     public:
@@ -191,14 +206,6 @@ namespace LLP
 
         /** Set for connected session. **/
         static std::map<uint64_t, std::pair<uint32_t, uint32_t>> mapSessions;
-
-
-        /** Mutex for controlling access to the p2p requests map. **/
-        static std::mutex P2P_REQUESTS_MUTEX;
-
-
-        /** map of P2P request timestamps by source genesis hash. **/
-        static std::map<uint256_t, uint64_t> mapP2PRequests;
 
 
         /** Name
@@ -391,7 +398,7 @@ namespace LLP
          *  @param[in] hashAddress The address to unsubscribe notifications for.
          *
          **/
-        void UnsubscribeNotification(const uint256_t& hashAddress);
+        void UnsubscribeAddress(const uint256_t& hashAddress);
 
 
         /** Subscribe
@@ -402,7 +409,7 @@ namespace LLP
          *  @param[in] fSubscribe Flag to determine whether subscibing or unsubscribing
          *
          **/
-        void SubscribeNotification(const uint256_t& hashAddress, bool fSubscribe = true);
+        void SubscribeAddress(const uint256_t& hashAddress, bool fSubscribe = true);
 
 
         /** RelayFilter
@@ -435,16 +442,14 @@ namespace LLP
         static DataStream GetAuth(bool fAuth);
 
 
-        /** SessionActive
+        /** Syncing
          *
-         *  Determine whether a session is connected.
-         *
-         *  @param[in] nSession The session to check for
+         *  Determine whether a node is syncing.
          *
          *  @return true if session is connected.
          *
          **/
-        static bool SessionActive(const uint64_t nSession);
+        static bool Syncing();
 
 
         /** GetNode
@@ -501,7 +506,7 @@ namespace LLP
         void PushMessage(const uint16_t nMsg, Args&&... args)
         {
             DataStream ssData(SER_NETWORK, MIN_PROTO_VERSION);
-            message_args(ssData, std::forward<Args>(args)...);
+            ((ssData << args), ...);
 
             WritePacket(NewMessage(nMsg, ssData));
 
@@ -512,9 +517,6 @@ namespace LLP
         /** BlockingMessage
          *
          *  Adds a tritium packet to the queue and waits for the peer to send a COMPLETED message.
-         *  NOTE: this is a static method taking the node reference as a parameter to avoid locking access to the connection
-         *  in the atomic_ptr.  If we did not do this, the data threads could not access the atomic_ptr to process the incoming
-         *  messages until trigger timed out and this method returned
          *
          *  @param[in] pNode Pointer to the TritiumNode connection instance to push the message to.
          *  @param[in] nMsg The message type.
@@ -523,48 +525,61 @@ namespace LLP
         template<typename... Args>
         static void BlockingMessage(const uint32_t nTimeout, LLP::TritiumNode* pNode, const uint16_t nMsg, Args&&... args)
         {
+            /* Check for shutdown. */
+            if(config::fShutdown.load())
+                return;
+
             /* Create our trigger nonce. */
             uint64_t nNonce = LLC::GetRand();
-            pNode->PushMessage(LLP::Tritium::TYPES::TRIGGER, nNonce);
+            pNode->PushMessage(LLP::TritiumNode::TYPES::TRIGGER, nNonce);
 
             /* Request the inventory message. */
             pNode->PushMessage(nMsg, std::forward<Args>(args)...);
 
             /* Create the condition variable trigger. */
             LLP::Trigger REQUEST_TRIGGER;
-            pNode->AddTrigger(LLP::Tritium::RESPONSE::COMPLETED, &REQUEST_TRIGGER);
+            pNode->AddTrigger(LLP::TritiumNode::RESPONSE::COMPLETED, &REQUEST_TRIGGER);
 
             /* Process the event. */
-            REQUEST_TRIGGER.wait_for_nonce(nNonce, nTimeout);
+            REQUEST_TRIGGER.wait_for_timeout(nNonce, nTimeout);
 
             /* Cleanup our event trigger. */
-            pNode->Release(LLP::Tritium::RESPONSE::COMPLETED);
-
+            pNode->Release(LLP::TritiumNode::RESPONSE::COMPLETED);
         }
 
 
-        /** RelayBlock
+        /** BlockingMessage
          *
-         *  Handle relays of all events for LLP when processing block. The Tritium LLP subscribes to the Ledger::Notify instance
-         *  to receive new block notifications via this callback method.
-         *
-         *  @param[in] hashBlock The hash of the block to relay.
-         *
-         **/
-        static void RelayBlock(const uint1024_t& hashBlock);
-
-
-        /** SyncSigChain
-         *
-         *  Requests missing sig chain / event transactions for the given signature chain.
+         *  Adds a tritium packet to the queue and waits for the peer to send a COMPLETED message.
          *
          *  @param[in] pNode Pointer to the TritiumNode connection instance to push the message to.
-         *  @param[in] hashGenesis The genesis hash of the sig chain to sync.
-         *  @param[in] bWait  Flag indicating that the method should wait until the sig chain is downloaded before returning
-         *  @param[in] bSyncEvents Flag indicating whether or not to also download events for the sig chain
-         *
+         *  @param[in] nMsg The message type.
+         *  @param[in] args variable args to be sent in the message.
          **/
-        static void SyncSigChain(LLP::TritiumNode* pNode, const uint256_t& hashGenesis, bool bWait, bool bSyncEvents);
+        template<typename... Args>
+        static void BlockingMessage(LLP::TritiumNode* pNode, const uint16_t nMsg, Args&&... args)
+        {
+            /* Check for shutdown. */
+            if(config::fShutdown.load())
+                return;
+
+            /* Create our trigger nonce. */
+            uint64_t nNonce = LLC::GetRand();
+            pNode->PushMessage(LLP::TritiumNode::TYPES::TRIGGER, nNonce);
+
+            /* Request the inventory message. */
+            pNode->PushMessage(nMsg, std::forward<Args>(args)...);
+
+            /* Create the condition variable trigger. */
+            LLP::Trigger REQUEST_TRIGGER;
+            pNode->AddTrigger(LLP::TritiumNode::RESPONSE::COMPLETED, &REQUEST_TRIGGER);
+
+            /* Process the event. */
+            REQUEST_TRIGGER.wait_for_nonce(nNonce);
+
+            /* Cleanup our event trigger. */
+            pNode->Release(LLP::TritiumNode::RESPONSE::COMPLETED);
+        }
 
 
         /** Sync

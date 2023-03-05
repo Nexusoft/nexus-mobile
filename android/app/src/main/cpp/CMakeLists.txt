@@ -59,11 +59,18 @@ string(REPLACE "include" "lib" OPENSSL_LIBRARIES_DIR ${OPENSSL_INCLUDE_DIR})
 SET(OPENSSL_LIBRARIES "ssl" "crypto")
 
 # build application's shared lib
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++17")
 set(CMAKE_SHARED_LINKER_FLAGS "-Wall -v -Wl ")
 
 # Link openssl to project
 LINK_DIRECTORIES(${OPENSSL_LIBRARIES_DIR})
+
+add_library (boost_filesystem STATIC IMPORTED)
+
+set_target_properties( boost_filesystem PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_CURRENT_SOURCE_DIR}/Boost/${ANDROID_ABI}/libboost_filesystem.a
+                    )
+set(BOOST_INCLUDE_DIR ${BOOST_ROOT_DIR})
 
 # Add main entry point to library
 add_library(nexusmobilelib SHARED
@@ -72,12 +79,18 @@ add_library(nexusmobilelib SHARED
 # Add all includes to MAKE
 target_include_directories(nexusmobilelib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/Nexus.androidframework/Headers/
-        ${OPENSSL_INCLUDE_DIR} )
+        ${OPENSSL_INCLUDE_DIR}
+        ${BOOST_INCLUDE_DIR})
 
 # Add specific openssl libs to MAKE
-target_link_libraries(nexusmobilelib lib_nexus ${OPENSSL_LIBRARIES})
+target_link_libraries(nexusmobilelib
+        lib_nexus
+        boost_filesystem
+        ${OPENSSL_LIBRARIES}
+        )
 
 # Build Target
 target_link_libraries(nexusmobilelib
+        boost_filesystem
         android
         log)

@@ -7,6 +7,7 @@ import InfoDialog from 'components/InfoDialog';
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import PinDialog from 'components/PinDialog';
 import OnboardingDialog from 'components/OnboardingDialog';
+import OptionsDialog from 'components/OptionsDialog';
 import { closeDialog } from 'lib/ui';
 
 // https://github.com/callstack/react-native-paper/blob/master/src/components/Modal.tsx#L48
@@ -19,6 +20,7 @@ const dialogTypes = {
   confirmation: ConfirmationDialog,
   pinConfirmation: PinDialog,
   onboard: OnboardingDialog,
+  options: OptionsDialog,
 };
 
 function Dialog({ id, type, ...rest }) {

@@ -40,6 +40,8 @@ namespace TAO
         class BlockState;
         class Transaction;
     }
+
+    namespace API { class Transaction; }
 }
 
 
@@ -127,6 +129,30 @@ namespace LLD
         bool ReadBestChain(uint1024_t &hashBest);
 
 
+        /** WriteHybridGenesis
+         *
+         *  Writes the hybrid chain pointer to the ledger DB.
+         *
+         *  @param[in] hashBest The best chain hash to write.
+         *
+         *  @return True if the write was successful, false otherwise.
+         *
+         **/
+        bool WriteHybridGenesis(const uint1024_t& hashBest);
+
+
+        /** ReadHybridGenesis
+         *
+         *  Reads the hybrid chain pointer from the ledger DB.
+         *
+         *  @param[out] hashBest The best chain hash to read.
+         *
+         *  @return True if the read was successful, false otherwise.
+         *
+         **/
+        bool ReadHybridGenesis(uint1024_t &hashBest);
+
+
         /** ReadBestChain
          *
          *  Reads the best chain pointer from the ledger DB.
@@ -192,6 +218,20 @@ namespace LLD
          *
          **/
         bool ReadTx(const uint512_t& hashTx, TAO::Ledger::Transaction &tx, const uint8_t nFlags = TAO::Ledger::FLAGS::BLOCK);
+
+
+        /** ReadTx
+         *
+         *  Reads a transaction from the ledger DB and casts it to an API::Transaction type.
+         *
+         *  @param[in] hashTx The txid of transaction to read.
+         *  @param[out] tx The transaction object to read.
+         *  @param[in] nFlags The flags to determine memory pool or disk
+         *
+         *  @return True if the transaction was successfully read, false otherwise.
+         *
+         **/
+        bool ReadTx(const uint512_t& hashTx, TAO::API::Transaction &tx, const uint8_t nFlags = TAO::Ledger::FLAGS::BLOCK);
 
 
         /** ReadTx
@@ -351,32 +391,6 @@ namespace LLD
         bool EraseIndex(const uint32_t& nBlockHeight);
 
 
-        /** RepairIndex
-         *
-         *  Recover if an index is not found.
-         *  Fixes a corrupted database with a linear search for the hash tx up
-         *  to the chain height.
-         *
-         *  @param[in] hashTx The txid of transaction to write.
-         *  @param[in] state The block state of the block the transaction belongs to.
-         *
-         *  @return True if the transaction was successfully written, false otherwise.
-         *
-         **/
-        bool RepairIndex(const uint512_t& hashTx, const TAO::Ledger::BlockState &state);
-
-
-        /** RepairIndexHeight
-         *
-         *  Recover the block height index.
-         *  Adds or fixes th block height index by iterating forward from the genesis block
-         *
-         *  @return True if the index was successfully written, false otherwise.
-         *
-         **/
-        bool RepairIndexHeight();
-
-
         /** ReadBlock
          *
          *  Reads a block state from disk from a tx index.
@@ -465,6 +479,19 @@ namespace LLD
          *
          **/
         bool EraseEvent(const uint256_t& hashAddress);
+
+
+        /** HasEvent
+         *
+         *  Checks an event in the ledger database of foreign index.
+         *
+         *  @param[in] hashAddress The event address to write.
+         *  @param[in] nSequence The sequence number to read from event.
+         *
+         *  @return True if the event exists.
+         *
+         **/
+        bool HasEvent(const uint256_t& hashAddress, const uint32_t nSequence);
 
 
         /** ReadEvent
@@ -684,7 +711,7 @@ namespace LLD
         bool EraseBlock(const uint1024_t& hashBlock);
 
 
-        /** HasGenesis
+        /** HasFirst
          *
          *  Checks if a genesis transaction exists.
          *
@@ -694,10 +721,10 @@ namespace LLD
          *  @return True if the genesis exists, false otherwise.
          *
          **/
-        bool HasGenesis(const uint256_t& hashGenesis, const uint8_t nFlags = TAO::Ledger::FLAGS::BLOCK);
+        bool HasFirst(const uint256_t& hashGenesis, const uint8_t nFlags = TAO::Ledger::FLAGS::BLOCK);
 
 
-        /** WriteGenesis
+        /** WriteFirst
          *
          *  Writes a genesis transaction-id to disk.
          *
@@ -707,10 +734,10 @@ namespace LLD
          *  @return True if the genesis is written, false otherwise.
          *
          **/
-        bool WriteGenesis(const uint256_t& hashGenesis, const uint512_t& hashTx);
+        bool WriteFirst(const uint256_t& hashGenesis, const uint512_t& hashTx);
 
 
-        /** ReadGenesis
+        /** ReadFirst
          *
          *  Reads a genesis transaction-id from disk.
          *
@@ -720,10 +747,10 @@ namespace LLD
          *  @return True if the genesis was read, false otherwise.
          *
          **/
-        bool ReadGenesis(const uint256_t& hashGenesis, uint512_t& hashTx);
+        bool ReadFirst(const uint256_t& hashGenesis, uint512_t& hashTx);
 
 
-        /** EraseGenesis
+        /** EraseFirst
          *
          *  Erases a genesis-id from disk.
          *
@@ -732,7 +759,7 @@ namespace LLD
          *  @return True if the genesis exists, false otherwise.
          *
          **/
-        bool EraseGenesis(const uint256_t& hashGenesis);
+        bool EraseFirst(const uint256_t& hashGenesis);
 
 
         /** MemoryBegin
