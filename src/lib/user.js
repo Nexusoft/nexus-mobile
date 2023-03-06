@@ -17,7 +17,13 @@ export async function refreshUserStatus() {
   const store = getStore();
   try {
     const status = await callAPI('sessions/status/local');
-    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+    let recovery = store.getState()?.user?.status?.recovery;
+    if (!recovery)
+    { //Limit API calls
+      const profStatus = await callAPI('profiles/status/master');
+      recovery = profStatus.recovery;
+    }
+    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: {recovery, ...status} });
     return status;
   } catch (err) {
     try {
