@@ -276,6 +276,10 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     /* Shutdown metrics. */
     timer.Reset();
 
+  
+    /* Release network triggers. */
+    LLP::Release();
+
 
     /* Shutdown the API subsystems. */
     TAO::API::Shutdown();
