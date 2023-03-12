@@ -152,6 +152,7 @@ function UnlockingBase() {
         pin,
         username: savedUsername,
       });
+      await callAPI('sessions/unlock/local', { pin, notifications: true }),
       await refreshUserStatus();
       saveUsernameToUI(savedUsername);
       closeUnlockScreen();
