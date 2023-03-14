@@ -152,6 +152,12 @@ function UnlockingBase() {
         pin,
         username: savedUsername,
       });
+      let finishedIndexing = false;
+      while (!finishedIndexing) { // This checks if the account has finished indexing after downloading the sigchain, consider revising this. 
+        let status = await callAPI('sessions/status/local');
+        finishedIndexing = !status.indexing;
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
       await callAPI('sessions/unlock/local', { pin, notifications: true }),
       await refreshUserStatus();
       saveUsernameToUI(savedUsername);
