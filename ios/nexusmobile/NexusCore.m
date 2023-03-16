@@ -31,7 +31,7 @@ void* PosixThreadMainRoutine(void* data)
              strdup("-apisslport=7080"),
              strdup("-apisslrequired=true"),
           strdup("-connect=node2.nexus.io"),
-             strdup("-noterminateauth=true"),
+             strdup("-terminateauth=0"),
           NULL
      };
      const char *com = [userCre[0] UTF8String];
