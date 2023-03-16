@@ -133,7 +133,7 @@ export default function SetRecoveryScreen() {
         })}
         onSubmit={async ({ password, pin, recovery, newRecovery }) => {
           try {
-            await callAPI('profiles/update/credentials', {
+            await callAPI('profiles/update/recovery', {
               password,
               pin,
               recovery: hasRecoveryPhrase ? recovery : undefined,
