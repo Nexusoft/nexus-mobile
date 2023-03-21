@@ -24,7 +24,7 @@ void* PosixThreadMainRoutine(void* data)
            char *my_argv[] = {
              NULL,
           strdup("-client=true"),
-          strdup("-verbose=0"),
+          strdup("-verbose=3"),
           strdup("-timeout=30"),
              strdup("-ssl=true"),
              strdup("-apissl=true"),
