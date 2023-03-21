@@ -111,6 +111,33 @@ export default function CoreSettings() {
 
             <SettingItem
               small
+              title="Delete Peer Info"
+              description="Clear Address Database"
+              onPress={async () => {
+                const confirmed = await confirm({
+                  title: 'Are you sure you want Delete?',
+                  confirmLabel: 'Delete Part of Database',
+                  danger: true,
+                });
+                if (confirmed) {
+                  await callAPI('system/stop', {});
+                  await unlink(
+                    (Platform.OS === 'android'
+                      ? ExternalDirectoryPath + '/Nexus/client/_ADDR'
+                      : DocumentDirectoryPath) + '/Nexus/client/_ADDR'
+                  );
+                  if (Platform.OS === 'android')
+                    await scanFile(ExternalDirectoryPath);
+                  showSuccess(
+                    'Addresses deleted. App must be closed complety and restarted.'
+                  );
+                  /* Not the best solution, but we do not expect this function to be used very ofter. */
+                }
+              }}
+            />
+
+            <SettingItem
+              small
               title="Delete Database"
               description="Delete all core data and resync from scratch"
               onPress={async () => {
