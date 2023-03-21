@@ -24,14 +24,14 @@ void* PosixThreadMainRoutine(void* data)
            char *my_argv[] = {
              NULL,
           strdup("-client=true"),
-          strdup("-verbose=0"),
+          strdup("-verbose=3"),
           strdup("-timeout=30"),
              strdup("-ssl=true"),
              strdup("-apissl=true"),
              strdup("-apisslport=7080"),
              strdup("-apisslrequired=true"),
           strdup("-connect=node2.nexus.io"),
-             strdup("-noterminateauth=true"),
+             strdup("-terminateauth=0"),
           NULL
      };
      const char *com = [userCre[0] UTF8String];

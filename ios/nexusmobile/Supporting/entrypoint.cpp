@@ -213,12 +213,8 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
         TAO::Ledger::ChainState::Initialize();
 
 
-        /* Check for reindexing entries. */
-        LLD::Logical->IndexRegisters();
-
-
-        /* Check for reindexing entries. */
-        LLD::Register->IndexAddress();
+        /* Run our LLD indexing operations. */
+        LLD::Indexing();
 
 
         /* Initialize the Lower Level Protocol. */
