@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         loaded: loadedAll ? 'all' : 'partly',
-        transactions: [...transactions, ...state.transactions],
+        transactions: [...state.transactions,...transactions],
       };
     }
 

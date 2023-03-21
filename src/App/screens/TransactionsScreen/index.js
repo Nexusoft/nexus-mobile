@@ -37,8 +37,8 @@ export default function TransactionsScreen() {
         ItemSeparatorComponent={Divider}
         keyExtractor={(tx) => tx.txid}
         renderItem={({ item }) => <Transaction transaction={item} />}
-        onEndReached={loaded === 'all' ? undefined : loadTransactions}
-        onEndReachedThreshold={0.1}
+        onEndReached={loaded === 'all' ? undefined : () => loadTransactions()}
+        onEndReachedThreshold={0.5}
       />
       {loading && <ActivityIndicator />}
     </ScreenBody>

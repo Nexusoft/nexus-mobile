@@ -48,8 +48,8 @@ async function resolveNameOrAddress(nameOrAddress) {
     const nameResult = await callAPI('names/get/name', { name: nameOrAddress });
     return {
       name: nameOrAddress,
-      address: nameResult.address,
-      contactName: findContactName(nameResult.register_address),
+      address: nameResult.register,
+      contactName: findContactName(nameResult.register),
     };
   } catch (err) {
     try {
@@ -58,8 +58,8 @@ async function resolveNameOrAddress(nameOrAddress) {
       });
       return {
         name: `${nameOrAddress}:default`,
-        address: nameResult.register_address,
-        contactName: findContactName(nameResult.register_address),
+        address: nameResult.register,
+        contactName: findContactName(nameResult.register),
       };
     } catch (err) {
       return null;
