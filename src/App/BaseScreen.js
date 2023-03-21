@@ -143,7 +143,10 @@ function UnlockingBase() {
   const theme = useTheme();
   const [pin, setPin] = React.useState('');
   const [loading, setLoading] = React.useState('');
-  const savedUsername = useSelector((state) => state.settings.savedUsername);
+  //TODO: Clean up
+  const savedUsernameSettings = useSelector((state) => state.settings.savedUsername);
+  const savedUsernameUnlock = useSelector((state) => state.ui.unlockingWallet.saved);
+  const savedUsername = savedUsernameSettings || savedUsernameUnlock;
 
   const unlock = async () => {
     setLoading(true);
@@ -158,10 +161,12 @@ function UnlockingBase() {
         finishedIndexing = !status.indexing;
         await new Promise(resolve => setTimeout(resolve, 500));
       }
+      await callAPI('sessions/save/local', { pin })
       await callAPI('sessions/unlock/local', { pin, notifications: true }),
       await refreshUserStatus();
+      updateSettings({ savedUsername: savedUsername });
       saveUsernameToUI(savedUsername);
-      closeUnlockScreen();
+      closeUnlockScreen(null);
     } catch (err) {
       setLoading(false);
       showError(err?.message);
@@ -214,7 +219,7 @@ function UnlockingBase() {
           labelStyle={{ fontSize: 12 }}
           onPress={() => {
             updateSettings({ savedUsername: null });
-            closeUnlockScreen();
+            closeUnlockScreen(savedUsername);
           }}
         >
           Log in as another user
@@ -293,7 +298,7 @@ const selectDefaultScreenStates = (() => {
   let cache = null;
   return (state) => {
     const connected = selectConnected(state);
-    const unlocking = state.ui.unlockingWallet;
+    const unlocking = state.ui.unlockingWallet.open;
     const syncing = state.core.info?.synchronizing;
     const loggedIn = selectLoggedIn(state);
     if (
@@ -362,7 +367,7 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
 
 export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
-  const unlocking = useSelector((state) => state.ui.unlockingWallet);
+  const unlocking = useSelector((state) => state.ui.unlockingWallet.open);
   const syncing = useSelector((state) => state.core.info?.synchronizing);
   const loggedIn = useSelector(selectLoggedIn);
   const confirmedUser = useSelector(selectUserIsConfirmed);

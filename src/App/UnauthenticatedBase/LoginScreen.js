@@ -11,7 +11,7 @@ import SvgIcon from 'components/SvgIcon';
 import Switch from 'components/Switch';
 import { useTheme } from 'lib/theme';
 import { login } from 'lib/user';
-import { showError } from 'lib/ui';
+import { openUnlockScreen, showError } from 'lib/ui';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 import { selectSetting } from 'lib/settings';
@@ -44,6 +44,7 @@ const styles = {
 };
 
 function LoginForm({ handleSubmit, isSubmitting, values }) {
+  const savedFromUnlockScreen = useSelector((state) => state.ui.unlockingWallet?.saved);
   return (
     <View style={styles.wrapper}>
       <TextBox.Formik
@@ -66,6 +67,11 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
         secure
         style={styles.field}
       />
+      {savedFromUnlockScreen && <FAB
+        style={styles.loginBtn}
+        onPress={() => openUnlockScreen()}
+        label={'Return to saved session'}
+      />}
       <FAB
         style={styles.loginBtn}
         disabled={isSubmitting}
