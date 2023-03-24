@@ -54,7 +54,7 @@ public class NexusService extends Service {
                         getExternalFilesDir(null).getAbsolutePath(),
                         userCreds[0],
                         userCreds[1],
-                        new String[]{"-manager=1", "-ssl=1" , "-apissl=1", "-apisslport=7080", "-apisslrequired=1", "-connect=node1.nexus.io", "-connect=lite4.nexenture.xyz", "-connect=node2.nexus.io", "-connect=node3.nexus.io" , "-verbose=0", "-terminateauth=0"}
+                        new String[]{"-manager=1", "-ssl=1" , "-apissl=1", "-apisslport=7080", "-apisslrequired=1", "-connect=node1.nexus.io", "-connect=lite4.nexenture.xyz", "-connect=node2.nexus.io", "-connect=node3.nexus.io" , "-verbose=3", "-terminateauth=0"}
                 );
                 super.run();
 
