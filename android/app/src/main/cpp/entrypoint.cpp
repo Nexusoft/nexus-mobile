@@ -113,7 +113,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         int nxsPolicyExists = stat(nxsPolicy.c_str(), &statbuf);
         int nxsFolderExists = stat(nxsFolder.c_str(), &statbuf);
         int nxsConfExists = stat(nxsConf.c_str(), &statbuf);
-        int CURRENT_DB_POLICY = 1;
+        int CURRENT_DB_POLICY = 2;
 
         LOG_D("Is Nexus Folder Already there? : %d", nxsFolderExists);
         LOG_D("Is Nexus Conf There? : %d", nxsConfExists);

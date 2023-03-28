@@ -63,7 +63,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     int nxsPolicyExists = stat(nxsPolicy.c_str(), &statbuf);
     int nxsFolderExists = stat(nxsFolder.c_str(), &statbuf);
     int nxsConfExists = stat(nxsConf.c_str(), &statbuf);
-    int CURRENT_DB_POLICY = 1;
+    int CURRENT_DB_POLICY = 2;
 
     if ( nxsFolderExists < 0)
     {
