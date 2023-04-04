@@ -121,8 +121,8 @@ export default function LoginScreen() {
         }}
         validationSchema={yup.object().shape({
           username: yup.string().required('Required!'),
-          password: yup.string().required('Required!'),
-          pin: yup.string().required('Required!'),
+          password: yup.string().min(8).required('Required!'),
+          pin: yup.string().min(4).required('Required!'),
           rememberMe: yup.bool(),
           keepLoggedIn: yup.bool(),
         })}
