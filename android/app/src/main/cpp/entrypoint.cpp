@@ -113,7 +113,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         int nxsPolicyExists = stat(nxsPolicy.c_str(), &statbuf);
         int nxsFolderExists = stat(nxsFolder.c_str(), &statbuf);
         int nxsConfExists = stat(nxsConf.c_str(), &statbuf);
-        int CURRENT_DB_POLICY = 2;
+        int CURRENT_DB_POLICY = 4;
 
         LOG_D("Is Nexus Folder Already there? : %d", nxsFolderExists);
         LOG_D("Is Nexus Conf There? : %d", nxsConfExists);
@@ -194,7 +194,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         }
 
 
-    /* Read the configuration file. Pass argc and argv for possible -datadir setting */
+/* Read the configuration file. Pass argc and argv for possible -datadir setting */
     config::ReadConfigFile(config::mapArgs, config::mapMultiArgs, argc, argv);
 
 
@@ -258,8 +258,8 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         TAO::Ledger::ChainState::Initialize();
 
 
-        /* Check for reindexing entries. */
-        LLD::Logical->IndexRegisters();
+        /* Run our LLD indexing operations. */
+        LLD::Indexing();
 
 
         /* Check for reindexing entries. */
@@ -321,6 +321,9 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
     /* Shutdown metrics. */
     timer.Reset();
 
+
+    /* Release network triggers. */
+    LLP::Release();
 
     /* Shutdown the API subsystems. */
     TAO::API::Shutdown();
