@@ -294,6 +294,28 @@ function SynchronizingBase() {
   );
 }
 
+function IndexingBase() {
+  const theme = useTheme();
+  //const percentage = useSelector((state) => state.core.info?.syncprogress);
+  return (
+    <BaseScreenContainer>
+      <ActivityIndicator
+        animating
+        color={theme.dark ? theme.foreground : theme.onPrimary}
+      />
+      <Text
+        sub
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        size={18}
+        style={{ textAlign: 'center', marginTop: 20 }}
+      >
+        Downloading and Indexing Sigchain...
+      </Text>
+    </BaseScreenContainer>
+  );
+}
+
+
 const selectDefaultScreenStates = (() => {
   let cache = null;
   return (state) => {
@@ -369,8 +391,10 @@ export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
   const unlocking = useSelector((state) => state.ui.unlockingWallet.open);
   const syncing = useSelector((state) => state.core.info?.synchronizing);
+  const indexing = useSelector((state) => state.user?.status?.indexing);
   const loggedIn = useSelector(selectLoggedIn);
   const confirmedUser = useSelector(selectUserIsConfirmed);
+
 
   useDefaultScreenFix();
   useDynamicNavOptions({
@@ -382,6 +406,8 @@ export default function BaseScreen({ route, navigation }) {
   if (!connected) return <DisconnectedBase />;
 
   if (syncing) return <SynchronizingBase />;
+
+  if (indexing) return <IndexingBase />;
 
   if (unlocking) return <UnlockingBase />;
 
