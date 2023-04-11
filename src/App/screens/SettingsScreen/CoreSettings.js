@@ -115,7 +115,7 @@ export default function CoreSettings() {
               description="Clear Address Database"
               onPress={async () => {
                 const confirmed = await confirm({
-                  title: 'Are you sure you want Delete?',
+                  title: 'Are you sure you want to delete the Address Folder?',
                   confirmLabel: 'Delete Part of Database',
                   danger: true,
                 });
