@@ -126,9 +126,9 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
             status = mkdir(nxsFolder.c_str(), m);
             LOG_D("Make Nexus Folder Status: %d", status);
         }
-        
 
-        nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
+
+        nxsPolicyFile.open (nxsPolicy, std::fstream::in);
 
         if (nxsPolicyExists < 0)
         {
@@ -152,13 +152,16 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
             while (std::getline(nxsPolicyFile, line)) {
                 nxsPolicyFileLines.push_back(line);
             }
-            nxsPolicyFile.clear();
-            nxsPolicyFile.seekg(0);
+            nxsPolicyFile.close();
+            nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
+
             if (nxsPolicyFileLines.size() > 0) {
                 string dbpolicy = nxsPolicyFileLines[0];
-                LOG_D("DB POLICY: %s",dbpolicy.c_str());
-                int dbpolicynumber = int(dbpolicy.back() - '0');
-                if (dbpolicynumber < CURRENT_DB_POLICY) {
+                string delimiter = "dbpolicy:"; // A bit overkill but will be useful in the future
+                dbpolicy.erase(0, dbpolicy.find(delimiter) + delimiter.length());
+
+                if (stoi(dbpolicy) < CURRENT_DB_POLICY)
+                {
                     LOG_D("Deleting DB");
                     boost::filesystem::remove_all(nxsFolder + "/client");
                 }
