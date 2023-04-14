@@ -128,7 +128,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         }
 
 
-        nxsPolicyFile.open (nxsPolicy, std::fstream::in);
+
 
         if (nxsPolicyExists < 0)
         {
@@ -141,7 +141,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         }
         else {
 
-
+            nxsPolicyFile.open (nxsPolicy, std::fstream::in);
             if (nxsPolicyFile.is_open()) {
                 LOG_D("Open success");
             }
@@ -153,7 +153,6 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
                 nxsPolicyFileLines.push_back(line);
             }
             nxsPolicyFile.close();
-            nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
 
             if (nxsPolicyFileLines.size() > 0) {
                 string dbpolicy = nxsPolicyFileLines[0];
@@ -167,6 +166,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
                 }
             }
         }
+        nxsPolicyFile.open (nxsPolicy,  std::fstream::out | std::fstream::trunc);
 
         //TODO: Replace with vector write
         nxsPolicyFile << "dbpolicy:" << std::to_string(CURRENT_DB_POLICY) << '\n';

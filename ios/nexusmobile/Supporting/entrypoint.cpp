@@ -72,7 +72,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
       cout << status << endl;
     }
 
-    nxsPolicyFile.open (nxsPolicy, std::fstream::in);
+  
     if (nxsPolicyExists < 0)
     {
       // If No policy is there but the nexus folder is, then we need to delete
@@ -84,7 +84,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     }
     else
     {
-      
+        nxsPolicyFile.open (nxsPolicy, std::fstream::in);
       if (nxsPolicyFile.is_open())
       {
         cout << "Open success" << endl;
@@ -99,7 +99,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
       }
       
       nxsPolicyFile.close();
-      nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
+      
       
       cout << nxsPolicyFileLines.size() << endl;
       if ( nxsPolicyFileLines.size() > 0 )
@@ -117,7 +117,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
         }
       }
     }
-
+    nxsPolicyFile.open (nxsPolicy, std::fstream::out | std::fstream::trunc);
     //TODO: Replace with vector write
     nxsPolicyFile << "dbpolicy:" << std::to_string(CURRENT_DB_POLICY) << '\n';
     nxsPolicyFile.close();
