@@ -172,7 +172,7 @@ export default function ConfirmSendScreen({ route }) {
           }
 
           try {
-            await callAPI('finance/debit/account', params);
+            await callAPI('finance/debit/account,trust', params);
           } catch (err) {
             showError(err && err.message);
             return;

@@ -113,7 +113,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         int nxsPolicyExists = stat(nxsPolicy.c_str(), &statbuf);
         int nxsFolderExists = stat(nxsFolder.c_str(), &statbuf);
         int nxsConfExists = stat(nxsConf.c_str(), &statbuf);
-        int CURRENT_DB_POLICY = 1;
+        int CURRENT_DB_POLICY = 4;
 
         LOG_D("Is Nexus Folder Already there? : %d", nxsFolderExists);
         LOG_D("Is Nexus Conf There? : %d", nxsConfExists);
@@ -126,9 +126,9 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
             status = mkdir(nxsFolder.c_str(), m);
             LOG_D("Make Nexus Folder Status: %d", status);
         }
-        
 
-        nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
+
+
 
         if (nxsPolicyExists < 0)
         {
@@ -141,7 +141,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         }
         else {
 
-
+            nxsPolicyFile.open (nxsPolicy, std::fstream::in);
             if (nxsPolicyFile.is_open()) {
                 LOG_D("Open success");
             }
@@ -152,18 +152,21 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
             while (std::getline(nxsPolicyFile, line)) {
                 nxsPolicyFileLines.push_back(line);
             }
-            nxsPolicyFile.clear();
-            nxsPolicyFile.seekg(0);
+            nxsPolicyFile.close();
+
             if (nxsPolicyFileLines.size() > 0) {
                 string dbpolicy = nxsPolicyFileLines[0];
-                LOG_D("DB POLICY: %s",dbpolicy.c_str());
-                int dbpolicynumber = int(dbpolicy.back() - '0');
-                if (dbpolicynumber < CURRENT_DB_POLICY) {
+                string delimiter = "dbpolicy:"; // A bit overkill but will be useful in the future
+                dbpolicy.erase(0, dbpolicy.find(delimiter) + delimiter.length());
+
+                if (stoi(dbpolicy) < CURRENT_DB_POLICY)
+                {
                     LOG_D("Deleting DB");
                     boost::filesystem::remove_all(nxsFolder + "/client");
                 }
             }
         }
+        nxsPolicyFile.open (nxsPolicy,  std::fstream::out | std::fstream::trunc);
 
         //TODO: Replace with vector write
         nxsPolicyFile << "dbpolicy:" << std::to_string(CURRENT_DB_POLICY) << '\n';
@@ -194,7 +197,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         }
 
 
-    /* Read the configuration file. Pass argc and argv for possible -datadir setting */
+/* Read the configuration file. Pass argc and argv for possible -datadir setting */
     config::ReadConfigFile(config::mapArgs, config::mapMultiArgs, argc, argv);
 
 
@@ -258,8 +261,8 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         TAO::Ledger::ChainState::Initialize();
 
 
-        /* Check for reindexing entries. */
-        LLD::Logical->IndexRegisters();
+        /* Run our LLD indexing operations. */
+        LLD::Indexing();
 
 
         /* Check for reindexing entries. */
@@ -321,6 +324,9 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
     /* Shutdown metrics. */
     timer.Reset();
 
+
+    /* Release network triggers. */
+    LLP::Release();
 
     /* Shutdown the API subsystems. */
     TAO::API::Shutdown();
