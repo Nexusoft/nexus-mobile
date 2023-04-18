@@ -77,17 +77,17 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
   if (timeSpan) {
     const pastDate = getThresholdDate(timeSpan);
     if (pastDate) {
-      queries.push(`object.timespan>${pastDate.getTime() / 1000}`);
+      queries.push(`results.timestamp>date(\`${pastDate.toISOString().split('T')[0]}\`);`);
     }
   }
   if (operation) {
-    queries.push(`object.contracts.OP=${operation}`);
+    queries.push(`results.contracts.OP=${operation}`);
   }
   if (addressQuery) {
     const buildAddressQuery =
       addressQuery === '0'
-        ? (field) => `object.contracts.${field}=0`
-        : (field) => `object.contracts.${field}=*${addressQuery}*`;
+        ? (field) => `results.contracts.${field}.address=0`
+        : (field) => `results.contracts.${field}.address=*${addressQuery}*`;
     const addressQueries = [
       buildAddressQuery('token'),
       buildAddressQuery('from'),

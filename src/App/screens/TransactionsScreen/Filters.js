@@ -31,6 +31,7 @@ const operations = [
   'LEGACY',
   'MIGRATE',
   'TRANSFER',
+  'TRUST',
   'WRITE',
 ];
 

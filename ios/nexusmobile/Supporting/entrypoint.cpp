@@ -63,7 +63,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     int nxsPolicyExists = stat(nxsPolicy.c_str(), &statbuf);
     int nxsFolderExists = stat(nxsFolder.c_str(), &statbuf);
     int nxsConfExists = stat(nxsConf.c_str(), &statbuf);
-    int CURRENT_DB_POLICY = 1;
+    int CURRENT_DB_POLICY = 4;
 
     if ( nxsFolderExists < 0)
     {
@@ -72,7 +72,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
       cout << status << endl;
     }
 
-    nxsPolicyFile.open (nxsPolicy, std::fstream::in | std::fstream::out | std::fstream::trunc);
+  
     if (nxsPolicyExists < 0)
     {
       // If No policy is there but the nexus folder is, then we need to delete
@@ -84,7 +84,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
     }
     else
     {
-      
+        nxsPolicyFile.open (nxsPolicy, std::fstream::in);
       if (nxsPolicyFile.is_open())
       {
         cout << "Open success" << endl;
@@ -97,15 +97,19 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
       {
         nxsPolicyFileLines.push_back(line);
       }
-      nxsPolicyFile.clear();
-      nxsPolicyFile.seekg(0);
+      
+      nxsPolicyFile.close();
+      
+      
+      cout << nxsPolicyFileLines.size() << endl;
       if ( nxsPolicyFileLines.size() > 0 )
       {
         
         string dbpolicy = nxsPolicyFileLines[0];
-        cout <<"DB POLICY: " << dbpolicy << endl;
-        int dbpolicynumber = int(dbpolicy.back() - '0');
-        if (dbpolicynumber < CURRENT_DB_POLICY)
+        string delimiter = "dbpolicy:"; // A bit overkill but will be useful in the future
+        dbpolicy.erase(0, dbpolicy.find(delimiter) + delimiter.length());
+        cout <<"DB POLICY OLD: " << dbpolicy << endl;
+        if (stoi(dbpolicy) < CURRENT_DB_POLICY)
         {
           cout << "Deleting DB" << endl;
           cout << boost::filesystem::remove_all(nxsFolder + "/client") << endl;
@@ -113,7 +117,7 @@ int startNexus (int argc, char** argv, char* inApiUserName , char* inApiPassword
         }
       }
     }
-
+    nxsPolicyFile.open (nxsPolicy, std::fstream::out | std::fstream::trunc);
     //TODO: Replace with vector write
     nxsPolicyFile << "dbpolicy:" << std::to_string(CURRENT_DB_POLICY) << '\n';
     nxsPolicyFile.close();
