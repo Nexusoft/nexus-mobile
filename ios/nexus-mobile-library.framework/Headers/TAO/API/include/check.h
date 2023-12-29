@@ -1,8 +1,8 @@
 /*__________________________________________________________________________________________
 
-            (c) Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014] ++
+            Hash(BEGIN(Satoshi[2010]), END(Sunny[2012])) == Videlicet[2014]++
 
-            (c) Copyright The Nexus Developers 2014 - 2019
+            (c) Copyright The Nexus Developers 2014 - 2023
 
             Distributed under the MIT software license, see the accompanying
             file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -78,6 +78,19 @@ namespace TAO::API
      *
      **/
     bool CheckMature(const uint256_t& hashGenesis);
+
+
+    /** CheckTimespan
+     *
+     *  Utilty method that checks that the last transaction was within a given amount of seconds.
+     *
+     *  @param[in] hashGenesis The genesis hash of the signature chain to check
+     *  @param[in] nSeconds The total number of seconds required for frequency.
+     *
+     *  @return true if the sigchain is mature and ready to process transactions.
+     *
+     **/
+    bool CheckTimespan(const uint256_t& hashGenesis, const uint32_t nSeconds = 10);
 
 
     /** CheckContract
