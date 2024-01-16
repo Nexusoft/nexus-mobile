@@ -13,7 +13,6 @@ export default (state = initialState, action) => {
     }
 
     case TYPE.DISCONNECT_CORE:
-    case TYPE.LOGOUT:
       return initialState;
 
     default:

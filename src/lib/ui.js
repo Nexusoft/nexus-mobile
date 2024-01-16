@@ -157,16 +157,12 @@ export function setContactSearch(text) {
 }
 
 export function closeUnlockScreen(savedUsername) {
-  getStore().dispatch({ type: TYPE.CLOSE_UNLOCK_SCREEN, payload:savedUsername });
+  getStore().dispatch({
+    type: TYPE.CLOSE_UNLOCK_SCREEN,
+    payload: savedUsername,
+  });
 }
 
 export function openUnlockScreen() {
   getStore().dispatch({ type: TYPE.OPEN_UNLOCK_SCREEN });
-}
-
-export function saveUsernameToUI(savedUsername) {
-  getStore().dispatch({
-    type: TYPE.SET_USERNAME,
-    payload: { username: savedUsername },
-  });
 }

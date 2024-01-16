@@ -61,7 +61,7 @@ export default function OverviewScreen() {
 
 function SideMenuIcon({ tintColor, theme, navigation }) {
   const hasRecoveryPhrase = useSelector(
-    (state) => !!state.user?.status?.recovery
+    (state) => !!state.user?.profileStatus?.recovery
   );
 
   return (

@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         loaded: loadedAll ? 'all' : 'partly',
-        transactions: [...state.transactions,...transactions],
+        transactions: [...state.transactions, ...transactions],
       };
     }
 
@@ -61,6 +61,8 @@ export default (state = initialState, action) => {
       }
 
     case TYPE.DISCONNECT_CORE:
+    case TYPE.ACTIVE_USER:
+    case TYPE.CLEAR_USER:
     case TYPE.LOGOUT:
       return initialState;
 

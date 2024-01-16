@@ -20,11 +20,12 @@ import {
   selectLoggedIn,
   selectUserIsConfirmed,
   refreshUserStatus,
+  selectUsername,
 } from 'lib/user';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef, navContainerRef } from 'lib/navigation';
 import { callAPI } from 'lib/api';
-import { closeUnlockScreen, saveUsernameToUI, showError, showNotification } from 'lib/ui';
+import { closeUnlockScreen, showError, showNotification } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
 import CopyIcon from 'icons/copy.svg';
@@ -144,8 +145,12 @@ function UnlockingBase() {
   const [pin, setPin] = React.useState('');
   const [loading, setLoading] = React.useState('');
   //TODO: Clean up
-  const savedUsernameSettings = useSelector((state) => state.settings.savedUsername);
-  const savedUsernameUnlock = useSelector((state) => state.ui.unlockingWallet.saved);
+  const savedUsernameSettings = useSelector(
+    (state) => state.settings.savedUsername
+  );
+  const savedUsernameUnlock = useSelector(
+    (state) => state.ui.unlockingWallet.saved
+  );
   const savedUsername = savedUsernameSettings || savedUsernameUnlock;
 
   const unlock = async () => {
@@ -156,16 +161,16 @@ function UnlockingBase() {
         username: savedUsername,
       });
       let finishedIndexing = false;
-      while (!finishedIndexing) { // This checks if the account has finished indexing after downloading the sigchain, consider revising this. 
+      while (!finishedIndexing) {
+        // This checks if the account has finished indexing after downloading the sigchain, consider revising this.
         let status = await callAPI('sessions/status/local');
-        finishedIndexing = !status.indexing;
-        await new Promise(resolve => setTimeout(resolve, 500));
+        finishedIndexing = !status?.indexing;
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
-      await callAPI('sessions/save/local', { pin })
+      await callAPI('sessions/save/local', { pin });
       await callAPI('sessions/unlock/local', { pin, notifications: true }),
-      await refreshUserStatus();
+        await refreshUserStatus();
       updateSettings({ savedUsername: savedUsername });
-      saveUsernameToUI(savedUsername);
       closeUnlockScreen(null);
     } catch (err) {
       setLoading(false);
@@ -230,7 +235,7 @@ function UnlockingBase() {
 }
 
 function UnconfirmedUserBase() {
-  const { username } = useSelector((state) => state.user.status);
+  const username = useSelector(selectUsername);
   const theme = useTheme();
   const txid = useSelector((state) => state.user.registrationTxids[username]);
   const color = theme.dark ? theme.foreground : theme.onPrimary;
@@ -315,7 +320,6 @@ function IndexingBase() {
   );
 }
 
-
 const selectDefaultScreenStates = (() => {
   let cache = null;
   return (state) => {
@@ -394,7 +398,6 @@ export default function BaseScreen({ route, navigation }) {
   const indexing = useSelector((state) => state.user?.status?.indexing);
   const loggedIn = useSelector(selectLoggedIn);
   const confirmedUser = useSelector(selectUserIsConfirmed);
-
 
   useDefaultScreenFix();
   useDynamicNavOptions({

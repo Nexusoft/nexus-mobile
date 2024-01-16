@@ -10,7 +10,7 @@ import ScreenBody from 'components/ScreenBody';
 import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import { confirmPin, showError } from 'lib/ui';
 import { callAPI } from 'lib/api';
-import { refreshUserAccounts } from 'lib/user';
+import { refreshUserAccounts, selectUsername } from 'lib/user';
 import { goBack } from 'lib/navigation';
 
 const getFee = (accountName) => (accountName ? 2 : 1);
@@ -19,7 +19,7 @@ export default function RenameAccountScreen({ route }) {
   const {
     params: { account },
   } = route;
-  const username = useSelector((state) => state.user.status?.username);
+  const username = useSelector(selectUsername);
   return (
     <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
       <Formik

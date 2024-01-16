@@ -5,25 +5,51 @@ import { getStore } from 'store';
 
 // Store Selects
 
-export const selectLoggedIn = (state) => !!state.user.status.genesis;
+export const selectLoggedIn = (state) => !!state.user.status?.genesis;
 
 // Return user's confirmed status
 export const selectUserIsConfirmed = (state) =>
   state.user?.status?.confirmed !== false;
 
+export const selectUsername = (state) => {
+  const {
+    user: { status, profileStatus },
+  } = state;
+
+  return profileStatus?.session?.username || status?.username || '';
+};
+
 // Refreshes
 
+// Don't refresh user status while login process is not yet done
+let refreshUserStatusLock = false;
 export async function refreshUserStatus() {
+  if (refreshUserStatusLock) return;
+
   const store = getStore();
   try {
     const status = await callAPI('sessions/status/local');
-    let recovery = store.getState()?.user?.status?.recovery;
-    if (!recovery)
-    { //Limit API calls
-      const profStatus = await callAPI('profiles/status/master');
-      recovery = profStatus.recovery;
+
+    if (store.getState().user.profileStatus?.genesis !== status.genesis) {
+      const profileStatus = await callApi('profiles/status/master', {
+        genesis: status.genesis,
+      });
+      store.dispatch({
+        type: TYPE.SET_PROFILE_STATUS,
+        payload: profileStatus,
+      });
     }
-    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: {recovery, ...status} });
+
+    // let recovery = store.getState()?.user?.status?.recovery;
+    // if (!recovery) {
+    //   //Limit API calls
+    //   const profStatus = await callAPI('profiles/status/master');
+    //   recovery = profStatus.recovery;
+    // }
+    store.dispatch({
+      type: TYPE.SET_USER_STATUS,
+      payload: status,
+    });
     return status;
   } catch (err) {
     try {
@@ -31,7 +57,7 @@ export async function refreshUserStatus() {
         settings: { savedUsername },
       } = store.getState();
       if (savedUsername) {
-        const {saved} = await callAPI('sessions/status/local', {
+        const { saved } = await callAPI('sessions/status/local', {
           username: savedUsername,
         });
         if (saved) {
@@ -39,7 +65,8 @@ export async function refreshUserStatus() {
         }
       }
     } catch (err) {
-      if (err.code == -11) { // If session is not found, then removed the saved user name. 
+      if (err.code == -11) {
+        // If session is not found, then removed the saved user name.
         updateSettings({ savedUsername: null });
         return null;
       }
@@ -57,7 +84,6 @@ export async function refreshUserBalances() {
     store.dispatch({ type: TYPE.SET_USER_BALANCES, payload: balances });
     return balances;
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_USER_BALANCES });
     return null;
   }
 }
@@ -65,20 +91,14 @@ export async function refreshUserBalances() {
 export async function refreshUserAccounts() {
   const store = getStore();
   try {
-    const [trust, accounts] = await Promise.all([
-      callAPI('finance/list/trust'),
-      callAPI('finance/list/account'),
-    ]);
-    if (!accounts?.length && !trust.length) {
+    const accounts = await callApi('finance/list/any');
+    if (!accounts?.length) {
       // In a very rare case the sigchain is not fully downloaded, try again
       setTimeout(refreshUserAccounts, 500);
     }
-
-    const allAccounts = trust.concat(accounts);
-    store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: allAccounts });
-    return allAccounts;
+    store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: accounts });
+    return accounts;
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_USER_ACCOUNTS });
     return null;
   }
 }
@@ -90,7 +110,6 @@ export async function refreshUserTokens() {
     store.dispatch({ type: TYPE.SET_USER_TOKENS, payload: tokens });
     return tokens;
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_USER_TOKENS });
     return null;
   }
 }
@@ -120,12 +139,7 @@ export async function refreshHeaders() {
 export async function refreshUserAccount(address) {
   const store = getStore();
   try {
-    let account = null;
-    try {
-      account = await callAPI('finance/get/account', { address });
-    } catch (err) {
-      account = await callAPI('finance/get/trust', { address });
-    }
+    const account = await callAPI('finance/get/any', { address });
     store.dispatch({
       type: TYPE.SET_USER_ACCOUNT,
       payload: { address, account },
@@ -138,45 +152,68 @@ export async function refreshUserAccount(address) {
 
 // Functions
 
-export async function login({
+export async function logIn({
   username,
   password,
   pin,
   rememberMe,
   keepLoggedIn,
 }) {
-  await callAPI('sessions/create/local', { username, password, pin });
-  let finishedIndexing = false;
-  while (!finishedIndexing) { // This checks if the account has finished indexing after downloading the sigchain, consider revising this. 
-    let status = await callAPI('sessions/status/local');
-    finishedIndexing = !status.indexing;
-    await new Promise(resolve => setTimeout(resolve, 500));
+  // Stop refreshing user status
+  refreshUserStatusLock = true;
+  try {
+    const { genesis } = await callAPI('sessions/create/local', {
+      username,
+      password,
+      pin,
+    });
+    let finishedIndexing = false;
+    while (!finishedIndexing) {
+      // This checks if the account has finished indexing after downloading the sigchain, consider revising this.
+      let status = await callAPI('sessions/status/local');
+      finishedIndexing = !status.indexing;
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    updateSettings({
+      savedUsername: rememberMe ? username : null,
+    });
+    const [status, profileStatus] = await Promise.all([
+      callAPI('sessions/status/local'),
+      callAPI('profiles/status/master', { genesis }),
+      callAPI('sessions/unlock/local', { pin, notifications: true }),
+      rememberMe && keepLoggedIn
+        ? callAPI('sessions/save/local', { pin })
+        : null,
+    ]);
+    getStore().dispatch({
+      type: TYPE.ACTIVE_USER,
+      payload: {
+        status,
+        profileStatus,
+      },
+    });
+  } finally {
+    // Release the lock
+    refreshUserStatusLock = false;
   }
-  getStore().dispatch({
-    type: TYPE.SET_USERNAME,
-    payload: { username },
-  });
-  updateSettings({
-    savedUsername: rememberMe ? username : null,
-  });
-  await Promise.all([
-    callAPI('sessions/unlock/local', { pin, notifications: true }),
-    refreshUserStatus(),
-    rememberMe && keepLoggedIn ? callAPI('sessions/save/local', { pin }) : null,
-  ]);
 }
 
-export async function logout() {
-  const store = getStore();
-  const {
-    user: {
-      status: { 
-        saved
-      }
-    }
-  } = store.getState();
+export async function logOut() {
+  // Stop refreshing user status
+  refreshUserStatusLock = true;
+  try {
+    const store = getStore();
+    const {
+      user: {
+        status: { saved },
+      },
+    } = store.getState();
 
-  await callAPI('sessions/terminate/local', saved ? {clear:1} : null);
+    await callAPI('sessions/terminate/local', saved ? { clear: 1 } : null);
+  } finally {
+    // Release the lock
+    refreshUserStatusLock = false;
+  }
   await refreshUserStatus();
 }
 

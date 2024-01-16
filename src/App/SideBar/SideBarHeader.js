@@ -17,7 +17,7 @@ import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
 import AttentionIcon from 'components/AttentionIcon';
 import { useTheme, subColor } from 'lib/theme';
-import { logout } from 'lib/user';
+import { logOut, selectUsername } from 'lib/user';
 import { confirm, showNotification } from 'lib/ui';
 // import { addNavListener } from 'lib/navigation';
 import UserIcon from 'icons/user.svg';
@@ -90,7 +90,7 @@ const styles = {
 };
 
 function UserIdDialog({ visible, onDismiss }) {
-  const username = useSelector((state) => state.user.status?.username);
+  const username = useSelector(selectUsername);
   const userID = useSelector((state) => state.user.status?.genesis);
   return (
     <Portal>
@@ -146,7 +146,7 @@ async function confirmLogout({ closeDrawer }) {
     danger: true,
   });
   if (confirmed) {
-    await logout();
+    await logOut();
     closeDrawer();
   }
 }
@@ -155,9 +155,11 @@ export default function SideBarHeader({ navigation }) {
   const theme = useTheme();
   const colorName = theme.dark ? 'foreground' : 'onPrimary';
   const [expanded, setExpanded] = React.useState(false);
-  const username = useSelector((state) => state.user.status?.username);
+  const username = useSelector(
+    (state) => state.user.profileStatus?.session?.username
+  );
   const hasRecoveryPhrase = useSelector(
-    (state) => !!state.user?.status?.recovery
+    (state) => !!state.user?.profileStatus?.recovery
   );
   const [dialogOpen, setDialogOpen] = React.useState(false);
   // React.useEffect(() => {
