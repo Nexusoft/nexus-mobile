@@ -6,6 +6,7 @@ import accounts from './accounts';
 import tokens from './tokens';
 import registrationTxids from './registrationTxids';
 import transactions from './transactions';
+import profileStatus from './profileStatus';
 
 export default combineReducers({
   status,
@@ -14,4 +15,5 @@ export default combineReducers({
   tokens,
   registrationTxids,
   transactions,
+  profileStatus,
 });
