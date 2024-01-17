@@ -16,10 +16,6 @@ export async function refreshMarketPrice() {
     const data = await response.json();
 
     if (data?.price) {
-      // cryptocompare's VND price is divided by 1000
-      if (baseCurrency === 'VND') {
-        data.price *= 1000;
-      }
       store.dispatch({
         type: TYPE.UPDATE_MARKET_PRICE,
         payload: data.price,
