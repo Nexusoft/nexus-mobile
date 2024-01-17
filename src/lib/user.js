@@ -30,15 +30,15 @@ export async function refreshUserStatus() {
   try {
     const status = await callAPI('sessions/status/local');
 
-    if (store.getState().user.profileStatus?.genesis !== status.genesis) {
-      const profileStatus = await callApi('profiles/status/master', {
-        genesis: status.genesis,
-      });
-      store.dispatch({
-        type: TYPE.SET_PROFILE_STATUS,
-        payload: profileStatus,
-      });
-    }
+    // if (store.getState().user.profileStatus?.genesis !== status.genesis) {
+    const profileStatus = await callAPI('profiles/status/master', {
+      genesis: status.genesis,
+    });
+    store.dispatch({
+      type: TYPE.SET_PROFILE_STATUS,
+      payload: profileStatus,
+    });
+    // }
 
     // let recovery = store.getState()?.user?.status?.recovery;
     // if (!recovery) {
@@ -52,6 +52,7 @@ export async function refreshUserStatus() {
     });
     return status;
   } catch (err) {
+    console.error(err);
     try {
       const {
         settings: { savedUsername },
@@ -91,7 +92,7 @@ export async function refreshUserBalances() {
 export async function refreshUserAccounts() {
   const store = getStore();
   try {
-    const accounts = await callApi('finance/list/any');
+    const accounts = await callAPI('finance/list/any');
     if (!accounts?.length) {
       // In a very rare case the sigchain is not fully downloaded, try again
       setTimeout(refreshUserAccounts, 500);
