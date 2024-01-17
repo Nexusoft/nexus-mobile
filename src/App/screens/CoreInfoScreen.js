@@ -80,14 +80,34 @@ export default function CoreInfoScreen() {
         <InfoField
           inline
           label="Synchronizing"
-          value={coreInfo?.synchronizing ? 'Yes' : 'No'}
+          value={coreInfo?.syncing ? 'Yes' : 'No'}
         />
         <Divider />
-        <InfoField
-          inline
-          label="Sync. progress"
-          value={coreInfo?.syncprogress + '%'}
-        />
+        {!!coreInfo?.syncing && (
+          <>
+            <InfoField
+              inline
+              label="Sync. progress"
+              value={coreInfo.syncing.progress + '%'}
+            />
+            <Divider />
+            <InfoField
+              inline
+              label="Blocks"
+              value={`${formatNumber(coreInfo.blocks, {
+                maximumFractionDigits: 0,
+              })} / ${formatNumber(coreInfo.syncing.networkBlock, {
+                maximumFractionDigits: 0,
+              })} (${coreInfo.syncing.completed}%)`}
+            />
+            <Divider />
+            <InfoField
+              inline
+              label="Est. time remaining"
+              value={timeRemaining(coreInfo.syncing.secondsRemaining)}
+            />
+          </>
+        )}
         <Divider />
         <InfoField
           inline
@@ -122,3 +142,27 @@ CoreInfoScreen.nav = {
     title: 'Core info',
   },
 };
+
+function timeRemaining(secondsRemaining) {
+  const hours = Math.floor(secondsRemaining / (60 * 60));
+  const hText = hours > 0 ? `${hours} hours` : '';
+  if (hours > 9) {
+    return hText;
+  }
+
+  const minutes = Math.floor((secondsRemaining - hours * 60 * 60) / 60);
+  const mText = minutes > 0 ? `${minutes} minutes` : '';
+  if (hours > 0) {
+    return hText + ' ' + mText;
+  } else if (minutes > 10) {
+    return mText;
+  }
+
+  const seconds = secondsRemaining - hours * 60 * 60 - minutes * 60;
+  const sText = `${seconds} seconds`;
+  if (minutes > 0) {
+    return mText + ' ' + sText;
+  } else {
+    return sText;
+  }
+}
