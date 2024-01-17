@@ -21,22 +21,22 @@ NSArray *userCre;
 // Main Function for the thread
 void* PosixThreadMainRoutine(void* data)
 {
-           char *my_argv[] = {
-             NULL,
-          strdup("-client=true"),
-          strdup("-verbose=3"),
-          strdup("-timeout=30"),
-             strdup("-ssl=true"),
-             strdup("-apissl=true"),
-             strdup("-apisslport=7080"),
-             strdup("-apisslrequired=true"),
-          strdup("-connect=node2.nexus.io"),
-             strdup("-terminateauth=0"),
-          NULL
-     };
-     const char *com = [userCre[0] UTF8String];
-    const char *command = [userCre[1] UTF8String];
-     startNexus(10, my_argv,strdup(com),strdup(command));
+  char *my_argv[] = {
+    NULL,
+    strdup("-client=true"),
+    strdup("-verbose=3"),
+    strdup("-timeout=30"),
+    strdup("-ssl=true"),
+    strdup("-apissl=true"),
+    strdup("-apisslport=7080"),
+    strdup("-apisslrequired=true"),
+    strdup("-connect=node2.nexus.io"),
+    strdup("-terminateauth=0"),
+    NULL
+  };
+  const char *com = [userCre[0] UTF8String];
+  const char *command = [userCre[1] UTF8String];
+  startNexus(10, my_argv,strdup(com),strdup(command));
   
   return NULL;
   
