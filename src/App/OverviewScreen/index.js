@@ -93,9 +93,16 @@ OverviewScreen.stackOptions = ({ theme, navigation }) => ({
   ),
   headerTitleAlign: 'center',
   headerRight: ({ tintColor }) => (
-    <View style={{ flexDirection: 'row', alignSelf: 'flex-start' }}>
+    <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
       {/* TODO: Remove */}
-      <Text style={{ color: tintColor, position: 'relative', paddingTop: 15 }}>
+      <Text
+        style={{
+          color: tintColor,
+          opacity: 0.7,
+          position: 'relative',
+          paddingTop: 15,
+        }}
+      >
         Beta
       </Text>
       <IconButton
