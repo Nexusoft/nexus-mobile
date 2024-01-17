@@ -43,7 +43,6 @@ export default function AccountDetailsScreen({ route }) {
   const account = useSelector((state) =>
     state.user.accounts?.find((acc) => acc.address === address)
   );
-  console.log(account);
   const [refreshing, refresh] = useRefresh(() => refreshUserAccount(address));
   return (
     !!account && (
