@@ -14,6 +14,8 @@ PODS:
     - ExpoModulesCore
   - EXErrorRecovery (3.2.0):
     - ExpoModulesCore
+  - EXFileSystem (14.1.0):
+    - ExpoModulesCore
   - EXFont (10.2.1):
     - ExpoModulesCore
   - EXImageLoader (3.2.0):
@@ -344,6 +346,8 @@ PODS:
     - React-jsi (= 0.70.6)
     - React-logger (= 0.70.6)
     - React-perflogger (= 0.70.6)
+  - RNCAsyncStorage (1.17.11):
+    - React-Core
   - RNFS (2.20.0):
     - React-Core
   - RNGestureHandler (2.8.0):
@@ -396,6 +400,7 @@ DEPENDENCIES:
   - EXBarCodeScanner (from `../node_modules/expo-barcode-scanner/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
+  - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - EXNotifications (from `../node_modules/expo-notifications/ios`)
@@ -441,6 +446,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -470,6 +476,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-constants/ios"
   EXErrorRecovery:
     :path: "../node_modules/expo-error-recovery/ios"
+  EXFileSystem:
+    :path: "../node_modules/expo-file-system/ios"
   EXFont:
     :path: "../node_modules/expo-font/ios"
   EXImageLoader:
@@ -554,6 +562,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -572,20 +582,21 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  EXApplication: 64a38a15788ec0a9d01eb69683288f30c0726a64
-  EXBackgroundFetch: 1b1597d722d8f6cc9db44e939143be4b1bef4682
-  EXBarCodeScanner: e2920f37a433091b2f82ed4f5c46bcb096a99380
-  EXConstants: e15cbb0181ab1411ef2b5d4b5e8ecdc9b30aeed5
-  EXErrorRecovery: 550d48c3575dcd83538abd7f13f52d30c4fecdb0
-  EXFont: 0be44924d5000938c74715b2056fd7972ba65a05
-  EXImageLoader: fce288cd59b5366cfcf6b26f7fdb65d12af0c808
-  EXNotifications: 8eec29fb34d3b0cece65714449a500b4a34e9e46
-  Expo: 7f618583927b5f73c7777ecd665c80755748e8b9
-  ExpoKeepAwake: e44bcfa0e42b417b38d65ecbf145c754c7ae5109
-  ExpoModulesCore: a3b2ac6dfc2c897267e7ab7fc2f4760181225799
-  ExpoWebBrowser: e0e7bc4898d3b1d4eb859537516426cb8e3b135c
-  EXSplashScreen: 753b5da9b6307ee853c7f69436dbbc81edc8f02a
-  EXTaskManager: a8b2d2c6fc16afb237c506d34f45d025af82fc03
+  EXApplication: e418d737a036e788510f2c4ad6c10a7d54d18586
+  EXBackgroundFetch: 6e0952481a966c4c0580009a7e5d0f95cb531373
+  EXBarCodeScanner: 8e13bad5d197b4b9a58d16af41f8690875a5f736
+  EXConstants: 7c44785d41d8e959d527d23d29444277a4d1ee73
+  EXErrorRecovery: 74d71ee59f6814315457b09d68e86aa95cc7d05d
+  EXFileSystem: 927e0a8885aa9c49e50fc38eaba2c2389f2f1019
+  EXFont: 06df627203afcb8a3b3152ec06eb2f11f46f0cff
+  EXImageLoader: b88e053d760f85a82405b1db2de4abf11978fc9f
+  EXNotifications: 9a2aa201deb19dfe1dbe0e370eeb2922de0d2422
+  Expo: 2aa7370e08c458536b7089120e84ed8bd204357b
+  ExpoKeepAwake: 8b47e5358d54ea4922b630a74f2acb026ab7a28b
+  ExpoModulesCore: 1b2f5f91eff132671f6d0642aad2ba7915c6ff41
+  ExpoWebBrowser: 5804ac42a8269d0e534bc4461993005f72535649
+  EXSplashScreen: 799bece80089219b2c989c1082d70f3b00995cda
+  EXTaskManager: 6e7e5c31d14ba62cdccc979e23ebebe182557669
   FBLazyVector: 48289402952f4f7a4e235de70a9a590aa0b79ef4
   FBReactNativeSpec: dd1186fd05255e3457baa2f4ca65e94c2cd1e3ac
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
@@ -607,8 +618,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b4a65947391c658450151275aa406f2b8263178f
   React-jsinspector: 60769e5a0a6d4b32294a2456077f59d0266f9a8b
   React-logger: 1623c216abaa88974afce404dc8f479406bbc3a0
-  react-native-background-timer: 117fffdc9b0d6f144444bb49029f94275a45fdb5
-  react-native-safe-area-context: 86612d2c9a9e94e288319262d10b5f93f0b395f5
+  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
+  react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   React-perflogger: 8c79399b0500a30ee8152d0f9f11beae7fc36595
   React-RCTActionSheet: 7316773acabb374642b926c19aef1c115df5c466
   React-RCTAnimation: 5341e288375451297057391227f691d9b2326c3d
@@ -621,15 +632,16 @@ SPEC CHECKSUMS:
   React-RCTVibration: c75ceef7aa60a33b2d5731ebe5800ddde40cefc4
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
+  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 3a79c0c4992213e4f06c08e62730c5e7b9e4dc17
-  UMAppLoader: 6210653f1ac3d3752272a3e6220a172d422b2952
+  UMAppLoader: 6185e8c45922f187002b85afae097961c4781df4
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
 PODFILE CHECKSUM: 83ade961b45d416222c991a4b1a9dbebff496465
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.14.3
