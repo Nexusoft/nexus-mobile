@@ -5,7 +5,7 @@ PODS:
     - ExpoModulesCore
   - EXBackgroundFetch (10.3.0):
     - ExpoModulesCore
-  - EXBarCodeScanner (11.4.0):
+  - EXBarCodeScanner (11.2.0):
     - EXImageLoader
     - ExpoModulesCore
     - ZXingObjC/OneD
@@ -18,7 +18,7 @@ PODS:
     - ExpoModulesCore
   - EXFont (10.2.1):
     - ExpoModulesCore
-  - EXImageLoader (3.2.0):
+  - EXImageLoader (3.1.1):
     - ExpoModulesCore
     - React-Core
   - EXNotifications (0.16.1):
@@ -584,12 +584,12 @@ SPEC CHECKSUMS:
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: e418d737a036e788510f2c4ad6c10a7d54d18586
   EXBackgroundFetch: 6e0952481a966c4c0580009a7e5d0f95cb531373
-  EXBarCodeScanner: 8e13bad5d197b4b9a58d16af41f8690875a5f736
+  EXBarCodeScanner: 7deeeb35f396ce9a13434a75b581c19fc2564205
   EXConstants: 7c44785d41d8e959d527d23d29444277a4d1ee73
   EXErrorRecovery: 74d71ee59f6814315457b09d68e86aa95cc7d05d
   EXFileSystem: 927e0a8885aa9c49e50fc38eaba2c2389f2f1019
   EXFont: 06df627203afcb8a3b3152ec06eb2f11f46f0cff
-  EXImageLoader: b88e053d760f85a82405b1db2de4abf11978fc9f
+  EXImageLoader: 347b72c2ec2df65120ccec40ea65a4c4f24317ff
   EXNotifications: 9a2aa201deb19dfe1dbe0e370eeb2922de0d2422
   Expo: 2aa7370e08c458536b7089120e84ed8bd204357b
   ExpoKeepAwake: 8b47e5358d54ea4922b630a74f2acb026ab7a28b
