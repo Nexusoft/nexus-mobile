@@ -70,7 +70,7 @@ add_library (boost_filesystem STATIC IMPORTED)
 set_target_properties( boost_filesystem PROPERTIES IMPORTED_LOCATION
         ${CMAKE_CURRENT_SOURCE_DIR}/Boost/${ANDROID_ABI}/libboost_filesystem.a
                     )
-set(BOOST_INCLUDE_DIR ${BOOST_ROOT_DIR})
+set(BOOST_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Boost/Headers/)
 
 # Add main entry point to library
 add_library(nexusmobilelib SHARED
