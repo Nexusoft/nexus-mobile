@@ -5,7 +5,7 @@ PODS:
     - ExpoModulesCore
   - EXBackgroundFetch (10.3.0):
     - ExpoModulesCore
-  - EXBarCodeScanner (11.2.1):
+  - EXBarCodeScanner (11.2.0):
     - EXImageLoader
     - ExpoModulesCore
     - ZXingObjC/OneD
@@ -584,7 +584,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: e418d737a036e788510f2c4ad6c10a7d54d18586
   EXBackgroundFetch: 6e0952481a966c4c0580009a7e5d0f95cb531373
-  EXBarCodeScanner: e5ca0062d8ad1c4c1d2e386d6a308d5a32213020
+  EXBarCodeScanner: 7deeeb35f396ce9a13434a75b581c19fc2564205
   EXConstants: 7c44785d41d8e959d527d23d29444277a4d1ee73
   EXErrorRecovery: 74d71ee59f6814315457b09d68e86aa95cc7d05d
   EXFileSystem: 927e0a8885aa9c49e50fc38eaba2c2389f2f1019
@@ -644,4 +644,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 83ade961b45d416222c991a4b1a9dbebff496465
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.14.3

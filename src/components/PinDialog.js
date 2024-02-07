@@ -29,6 +29,7 @@ export default function PinDialog({
     onConfirm?.(pin);
     onDismiss?.();
   };
+  console.log(fee);
   return (
     <Portal>
       <Dialog
@@ -52,7 +53,11 @@ export default function PinDialog({
             }
             onSubmitEditing={submit}
           />
-          {!!fee && <Text style={styles.feeText}>Fee: {fee} NXS</Text>}
+          {!!fee && (
+            <Text sub style={styles.feeText}>
+              This operation will cost you {fee} NXS
+            </Text>
+          )}
           <Button
             mode="contained"
             icon={({ color, size }) => (

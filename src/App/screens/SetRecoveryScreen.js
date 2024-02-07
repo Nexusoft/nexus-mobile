@@ -106,7 +106,7 @@ function useLoadWordList() {
 export default function SetRecoveryScreen() {
   const theme = useTheme();
   const hasRecoveryPhrase = useSelector(
-    (state) => !!state.user?.status?.recovery
+    (state) => !!state.user?.profileStatus?.recovery
   );
   const wordList = useLoadWordList();
   const [confirming, setConfirming] = React.useState(false);

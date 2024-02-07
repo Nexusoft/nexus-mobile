@@ -127,6 +127,16 @@ export default function AccountDetailsScreen({ route }) {
             />
           )}
           <Divider />
+          {account.data !== undefined && (
+            <>
+              <InfoField
+                compact
+                label="Data"
+                value={<Text mono>{account.data}</Text>}
+              />
+              <Divider />
+            </>
+          )}
           <InfoField
             compact
             inline
@@ -205,17 +215,17 @@ export default function AccountDetailsScreen({ route }) {
             </Button>
             <Divider vertical inset={10} />
             {!account.name?.endsWith(':default') &&
-             !account.name?.endsWith(':trust')   && (
-              <Button
-                style={styles.action}
-                mode="text"
-                onPress={() => {
-                  navigate('RenameAccount', { account });
-                }}
-              >
-                Rename
-              </Button>
-            )}
+              !account.name?.endsWith(':trust') && (
+                <Button
+                  style={styles.action}
+                  mode="text"
+                  onPress={() => {
+                    navigate('RenameAccount', { account });
+                  }}
+                >
+                  Rename
+                </Button>
+              )}
             <Divider vertical inset={10} />
             <Button
               style={styles.action}

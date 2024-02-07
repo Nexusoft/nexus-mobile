@@ -4,22 +4,21 @@ import { FAB } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
 import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import { confirmPin, showError } from 'lib/ui';
 import { callAPI } from 'lib/api';
-import { refreshUserAccounts } from 'lib/user';
+import { refreshUserAccounts, selectUsername } from 'lib/user';
 import { goBack } from 'lib/navigation';
 
-const getFee = (accountName) => (accountName ? 2 : 1);
+const getFee = (nameRecord) => (nameRecord ? 0 : 1);
 
 export default function RenameAccountScreen({ route }) {
   const {
     params: { account },
   } = route;
-  const username = useSelector((state) => state.user.status?.username);
+  const username = useSelector(selectUsername);
   return (
     <ScreenBody style={{ paddingVertical: 50, paddingHorizontal: 30 }}>
       <Formik
@@ -38,52 +37,46 @@ export default function RenameAccountScreen({ route }) {
             nameRecord = await callAPI('names/get/name', {
               name: `${username}:${name}`,
             });
-            if (
-              nameRecord?.register_address &&
-              nameRecord.register_address !== '0'
-            ) {
+            if (nameRecord?.register && nameRecord.register !== '0') {
               showError(
                 'The name you entered is already in use. Please choose another name.'
               );
               return;
             }
           } catch (err) {
-            if (err.code !== -101) {
-              showError(err && err.message);
+            if (err.code === -49) {
+              // Error -49: Unsupported type for name/address
+              // When name is inactive
+              try {
+                nameRecord = await callAPI('names/get/inactive', {
+                  name: `${username}:${name}`,
+                });
+              } catch (err2) {
+                showError(err2?.message);
+                return;
+              }
+            } else if (err.code !== -101) {
+              // -101 Unknown name: (name)
+              showError(err?.message);
               return;
             }
           }
 
           try {
-            // Check if balance is enough to pay the fee, otherwise user might
-            // end up creating a new name without nullifying the old name
-            const fee = getFee(account?.name);
-            const defaultAccount = await callAPI('finance/get/account', {
-              name: 'default',
-            });
-            if (defaultAccount.balance < fee) {
-              showError(
-                'Your default account balance is not enough to pay the fee.'
-              );
-              return;
-            }
-
+            const fee = getFee(nameRecord);
             const pin = await confirmPin({ fee });
-            if (pin !== null) {
-              await callAPI(
-                nameRecord ? 'names/update/name' : 'names/create/name',
-                {
-                  pin,
-                  name,
-                  register_address: account?.address,
-                }
-              );
-
-              if (account?.name) {
-                await callAPI('names/update/name', {
+            if (pin) {
+              if (account.name) {
+                await callAPI('names/rename/name', {
                   pin,
                   name: account.name,
-                  register_address: '0',
+                  new: name,
+                });
+              } else {
+                await callAPI('names/create/name', {
+                  pin,
+                  name,
+                  register: account.address,
                 });
               }
 
@@ -92,16 +85,13 @@ export default function RenameAccountScreen({ route }) {
               goBack();
             }
           } catch (err) {
-            showError(err && err.message);
+            showError(err?.message);
           }
         }}
       >
         {({ handleSubmit, isSubmitting }) => (
           <>
             <TextBox.Formik autoFocus name="name" label="Account name" />
-            <Text sub style={{ textAlign: 'center', marginTop: 30 }}>
-              Fee: {getFee(account?.name)} NXS
-            </Text>
             <FAB
               mode="contained"
               disabled={isSubmitting}
