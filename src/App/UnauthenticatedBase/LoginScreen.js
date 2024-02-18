@@ -140,7 +140,12 @@ export default function LoginScreen() {
           try {
             await logIn({ username, password, pin, rememberMe, keepLoggedIn });
           } catch (err) {
-            showError(err && err.message);
+            const message =
+              err?.message +
+              (syncing && err?.code === -139
+                ? '\nNot being fully synchronized may have caused this error.'
+                : '');
+            showError(message);
           }
         }}
         component={LoginForm}
