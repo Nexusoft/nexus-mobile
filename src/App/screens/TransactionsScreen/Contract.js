@@ -3,7 +3,11 @@ import { View } from 'react-native';
 
 import Text from 'components/Text';
 import TokenName from 'components/TokenName';
+import SvgIcon from 'components/SvgIcon';
 import { getDeltaSign } from 'lib/contracts';
+import { getStore } from 'store';
+import walletIcon from 'icons/wallet.svg';
+import tokenIcon from 'icons/token.svg';
 
 const styles = {
   contract: {
@@ -44,14 +48,70 @@ function Hash({ children, ...rest }) {
   }
 }
 
-const Account = ({ name, address }) =>
-  name ? <Text>{name}</Text> : <Hash>{address}</Hash>;
+const accountLabel = ({ name, address, local, namespace, mine }) => {
+  if (name) {
+    if (namespace) {
+      return namespace + '::' + name;
+    }
+
+    if (local) {
+      const prefix = mine ? '' : <Text sub>(?):</Text>;
+      return (
+        <Text>
+          {prefix}
+          {name}
+        </Text>
+      );
+    }
+
+    return name;
+  }
+
+  const store = getStore();
+  const contacts = store?.getState().contacts;
+  const match =
+    contacts &&
+    Object.entries(contacts).find(
+      ([name, contactAddress]) => address === contactAddress
+    );
+  if (match) {
+    return match[0];
+  }
+
+  return null;
+};
+
+const Register = ({ name, address, local, namespace, mine, type }) => {
+  const label = accountLabel({ name, address, local, namespace, mine });
+  const typeIcon =
+    type === 'ACCOUNT' || type === 'TRUST'
+      ? walletIcon
+      : type === 'TOKEN'
+      ? tokenIcon
+      : null;
+  const display = label ? <Text>{label}</Text> : <Hash>{address}</Hash>;
+  return (
+    <Text>
+      {!!typeIcon && (
+        <>
+          <Text>&nbsp;</Text>
+          <SvgIcon icon={typeIcon} size={12} />
+          <Text>&nbsp;</Text>
+        </>
+      )}
+      <Text bold>{display}</Text>
+    </Text>
+  );
+};
 
 const creditFrom = (contract) => {
   switch (contract.for) {
     case 'DEBIT':
-      return contract.from ? <Account name={contract.from.name} address={contract.from.address} /> :
-      <Account name={contract.to.name} address={contract.to.address}/>; //If no from then these are return credits
+      return contract.from ? (
+        <Register {...contract.from} />
+      ) : (
+        <Register {...contract.to} />
+      ); //If no from then these are return credits
 
     case 'LEGACY':
       return <Text>Legacy transaction</Text>;
@@ -71,7 +131,7 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Write</Text>
           <Text sub> data to </Text>
-          <Account address={contract.address} />
+          <Register address={contract.address} />
         </Text>
       );
     }
@@ -81,7 +141,7 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Append</Text>
           <Text sub> data to </Text>
-          <Account address={contract.address} />
+          <Register address={contract.address} />
         </Text>
       );
     }
@@ -108,8 +168,8 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Transfer</Text>
           <Text sub> ownership of </Text>
-          <Account address={contract.address} /> to{' '}
-          <Account address={contract.destination} />
+          <Register address={contract.address} /> to{' '}
+          <Register address={contract.destination} />
         </Text>
       );
     }
@@ -119,7 +179,7 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Claim</Text>
           <Text sub> ownership of </Text>
-          <Account address={contract.address} />
+          <Register address={contract.address} />
         </Text>
       );
     }
@@ -154,10 +214,10 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Debit</Text>
           <Text sub> from </Text>
-          <Account name={contract.from.name} address={contract.from.address} />
+          <Register {...contract.from} />
           {'\n'}
           <Text sub>to </Text>
-          <Account name={contract.to.name} address={contract.to.address} />
+          <Register {...contract.to} />
         </Text>
       );
     }
@@ -167,7 +227,7 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Credit</Text>
           <Text sub> to </Text>
-          <Account name={contract.to.name} address={contract.to.address} />
+          <Register {...contract.to} />
           {'\n'}
           <Text sub>from </Text>
           {creditFrom(contract)}
@@ -180,7 +240,7 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Migrate</Text>
           <Text sub> trust key to </Text>
-          <Account name={contract.account_name} address={contract.account} />
+          <Register name={contract.account_name} address={contract.account} />
           {'\n'}
           <Text sub>from </Text>
           <Hash>{contract.trustkey}</Hash>
@@ -206,7 +266,7 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Fee</Text>
           <Text sub> from </Text>
-          <Account name={contract.from.name} address={contract.from.address} />
+          <Register {...contract.from} />
         </Text>
       );
     }
@@ -216,10 +276,10 @@ const contractContent = (contract) => {
         <Text>
           <Text style={styles.operation}>Legacy</Text>
           <Text sub> debit from </Text>
-          <Account name={contract.from.name} address={contract.from.address} />
+          <Register {...contract.from} />
           {'\n'}
           <Text sub>to </Text>
-          <Account address={contract.to.address} />
+          <Register address={contract.to.address} />
         </Text>
       );
     }
