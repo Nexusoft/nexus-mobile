@@ -49,6 +49,17 @@ function Hash({ children, ...rest }) {
 }
 
 const accountLabel = ({ name, address, local, namespace, mine }) => {
+  const store = getStore();
+  const contacts = store?.getState().contacts;
+  const match =
+    contacts &&
+    Object.entries(contacts).find(
+      ([name, contactAddress]) => address === contactAddress
+    );
+  if (match) {
+    return match[0];
+  }
+
   if (name) {
     if (namespace) {
       return namespace + '::' + name;
@@ -65,17 +76,6 @@ const accountLabel = ({ name, address, local, namespace, mine }) => {
     }
 
     return name;
-  }
-
-  const store = getStore();
-  const contacts = store?.getState().contacts;
-  const match =
-    contacts &&
-    Object.entries(contacts).find(
-      ([name, contactAddress]) => address === contactAddress
-    );
-  if (match) {
-    return match[0];
   }
 
   return null;
