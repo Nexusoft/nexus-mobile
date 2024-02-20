@@ -12,6 +12,7 @@ import Switch from 'components/Switch';
 import { useTheme } from 'lib/theme';
 import { logIn } from 'lib/user';
 import { openUnlockScreen, showError } from 'lib/ui';
+import { getStore } from 'store';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 import { selectSetting } from 'lib/settings';
@@ -140,10 +141,15 @@ export default function LoginScreen() {
           try {
             await logIn({ username, password, pin, rememberMe, keepLoggedIn });
           } catch (err) {
+            const syncing = getStore()?.getState().core.info?.syncing;
             const message =
               err?.message +
-              (syncing && err?.code === -139
-                ? '\nNot being fully synchronized may have caused this error.'
+              (syncing &&
+              // Error code -130: Account doesn't exist or connection failed.
+              (err?.code === -130 ||
+                // Error code -139: Invalid credentials
+                err?.code === -139)
+                ? '\n\nNot being fully synchronized may have caused this error. Please wait for synchronization to complete and try again.'
                 : '');
             showError(message);
           }
