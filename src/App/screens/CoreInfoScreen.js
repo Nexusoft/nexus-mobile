@@ -10,6 +10,9 @@ import Text from 'components/Text';
 import formatNumber from 'utils/formatNumber';
 
 const styles = {
+  body: {
+    paddingBottom: 40,
+  },
   subHeader: {
     marginLeft: 30,
     marginTop: 30,
@@ -22,10 +25,28 @@ const styles = {
   },
 };
 
+function displayDownloadRate(byteRate) {
+  if (!byteRate) return 'N/A';
+  let number = byteRate;
+  let unit = 'B';
+  if (byteRate > 1000000000) {
+    number /= 1000000000;
+    unit = 'GB';
+  } else if (byteRate > 1000000) {
+    number /= 1000000;
+    unit = 'MB';
+  }
+  if (byteRate > 1000) {
+    number /= 1000;
+    unit = 'KB';
+  }
+  return `${formatNumber(number, { maximumFractionDigits: 2 })} ${unit}/s`;
+}
+
 export default function CoreInfoScreen() {
   const coreInfo = useSelector((state) => state.core?.info);
   return (
-    <ScreenBody>
+    <ScreenBody style={styles.body}>
       <Text sub style={styles.subHeader}>
         Core
       </Text>
@@ -103,21 +124,29 @@ export default function CoreInfoScreen() {
             <Divider />
             <InfoField
               inline
-              label="Est. time remaining"
-              value={timeRemaining(coreInfo.syncing.secondsRemaining)}
+              label="Download rate"
+              value={displayDownloadRate(coreInfo.syncing.downloadRate)}
             />
+            <Divider />
+            <InfoField
+              inline
+              label="Est. time remaining"
+              value={coreInfo.syncing.timeRemaining}
+            />
+            <Divider />
           </>
         )}
-        <Divider />
-        <InfoField
-          inline
-          label="Block height"
-          value={
-            coreInfo?.blocks
-              ? formatNumber(coreInfo.blocks, { maximumFractionDigits: 0 })
-              : ''
-          }
-        />
+        {!coreInfo?.syncing && (
+          <InfoField
+            inline
+            label="Block height"
+            value={
+              coreInfo?.blocks
+                ? formatNumber(coreInfo.blocks, { maximumFractionDigits: 0 })
+                : ''
+            }
+          />
+        )}
       </Surface>
 
       {/* <Text sub style={styles.subHeader}>
@@ -143,26 +172,26 @@ CoreInfoScreen.nav = {
   },
 };
 
-function timeRemaining(secondsRemaining) {
-  const hours = Math.floor(secondsRemaining / (60 * 60));
-  const hText = hours > 0 ? `${hours} hours` : '';
-  if (hours > 9) {
-    return hText;
-  }
+// function timeRemaining(secondsRemaining) {
+//   const hours = Math.floor(secondsRemaining / (60 * 60));
+//   const hText = hours > 0 ? `${hours} hours` : '';
+//   if (hours > 9) {
+//     return hText;
+//   }
 
-  const minutes = Math.floor((secondsRemaining - hours * 60 * 60) / 60);
-  const mText = minutes > 0 ? `${minutes} minutes` : '';
-  if (hours > 0) {
-    return hText + ' ' + mText;
-  } else if (minutes > 10) {
-    return mText;
-  }
+//   const minutes = Math.floor((secondsRemaining - hours * 60 * 60) / 60);
+//   const mText = minutes > 0 ? `${minutes} minutes` : '';
+//   if (hours > 0) {
+//     return hText + ' ' + mText;
+//   } else if (minutes > 10) {
+//     return mText;
+//   }
 
-  const seconds = secondsRemaining - hours * 60 * 60 - minutes * 60;
-  const sText = `${seconds} seconds`;
-  if (minutes > 0) {
-    return mText + ' ' + sText;
-  } else {
-    return sText;
-  }
-}
+//   const seconds = secondsRemaining - hours * 60 * 60 - minutes * 60;
+//   const sText = `${seconds} seconds`;
+//   if (minutes > 0) {
+//     return mText + ' ' + sText;
+//   } else {
+//     return sText;
+//   }
+// }

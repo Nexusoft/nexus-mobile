@@ -52,7 +52,10 @@ export async function refreshUserStatus() {
     });
     return status;
   } catch (err) {
-    console.error(err);
+    // Don't log "Session not found" errors
+    if (err?.code !== -11) {
+      console.error('refresh status', err);
+    }
     try {
       const {
         settings: { savedUsername },
@@ -66,12 +69,13 @@ export async function refreshUserStatus() {
         }
       }
     } catch (err) {
-      if (err.code == -11) {
+      if (err?.code === -11) {
         // If session is not found, then removed the saved user name.
         updateSettings({ savedUsername: null });
         return null;
+      } else {
+        console.error(err);
       }
-      console.error(err);
     }
     store.dispatch({ type: TYPE.LOGOUT });
     return null;

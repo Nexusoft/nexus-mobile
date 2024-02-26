@@ -349,7 +349,7 @@ const selectDefaultScreenStates = (() => {
 function useDefaultScreenFix() {
   React.useEffect(() => {
     const store = getStore();
-    store.observe(
+    return store.observe(
       selectDefaultScreenStates,
       ({ connected, unlocking, syncing, loggedIn }) => {
         if (
