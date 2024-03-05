@@ -14,8 +14,8 @@
 		6A1EC0282609882D005931AC /* RCTHTTPRequestHandler+acceptSelfSign.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1EC0272609882D005931AC /* RCTHTTPRequestHandler+acceptSelfSign.m */; };
 		6A6FD1452B61996E008C2EB6 /* lib_nexus_mobile_core.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A6FD1442B61996E008C2EB6 /* lib_nexus_mobile_core.xcframework */; };
 		6A7F084B2B5F7D3100EBA1B8 /* libboost.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A3FD2C12B5F2FD4001CA43D /* libboost.xcframework */; };
-		6A7F084E2B5F7D3500EBA1B8 /* libcrypto.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7323E92B5F755B0051E3AE /* libcrypto.xcframework */; };
-		6A7F08512B5F7D3700EBA1B8 /* libssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7323E82B5F755B0051E3AE /* libssl.xcframework */; };
+		6A82803F2B97E0FF00A49305 /* libssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7323E82B5F755B0051E3AE /* libssl.xcframework */; };
+		6A8280422B97E10900A49305 /* libcrypto.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7323E92B5F755B0051E3AE /* libcrypto.xcframework */; };
 		6A83CA56253E4F1000F455C1 /* NexusCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A83CA55253E4F1000F455C1 /* NexusCore.m */; };
 		6AECDE8D2511442C00834A71 /* entrypoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6AECDE862511442B00834A71 /* entrypoint.cpp */; };
 		6AECDE912511442C00834A71 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6AECDE8B2511442C00834A71 /* Expo.plist */; };
@@ -57,9 +57,9 @@
 			files = (
 				6A6FD1452B61996E008C2EB6 /* lib_nexus_mobile_core.xcframework in Frameworks */,
 				96905EF65AED1B983A6B3ABC /* libPods-nexusmobile.a in Frameworks */,
+				6A82803F2B97E0FF00A49305 /* libssl.xcframework in Frameworks */,
+				6A8280422B97E10900A49305 /* libcrypto.xcframework in Frameworks */,
 				6A7F084B2B5F7D3100EBA1B8 /* libboost.xcframework in Frameworks */,
-				6A7F08512B5F7D3700EBA1B8 /* libssl.xcframework in Frameworks */,
-				6A7F084E2B5F7D3500EBA1B8 /* libcrypto.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,7 +363,6 @@
 					"/Users/spikyfishgames/nexus-mobile/ios/**",
 					"\"$(SRCROOT)/\"",
 					"$(PROJECT_DIR)",
-					"\"$(SRCROOT)/nexus-mobile-library.framework\"",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -426,7 +425,6 @@
 					"/Users/spikyfishgames/nexus-mobile/ios/**",
 					"\"$(SRCROOT)/\"",
 					"$(PROJECT_DIR)",
-					"\"$(SRCROOT)/nexus-mobile-library.framework\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)",
