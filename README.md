@@ -39,6 +39,8 @@ org.gradle.java.home=/location/to/JDK
 ```
 You can also add `openssl.dir` (which is the location to openssl) to override the precompiled packages. 
 
+More can be [found here.](/docs/android-comprehensive-guide.md)
+
 ## Nexus Core
 
 Nexus Mobile runs in two layers, the React layer with the UI and the native layer that runs the core. For iOS this is in Objective-c++ and android, Java. Each platform has an entrypoint file that will interface with the native code and nexus's c++ compiled library.
