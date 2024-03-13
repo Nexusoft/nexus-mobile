@@ -45,9 +45,7 @@ const styles = {
 };
 
 function LoginForm({ handleSubmit, isSubmitting, values }) {
-  const savedFromUnlockScreen = useSelector(
-    (state) => state.ui.unlockingWallet?.saved
-  );
+  const hasSavedSession = useSelector((state) => state.user.hasSavedSession);
   return (
     <View style={styles.wrapper}>
       <TextBox.Formik
@@ -70,10 +68,15 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
         secure
         style={styles.field}
       />
-      {savedFromUnlockScreen && (
+      {hasSavedSession && (
         <FAB
           style={styles.loginBtn}
-          onPress={() => openUnlockScreen()}
+          onPress={() => {
+            getStore().dispatch({
+              type: TYPE.SET_IGNORE_SAVED_SESSION,
+              payload: true,
+            });
+          }}
           label={'Return to saved session'}
         />
       )}
