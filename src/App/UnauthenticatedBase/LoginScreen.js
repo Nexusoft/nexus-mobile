@@ -11,6 +11,7 @@ import SvgIcon from 'components/SvgIcon';
 import Switch from 'components/Switch';
 import { useTheme } from 'lib/theme';
 import { logIn } from 'lib/user';
+import * as TYPE from 'consts/actionTypes';
 import { openUnlockScreen, showError } from 'lib/ui';
 import { getStore } from 'store';
 import LogoIcon from 'icons/logo-full.svg';
@@ -74,7 +75,7 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
           onPress={() => {
             getStore().dispatch({
               type: TYPE.SET_IGNORE_SAVED_SESSION,
-              payload: true,
+              payload: false,
             });
           }}
           label={'Return to saved session'}
