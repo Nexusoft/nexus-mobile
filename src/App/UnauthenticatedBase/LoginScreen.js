@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Formik } from 'formik';
-import { FAB } from 'react-native-paper';
+import { FAB, Button } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 
@@ -46,6 +46,7 @@ const styles = {
 };
 
 function LoginForm({ handleSubmit, isSubmitting, values }) {
+  const theme = useTheme();
   const hasSavedSession = useSelector((state) => state.user.hasSavedSession);
   return (
     <View style={styles.wrapper}>
@@ -69,18 +70,6 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
         secure
         style={styles.field}
       />
-      {hasSavedSession && (
-        <FAB
-          style={styles.loginBtn}
-          onPress={() => {
-            getStore().dispatch({
-              type: TYPE.SET_IGNORE_SAVED_SESSION,
-              payload: false,
-            });
-          }}
-          label={'Return to saved session'}
-        />
-      )}
       <FAB
         style={styles.loginBtn}
         disabled={isSubmitting}
@@ -88,6 +77,7 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
         onPress={handleSubmit}
         label={isSubmitting ? 'Logging in' : 'Log in'}
       />
+
       <View style={styles.options}>
         <Text sub>Remember username</Text>
         <Switch.Formik name="rememberMe" />
@@ -98,6 +88,23 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
         </Text>
         <Switch.Formik name="keepLoggedIn" disabled={!values.rememberMe} />
       </View>
+
+      {hasSavedSession && (
+        <Button
+          mode="text"
+          color={theme.dark ? theme.foreground : theme.primary}
+          labelStyle={{ fontSize: 12 }}
+          style={{ marginTop: 10 }}
+          onPress={() => {
+            getStore().dispatch({
+              type: TYPE.SET_IGNORE_SAVED_SESSION,
+              payload: false,
+            });
+          }}
+        >
+          Return to saved session
+        </Button>
+      )}
     </View>
   );
 }
