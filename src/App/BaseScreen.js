@@ -350,18 +350,18 @@ export default function BaseScreen({ route, navigation }) {
     (state) => state.ui.ignoreSavedSession
   );
 
-  const showingUnauthenticatedBase =
-    connected &&
-    !syncing &&
-    !indexing &&
-    !loggedIn &&
-    (!hasSavedSession || ignoreSavedSession) &&
-    confirmedUser;
-  React.useEffect(() => {
-    if (showingUnauthenticatedBase) {
-      navigate('Login');
-    }
-  }, [showingUnauthenticatedBase]);
+  // const showingUnauthenticatedBase =
+  //   connected &&
+  //   !syncing &&
+  //   !indexing &&
+  //   !loggedIn &&
+  //   (!hasSavedSession || ignoreSavedSession) &&
+  //   confirmedUser;
+  // React.useEffect(() => {
+  //   if (showingUnauthenticatedBase) {
+  //     navigate('Login');
+  //   }
+  // }, [showingUnauthenticatedBase]);
   useDynamicNavOptions({
     route,
     navigation,
