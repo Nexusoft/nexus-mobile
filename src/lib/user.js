@@ -65,13 +65,13 @@ export async function refreshUserStatus() {
           username: savedUsername,
         });
         if (saved) {
-          store.dispatch({ type: TYPE.OPEN_UNLOCK_SCREEN });
+          store.dispatch({ type: TYPE.SET_SESSION_SAVED, payload: true });
         }
       }
     } catch (err) {
       if (err?.code === -11) {
-        // If session is not found, then removed the saved user name.
-        updateSettings({ savedUsername: null });
+        // Error code -11 "Session not found"
+        store.dispatch({ type: TYPE.SET_SESSION_SAVED, payload: false });
         return null;
       } else {
         console.error(err);

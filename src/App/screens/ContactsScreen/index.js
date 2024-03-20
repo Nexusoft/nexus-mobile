@@ -9,6 +9,7 @@ import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import { navigate } from 'lib/navigation';
 import { setContactSearch } from 'lib/ui';
+import { fade } from 'utils/color';
 import { selectSetting, updateSettings } from 'lib/settings';
 import { useTheme, disabledColor } from 'lib/theme';
 import memoize from 'utils/memoize';
@@ -16,19 +17,20 @@ import Contact from './Contact';
 
 const styles = {
   wrapper: {
+    paddingTop: 10,
     paddingBottom: 106,
   },
   descBox: ({ theme }) => ({
     marginHorizontal: 20,
     marginTop: 10,
     marginBottom: 20,
-    paddingVertical: 5,
+    paddingVertical: 10,
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: disabledColor(theme.foreground),
+    borderColor: fade(theme.foreground, 0.9),
     borderRadius: 4,
+    backgroundColor: theme.surface,
   }),
-  descText: {},
   descButton: {
     alignSelf: 'flex-end',
   },
@@ -100,14 +102,10 @@ export default function ContactsScreen() {
       : contacts;
 
   return (
-    <ScreenBody
-      style={styles.wrapper}
-      scroll={false}
-      style={{ paddingVertical: 10 }}
-    >
+    <ScreenBody style={styles.wrapper} scroll={false}>
       {showContactsTip && (
         <View style={styles.descBox({ theme })}>
-          <Text sub style={styles.descText}>
+          <Text sub>
             Contacts are stored locally on this phone and not bound to any
             individual user. Therefore, anyone who logs in to this app on this
             phone would see the same contacts.

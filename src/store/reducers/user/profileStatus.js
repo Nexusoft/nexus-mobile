@@ -11,7 +11,6 @@ export default (state = initialState, action) => {
       return action.payload.profileStatus;
 
     case TYPE.DISCONNECT_CORE:
-    case TYPE.CLEAR_USER:
     case TYPE.LOGOUT:
       return initialState;
 

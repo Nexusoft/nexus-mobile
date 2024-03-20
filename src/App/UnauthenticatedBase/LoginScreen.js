@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Formik } from 'formik';
-import { FAB } from 'react-native-paper';
+import { FAB, Button } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 
@@ -11,6 +11,7 @@ import SvgIcon from 'components/SvgIcon';
 import Switch from 'components/Switch';
 import { useTheme } from 'lib/theme';
 import { logIn } from 'lib/user';
+import * as TYPE from 'consts/actionTypes';
 import { openUnlockScreen, showError } from 'lib/ui';
 import { getStore } from 'store';
 import LogoIcon from 'icons/logo-full.svg';
@@ -45,9 +46,8 @@ const styles = {
 };
 
 function LoginForm({ handleSubmit, isSubmitting, values }) {
-  const savedFromUnlockScreen = useSelector(
-    (state) => state.ui.unlockingWallet?.saved
-  );
+  const theme = useTheme();
+  const hasSavedSession = useSelector((state) => state.user.hasSavedSession);
   return (
     <View style={styles.wrapper}>
       <TextBox.Formik
@@ -70,13 +70,6 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
         secure
         style={styles.field}
       />
-      {savedFromUnlockScreen && (
-        <FAB
-          style={styles.loginBtn}
-          onPress={() => openUnlockScreen()}
-          label={'Return to saved session'}
-        />
-      )}
       <FAB
         style={styles.loginBtn}
         disabled={isSubmitting}
@@ -84,6 +77,7 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
         onPress={handleSubmit}
         label={isSubmitting ? 'Logging in' : 'Log in'}
       />
+
       <View style={styles.options}>
         <Text sub>Remember username</Text>
         <Switch.Formik name="rememberMe" />
@@ -94,6 +88,23 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
         </Text>
         <Switch.Formik name="keepLoggedIn" disabled={!values.rememberMe} />
       </View>
+
+      {hasSavedSession && (
+        <Button
+          mode="text"
+          color={theme.dark ? theme.foreground : theme.primary}
+          labelStyle={{ fontSize: 12 }}
+          style={{ marginTop: 10 }}
+          onPress={() => {
+            getStore().dispatch({
+              type: TYPE.SET_IGNORE_SAVED_SESSION,
+              payload: false,
+            });
+          }}
+        >
+          Return to saved session
+        </Button>
+      )}
     </View>
   );
 }
