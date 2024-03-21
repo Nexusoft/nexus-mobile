@@ -21,6 +21,7 @@ import {
   selectUserIsConfirmed,
   refreshUserStatus,
   selectUsername,
+  selectShowInitialDB,
 } from 'lib/user';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { navigate, navReadyRef, navContainerRef } from 'lib/navigation';
@@ -275,7 +276,7 @@ function UnconfirmedUserBase() {
 
 function SynchronizingBase() {
   const theme = useTheme();
-  const percentage = useSelector((state) => state.core.info?.syncprogress);
+  const syncInfo = useSelector((state) => state.core.info?.syncing);
   return (
     <BaseScreenContainer>
       <ActivityIndicator
@@ -283,12 +284,27 @@ function SynchronizingBase() {
         color={theme.dark ? theme.foreground : theme.onPrimary}
       />
       <Text
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        size={24}
+        style={{ textAlign: 'center', marginTop: 20 }}
+      >
+        Downloading Initial Database
+      </Text>
+      <Text
         sub
         colorName={theme.dark ? 'foreground' : 'onPrimary'}
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Synchronizing {percentage}%...
+        Time Remaining {syncInfo.timeRemaining}
+      </Text>
+      <Text
+        sub
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        size={18}
+        style={{ textAlign: 'center', marginTop: 20 }}
+      >
+        {syncInfo.completed}% ...
       </Text>
     </BaseScreenContainer>
   );
@@ -342,7 +358,7 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
 export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
   const hasSavedSession = useSelector((state) => state.user.hasSavedSession);
-  const syncing = useSelector((state) => state.core.info?.synchronizing);
+  const syncing = useSelector(selectShowInitialDB);
   const indexing = useSelector((state) => state.user.status?.indexing);
   const loggedIn = useSelector(selectLoggedIn);
   const confirmedUser = useSelector(selectUserIsConfirmed);

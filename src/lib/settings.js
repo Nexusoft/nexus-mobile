@@ -24,6 +24,7 @@ export const defaultSettings = {
   showContactsTip: true,
   savedUsername: null,
   showOnboarding: true,
+  showInitialDBDownload: null,
 };
 
 export async function loadSettings() {

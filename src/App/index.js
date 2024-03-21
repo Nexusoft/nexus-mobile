@@ -215,6 +215,7 @@ export default function Root(props) {
           getStore().getState()
         );
         if (showOnboard) {
+          updateSettings({ showInitialDBDownload: true });
           showOnboarding();
         }
         setLoadingComplete(true);
