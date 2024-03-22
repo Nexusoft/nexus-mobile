@@ -121,7 +121,7 @@ export default function ApplicationSettings() {
         )}
 
         <SettingItem
-          title="Ignore Initialization screen"
+          title="Ignore database initialization"
           description="Don't show the 'Initializing database' screen when the app initializes the blockchain database."
           right={
             <Switch
