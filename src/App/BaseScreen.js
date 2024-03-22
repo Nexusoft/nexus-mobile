@@ -316,7 +316,7 @@ function SynchronizingBase() {
           const confirmed = await confirm({
             title: 'Ignore database initialization?',
             message:
-              'When the app is initializing the blockchain database, login might not work as intended and incorrect balances might be shown.\nAre you sure you want to ignore this process and proceed to use the app anyway?',
+              'When the app is initializing the blockchain database, login might not work as intended and inaccurate balances might be shown.\nAre you sure you want to ignore this process and proceed to use the app anyway?',
             cancelLabel: 'Stay and wait',
             confirmLabel: 'Ignore',
             danger: true,
