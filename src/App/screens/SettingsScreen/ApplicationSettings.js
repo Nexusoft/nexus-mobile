@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Surface } from 'react-native-paper';
 
@@ -40,6 +41,7 @@ export default function ApplicationSettings() {
   const colorScheme = useSelector(selectSetting('colorScheme'));
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const hideBalances = useSelector(selectSetting('hideBalances'));
+  const ignoreSyncScreen = useSelector(selectSetting('ignoreSyncScreen'));
   const hideUnusedTrustAccount = useSelector(
     selectSetting('hideUnusedTrustAccount')
   );
@@ -118,6 +120,19 @@ export default function ApplicationSettings() {
             />
           </>
         )}
+
+        <SettingItem
+          title="Ignore Initialization screen"
+          description="Don't show the 'Initializing database' screen when the app initializes the blockchain database."
+          right={
+            <Switch
+              value={ignoreSyncScreen}
+              onValueChange={(value) => {
+                updateSettings({ ignoreSyncScreen: !!value });
+              }}
+            />
+          }
+        />
       </Surface>
     </>
   );
