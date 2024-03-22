@@ -156,13 +156,6 @@ export function setContactSearch(text) {
   });
 }
 
-export function closeUnlockScreen(savedUsername) {
-  getStore().dispatch({
-    type: TYPE.CLOSE_UNLOCK_SCREEN,
-    payload: savedUsername,
-  });
-}
-
 export function openUnlockScreen() {
   getStore().dispatch({ type: TYPE.OPEN_UNLOCK_SCREEN });
 }

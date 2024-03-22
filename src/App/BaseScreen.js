@@ -144,7 +144,6 @@ function UnlockingBase() {
   const theme = useTheme();
   const [pin, setPin] = React.useState('');
   const [loading, setLoading] = React.useState('');
-  //TODO: Clean up
   const savedUsername = useSelector((state) => state.settings.savedUsername);
 
   const unlock = async () => {
@@ -317,7 +316,7 @@ function SynchronizingBase() {
           const confirmed = await confirm({
             title: 'Ignore this screen?',
             message:
-              'When the app is initializing the blockchain database, login might not work as intended and balances might be incorrectly shown.\nAre you sure you want to ignore this screen and proceed to use the app anyway?',
+              'When the app is initializing the blockchain database, login might not work as intended and incorrect balances might be shown.\nAre you sure you want to ignore this screen and proceed to use the app anyway?',
             cancelLabel: 'Stay and wait',
             confirmLabel: 'Ignore',
             danger: true,
@@ -335,7 +334,6 @@ function SynchronizingBase() {
 
 function IndexingBase() {
   const theme = useTheme();
-  //const percentage = useSelector((state) => state.core.info?.syncprogress);
   return (
     <BaseScreenContainer>
       <ActivityIndicator
@@ -394,18 +392,6 @@ export default function BaseScreen({ route, navigation }) {
     (state) => state.settings.ignoreSyncScreen
   );
 
-  // const showingUnauthenticatedBase =
-  //   connected &&
-  //   !syncing &&
-  //   !indexing &&
-  //   !loggedIn &&
-  //   (!hasSavedSession || ignoreSavedSession) &&
-  //   confirmedUser;
-  // React.useEffect(() => {
-  //   if (showingUnauthenticatedBase) {
-  //     navigate('Login');
-  //   }
-  // }, [showingUnauthenticatedBase]);
   useDynamicNavOptions({
     route,
     navigation,

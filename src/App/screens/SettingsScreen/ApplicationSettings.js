@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Surface } from 'react-native-paper';
 
