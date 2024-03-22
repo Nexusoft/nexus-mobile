@@ -40,6 +40,7 @@ export default function ApplicationSettings() {
   const colorScheme = useSelector(selectSetting('colorScheme'));
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const hideBalances = useSelector(selectSetting('hideBalances'));
+  const ignoreSyncScreen = useSelector(selectSetting('ignoreSyncScreen'));
   const hideUnusedTrustAccount = useSelector(
     selectSetting('hideUnusedTrustAccount')
   );
@@ -118,6 +119,19 @@ export default function ApplicationSettings() {
             />
           </>
         )}
+
+        <SettingItem
+          title="Ignore database initialization"
+          description="Don't show the 'Initializing database' screen when the app initializes the blockchain database."
+          right={
+            <Switch
+              value={ignoreSyncScreen}
+              onValueChange={(value) => {
+                updateSettings({ ignoreSyncScreen: !!value });
+              }}
+            />
+          }
+        />
       </Surface>
     </>
   );

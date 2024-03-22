@@ -156,9 +156,9 @@ export default function CoreSettings() {
                   if (Platform.OS === 'android')
                     await scanFile(ExternalDirectoryPath);
                   showSuccess(
-                    'Database deleted. Please swipe to close the app.'
+                    'Database deleted. Please close and reopen the app.'
                   );
-                  /* Not the best solution, but we do not expect this function to be used very ofter. */
+                  /* Not the best solution, but we do not expect this function to be used very often. */
                 }
               }}
             />
