@@ -21,12 +21,10 @@ import {
   selectUserIsConfirmed,
   refreshUserStatus,
   selectUsername,
-  selectShowInitialDB,
 } from 'lib/user';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
-import { navigate, navReadyRef, navContainerRef } from 'lib/navigation';
 import { callAPI } from 'lib/api';
-import { closeUnlockScreen, showError, showNotification } from 'lib/ui';
+import { showError, showNotification, confirm } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import * as TYPE from 'consts/actionTypes';
 import { getStore } from 'store';
@@ -286,9 +284,9 @@ function SynchronizingBase() {
       <Text
         colorName={theme.dark ? 'foreground' : 'onPrimary'}
         size={24}
-        style={{ textAlign: 'center', marginTop: 20 }}
+        style={{ textAlign: 'center', marginTop: 15 }}
       >
-        Downloading Initial Database
+        Initializing database...
       </Text>
       <Text
         sub
@@ -296,16 +294,41 @@ function SynchronizingBase() {
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Time Remaining {syncInfo.timeRemaining}
+        Completed {syncInfo.completed}%
       </Text>
       <Text
         sub
         colorName={theme.dark ? 'foreground' : 'onPrimary'}
         size={18}
-        style={{ textAlign: 'center', marginTop: 20 }}
+        style={{ textAlign: 'center' }}
       >
-        {syncInfo.completed}% ...
+        Est. time remaining: {syncInfo.timeRemaining}
       </Text>
+
+      <Button
+        mode="outlined"
+        color={theme.dark ? theme.foreground : theme.onPrimary}
+        labelStyle={{ fontSize: 12 }}
+        style={{
+          marginTop: 80,
+          borderColor: theme.dark ? theme.foreground : theme.onPrimary,
+        }}
+        onPress={async () => {
+          const confirmed = await confirm({
+            title: 'Ignore this screen?',
+            message:
+              'When the app is initializing the blockchain database, login might not work as intended and balances might be incorrectly shown.\nAre you sure you want to ignore this screen and proceed to use the app anyway?',
+            cancelLabel: 'Stay and wait',
+            confirmLabel: 'Ignore',
+            danger: true,
+          });
+          if (confirmed) {
+            updateSettings({ ignoreSyncScreen: true });
+          }
+        }}
+      >
+        Ignore
+      </Button>
     </BaseScreenContainer>
   );
 }
@@ -358,12 +381,17 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
 export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
   const hasSavedSession = useSelector((state) => state.user.hasSavedSession);
-  const syncing = useSelector(selectShowInitialDB);
+  const syncingFromScratch = useSelector(
+    (state) => state.core.syncingFromScratch
+  );
   const indexing = useSelector((state) => state.user.status?.indexing);
   const loggedIn = useSelector(selectLoggedIn);
   const confirmedUser = useSelector(selectUserIsConfirmed);
   const ignoreSavedSession = useSelector(
     (state) => state.ui.ignoreSavedSession
+  );
+  const ignoreSyncScreen = useSelector(
+    (state) => state.settings.ignoreSyncScreen
   );
 
   // const showingUnauthenticatedBase =
@@ -386,7 +414,7 @@ export default function BaseScreen({ route, navigation }) {
 
   if (!connected) return <DisconnectedBase />;
 
-  if (syncing) return <SynchronizingBase />;
+  if (syncingFromScratch && !ignoreSyncScreen) return <SynchronizingBase />;
 
   if (indexing) return <IndexingBase />;
 

@@ -19,22 +19,6 @@ export const selectUsername = (state) => {
   return profileStatus?.session?.username || status?.username || '';
 };
 
-export const selectShowInitialDB = (state) => {
-  const {
-    settings: { showInitialDBDownload },
-    core: { info },
-  } = state;
-
-  if (!showInitialDBDownload || !info) return false;
-
-  if (info.synchronized || info.completed > 98) {
-    // At 100 it info turns to false.
-    updateSettings({ showInitialDBDownload: false });
-    return false;
-  }
-  return true;
-};
-
 // Refreshes
 
 // Don't refresh user status while login process is not yet done
