@@ -1,5 +1,6 @@
 import { refreshCoreInfo } from 'lib/coreInfo';
-import { refreshUserStatus, refreshUserAccounts } from 'lib/user';
+import { refreshUserAccounts } from 'lib/user';
+import { refreshUserStatus } from 'lib/session';
 import { watchNewTransactions } from 'lib/transactions';
 import { pollMarketPrice } from 'lib/market';
 import { createStore } from 'store';

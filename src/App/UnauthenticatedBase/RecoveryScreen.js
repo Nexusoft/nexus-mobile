@@ -10,7 +10,7 @@ import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
 import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
-import { refreshUserStatus } from 'lib/user';
+import { refreshUserStatus } from 'lib/session';
 import { callAPI } from 'lib/api';
 import { showError } from 'lib/ui';
 import LogoIcon from 'icons/logo-full.svg';

@@ -13,7 +13,7 @@ import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
 import { showError } from 'lib/ui';
-import { logIn, setRegistrationTxids } from 'lib/user';
+import { logIn, setRegistrationTxids } from 'lib/session';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 
