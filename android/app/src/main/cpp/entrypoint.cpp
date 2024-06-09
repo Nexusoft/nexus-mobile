@@ -56,6 +56,89 @@ jint JNI_Onload(JavaVM* vm, void* reserved) {
     }
 }
 
+/** Startup
+ *
+ *  Wrap all our initialization logic here that needs to run in the background after startup.
+ *
+ **/
+void Startup()
+{
+    /* Add our connections from commandline. */
+    LLP::MakeConnections<LLP::TimeNode>   (LLP::TIME_SERVER);
+    LLP::MakeConnections<LLP::TritiumNode>(LLP::TRITIUM_SERVER);
+
+    /* Run our autologin scripts now. */
+    if(config::GetBoolArg("-autocreate", false) || config::GetBoolArg("-autologin", false))
+    {
+        /* Check that we are in single-user mode. */
+        if(config::fMultiuser.load())
+        {
+            /* Output our new warning message if the API was disabled. */
+            debug::log(0, ANSI_COLOR_BRIGHT_RED, "-autocreate and -autologin DISABLED", ANSI_COLOR_RESET);
+            debug::log(0, ANSI_COLOR_BRIGHT_YELLOW, "You cannot use -multiuser=1 with -auto(type) arguments.", ANSI_COLOR_RESET);
+
+            return;
+        }
+
+        /* Create a JSON encoding and call the main API endpoint. */
+        encoding::json jParams =
+        {
+            { "username", config::GetArg("-username", "") },
+            { "password", config::GetArg("-password", "") },
+            { "pin",      config::GetArg("-pin", "")      }
+        };
+
+        /* Handle for -autocreate if specified. */
+        std::string strCreate = "create/master";
+        if(config::GetBoolArg("-autocreate", false))
+        {
+            try { TAO::API::Commands::Invoke("profiles", strCreate, jParams); }
+            catch(const TAO::API::Exception e){ debug::notice(FUNCTION, "::autocreate:", e.what()); }
+        }
+
+        /* Handle for -autologin if specified. */
+        if(config::GetBoolArg("-autologin", false))
+        {
+            try
+            {
+                /* Create our local session first. */
+                std::string strLogin = "create/local";
+                TAO::API::Commands::Invoke("sessions", strLogin, jParams);
+
+                /* Wait for dynamic indexing services. */
+                std::string strStatus = "status/local";
+                while(!config::fShutdown.load())
+                {
+                    /* Check our current status against indexing services. */
+                    const encoding::json jStatus =
+                        TAO::API::Commands::Invoke("sessions", strStatus, jParams);
+
+                    /* Break once we have indexed sigchain. */
+                    if(!jStatus["indexing"].get<bool>()) //basic spin-lock
+                        break;
+
+                    /* Make sure we don't spin at 100% of a CPU core. */
+                    runtime::sleep(1);
+                }
+
+                /* Create a JSON encoding and call the main API endpoint. */
+                encoding::json jUnlock =
+                {
+                    { "pin",  config::GetArg("-pin", "") },
+                    { "notifications",              "1" },
+                    { "mining",                     "1" },
+                    { "staking",                    "1" }
+                };
+
+                /* Unlock our local session now. */
+                std::string strUnlock = "unlock/local";
+                TAO::API::Commands::Invoke("sessions", strUnlock, jUnlock);
+            }
+            catch(const TAO::API::Exception e){ debug::notice(FUNCTION, "::autologin: ", e.what()); }
+        }
+    }
+}
+
 JNIEXPORT jstring JNICALL
 Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject thiz, jstring homepath, jstring apiUser ,jstring apiPassword , jobjectArray params) {
     {
@@ -197,7 +280,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         }
 
 
-/* Read the configuration file. Pass argc and argv for possible -datadir setting */
+    /* Read the configuration file. Pass argc and argv for possible -datadir setting */
     config::ReadConfigFile(config::mapArgs, config::mapMultiArgs, argc, argv);
 
 
@@ -265,8 +348,6 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
         LLD::Indexing();
 
 
-        /* Check for reindexing entries. */
-        LLD::Register->IndexAddress();
 
 
         /* Initialize the Lower Level Protocol. */
@@ -279,6 +360,10 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
 
         /* Set the initialized flags. */
         config::fInitialized.store(true);
+
+
+        /* Kick off our startup thread for post-startup processing. */
+        std::thread tStartup = std::thread(Startup);
 
 
         /* Initialize generator thread. */
@@ -302,6 +387,10 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
             getchar();
             config::fShutdown = true;
         }
+
+
+        /* Wait for our startup thread to finish. */
+        tStartup.join();
 
 
         /* Stop stake minter if running. Minter ignores request if not running, so safe to just call both */
@@ -328,6 +417,7 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
     /* Release network triggers. */
     LLP::Release();
 
+
     /* Shutdown the API subsystems. */
     TAO::API::Shutdown();
 
@@ -346,7 +436,6 @@ Java_io_nexus_wallet_android_MainActivity_startNexusCore(JNIEnv *env, jobject th
 
     /* Close the debug log file once and for all. */
     debug::Shutdown();
-
 
         unsetenv("HOME");
         return env->NewStringUTF("Shutdown");
