@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, VirtualizedList } from 'react-native';
+import { VirtualizedList } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';

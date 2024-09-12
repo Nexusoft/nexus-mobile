@@ -104,7 +104,7 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
   return queries.join(' AND ') || undefined;
 }
 
-const txCountPerPage = 20;
+const txCountPerPage = 50;
 export async function loadTransactions({ reload } = { reload: false }) {
   const store = getStore();
   const {
