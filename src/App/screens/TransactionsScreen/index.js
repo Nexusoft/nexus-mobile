@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, VirtualizedList } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
@@ -22,6 +22,7 @@ export default function TransactionsScreen() {
   const [refreshing, refresh] = useRefresh(() =>
     loadTransactions({ reload: true })
   );
+
   React.useEffect(() => {
     if (loaded === 'none') {
       loadTransactions();
@@ -30,10 +31,12 @@ export default function TransactionsScreen() {
   return (
     <ScreenBody surface scroll={false}>
       <Filters />
-      <FlatList
+      <VirtualizedList
         refreshing={refreshing}
         onRefresh={refresh}
         data={transactions}
+        getItemCount={(data) => data.length}
+        getItem={(data, i) => data[i]}
         ItemSeparatorComponent={Divider}
         keyExtractor={(tx) => tx.txid}
         renderItem={({ item }) => <Transaction transaction={item} />}
