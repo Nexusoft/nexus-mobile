@@ -39,7 +39,7 @@
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "~18.0.0",
-    "react-native": "^0.70.6",
+    "react-native": "^0.70.15",
     "react-native-app-intro-slider": "^4.0.4",
     "react-native-background-timer": "^2.4.1",
     "react-native-fs": "^2.20.0",
@@ -71,7 +71,7 @@
   },
   "private": true,
   "name": "nexus-mobile",
-  "version": "0.9.5-6",
-  "builddate": "Mar, 22nd 2024",
-  "builddatecore": "Mar, 22nd 2024"
+  "version": "0.9.5-7",
+  "builddate": "Jul, 11th 2024",
+  "builddatecore": "Jun, 22nd 2024"
 }
