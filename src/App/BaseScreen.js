@@ -19,9 +19,9 @@ import { useTheme } from 'lib/theme';
 import {
   selectLoggedIn,
   selectUserIsConfirmed,
-  refreshUserStatus,
   selectUsername,
 } from 'lib/user';
+import { refreshUserStatus } from 'lib/session';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
 import { showError, showNotification, confirm } from 'lib/ui';
