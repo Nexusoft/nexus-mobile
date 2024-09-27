@@ -77,7 +77,9 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
   if (timeSpan) {
     const pastDate = getThresholdDate(timeSpan);
     if (pastDate) {
-      queries.push(`results.timestamp>date(\`${pastDate.toISOString().split('T')[0]}\`);`);
+      queries.push(
+        `results.timestamp>date(\`${pastDate.toISOString().split('T')[0]}\`);`
+      );
     }
   }
   if (operation) {
@@ -102,21 +104,23 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
   return queries.join(' AND ') || undefined;
 }
 
-const txCountPerPage = 20;
+const txCountPerPage = 50;
 export async function loadTransactions({ reload } = { reload: false }) {
   const store = getStore();
   const {
     user: {
-      transactions: { transactions: currentTransactions },
+      transactions: { transactions: currentTransactions, loading },
     },
     ui: { transactionsFilter },
   } = store.getState();
-  const offset = reload ? 0 : currentTransactions.length;
+  if (loading) return;
 
+  const offset = reload ? 0 : currentTransactions.length;
   store.dispatch({
     type: TYPE.START_FETCHING_TXS,
     payload: { reload },
   });
+
   try {
     const params = {
       verbose: 'summary',
@@ -131,13 +135,14 @@ export async function loadTransactions({ reload } = { reload: false }) {
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
+        offset,
         reload,
         transactions,
         loadedAll: transactions.length < txCountPerPage,
       },
     });
     watchIfUnconfirmed(transactions);
-  } catch (err) {
+  } finally {
     store.dispatch({
       type: TYPE.STOP_FETCHING_TXS,
     });

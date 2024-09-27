@@ -39,7 +39,7 @@
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "~18.0.0",
-    "react-native": "^0.70.6",
+    "react-native": "^0.70.15",
     "react-native-app-intro-slider": "^4.0.4",
     "react-native-background-timer": "^2.4.1",
     "react-native-fs": "^2.20.0",
@@ -49,7 +49,7 @@
     "react-native-qrcode-svg": "^6.2.0",
     "react-native-reanimated": "^2.13.0",
     "react-native-safe-area-context": "~3.1.9",
-    "react-native-screens": "^3.18.2",
+    "react-native-screens": "^3.22.0",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^13.6.0",
     "react-native-web": "^0.16.0",
@@ -71,7 +71,7 @@
   },
   "private": true,
   "name": "nexus-mobile",
-  "version": "0.9.5-2",
-  "builddate": "Feb, 8th 2024",
-  "builddatecore": "Feb, 8th 2024"
+  "version": "0.9.9-1",
+  "builddate": "Sept, 16th 2024",
+  "builddatecore": "Jun, 22nd 2024"
 }
