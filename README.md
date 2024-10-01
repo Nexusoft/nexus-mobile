@@ -28,11 +28,18 @@ Due to Apple's development rules you must have a development profile, one can ge
 
 ### Android
 
-Download and install Android Studios.
+Download and install Android Studios (Must have gradle 7.0+ support ie Artic Fox and above).
 
 Open the `android` folder.
 
-Since android pacakges are non static you must install an Android version of OpenSLL, you can get a precompiled [version here](https://teskalabs.com/blog/openssl-binary-distribution-for-developers-static-library)
+Make a `local.properties` text file in the android/ folder. Add and fill out these two properties 
+``` 
+sdk.dir=/location/to/android-sdk/version
+org.gradle.java.home=/location/to/JDK
+```
+You can also add `openssl.dir` (which is the location to openssl) to override the precompiled packages. 
+
+More can be [found here.](/docs/android-comprehensive-guide.md)
 
 ## Nexus Core
 

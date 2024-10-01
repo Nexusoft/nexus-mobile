@@ -19,13 +19,14 @@ import { useTheme } from 'lib/theme';
 import {
   selectLoggedIn,
   selectUserIsConfirmed,
-  refreshUserStatus,
+  selectUsername,
 } from 'lib/user';
+import { refreshUserStatus } from 'lib/session';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
-import { navigate, navReadyRef, navContainerRef } from 'lib/navigation';
 import { callAPI } from 'lib/api';
-import { closeUnlockScreen, saveUsernameToUI, showError, showNotification } from 'lib/ui';
+import { showError, showNotification, confirm } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
+import * as TYPE from 'consts/actionTypes';
 import { getStore } from 'store';
 import CopyIcon from 'icons/copy.svg';
 import UserIcon from 'icons/user.svg';
@@ -143,10 +144,7 @@ function UnlockingBase() {
   const theme = useTheme();
   const [pin, setPin] = React.useState('');
   const [loading, setLoading] = React.useState('');
-  //TODO: Clean up
-  const savedUsernameSettings = useSelector((state) => state.settings.savedUsername);
-  const savedUsernameUnlock = useSelector((state) => state.ui.unlockingWallet.saved);
-  const savedUsername = savedUsernameSettings || savedUsernameUnlock;
+  const savedUsername = useSelector((state) => state.settings.savedUsername);
 
   const unlock = async () => {
     setLoading(true);
@@ -156,17 +154,15 @@ function UnlockingBase() {
         username: savedUsername,
       });
       let finishedIndexing = false;
-      while (!finishedIndexing) { // This checks if the account has finished indexing after downloading the sigchain, consider revising this. 
+      while (!finishedIndexing) {
+        // This checks if the account has finished indexing after downloading the sigchain, consider revising this.
         let status = await callAPI('sessions/status/local');
-        finishedIndexing = !status.indexing;
-        await new Promise(resolve => setTimeout(resolve, 500));
+        finishedIndexing = !status?.indexing;
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
-      await callAPI('sessions/save/local', { pin })
-      await callAPI('sessions/unlock/local', { pin, notifications: true }),
+      await callAPI('sessions/save/local', { pin });
+      await callAPI('sessions/unlock/local', { pin, notifications: true });
       await refreshUserStatus();
-      updateSettings({ savedUsername: savedUsername });
-      saveUsernameToUI(savedUsername);
-      closeUnlockScreen(null);
     } catch (err) {
       setLoading(false);
       showError(err?.message);
@@ -218,8 +214,10 @@ function UnlockingBase() {
           color={theme.dark ? theme.foreground : theme.onPrimary}
           labelStyle={{ fontSize: 12 }}
           onPress={() => {
-            updateSettings({ savedUsername: null });
-            closeUnlockScreen(savedUsername);
+            getStore().dispatch({
+              type: TYPE.SET_IGNORE_SAVED_SESSION,
+              payload: true,
+            });
           }}
         >
           Log in as another user
@@ -230,7 +228,7 @@ function UnlockingBase() {
 }
 
 function UnconfirmedUserBase() {
-  const { username } = useSelector((state) => state.user.status);
+  const username = useSelector(selectUsername);
   const theme = useTheme();
   const txid = useSelector((state) => state.user.registrationTxids[username]);
   const color = theme.dark ? theme.foreground : theme.onPrimary;
@@ -275,7 +273,7 @@ function UnconfirmedUserBase() {
 
 function SynchronizingBase() {
   const theme = useTheme();
-  const percentage = useSelector((state) => state.core.info?.syncprogress);
+  const syncInfo = useSelector((state) => state.core.info?.syncing);
   return (
     <BaseScreenContainer>
       <ActivityIndicator
@@ -283,20 +281,59 @@ function SynchronizingBase() {
         color={theme.dark ? theme.foreground : theme.onPrimary}
       />
       <Text
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        size={24}
+        style={{ textAlign: 'center', marginTop: 15 }}
+      >
+        Initializing database...
+      </Text>
+      <Text
         sub
         colorName={theme.dark ? 'foreground' : 'onPrimary'}
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Synchronizing {percentage}%...
+        Completed {syncInfo.completed}%
       </Text>
+      <Text
+        sub
+        colorName={theme.dark ? 'foreground' : 'onPrimary'}
+        size={18}
+        style={{ textAlign: 'center' }}
+      >
+        Est. time remaining: {syncInfo.timeRemaining}
+      </Text>
+
+      <Button
+        mode="outlined"
+        color={theme.dark ? theme.foreground : theme.onPrimary}
+        labelStyle={{ fontSize: 12 }}
+        style={{
+          marginTop: 80,
+          borderColor: theme.dark ? theme.foreground : theme.onPrimary,
+        }}
+        onPress={async () => {
+          const confirmed = await confirm({
+            title: 'Ignore database initialization?',
+            message:
+              'When the app is initializing the blockchain database, login might not work as intended and inaccurate balances might be shown.\nAre you sure you want to ignore this process and proceed to use the app anyway?',
+            cancelLabel: 'Stay and wait',
+            confirmLabel: 'Ignore',
+            danger: true,
+          });
+          if (confirmed) {
+            updateSettings({ ignoreSyncScreen: true });
+          }
+        }}
+      >
+        Ignore
+      </Button>
     </BaseScreenContainer>
   );
 }
 
 function IndexingBase() {
   const theme = useTheme();
-  //const percentage = useSelector((state) => state.core.info?.syncprogress);
   return (
     <BaseScreenContainer>
       <ActivityIndicator
@@ -313,54 +350,6 @@ function IndexingBase() {
       </Text>
     </BaseScreenContainer>
   );
-}
-
-
-const selectDefaultScreenStates = (() => {
-  let cache = null;
-  return (state) => {
-    const connected = selectConnected(state);
-    const unlocking = state.ui.unlockingWallet.open;
-    const syncing = state.core.info?.synchronizing;
-    const loggedIn = selectLoggedIn(state);
-    if (
-      !cache ||
-      connected !== cache.connected ||
-      unlocking !== cache.unlocking ||
-      syncing !== cache.syncing ||
-      loggedIn !== cache.loggedIn
-    ) {
-      cache = {
-        connected,
-        unlocking,
-        syncing,
-        loggedIn,
-      };
-    }
-    return cache;
-  };
-})();
-
-// Fix default BottomTab screen being the first tab when login state changes
-function useDefaultScreenFix() {
-  React.useEffect(() => {
-    const store = getStore();
-    store.observe(
-      selectDefaultScreenStates,
-      ({ connected, unlocking, syncing, loggedIn }) => {
-        if (
-          navReadyRef.current &&
-          navContainerRef.current?.getRootState() &&
-          connected &&
-          !syncing &&
-          unlocking === false &&
-          !loggedIn
-        ) {
-          navigate('Login');
-        }
-      }
-    );
-  }, []);
 }
 
 function useDynamicNavOptions({ loggedIn, route, navigation }) {
@@ -389,14 +378,20 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
 
 export default function BaseScreen({ route, navigation }) {
   const connected = useSelector(selectConnected);
-  const unlocking = useSelector((state) => state.ui.unlockingWallet.open);
-  const syncing = useSelector((state) => state.core.info?.synchronizing);
-  const indexing = useSelector((state) => state.user?.status?.indexing);
+  const hasSavedSession = useSelector((state) => state.user.hasSavedSession);
+  const syncingFromScratch = useSelector(
+    (state) => state.core.syncingFromScratch
+  );
+  const indexing = useSelector((state) => state.user.status?.indexing);
   const loggedIn = useSelector(selectLoggedIn);
   const confirmedUser = useSelector(selectUserIsConfirmed);
+  const ignoreSavedSession = useSelector(
+    (state) => state.ui.ignoreSavedSession
+  );
+  const ignoreSyncScreen = useSelector(
+    (state) => state.settings.ignoreSyncScreen
+  );
 
-
-  useDefaultScreenFix();
   useDynamicNavOptions({
     route,
     navigation,
@@ -405,24 +400,24 @@ export default function BaseScreen({ route, navigation }) {
 
   if (!connected) return <DisconnectedBase />;
 
-  if (syncing) return <SynchronizingBase />;
+  if (syncingFromScratch && !ignoreSyncScreen) return <SynchronizingBase />;
 
   if (indexing) return <IndexingBase />;
 
-  if (unlocking) return <UnlockingBase />;
-
-  if (!loggedIn)
+  if (loggedIn)
     return (
       <BaseScreenContainer unStyled>
-        <UnauthenticatedBase />
+        <OverviewScreen />
       </BaseScreenContainer>
     );
+
+  if (hasSavedSession && !ignoreSavedSession) return <UnlockingBase />;
 
   if (!confirmedUser) return <UnconfirmedUserBase />;
 
   return (
     <BaseScreenContainer unStyled>
-      <OverviewScreen />
+      <UnauthenticatedBase />
     </BaseScreenContainer>
   );
 }

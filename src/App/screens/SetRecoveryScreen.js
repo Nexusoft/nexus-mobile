@@ -10,7 +10,7 @@ import Dialog from 'components/Dialog';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import ScreenBody from 'components/ScreenBody';
-import { refreshUserStatus } from 'lib/user';
+import { refreshUserStatus } from 'lib/session';
 import { callAPI } from 'lib/api';
 import { goBack } from 'lib/navigation';
 import { showError, showNotification } from 'lib/ui';
@@ -106,7 +106,7 @@ function useLoadWordList() {
 export default function SetRecoveryScreen() {
   const theme = useTheme();
   const hasRecoveryPhrase = useSelector(
-    (state) => !!state.user?.status?.recovery
+    (state) => !!state.user?.profileStatus?.recovery
   );
   const wordList = useLoadWordList();
   const [confirming, setConfirming] = React.useState(false);

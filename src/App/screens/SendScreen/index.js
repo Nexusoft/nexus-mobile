@@ -9,6 +9,7 @@ import ScreenBody from 'components/ScreenBody';
 import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import TokenName from 'components/TokenName';
 import SvgIcon from 'components/SvgIcon';
+import Text from 'components/Text';
 import { navigate } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { useTheme } from 'lib/theme';
@@ -27,6 +28,33 @@ function findContactName(addr) {
   return contact?.[0];
 }
 
+async function reverseLookup(address) {
+  try {
+    const result = await callAPI('names/reverse/lookup', { address });
+    const { name, local, mine, namespace } = result;
+
+    if (namespace) {
+      return namespace + '::' + name;
+    }
+
+    if (local) {
+      if (mine) {
+        return name;
+      } else {
+        return (
+          <Text>
+            <Text sub>(?):</Text>
+            {name}
+          </Text>
+        );
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 async function resolveNameOrAddress(nameOrAddress) {
   if (!nameOrAddress) return null;
 
@@ -36,7 +64,9 @@ async function resolveNameOrAddress(nameOrAddress) {
     });
     if (addressResult.valid) {
       // This is a Nexus address
+      const resolvedName = await reverseLookup(nameOrAddress);
       return {
+        name: resolvedName,
         address: nameOrAddress,
         contactName: findContactName(nameOrAddress),
       };
@@ -53,11 +83,12 @@ async function resolveNameOrAddress(nameOrAddress) {
     };
   } catch (err) {
     try {
+      const fullName = `${nameOrAddress}:default`;
       const nameResult = await callAPI('names/get/name', {
-        name: `${nameOrAddress}:default`,
+        name: fullName,
       });
       return {
-        name: `${nameOrAddress}:default`,
+        name: fullName,
         address: nameResult.register,
         contactName: findContactName(nameResult.register),
       };

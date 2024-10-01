@@ -3,23 +3,23 @@ import { DefaultTheme, DarkTheme } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { mix, fade, darken } from 'utils/color';
+import { mix, fade } from 'utils/color';
 import memoize from 'utils/memoize';
 import { selectSetting } from 'lib/settings';
 
 const darkColor = '#060606';
-const lightColor = '#ffffff';
+const lightColor = '#fbfbfb';
 const primaryShades = {
-  50: '#e3f3ff',
-  100: '#bbe1ff',
-  200: '#8dcfff',
-  300: '#58bbff',
-  400: '#26abff',
-  500: '#009cff',
-  600: '#008dff',
-  700: '#007af2',
-  800: '#0069e0',
-  900: '#0e48c1',
+  50: '#e1f5ff',
+  100: '#b2e5fe',
+  200: '#7dd4fd',
+  300: '#45c4fc',
+  400: '#07b7fc',
+  500: '#00aafb',
+  600: '#009bec',
+  700: '#0088d8',
+  800: '#0077c4',
+  900: '#0057a1',
 };
 const primaryDark = '#0040ad';
 const dangerShades = {
@@ -80,7 +80,7 @@ export function disabledColor(color) {
 
 export const darkTheme = {
   dark: true,
-  background: elevatedDarkColors[1],
+  background: elevatedDarkColors[2],
   foreground: lightColor,
   surface: elevatedDarkColors[4],
   primary: primaryShades[400],
@@ -92,11 +92,11 @@ export const darkTheme = {
 
 export const lightTheme = {
   dark: false,
-  background: darken(lightColor, 0.05),
-  foreground: darkColor,
+  background: primaryShades[50],
+  foreground: elevatedDarkColors[16],
   surface: lightColor,
-  primary: primaryShades[800],
-  primaryVariant: primaryDark,
+  primary: primaryShades[400],
+  primaryVariant: primaryShades[700],
   onPrimary: lightColor,
   danger: dangerShades[800],
   onDanger: lightColor,

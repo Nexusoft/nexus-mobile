@@ -19,12 +19,13 @@ export default (state = initialState, action) => {
     }
 
     case TYPE.FETCH_TXS_RESULT: {
-      const { transactions, loadedAll } = action.payload;
+      const { transactions, loadedAll, offset } = action.payload;
+      if (offset !== state.transactions.length) return state;
       return {
         ...state,
         loading: false,
         loaded: loadedAll ? 'all' : 'partly',
-        transactions: [...state.transactions,...transactions],
+        transactions: [...state.transactions, ...transactions],
       };
     }
 
@@ -61,6 +62,7 @@ export default (state = initialState, action) => {
       }
 
     case TYPE.DISCONNECT_CORE:
+    case TYPE.ACTIVE_USER:
     case TYPE.LOGOUT:
       return initialState;
 

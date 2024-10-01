@@ -105,5 +105,7 @@
 	<true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>UILaunchStoryboardName</key>
+  <string>SplashScreen</string>
 </dict>
 </plist>

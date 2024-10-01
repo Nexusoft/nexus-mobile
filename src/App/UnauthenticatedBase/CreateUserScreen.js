@@ -13,7 +13,7 @@ import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
 import { showError } from 'lib/ui';
-import { login, setRegistrationTxids } from 'lib/user';
+import { logIn, setRegistrationTxids } from 'lib/session';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 
@@ -208,7 +208,7 @@ export default function CreateUserScreen() {
           }
           // Allow mempool login
           try {
-            await login({ username, password, pin, rememberMe, keepLoggedIn });
+            await logIn({ username, password, pin, rememberMe, keepLoggedIn });
           } catch (err) {
             showError(
               err &&

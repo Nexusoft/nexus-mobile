@@ -1,54 +1,24 @@
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
-import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
 
 // Store Selects
 
-export const selectLoggedIn = (state) => !!state.user.status.genesis;
+export const selectLoggedIn = (state) => !!state.user.status?.genesis;
 
 // Return user's confirmed status
 export const selectUserIsConfirmed = (state) =>
   state.user?.status?.confirmed !== false;
 
-// Refreshes
+export const selectUsername = (state) => {
+  const {
+    user: { status, profileStatus },
+  } = state;
 
-export async function refreshUserStatus() {
-  const store = getStore();
-  try {
-    const status = await callAPI('sessions/status/local');
-    let recovery = store.getState()?.user?.status?.recovery;
-    if (!recovery)
-    { //Limit API calls
-      const profStatus = await callAPI('profiles/status/master');
-      recovery = profStatus.recovery;
-    }
-    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: {recovery, ...status} });
-    return status;
-  } catch (err) {
-    try {
-      const {
-        settings: { savedUsername },
-      } = store.getState();
-      if (savedUsername) {
-        const {saved} = await callAPI('sessions/status/local', {
-          username: savedUsername,
-        });
-        if (saved) {
-          store.dispatch({ type: TYPE.OPEN_UNLOCK_SCREEN });
-        }
-      }
-    } catch (err) {
-      if (err.code == -11) { // If session is not found, then removed the saved user name. 
-        updateSettings({ savedUsername: null });
-        return null;
-      }
-      console.error(err);
-    }
-    store.dispatch({ type: TYPE.LOGOUT });
-    return null;
-  }
-}
+  return profileStatus?.session?.username || status?.username || '';
+};
+
+// Refreshes
 
 export async function refreshUserBalances() {
   const store = getStore();
@@ -57,7 +27,6 @@ export async function refreshUserBalances() {
     store.dispatch({ type: TYPE.SET_USER_BALANCES, payload: balances });
     return balances;
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_USER_BALANCES });
     return null;
   }
 }
@@ -65,20 +34,14 @@ export async function refreshUserBalances() {
 export async function refreshUserAccounts() {
   const store = getStore();
   try {
-    const [trust, accounts] = await Promise.all([
-      callAPI('finance/list/trust'),
-      callAPI('finance/list/account'),
-    ]);
-    if (!accounts?.length && !trust.length) {
+    const accounts = await callAPI('finance/list/any');
+    if (!accounts?.length) {
       // In a very rare case the sigchain is not fully downloaded, try again
       setTimeout(refreshUserAccounts, 500);
     }
-
-    const allAccounts = trust.concat(accounts);
-    store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: allAccounts });
-    return allAccounts;
+    store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: accounts });
+    return accounts;
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_USER_ACCOUNTS });
     return null;
   }
 }
@@ -90,7 +53,6 @@ export async function refreshUserTokens() {
     store.dispatch({ type: TYPE.SET_USER_TOKENS, payload: tokens });
     return tokens;
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_USER_TOKENS });
     return null;
   }
 }
@@ -120,12 +82,7 @@ export async function refreshHeaders() {
 export async function refreshUserAccount(address) {
   const store = getStore();
   try {
-    let account = null;
-    try {
-      account = await callAPI('finance/get/account', { address });
-    } catch (err) {
-      account = await callAPI('finance/get/trust', { address });
-    }
+    const account = await callAPI('finance/get/any', { address });
     store.dispatch({
       type: TYPE.SET_USER_ACCOUNT,
       payload: { address, account },
@@ -134,55 +91,4 @@ export async function refreshUserAccount(address) {
   } catch (err) {
     return null;
   }
-}
-
-// Functions
-
-export async function login({
-  username,
-  password,
-  pin,
-  rememberMe,
-  keepLoggedIn,
-}) {
-  await callAPI('sessions/create/local', { username, password, pin });
-  let finishedIndexing = false;
-  while (!finishedIndexing) { // This checks if the account has finished indexing after downloading the sigchain, consider revising this. 
-    let status = await callAPI('sessions/status/local');
-    finishedIndexing = !status.indexing;
-    await new Promise(resolve => setTimeout(resolve, 500));
-  }
-  getStore().dispatch({
-    type: TYPE.SET_USERNAME,
-    payload: { username },
-  });
-  updateSettings({
-    savedUsername: rememberMe ? username : null,
-  });
-  await Promise.all([
-    callAPI('sessions/unlock/local', { pin, notifications: true }),
-    refreshUserStatus(),
-    rememberMe && keepLoggedIn ? callAPI('sessions/save/local', { pin }) : null,
-  ]);
-}
-
-export async function logout() {
-  const store = getStore();
-  const {
-    user: {
-      status: { 
-        saved
-      }
-    }
-  } = store.getState();
-
-  await callAPI('sessions/terminate/local', saved ? {clear:1} : null);
-  await refreshUserStatus();
-}
-
-export function setRegistrationTxids({ username, txid }) {
-  getStore().dispatch({
-    type: TYPE.SET_REGISTRATION_TXID,
-    payload: { username, txid },
-  });
 }

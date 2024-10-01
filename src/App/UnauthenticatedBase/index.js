@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { IconButton, shadow, overlay } from 'react-native-paper';
@@ -33,6 +34,9 @@ const styles = {
     textAlign: 'center',
     fontSize: 18,
   },
+  sync: ({ theme }) => ({
+    color: theme.dark ? theme.foreground : theme.onPrimary,
+  }),
   field: {
     marginBottom: 10,
   },
@@ -119,7 +123,7 @@ UnauthenticatedBase.stackOptions = ({ theme, route }) => {
           colorName={theme.dark ? 'foreground' : 'onPrimary'}
           style={styles.versionText}
         >
-          v {version}
+          v{version} Beta <SyncStatus />
         </Text>
       </View>
     ),
@@ -140,3 +144,15 @@ UnauthenticatedBase.stackOptions = ({ theme, route }) => {
     ...stackOptions,
   };
 };
+
+function SyncStatus() {
+  const theme = useTheme();
+  const syncing = useSelector((state) => state.core.info?.syncing);
+  if (!syncing) return null;
+
+  return (
+    <Text style={styles.sync({ theme })}>
+      | Synchronizing... {syncing?.progress}%
+    </Text>
+  );
+}
