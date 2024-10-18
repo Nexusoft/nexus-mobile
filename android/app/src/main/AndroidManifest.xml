@@ -11,6 +11,7 @@
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
   <application
     android:name=".MainApplication"
@@ -50,6 +51,9 @@
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
-    <service android:name=".NexusService"/>
+    <service android:name=".NexusService" android:foregroundServiceType="specialUse">
+      <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+          android:value="Nexus Core synchronizes and validates your device with the network."/>
+    </service>
   </application>
 </manifest>

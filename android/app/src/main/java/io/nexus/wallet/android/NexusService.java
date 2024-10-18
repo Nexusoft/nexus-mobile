@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -81,7 +82,7 @@ public class NexusService extends Service {
                 .setOngoing(true);
 
         Notification coreNotification = builder.build();
-        startForeground(notificationID, coreNotification);
+        startForeground(notificationID, coreNotification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
 
         super.onCreate();
     }
