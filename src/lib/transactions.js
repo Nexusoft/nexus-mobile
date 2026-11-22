@@ -4,8 +4,8 @@ import TokenName from 'components/TokenName';
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
 import { getDeltaSign } from 'lib/contracts';
-import { refreshUserAccounts } from 'lib/user';
-import { getStore } from 'store';
+import { refreshUserAccounts, selectLoggedIn } from 'lib/user';
+import { getStore, observeStore } from 'store';
 import formatNumber from 'utils/formatNumber';
 
 export const isConfirmed = (tx) => !!tx.confirmations;
@@ -19,10 +19,12 @@ function startWatcher() {
       // Clear watcher if user is logged out or core is disconnected or user is switched
       const genesis = state.user.status?.genesis;
       const oldGenesis = oldState.user.status?.genesis;
-      if (!isLoggedIn(state) || genesis !== oldGenesis) {
+      if (!oldState) return;
+      if (!selectLoggedIn(state) || genesis !== oldGenesis) {
         unsubscribe?.();
         unsubscribe = null;
         watchedIds = [];
+        return;
       }
 
       // Only refetch transaction each time there is a new block
@@ -31,12 +33,12 @@ function startWatcher() {
       if (!blocks || blocks === oldBlocks) return;
 
       // Fetch the updated transaction info
-      const transactions = await Promise.all([
-        watchedIds.map((txid) => fetchTransaction({ txid })),
-      ]);
+      const transactions = await Promise.all(
+        watchedIds.map((txid) => fetchTransaction({ txid }).catch(() => null))
+      );
 
       for (const tx of transactions) {
-        if (isConfirmed(tx)) {
+        if (tx && isConfirmed(tx)) {
           unwatchTransaction(tx.txid);
           // Reload the account list
           // so that the account balances (available & unconfirmed) are up-to-date
