@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import Text from 'components/Text';
 import TokenName from 'components/TokenName';
-import { getDeltaSign } from 'lib/contracts';
+import { getDeltaSign, deltaColor } from 'lib/contracts';
 import { useTheme } from 'lib/theme';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
@@ -204,7 +204,7 @@ export default function Contract({ contract, time, pending }) {
           size={14}
           style={[
             styles.amount,
-            { color: sign === '-' ? '#d9534f' : sign === '+' ? '#1b9e5a' : undefined },
+            { color: deltaColor(sign) },
           ]}
         >
           {sign}

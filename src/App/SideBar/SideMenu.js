@@ -6,6 +6,7 @@ import CoreIcon from 'icons/core.svg';
 import NexusIcon from 'icons/nexus.svg';
 import ContactsIcon from 'icons/address-book.svg';
 import TransactionIcon from 'icons/transaction.svg';
+import ChartIcon from 'icons/chart.svg';
 import MenuItem from './MenuItem';
 
 export default function SideMenu() {
@@ -18,6 +19,7 @@ export default function SideMenu() {
         icon={TransactionIcon}
         label="Transactions"
       />
+      <MenuItem linkTo="Summary" icon={ChartIcon} label="Summary and export" />
       <Divider spacing={5} />
 
       <MenuItem linkTo="CoreInfo" icon={CoreIcon} label="Core information" />

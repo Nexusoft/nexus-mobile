@@ -263,6 +263,7 @@ export default function ConfirmSendScreen({ route }) {
               {canBiometric && (
                 <Button
                   mode="contained"
+                  labelStyle={{ color: theme.onPrimary }}
                   style={{ marginBottom: 20 }}
                   disabled={isSubmitting || sending}
                   icon={({ size, color }) => (

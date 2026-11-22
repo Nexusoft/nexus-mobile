@@ -1,11 +1,12 @@
 import React from 'react';
 import { SectionList, View, ScrollView } from 'react-native';
-import { IconButton, ActivityIndicator, TouchableRipple } from 'react-native-paper';
+import { IconButton, ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
 import ScreenBody from 'components/ScreenBody';
 import Divider from 'components/Divider';
+import Chip from 'components/Chip';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import {
@@ -34,17 +35,6 @@ const styles = {
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
-  chip: ({ theme, active }) => ({
-    borderRadius: 16,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    marginRight: 8,
-    backgroundColor: active
-      ? theme.primary
-      : theme.dark
-      ? theme.surface
-      : '#eef2f7',
-  }),
   dayHeader: ({ theme }) => ({
     paddingHorizontal: 16,
     paddingTop: 14,
@@ -81,7 +71,6 @@ export function groupByDay(transactions) {
 }
 
 function QuickFilters() {
-  const theme = useTheme();
   const operation = useSelector(
     (state) => state.ui.transactionsFilter.operation
   );
@@ -95,24 +84,16 @@ function QuickFilters() {
         {quickFilters.map(({ label, ops }) => {
           const active = sameOps(operation, ops);
           return (
-            <TouchableRipple
+            <Chip
               key={label}
-              style={styles.chip({ theme, active })}
-              borderless
+              label={label}
+              active={active}
               onPress={() => {
                 if (active) return;
                 updateFilter({ operation: ops });
                 loadTransactions({ reload: true });
               }}
-            >
-              <Text
-                bold={active}
-                size={13}
-                colorName={active ? 'onPrimary' : 'foreground'}
-              >
-                {label}
-              </Text>
-            </TouchableRipple>
+            />
           );
         })}
       </ScrollView>
