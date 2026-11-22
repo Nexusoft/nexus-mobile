@@ -8,7 +8,7 @@ export const selectLoggedIn = (state) => !!state.user.status?.genesis;
 
 // Return user's confirmed status
 export const selectUserIsConfirmed = (state) =>
-  state.user?.status?.confirmed !== false;
+  state.user?.profileStatus?.confirmed !== false;
 
 export const selectUsername = (state) => {
   const {

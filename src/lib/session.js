@@ -68,6 +68,18 @@ export async function refreshUserStatus() {
 
 // Functions
 
+//wait for the sigchain download and indexing...
+export async function waitForIndexing() {
+  const indexingDeadline = Date.now() + maxIndexingWaitMs;
+  while (true) {
+    const status = await callAPI('sessions/status/local');
+    if (!status?.indexing) return;
+    //very large sigchains: go on, balances fill in when indexing ends
+    if (Date.now() > indexingDeadline) return;
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+}
+
 export async function logIn({
   username,
   password,
@@ -83,15 +95,7 @@ export async function logIn({
       password,
       pin,
     });
-    //wait for the sigchain download and indexing...
-    const indexingDeadline = Date.now() + maxIndexingWaitMs;
-    while (true) {
-      const status = await callAPI('sessions/status/local');
-      if (!status?.indexing) break;
-      //very large sigchains: go on, balances fill in when indexing ends
-      if (Date.now() > indexingDeadline) break;
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
+    await waitForIndexing();
     updateSettings({
       savedUsername: rememberMe ? username : null,
     });
