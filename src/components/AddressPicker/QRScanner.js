@@ -33,8 +33,19 @@ const styles = {
   },
 };
 
-export default function QRScanner({ setAddress, style }) {
+async function startScan(setScanning) {
+  const { status } = await BarCodeScanner.requestPermissionsAsync();
+  if (status === 'granted') {
+    setScanning(true);
+    Keyboard.dismiss();
+  }
+}
+
+export default function QRScanner({ setAddress, style, autoOpen }) {
   const [scanning, setScanning] = React.useState(false);
+  React.useEffect(() => {
+    if (autoOpen) startScan(setScanning);
+  }, []);
   const insets = useSafeAreaInsets();
   useBackHandler(() => {
     if (scanning) {
@@ -48,13 +59,7 @@ export default function QRScanner({ setAddress, style }) {
       <IconButton
         style={style}
         icon={() => <SvgIcon icon={QRIcon} size={16} />}
-        onPress={async () => {
-          const { status } = await BarCodeScanner.requestPermissionsAsync();
-          if (status === 'granted') {
-            setScanning(true);
-            Keyboard.dismiss();
-          }
-        }}
+        onPress={() => startScan(setScanning)}
       />
       {scanning && (
         <Portal>
@@ -63,7 +68,8 @@ export default function QRScanner({ setAddress, style }) {
             barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
             onBarCodeScanned={({ data }) => {
               Vibration.vibrate();
-              setAddress(data);
+              //accept nexus:ADDRESS?... payment links too
+              setAddress(String(data).replace(/^nexus:/i, '').split('?')[0].trim());
               setScanning(false);
             }}
           />

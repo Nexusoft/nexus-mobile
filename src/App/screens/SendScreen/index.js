@@ -224,6 +224,7 @@ export default function SendScreen({ route }) {
 
             <SendTo
               account={account}
+              autoScan={!!route.params?.scan}
               handleSubmit={handleSubmit}
               isSubmitting={isSubmitting}
               {...rest}

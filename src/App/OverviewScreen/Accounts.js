@@ -15,6 +15,8 @@ import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
 import useRefresh from 'utils/useRefresh';
 import WalletIcon from 'icons/wallet.svg';
+import QuickActions from './QuickActions';
+import Assets from './Assets';
 
 const styles = {
   accountsHeader: {
@@ -135,42 +137,46 @@ const refreshData = () =>
 export default function Accounts({ filteredAccounts }) {
   const [refreshing, refresh] = useRefresh(refreshData);
   return (
-    <>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigate('Accounts');
-        }}
-      >
-        <Text style={styles.accountsHeader} sub>
-          Your Accounts
-        </Text>
-      </TouchableWithoutFeedback>
-      <FlatList
-        refreshing={refreshing}
-        onRefresh={refresh}
-        style={styles.accounts}
-        data={filteredAccounts}
-        keyExtractor={(acc) => acc.address}
-        renderItem={({ item: account }) => <Account account={account} />}
-        ItemSeparatorComponent={() => <Divider inset={20} />}
-        ListEmptyComponent={
-          Array.isArray(filteredAccounts) ? (
-            <View style={styles.empty}>
-              <Text sub style={styles.emptyText}>
-                You have no accounts yet.
-              </Text>
-              <Button
-                mode="text"
-                onPress={() => {
-                  navigate('NewAccount');
-                }}
-              >
-                Create account
-              </Button>
-            </View>
-          ) : null
-        }
-      />
-    </>
+    <FlatList
+      refreshing={refreshing}
+      onRefresh={refresh}
+      style={styles.accounts}
+      data={filteredAccounts}
+      keyExtractor={(acc) => acc.address}
+      renderItem={({ item: account }) => <Account account={account} />}
+      ListHeaderComponent={
+        <>
+          <QuickActions accounts={filteredAccounts} />
+          <Assets accounts={filteredAccounts} />
+          <TouchableWithoutFeedback
+            onPress={() => {
+              navigate('Accounts');
+            }}
+          >
+            <Text style={styles.accountsHeader} sub>
+              Your Accounts
+            </Text>
+          </TouchableWithoutFeedback>
+        </>
+      }
+      ItemSeparatorComponent={() => <Divider inset={20} />}
+      ListEmptyComponent={
+        Array.isArray(filteredAccounts) ? (
+          <View style={styles.empty}>
+            <Text sub style={styles.emptyText}>
+              You have no accounts yet.
+            </Text>
+            <Button
+              mode="text"
+              onPress={() => {
+                navigate('NewAccount');
+              }}
+            >
+              Create account
+            </Button>
+          </View>
+        ) : null
+      }
+    />
   );
 }

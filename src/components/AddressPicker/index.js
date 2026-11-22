@@ -19,7 +19,11 @@ const styles = {
   },
 };
 
-export default function AddressPicker({ pickContacts = true, setAddress }) {
+export default function AddressPicker({
+  pickContacts = true,
+  setAddress,
+  autoScan,
+}) {
   return (
     <View style={styles.wrapper}>
       <IconButton
@@ -35,7 +39,11 @@ export default function AddressPicker({ pickContacts = true, setAddress }) {
       {pickContacts && (
         <ContactSelector setAddress={setAddress} style={styles.button} />
       )}
-      <QRScanner setAddress={setAddress} style={styles.button} />
+      <QRScanner
+        setAddress={setAddress}
+        style={styles.button}
+        autoOpen={autoScan}
+      />
     </View>
   );
 }

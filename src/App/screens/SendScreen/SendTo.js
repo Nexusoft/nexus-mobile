@@ -44,7 +44,7 @@ const styles = {
   }),
 };
 
-export default function SendTo({ account, setFieldValue }) {
+export default function SendTo({ account, setFieldValue, autoScan }) {
   const theme = useTheme();
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
 
@@ -62,6 +62,7 @@ export default function SendTo({ account, setFieldValue }) {
           blurOnSubmit
         />
         <AddressPicker
+          autoScan={autoScan}
           setAddress={(address) => {
             setFieldValue('nameOrAddress', address);
           }}
