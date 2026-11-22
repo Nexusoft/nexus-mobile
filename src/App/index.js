@@ -25,7 +25,7 @@ import initStore from './initStore';
 
 import BackgroundTimer from 'react-native-background-timer';
 
-import { selectLoggedIn, refreshUserSync, refreshHeaders } from 'lib/user';
+import { selectLoggedIn, refreshUserSync } from 'lib/user';
 import { selectSetting } from 'lib/settings';
 import { refreshCoreInfo } from 'lib/coreInfo';
 
@@ -153,8 +153,7 @@ const _handleAppStateChange = (nextAppState) => {
               if (isRegistered) {
                 BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
                 await refreshCoreInfo();
-                await refreshHeaders();
-                await refreshUserSync();
+                refreshUserSync();
               }
             }
           );

@@ -1,5 +1,10 @@
 import { refreshCoreInfo } from 'lib/coreInfo';
-import { refreshUserAccounts } from 'lib/user';
+import {
+  refreshUserAccounts,
+  refreshUserBalances,
+  refreshUserSync,
+  selectLoggedIn,
+} from 'lib/user';
 import { refreshUserStatus } from 'lib/session';
 import { watchNewTransactions } from 'lib/transactions';
 import { pollMarketPrice } from 'lib/market';
@@ -53,6 +58,21 @@ export default function initStore() {
       (userStatus) => {
         if (userStatus) {
           refreshUserAccounts();
+        }
+      }
+    );
+
+    //lite core: after login, indexing or header sync, fetch history the core may have skipped
+    store.observe(
+      (state) =>
+        selectLoggedIn(state) &&
+        !state.user.status?.indexing &&
+        !state.core.info?.syncing &&
+        state.user.status.genesis,
+      async (readyGenesis) => {
+        if (readyGenesis && (await refreshUserSync())) {
+          refreshUserAccounts();
+          refreshUserBalances();
         }
       }
     );

@@ -63,26 +63,44 @@ export async function refreshUserTokens() {
   }
 }
 
-export async function refreshUserSync() {
-  try {
-    const result = await callAPI('ledger/sync/sigchain');
-    return result;
-  } catch (err) {
-    return null;
-  }
+const maxSigchainSyncRounds = 10;
+let sigchainSync = null;
+
+async function readTransactionCount() {
+  const status = await callAPI('profiles/status/master');
+  return status?.transactions;
 }
 
-export async function refreshHeaders() {
-  try {
-    const result = await callAPI('ledger/sync/headers');
-    return result;
-  } catch (error) {
-    if (String(error?.code) === '-306') {
-      setTimeout(() => {
-        refreshHeaders();
-      }, 500);
-    }
+//lite core only, a full node keeps the sigchain current by itself
+//core 5.1 has no ledger/sync/*, profiles/transactions downloads what is missing first
+//the core can stop a download early (peer dropped), so go on while it still brings new ones
+async function syncSigchain() {
+  let added = false;
+  let count = await readTransactionCount();
+  for (let round = 0; round < maxSigchainSyncRounds; round++) {
+    await callAPI('profiles/transactions', { limit: 1 });
+    const newCount = await readTransactionCount();
+    if (!(newCount > count)) break;
+    added = true;
+    count = newCount;
   }
+  return added;
+}
+
+//resolves true when older transactions came in
+export function refreshUserSync() {
+  const state = getStore().getState();
+  if (!state.core.info?.litemode || !selectLoggedIn(state)) {
+    return Promise.resolve(false);
+  }
+  if (!sigchainSync) {
+    sigchainSync = syncSigchain()
+      .catch(() => false)
+      .finally(() => {
+        sigchainSync = null;
+      });
+  }
+  return sigchainSync;
 }
 
 export async function refreshUserAccount(address) {
