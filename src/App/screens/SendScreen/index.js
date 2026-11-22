@@ -9,11 +9,11 @@ import ScreenBody from 'components/ScreenBody';
 import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import TokenName from 'components/TokenName';
 import SvgIcon from 'components/SvgIcon';
-import Text from 'components/Text';
 import { navigate } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { useTheme } from 'lib/theme';
 import { addressRegex } from 'consts/regex';
+import parseAmount from 'utils/parseAmount';
 import { getStore } from 'store';
 import SendIcon from 'icons/send.svg';
 import SendFrom from './SendFrom';
@@ -37,31 +37,15 @@ async function reverseLookup(address) {
       return namespace + '::' + name;
     }
 
+    //another user's local name is ambiguous, show the address instead
     if (local) {
-      if (mine) {
-        return name;
-      } else {
-        return (
-          <Text>
-            <Text sub>(?):</Text>
-            {name}
-          </Text>
-        );
-      }
+      return mine ? name : null;
     }
+    return name;
   } catch (err) {
     console.error(err);
     return null;
   }
-}
-
-export function parseAmount(text) {
-  const normalized = String(text ?? '')
-    .trim()
-    .replace(/\s/g, '')
-    .replace(',', '.');
-  if (!/^\d*\.?\d+$|^\d+\.$/.test(normalized)) return NaN;
-  return Number(normalized);
 }
 
 async function resolveNameOrAddress(nameOrAddress) {

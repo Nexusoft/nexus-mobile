@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, LayoutAnimation } from 'react-native';
-import { Button, overlay } from 'react-native-paper';
+import { Button, overlay, TouchableRipple } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
@@ -8,6 +9,8 @@ import TokenName from 'components/TokenName';
 import AddressPicker from 'components/AddressPicker';
 import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
+import parseAmount from 'utils/parseAmount';
+import { selectSetting } from 'lib/settings';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -31,6 +34,31 @@ const styles = {
   section: {
     marginBottom: 30,
   },
+  contacts: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 14,
+  },
+  contact: {
+    alignItems: 'center',
+    width: 64,
+    marginRight: 6,
+    marginBottom: 6,
+    borderRadius: 10,
+  },
+  avatar: ({ theme }) => ({
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: theme.dark ? '#173445' : '#e3f5fe',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 3,
+  }),
+  fiat: {
+    marginTop: 4,
+    marginLeft: 4,
+  },
   advancedToggle: {
     alignSelf: 'flex-start',
     marginBottom: 5,
@@ -44,7 +72,53 @@ const styles = {
   }),
 };
 
-export default function SendTo({ account, setFieldValue, autoScan }) {
+const maxContactShortcuts = 5;
+
+function ContactShortcuts({ setFieldValue }) {
+  const theme = useTheme();
+  const contacts = useSelector((state) => state.contacts);
+  const list = Object.entries(contacts || {}).slice(0, maxContactShortcuts);
+  if (!list.length) return null;
+  return (
+    <View style={styles.contacts}>
+      {list.map(([name, { address }]) => (
+        <TouchableRipple
+          key={name}
+          style={styles.contact}
+          borderless
+          onPress={() => setFieldValue('nameOrAddress', address)}
+          accessibilityLabel={'Send to ' + name}
+        >
+          <View style={{ alignItems: 'center' }}>
+            <View style={styles.avatar({ theme })}>
+              <Text bold style={{ color: theme.primary }}>
+                {name.slice(0, 1).toUpperCase()}
+              </Text>
+            </View>
+            <Text size={12} numberOfLines={1}>
+              {name}
+            </Text>
+          </View>
+        </TouchableRipple>
+      ))}
+    </View>
+  );
+}
+
+function FiatValue({ account, amount }) {
+  const price = useSelector((state) => state.market.price);
+  const baseCurrency = useSelector(selectSetting('baseCurrency'));
+  const value = parseAmount(amount);
+  if (account?.token !== '0' || !price || !(value > 0)) return null;
+  return (
+    <Text sub size={13} style={styles.fiat}>
+      {'≈ '}
+      {formatNumber(value * price, { maximumFractionDigits: 2 })} {baseCurrency}
+    </Text>
+  );
+}
+
+export default function SendTo({ account, setFieldValue, autoScan, values }) {
   const theme = useTheme();
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
 
@@ -52,6 +126,7 @@ export default function SendTo({ account, setFieldValue, autoScan }) {
     <View style={styles.wrapper({ theme })}>
       <Text style={styles.heading}>Send to</Text>
 
+      <ContactShortcuts setFieldValue={setFieldValue} />
       <View style={styles.section}>
         <TextBox.Formik
           multiline
@@ -78,6 +153,7 @@ export default function SendTo({ account, setFieldValue, autoScan }) {
           keyboardType="numeric"
           autoCapitalize="none"
         />
+        <FiatValue account={account} amount={values?.amount} />
         <Button
           mode="text"
           style={styles.sendAll}
@@ -86,7 +162,7 @@ export default function SendTo({ account, setFieldValue, autoScan }) {
           }}
           labelStyle={{ fontSize: 12 }}
         >
-          Send all (
+          Max (
           {formatNumber(account.balance, { maximumFractionDigits: 6 })}{' '}
           {TokenName.from({ account })})
         </Button>
