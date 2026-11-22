@@ -54,6 +54,12 @@ const styles = {
     paddingTop: expanded ? 20 : 0,
     paddingHorizontal: '10%',
   }),
+  tokensLabel: {
+    fontSize: 12,
+    textTransform: 'uppercase',
+    marginTop: 12,
+    marginBottom: 2,
+  },
   subBalance: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -88,7 +94,7 @@ export default function BalanceSection({ filteredAccounts }) {
     filteredAccounts?.length === 1 && userExpanded === null
       ? true
       : !!userExpanded;
-  const [nxsBalances] = useSelector(selectBalances);
+  const [nxsBalances, tokenBalances] = useSelector(selectBalances);
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const hideBalances = useSelector(selectSetting('hideBalances'));
   const price = useSelector(({ market: { price } }) => price);
@@ -182,6 +188,28 @@ export default function BalanceSection({ filteredAccounts }) {
               )}
             </BalanceText>
           </View>
+          {!!tokenBalances?.length && (
+            <BalanceText style={styles.tokensLabel} sub>
+              Tokens
+            </BalanceText>
+          )}
+          {tokenBalances?.map((token) => (
+            <View style={styles.subBalance} key={token.token}>
+              <BalanceText>
+                {token.ticker ||
+                  (token.token ? token.token.slice(0, 6) + '...' : 'Token')}
+              </BalanceText>
+              <BalanceText>
+                {hideBalances
+                  ? '???'
+                  : formatNumber(
+                      (token.available || 0) +
+                        (token.unclaimed || 0) +
+                        (token.unconfirmed || 0)
+                    )}
+              </BalanceText>
+            </View>
+          ))}
         </View>
       </>
     </TouchableRipple>
