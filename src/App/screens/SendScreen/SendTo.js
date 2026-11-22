@@ -11,6 +11,7 @@ import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
 import parseAmount from 'utils/parseAmount';
 import { selectSetting } from 'lib/settings';
+import { selectMarketPrice } from 'lib/market';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -106,7 +107,7 @@ function ContactShortcuts({ setFieldValue }) {
 }
 
 function FiatValue({ account, amount }) {
-  const price = useSelector((state) => state.market.price);
+  const price = useSelector(selectMarketPrice);
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const value = parseAmount(amount);
   if (account?.token !== '0' || !price || !(value > 0)) return null;

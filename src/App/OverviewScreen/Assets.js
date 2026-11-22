@@ -8,6 +8,7 @@ import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
 import { selectSetting } from 'lib/settings';
 import formatNumber from 'utils/formatNumber';
+import { selectMarketPrice } from 'lib/market';
 
 const styles = {
   header: {
@@ -67,7 +68,7 @@ export function groupAssets(accounts) {
 export default function Assets({ accounts }) {
   const hideBalances = useSelector(selectSetting('hideBalances'));
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
-  const price = useSelector((state) => state.market.price);
+  const price = useSelector(selectMarketPrice);
   const assets = groupAssets(accounts);
   if (!assets.length) return null;
   return (
