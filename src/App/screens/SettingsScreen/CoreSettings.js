@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import { TouchableRipple, Surface } from 'react-native-paper';
 
@@ -10,7 +10,7 @@ import { useTheme } from 'lib/theme';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import SettingItem from './SettingItem';
 import commonStyles from './styles';
-import { confirm, showSuccess } from 'lib/ui';
+import { confirm, showSuccess, showError } from 'lib/ui';
 import { callAPI } from 'lib/api';
 import {
   scanFile,
@@ -18,6 +18,25 @@ import {
   ExternalDirectoryPath,
   DocumentDirectoryPath,
 } from 'react-native-fs';
+
+async function deleteCoreData(subPath, doneMessage) {
+  const coreDir =
+    (Platform.OS === 'android' ? ExternalDirectoryPath : DocumentDirectoryPath) +
+    '/Nexus/client';
+  try {
+    await callAPI('system/stop', {});
+  } catch (err) {
+    //core may already be down, still delete
+  }
+  try {
+    await unlink(coreDir + subPath);
+    if (Platform.OS === 'android') await scanFile(ExternalDirectoryPath);
+  } catch (err) {
+    showError('Could not delete: ' + (err?.message || err));
+    return;
+  }
+  showSuccess(doneMessage);
+}
 
 const styles = {
   ...commonStyles,
@@ -120,18 +139,10 @@ export default function CoreSettings() {
                   danger: true,
                 });
                 if (confirmed) {
-                  await callAPI('system/stop', {});
-                  await unlink(
-                    (Platform.OS === 'android'
-                      ? ExternalDirectoryPath + '/Nexus/client/_ADDR'
-                      : DocumentDirectoryPath) + '/Nexus/client/_ADDR'
+                  await deleteCoreData(
+                    '/_ADDR',
+                    'Addresses deleted. Close the app completely and open it again.'
                   );
-                  if (Platform.OS === 'android')
-                    await scanFile(ExternalDirectoryPath);
-                  showSuccess(
-                    'Addresses deleted. App must be closed complety and restarted.'
-                  );
-                  /* Not the best solution, but we do not expect this function to be used very ofter. */
                 }
               }}
             />
@@ -147,18 +158,10 @@ export default function CoreSettings() {
                   danger: true,
                 });
                 if (confirmed) {
-                  await callAPI('system/stop', {});
-                  await unlink(
-                    (Platform.OS === 'android'
-                      ? ExternalDirectoryPath
-                      : DocumentDirectoryPath) + '/Nexus/client'
+                  await deleteCoreData(
+                    '',
+                    'Database deleted. Close the app completely and open it again.'
                   );
-                  if (Platform.OS === 'android')
-                    await scanFile(ExternalDirectoryPath);
-                  showSuccess(
-                    'Database deleted. Please close and reopen the app.'
-                  );
-                  /* Not the best solution, but we do not expect this function to be used very often. */
                 }
               }}
             />
