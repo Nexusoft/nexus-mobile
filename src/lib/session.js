@@ -36,31 +36,25 @@ export async function refreshUserStatus() {
     });
     return status;
   } catch (err) {
-    // Don't log "Session not found" errors
+    //timeouts and other passing errors keep the current state, only a lost session logs out
     if (err?.code !== -11) {
       console.error('refresh status', err);
+      return null;
     }
-    try {
-      const {
-        settings: { savedUsername },
-      } = store.getState();
-      if (savedUsername) {
-        const { saved } = await callAPI('sessions/status/local', {
-          username: savedUsername,
-        });
-        if (saved) {
-          store.dispatch({ type: TYPE.SET_SESSION_SAVED, payload: true });
-        }
-      }
-    } catch (err) {
-      if (err?.code === -11) {
-        // Error code -11 "Session not found"
-        store.dispatch({ type: TYPE.SET_SESSION_SAVED, payload: false });
-        return null;
-      } else {
-        console.error(err);
+    const {
+      settings: { savedUsername },
+    } = store.getState();
+    let saved = false;
+    if (savedUsername) {
+      try {
+        saved = !!(
+          await callAPI('sessions/status/local', { username: savedUsername })
+        )?.saved;
+      } catch (err) {
+        saved = false;
       }
     }
+    store.dispatch({ type: TYPE.SET_SESSION_SAVED, payload: saved });
     store.dispatch({ type: TYPE.LOGOUT });
     return null;
   }
