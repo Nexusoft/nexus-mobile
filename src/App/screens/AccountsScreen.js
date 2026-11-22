@@ -16,6 +16,7 @@ import segmentAddress from 'utils/segmentAddress';
 import formatNumber from 'utils/formatNumber';
 import useRefresh from 'utils/useRefresh';
 import WalletIcon from 'icons/wallet.svg';
+import { t } from 'lib/i18n';
 
 const styles = {
   wrapper: {
@@ -92,7 +93,7 @@ export default function AccountsScreen() {
                       style={styles.accIcon}
                     />
                     <Text style={styles.accName} bold disabled={!account.name}>
-                      {account.name || 'Unnamed'}
+                      {account.name || t('Unnamed')}
                     </Text>
                   </View>
                   <Text>

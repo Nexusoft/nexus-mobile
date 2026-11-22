@@ -6,6 +6,7 @@ import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import AttentionIcon from 'components/AttentionIcon';
 import { navigate } from 'lib/navigation';
+import { t } from 'lib/i18n';
 import { useTheme, disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
 
@@ -75,11 +76,11 @@ export default function MenuItem({
             />
           )}
           <Text size={small ? 14 : 16} colorName={colorName}>
-            {label}
+            {t(label)}
           </Text>
         </View>
 
-        {comingSoon && <Text style={styles.tag({ theme })}>Coming soon</Text>}
+        {comingSoon && <Text style={styles.tag({ theme })}>{t('Coming soon')}</Text>}
         {warning && <AttentionIcon />}
       </View>
     </TouchableRipple>

@@ -12,6 +12,7 @@ import { watchAppLock, lockOnStart } from 'lib/appLock';
 import { pollMarketPrice } from 'lib/market';
 import { selectSetting } from 'lib/settings';
 import { loadEmbeddedCredentials } from 'lib/embeddedCore';
+import { setLanguage } from 'lib/i18n';
 import { createStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
 
@@ -40,6 +41,7 @@ export default function initStore() {
     // Load initialState here to avoid circular dependencies
     const initialState = await loadInitialState();
     const store = createStore(initialState);
+    store.observe(selectSetting('language'), setLanguage);
     if (selectSetting('coreMode')(store.getState()) === 'embedded') {
       await loadEmbeddedCredentials();
     }

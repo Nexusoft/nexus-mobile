@@ -7,6 +7,7 @@ import memoize from 'utils/memoize';
 export const defaultSettings = {
   // Application
   colorScheme: 'auto', // auto | light | dark
+  language: 'auto', // auto = phone language
   baseCurrency: 'USD',
   hideBalances: false,
   hideUnusedTrustAccount: true,

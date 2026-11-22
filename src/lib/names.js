@@ -1,5 +1,6 @@
 import { callAPI } from 'lib/api';
 import { createGlobalNameFee, createLocalNameFee } from 'lib/fees';
+import { t } from 'lib/i18n';
 
 const unknownName = -101;
 
@@ -32,9 +33,9 @@ export async function nameIsFree(name, { global, username }) {
 }
 
 export function nameProblem(name) {
-  if (!name) return 'Enter a name';
-  if (name.includes(':')) return 'A name cannot contain ":"';
-  if (name.length > 64) return 'At most 64 characters';
+  if (!name) return t('Enter a name');
+  if (name.includes(':')) return t('A name cannot contain ":"');
+  if (name.length > 64) return t('At most {count} characters', { count: 64 });
   return null;
 }
 

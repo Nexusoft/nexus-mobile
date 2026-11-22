@@ -16,6 +16,7 @@ import {
 } from 'lib/transactions';
 import { toggleTransactionsFilter } from 'lib/ui';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 import useRefresh from 'utils/useRefresh';
 import TransactionIcon from 'icons/transaction.svg';
 import AdjustIcon from 'icons/adjust.svg';
@@ -51,8 +52,8 @@ function dayLabel(timestamp) {
   const day = moment.unix(timestamp).startOf('day');
   const today = moment().startOf('day');
   const diff = today.diff(day, 'days');
-  if (diff === 0) return 'Today';
-  if (diff === 1) return 'Yesterday';
+  if (diff === 0) return t('Today');
+  if (diff === 1) return t('Yesterday');
   return day.format(day.year() === today.year() ? 'D MMMM' : 'D MMMM YYYY');
 }
 
@@ -86,7 +87,7 @@ function QuickFilters() {
           return (
             <Chip
               key={label}
-              label={label}
+              label={t(label)}
               active={active}
               onPress={() => {
                 if (active) return;
@@ -143,7 +144,7 @@ export default function TransactionsScreen() {
         ListEmptyComponent={
           loaded !== 'none' && !loading ? (
             <View style={styles.empty}>
-              <Text sub>No transactions here yet.</Text>
+              <Text sub>{t('No transactions here yet.')}</Text>
             </View>
           ) : null
         }

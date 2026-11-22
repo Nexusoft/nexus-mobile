@@ -12,6 +12,7 @@ import { refreshUserTokens } from 'lib/user';
 import { addressRegex } from 'consts/regex';
 import memoize from 'utils/memoize';
 import { showError } from 'lib/ui';
+import { t } from 'lib/i18n';
 
 const styles = {
   inputBox: {
@@ -83,7 +84,9 @@ export default function TokenSelector({
         submit(token);
       } else {
         showError(
-          'Invalid token name/address. Be aware that token name is case sensitive'
+          t(
+            'Invalid token name/address. Be aware that token name is case sensitive'
+          )
         );
       }
     } finally {
@@ -94,7 +97,7 @@ export default function TokenSelector({
   return (
     <Portal>
       <Dialog visible={open} onDismiss={onDismiss} style={{ maxHeight: '80%' }}>
-        <Dialog.Title>Select token</Dialog.Title>
+        <Dialog.Title>{t('Select token')}</Dialog.Title>
         <Dialog.ScrollArea>
           <ScrollView>
             <RadioButton.Group value={selectedToken} onValueChange={submit}>
@@ -121,8 +124,8 @@ export default function TokenSelector({
           <View style={styles.inputBox}>
             <Searchbar
               disabled={true}
-              placeholder="Token name/address"
-              value={searching ? 'Searching token...' : inputValue}
+              placeholder={t('Token name/address')}
+              value={searching ? t('Searching token...') : inputValue}
               onChangeText={setInputValue}
               style={styles.searchBar({ disabled: searching })}
               editable={!searching}

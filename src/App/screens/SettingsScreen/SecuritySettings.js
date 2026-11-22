@@ -18,22 +18,24 @@ import {
   disableBiometricPin,
 } from 'lib/biometric';
 import formatNumber from 'utils/formatNumber';
+import { t } from 'lib/i18n';
 import SettingItem from './SettingItem';
 import styles from './styles';
 
-const lockAfterOptions = [
-  { value: 0, display: 'Right away' },
-  { value: 30, display: '30 seconds' },
-  { value: 60, display: '1 minute' },
-  { value: 300, display: '5 minutes' },
-  { value: 900, display: '15 minutes' },
+//functions so the texts are translated at render time
+const getLockAfterOptions = () => [
+  { value: 0, display: t('Right away') },
+  { value: 30, display: t('30 seconds') },
+  { value: 60, display: t('1 minute') },
+  { value: 300, display: t('5 minutes') },
+  { value: 900, display: t('15 minutes') },
 ];
 
-const sendMaxOptions = [
-  { value: 100, display: 'Above 100' },
-  { value: 1000, display: 'Above 1,000' },
-  { value: 10000, display: 'Above 10,000' },
-  { value: 0, display: 'Never, fingerprint for every amount' },
+const getSendMaxOptions = () => [
+  { value: 100, display: t('Above {amount}', { amount: '100' }) },
+  { value: 1000, display: t('Above {amount}', { amount: '1,000' }) },
+  { value: 10000, display: t('Above {amount}', { amount: '10,000' }) },
+  { value: 0, display: t('Never, fingerprint for every amount') },
 ];
 
 //asks the PIN and checks it with the core before it goes into secure storage
@@ -42,7 +44,7 @@ async function askCheckedPin() {
   if (!pin) return null;
   const ok = await checkPin(pin);
   if (ok === false) {
-    showError('Wrong PIN');
+    showError(t('Wrong PIN'));
     return null;
   }
   return pin;
@@ -80,7 +82,7 @@ function BiometricPinSetting({ username, purpose, title, description, disabled, 
               if (!pin) return;
               const ok = await enableBiometricPin(username, pin, purpose);
               set(ok);
-              if (ok) showNotification(`${title}: on`);
+              if (ok) showNotification(t('{setting}: on', { setting: title }));
             } catch (err) {
               showError(err?.message);
             }
@@ -110,15 +112,15 @@ export default function SecuritySettings() {
   return (
     <>
       <Text style={styles.title} sub>
-        Security
+        {t('Security')}
       </Text>
       <Surface style={styles.section}>
         <SettingItem
-          title="Lock when I leave the app"
+          title={t('Lock when I leave the app')}
           description={
             hasBiometric
-              ? 'Fingerprint, face or PIN to open the wallet again'
-              : 'PIN to open the wallet again'
+              ? t('Fingerprint, face or PIN to open the wallet again')
+              : t('PIN to open the wallet again')
           }
           right={
             <Switch
@@ -131,14 +133,14 @@ export default function SecuritySettings() {
           <>
             <Divider inset={20} />
             <Select
-              options={lockAfterOptions}
+              options={getLockAfterOptions()}
               value={appLockAfter}
               updateValue={(appLockAfter) =>
                 updateSettings({ appLockAfter: Number(appLockAfter) })
               }
               render={({ display, openSelect }) => (
                 <SettingItem
-                  title="Lock after"
+                  title={t('Lock after')}
                   description={display}
                   primary
                   onPress={openSelect}
@@ -150,11 +152,11 @@ export default function SecuritySettings() {
 
         <Divider inset={20} />
         <SettingItem
-          title="Hide the app preview"
+          title={t('Hide the app preview')}
           description={
             Platform.OS === 'android'
-              ? 'No balances in the recent apps list. Screenshots of the wallet are blocked too.'
-              : 'Covers the wallet in the app switcher'
+              ? t('No balances in the recent apps list. Screenshots of the wallet are blocked too.')
+              : t('Covers the wallet in the app switcher')
           }
           right={
             <Switch
@@ -170,11 +172,11 @@ export default function SecuritySettings() {
             <BiometricPinSetting
               username={savedUsername}
               purpose="unlock"
-              title="Fingerprint / face unlock"
+              title={t('Fingerprint / face unlock')}
               description={
                 sessionSaved && savedUsername
-                  ? 'Open a saved login with your fingerprint or face instead of typing the PIN'
-                  : 'Log in with "Remember username" and "Keep me logged in" on to use this.'
+                  ? t('Open a saved login with your fingerprint or face instead of typing the PIN')
+                  : t('Log in with "Remember username" and "Keep me logged in" on to use this.')
               }
               disabled={!sessionSaved || !savedUsername}
             />
@@ -183,26 +185,28 @@ export default function SecuritySettings() {
             <BiometricPinSetting
               username={username}
               purpose="send"
-              title="Confirm sends with fingerprint"
-              description="The PIN still works as a fallback"
+              title={t('Confirm sends with fingerprint')}
+              description={t('The PIN still works as a fallback')}
               onChange={setSendOn}
             />
             {sendOn && (
               <>
                 <Divider inset={20} />
                 <Select
-                  options={sendMaxOptions}
+                  options={getSendMaxOptions()}
                   value={sendMax}
                   updateValue={(value) =>
                     updateSettings({ sendBiometricMax: Number(value) })
                   }
                   render={({ openSelect }) => (
                     <SettingItem
-                      title="Always ask for the PIN"
+                      title={t('Always ask for the PIN')}
                       description={
                         sendMax
-                          ? `For amounts above ${formatNumber(sendMax)}`
-                          : 'Never, fingerprint for every amount'
+                          ? t('For amounts above {amount}', {
+                              amount: formatNumber(sendMax),
+                            })
+                          : t('Never, fingerprint for every amount')
                       }
                       primary
                       onPress={openSelect}

@@ -1,14 +1,15 @@
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
 import { getStore } from 'store';
+import { t } from 'lib/i18n';
 
 export const selectConnected = (state) => !!state.core.info;
 
 //null on mainnet
 export const selectTestNetworkLabel = (state) => {
   const info = state.core.info;
-  if (info?.private) return 'Private network';
-  if (info?.testnet) return 'Testnet ' + info.testnet;
+  if (info?.private) return t('Private network');
+  if (info?.testnet) return t('Testnet {number}', { number: info.testnet });
   return null;
 };
 

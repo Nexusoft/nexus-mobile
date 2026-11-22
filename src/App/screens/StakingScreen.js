@@ -18,6 +18,7 @@ import {
 } from 'lib/staking';
 import { confirmPin, showError, showSuccess } from 'lib/ui';
 import { refreshUserAccounts } from 'lib/user';
+import { t } from 'lib/i18n';
 import formatNumber from 'utils/formatNumber';
 import parseAmount from 'utils/parseAmount';
 import useRefresh from 'utils/useRefresh';
@@ -105,9 +106,9 @@ function ChangeStake({ info, onChanged }) {
   const amount = parseAmount(value);
   const max = (info.stake || 0) + (info.balance || 0);
   let error = null;
-  if (value && !(amount >= 0)) error = 'Enter an amount';
-  else if (value && amount === info.stake) error = 'That is the stake you have now';
-  else if (value && amount > max) error = 'More than staked plus the trust account balance';
+  if (value && !(amount >= 0)) error = t('Enter an amount');
+  else if (value && amount === info.stake) error = t('That is the stake you have now');
+  else if (value && amount > max) error = t('More than staked plus the trust account balance');
   const lower = value && !error && amount < info.stake;
 
   const save = async () => {
@@ -118,7 +119,9 @@ function ChangeStake({ info, onChanged }) {
     try {
       await setStake(amount, pin);
       setValue('');
-      showSuccess('Stake change asked for. It is applied with the next stake block.');
+      showSuccess(
+        t('Stake change asked for. It is applied with the next stake block.')
+      );
       onChanged();
     } catch (err) {
       showError(err?.message);
@@ -130,14 +133,14 @@ function ChangeStake({ info, onChanged }) {
   return (
     <Surface style={styles.card}>
       <Text bold style={{ marginBottom: 6 }}>
-        Change stake
+        {t('Change stake')}
       </Text>
       <Text sub size={13}>
-        {`Trust account balance: ${nxs(info.balance)}. More than now comes from it, less goes back to it. To stake more, send NXS to the trust account first.`}
+        {t('Trust account balance: {balance}. More than now comes from it, less goes back to it. To stake more, send NXS to the trust account first.', { balance: nxs(info.balance) })}
       </Text>
       <TextBox
         mode="outlined"
-        label="New stake (total)"
+        label={t('New stake (total)')}
         value={value}
         onChangeText={setValue}
         keyboardType="decimal-pad"
@@ -151,12 +154,12 @@ function ChangeStake({ info, onChanged }) {
       )}
       {lower && (
         <Text sub size={12} style={{ marginTop: 4 }}>
-          Lowering the stake also lowers your trust in the same ratio.
+          {t('Lowering the stake also lowers your trust in the same ratio.')}
         </Text>
       )}
       <View style={[styles.line, { marginTop: 10, marginBottom: 0 }]}>
         <Button compact onPress={() => setValue(String(max))}>
-          Stake all
+          {t('Stake all')}
         </Button>
         <Button
           mode="contained"
@@ -165,7 +168,7 @@ function ChangeStake({ info, onChanged }) {
           loading={saving}
           onPress={save}
         >
-          Change stake
+          {t('Change stake')}
         </Button>
       </View>
     </Surface>
@@ -178,11 +181,11 @@ function StakeMinter({ info, onChanged }) {
     <Surface style={styles.card}>
       <View style={[styles.line, { marginBottom: 0 }]}>
         <View style={{ flex: 1, marginRight: 10 }}>
-          <Text bold>Stake with this core</Text>
+          <Text bold>{t('Stake with this core')}</Text>
           <Text sub size={12}>
             {info.staking
-              ? 'The core stakes for this profile now.'
-              : 'Keeps the profile unlocked for staking in the core.'}
+              ? t('The core stakes for this profile now.')
+              : t('Keeps the profile unlocked for staking in the core.')}
           </Text>
         </View>
         <Switch
@@ -247,8 +250,7 @@ export default function StakingScreen() {
       <ScreenBody>
         <View style={styles.center}>
           <Text sub style={{ textAlign: 'center' }}>
-            This profile has no trust account yet. It is made with the profile on
-            the main network; staking starts once NXS are in it and staked.
+            {t('This profile has no trust account yet. It is made with the profile on the main network; staking starts once NXS are in it and staked.')}
           </Text>
         </View>
       </ScreenBody>
@@ -257,10 +259,10 @@ export default function StakingScreen() {
 
   const fg = theme.dark ? theme.foreground : theme.onPrimary;
   const status = info.onhold
-    ? { label: 'On hold', color: '#a4720a' }
+    ? { label: t('On hold'), color: '#a4720a' }
     : info.staking
-    ? { label: 'Staking', color: '#1b9e5a' }
-    : { label: 'Not staking', color: 'rgba(0,0,0,0.25)' };
+    ? { label: t('Staking'), color: '#1b9e5a' }
+    : { label: t('Not staking'), color: 'rgba(0,0,0,0.25)' };
   const monthStart = moment().startOf('month').unix();
   const monthRewards = rewards
     .filter((r) => r.timestamp >= monthStart)
@@ -275,13 +277,15 @@ export default function StakingScreen() {
     >
       <View style={styles.hero({ theme })}>
         <Text size={13} color={fg} style={{ textTransform: 'uppercase', opacity: 0.85 }}>
-          Staked
+          {t('Staked')}
         </Text>
         <Text size={30} color={fg} style={{ marginTop: 4 }}>
           {nxs(info.stake)}
         </Text>
         <Text size={14} color={fg} style={{ opacity: 0.9 }}>
-          {`stake rate ${formatNumber(info.stakerate || 0, { maximumFractionDigits: 2 })} % a year`}
+          {t('stake rate {rate} % a year', {
+            rate: formatNumber(info.stakerate || 0, { maximumFractionDigits: 2 }),
+          })}
         </Text>
         <View style={styles.pill(status)}>
           <Text size={12} bold color="#fff">
@@ -293,42 +297,42 @@ export default function StakingScreen() {
       {lite && (
         <View style={styles.note({ theme })}>
           <Text sub size={13}>
-            This phone runs a light Nexus core, which cannot stake itself.
-            Staking runs on a full node with this profile, for example the
-            desktop wallet. You can still see and change your stake here.
+            {t('This phone runs a light Nexus core, which cannot stake itself. Staking runs on a full node with this profile, for example the desktop wallet. You can still see and change your stake here.')}
           </Text>
         </View>
       )}
       {!!info.onhold && (
         <View style={styles.note({ theme })}>
           <Text sub size={13}>
-            {`Staking starts in about ${Math.max(1, Math.round((info.holdtime || 0) / 60))} minutes, a new or changed stake waits first.`}
+            {t('Staking starts in about {minutes} minutes, a new or changed stake waits first.', { minutes: Math.max(1, Math.round((info.holdtime || 0) / 60)) })}
           </Text>
         </View>
       )}
       {!!info.change && (
         <View style={styles.note({ theme })}>
           <Text sub size={13}>
-            {`Stake change to ${nxs(info.amount)} waits for the next stake block.`}
+            {t('Stake change to {amount} waits for the next stake block.', {
+              amount: nxs(info.amount),
+            })}
           </Text>
         </View>
       )}
 
       <Surface style={styles.card}>
         <Line
-          label="Rewards this month"
+          label={t('Rewards this month')}
           value={`+${nxs(monthRewards)}`}
           color={deltaColor('+')}
         />
-        <Line label="Estimate per year" value={nxs(perYear, 2)} />
-        <Line label="Not staked yet" value={nxs(info.balance)} />
-        <Meter label="Trust weight" value={info.trustweight} />
-        <Meter label="Stake weight" value={info.stakeweight} />
+        <Line label={t('Estimate per year')} value={nxs(perYear, 2)} />
+        <Line label={t('Not staked yet')} value={nxs(info.balance)} />
+        <Meter label={t('Trust weight')} value={info.trustweight} />
+        <Meter label={t('Stake weight')} value={info.stakeweight} />
       </Surface>
 
       <Surface style={styles.card}>
         <Text bold style={{ marginBottom: 8 }}>
-          Last rewards
+          {t('Last rewards')}
         </Text>
         {rewards.length ? (
           rewards.slice(0, 10).map((r) => (
@@ -340,7 +344,7 @@ export default function StakingScreen() {
             </View>
           ))
         ) : (
-          <Text sub>No rewards yet.</Text>
+          <Text sub>{t('No rewards yet.')}</Text>
         )}
       </Surface>
 

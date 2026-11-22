@@ -3,6 +3,7 @@ import { encode } from 'base-64';
 import { getStore } from 'store';
 import { selectSetting } from 'lib/settings';
 import { loadEmbeddedCredentials } from 'lib/embeddedCore';
+import { t } from 'lib/i18n';
 
 const requestTimeoutMs = 60000;
 
@@ -59,11 +60,13 @@ async function sendRequest(config, endpoint, params) {
     );
   } catch (err) {
     if (err?.name === 'AbortError') {
-      throw { code: 'TIMEOUT', message: 'Nexus Core did not answer in time' };
+      throw { code: 'TIMEOUT', message: t('Nexus Core did not answer in time') };
     }
     throw {
       code: 'NETWORK',
-      message: 'Cannot reach Nexus Core' + (err?.message ? ': ' + err.message : ''),
+      message: err?.message
+        ? t('Cannot reach Nexus Core: {error}', { error: err.message })
+        : t('Cannot reach Nexus Core'),
     };
   } finally {
     clearTimeout(timer);
@@ -83,8 +86,8 @@ export async function callAPI(endpoint, params) {
     throw {
       code: 401,
       message: config.embedded
-        ? 'Nexus Core refused the API login, restart the app'
-        : 'Nexus Core refused the API username or password',
+        ? t('Nexus Core refused the API login, restart the app')
+        : t('Nexus Core refused the API username or password'),
     };
   }
   let content = null;
@@ -93,12 +96,14 @@ export async function callAPI(endpoint, params) {
   } catch (err) {
     throw {
       code: response.status,
-      message: `Unexpected answer from Nexus Core (HTTP ${response.status})`,
+      message: t('Unexpected answer from Nexus Core (HTTP {status})', {
+        status: response.status,
+      }),
     };
   }
   if (response.ok) {
     return content?.result;
   } else {
-    throw content?.error || { code: response.status, message: 'API error' };
+    throw content?.error || { code: response.status, message: t('API error') };
   }
 }

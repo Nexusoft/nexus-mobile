@@ -10,6 +10,7 @@ import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import QRIcon from 'icons/qr.svg';
 import { parsePaymentRequest } from 'lib/paymentRequest';
+import { t } from 'lib/i18n';
 
 const useBackHandler = useAndroidBackHandler || (() => {});
 
@@ -86,7 +87,7 @@ export default function QRScanner({ setAddress, style, autoOpen }) {
               },
             ]}
           >
-            <Text style={styles.title}>Scan QR code</Text>
+            <Text style={styles.title}>{t('Scan QR code')}</Text>
             <View style={[styles.backWrapper, { top: insets.top }]}>
               <IconButton
                 icon="arrow-left"

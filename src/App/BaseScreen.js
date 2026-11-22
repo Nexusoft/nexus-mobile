@@ -36,6 +36,7 @@ import PinPad from 'components/PinPad';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
 import { showError, showNotification, confirm } from 'lib/ui';
+import { t } from 'lib/i18n';
 import { updateSettings } from 'lib/settings';
 import * as TYPE from 'consts/actionTypes';
 import { getStore } from 'store';
@@ -74,6 +75,12 @@ const styles = {
   },
 };
 
+//stack options set here skip the navigator, so the title is translated here
+const translateTitle = (options) =>
+  typeof options.title === 'string'
+    ? { ...options, title: t(options.title) }
+    : options;
+
 const doubleBackTime = 3000;
 function BaseScreenContainer({ unStyled, children }) {
   const theme = useTheme();
@@ -108,7 +115,7 @@ function BaseScreenContainer({ unStyled, children }) {
           setSnackbarVisible(false);
         }}
       >
-        Press back again to close the app
+        {t('Press back again to close the app')}
       </Snackbar>
     </View>
   );
@@ -129,7 +136,7 @@ function DisconnectedBase() {
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Connecting to Nexus Core...
+        {t('Connecting to Nexus Core...')}
       </Text>
       <Button
         mode="outlined"
@@ -145,7 +152,7 @@ function DisconnectedBase() {
         }}
         labelStyle={theme.dark ? undefined : { color: theme.onPrimary }}
       >
-        {refreshing ? 'Refreshing...' : 'Refresh'}
+        {refreshing ? t('Refreshing...') : t('Refresh')}
       </Button>
     </BaseScreenContainer>
   );
@@ -183,7 +190,9 @@ function UnlockingBase() {
         await disableBiometricUnlock(savedUsername);
         setCanBiometric(false);
         showError(
-          'Fingerprint / face unlock was turned off because the saved PIN no longer works. Enter your PIN.'
+          t(
+            'Fingerprint / face unlock was turned off because the saved PIN no longer works. Enter your PIN.'
+          )
         );
       } else {
         showError(friendlyLoginError(err));
@@ -215,14 +224,14 @@ function UnlockingBase() {
       <BaseScreenContainer>
         <SvgIcon icon={UserIcon} size={56} color={color} />
         <Text style={styles.username} size={24} color={color}>
-          Welcome back, {savedUsername}
+          {t('Welcome back, {username}', { username: savedUsername })}
         </Text>
         {useKeyboard ? (
           <TextBox
             mode="flat"
             style={styles.pinInput}
             background={theme.dark ? 'background' : 'primary'}
-            label="Enter your PIN"
+            label={t('Enter your PIN')}
             value={pin}
             onChangeText={setPin}
             onSubmitEditing={() => unlock()}
@@ -251,7 +260,7 @@ function UnlockingBase() {
             theme.dark ? undefined : { backgroundColor: theme.onPrimary },
           ]}
           icon={(props) => <SvgIcon icon={UnlockIcon} {...props} />}
-          label={loading ? 'Unlocking...' : 'Unlock wallet'}
+          label={loading ? t('Unlocking...') : t('Unlock wallet')}
         />
         {canBiometric && !loading && (
           <Button
@@ -260,7 +269,7 @@ function UnlockingBase() {
             labelStyle={{ fontSize: 12 }}
             onPress={unlockWithBiometric}
           >
-            Use fingerprint / face
+            {t('Use fingerprint / face')}
           </Button>
         )}
         <Button
@@ -274,7 +283,7 @@ function UnlockingBase() {
             });
           }}
         >
-          Log in as another user
+          {t('Log in as another user')}
         </Button>
       </BaseScreenContainer>
     </TouchableWithoutFeedback>
@@ -290,14 +299,13 @@ function UnconfirmedUserBase() {
     <BaseScreenContainer>
       <ActivityIndicator animating color={color} />
       <Text style={styles.creatingText} sub color={color} size={18}>
-        User registration for{' '}
-        <Text bold color={color}>
-          {username}
-        </Text>{' '}
-        is waiting to be confirmed on Nexus blockchain...
+        {t(
+          'User registration for {username} is waiting to be confirmed on Nexus blockchain...',
+          { username }
+        )}
       </Text>
       <InfoField
-        label="Transaction ID"
+        label={t('Transaction ID')}
         color={color}
         control={
           <Button
@@ -307,10 +315,10 @@ function UnconfirmedUserBase() {
             labelStyle={{ fontSize: 12 }}
             onPress={() => {
               Clipboard.setString(txid);
-              showNotification('Copied to clipboard');
+              showNotification(t('Copied to clipboard'));
             }}
           >
-            Copy
+            {t('Copy')}
           </Button>
         }
         value={
@@ -339,7 +347,7 @@ function SynchronizingBase() {
         size={24}
         style={{ textAlign: 'center', marginTop: 15 }}
       >
-        Initializing database...
+        {t('Initializing database...')}
       </Text>
       <Text
         sub
@@ -347,7 +355,7 @@ function SynchronizingBase() {
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Completed {syncInfo?.completed ?? 0}%
+        {t('Completed {percent}%', { percent: syncInfo?.completed ?? 0 })}
       </Text>
       <Text
         sub
@@ -355,7 +363,9 @@ function SynchronizingBase() {
         size={18}
         style={{ textAlign: 'center' }}
       >
-        Est. time remaining: {syncInfo?.timeRemaining ?? '...'}
+        {t('Est. time remaining: {time}', {
+          time: syncInfo?.timeRemaining ?? '...',
+        })}
       </Text>
 
       <Button
@@ -368,11 +378,12 @@ function SynchronizingBase() {
         }}
         onPress={async () => {
           const confirmed = await confirm({
-            title: 'Ignore database initialization?',
-            message:
-              'When the app is initializing the blockchain database, login might not work as intended and inaccurate balances might be shown.\nAre you sure you want to ignore this process and proceed to use the app anyway?',
-            cancelLabel: 'Stay and wait',
-            confirmLabel: 'Ignore',
+            title: t('Ignore database initialization?'),
+            message: t(
+              'When the app is initializing the blockchain database, login might not work as intended and inaccurate balances might be shown.\nAre you sure you want to ignore this process and proceed to use the app anyway?'
+            ),
+            cancelLabel: t('Stay and wait'),
+            confirmLabel: t('Ignore'),
             danger: true,
           });
           if (confirmed) {
@@ -380,7 +391,7 @@ function SynchronizingBase() {
           }
         }}
       >
-        Ignore
+        {t('Ignore')}
       </Button>
     </BaseScreenContainer>
   );
@@ -400,7 +411,7 @@ function IndexingBase() {
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Downloading and Indexing Sigchain...
+        {t('Downloading and Indexing Sigchain...')}
       </Text>
     </BaseScreenContainer>
   );
@@ -419,13 +430,13 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
         contactSearch,
         route,
       });
-      navigation.setOptions(options);
+      navigation.setOptions(translateTitle(options));
     } else {
       const options = UnauthenticatedBase.stackOptions({
         theme,
         route,
       });
-      navigation.setOptions(options);
+      navigation.setOptions(translateTitle(options));
     }
   }, [route, navigation, theme, loggedIn, txFilterOpen, contactSearch]);
 }

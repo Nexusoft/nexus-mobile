@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Snackbar } from 'react-native-paper';
 
 import { dismissNotification } from 'lib/ui';
+import { t } from 'lib/i18n';
 
 function Notification({ notification }) {
   const [closing, setClosing] = React.useState(false);
@@ -17,7 +18,7 @@ function Notification({ notification }) {
     <Snackbar
       duration={5000}
       action={{
-        label: 'Dismiss',
+        label: t('Dismiss'),
         onPress: dismiss,
       }}
       {...notification.options}

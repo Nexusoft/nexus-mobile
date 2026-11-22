@@ -5,6 +5,7 @@ import { shadow } from 'react-native-paper';
 import Text from 'components/Text';
 import SvgIcon from 'components/SvgIcon';
 import { useTheme, disabledColor } from 'lib/theme';
+import { t } from 'lib/i18n';
 import segmentAddress from 'utils/segmentAddress';
 import WalletIcon from 'icons/wallet.svg';
 
@@ -45,7 +46,7 @@ export default function SendFrom({ account }) {
   return (
     <View style={styles.wrapper({ theme })}>
       <Text color={color} style={styles.heading}>
-        Send from
+        {t('Send from')}
       </Text>
       {!!account && (
         <>
@@ -57,7 +58,7 @@ export default function SendFrom({ account }) {
               style={{ marginRight: 8 }}
             />
             <Text bold color={color} size={16} disabled={!account.name}>
-              {account.name || 'Unnamed'}
+              {account.name || t('Unnamed')}
             </Text>
           </View>
           <View style={styles.addressBox({ theme })}>

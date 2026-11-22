@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 
 import Portal from 'components/Portal';
 import Dialog from 'components/Dialog';
@@ -24,14 +25,14 @@ export default function ErrorDialog({ message, onDismiss, ...rest }) {
             size={20}
             style={{ marginRight: 5 }}
           />{' '}
-          Error
+          {t('Error')}
         </Dialog.Title>
         <Dialog.Content>
-          <Text>{message || 'Unknown error'}</Text>
+          <Text>{message || t('Unknown error')}</Text>
         </Dialog.Content>
         <Dialog.Actions>
           <Button mode="text" onPress={onDismiss}>
-            Dismiss
+            {t('Dismiss')}
           </Button>
         </Dialog.Actions>
       </Dialog>

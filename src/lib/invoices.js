@@ -1,4 +1,5 @@
 import { callAPI } from 'lib/api';
+import { t } from 'lib/i18n';
 
 const sigchainNotSynced = -23;
 const invoiceTransferNotFound = -247;
@@ -97,10 +98,12 @@ export async function cancelInvoice(address, pin) {
   }
   //same as the core: void the transfer of the invoice (its condition lets the issuer take it back)
   if ((await fetchInvoice(address)).status !== 'OUTSTANDING') {
-    throw new Error('This invoice is not open any more');
+    throw new Error(t('This invoice is not open any more'));
   }
   const txid = await invoiceTxid(address);
-  if (!txid) throw new Error('Could not find the transaction of this invoice');
+  if (!txid) {
+    throw new Error(t('Could not find the transaction of this invoice'));
+  }
   return await callAPI('finance/void/transaction', { txid, pin });
 }
 
@@ -111,9 +114,10 @@ export function invoiceTicker(invoice, accounts) {
   return acc?.ticker || invoice.token.slice(0, 6) + '...';
 }
 
-export const statusLabel = {
-  OUTSTANDING: 'Open',
-  PAID: 'Paid',
-  CANCELLED: 'Cancelled',
-  REJECTED: 'Rejected',
-};
+//called at render, so the labels follow the language
+export const statusLabel = () => ({
+  OUTSTANDING: t('Open'),
+  PAID: t('Paid'),
+  CANCELLED: t('Cancelled'),
+  REJECTED: t('Rejected'),
+});

@@ -4,6 +4,7 @@ import { Surface } from 'react-native-paper';
 import Divider from 'components/Divider';
 import InfoField from 'components/InfoField';
 import formatNumber from 'utils/formatNumber';
+import { t } from 'lib/i18n';
 
 const styles = {
   wrapper: {
@@ -13,19 +14,20 @@ const styles = {
   },
 };
 
-const labels = {
-  OP: 'Operation',
-  from: 'From',
-  to: 'To',
-  account: 'Account',
-  destination: 'Destination',
-  address: 'Address',
-  amount: 'Amount',
-  claimed: 'Claimed',
-  reference: 'Reference',
-  token: 'Token',
-  conditions: 'Conditions',
-};
+//a function so the labels are translated at render time
+const getLabels = () => ({
+  OP: t('Operation'),
+  from: t('From'),
+  to: t('To'),
+  account: t('Account'),
+  destination: t('Destination'),
+  address: t('Address'),
+  amount: t('Amount'),
+  claimed: t('Claimed'),
+  reference: t('Reference'),
+  token: t('Token'),
+  conditions: t('Conditions'),
+});
 
 const hiddenKeys = ['id', 'ticker', 'token_name'];
 
@@ -38,10 +40,13 @@ function describeConditions(conditions) {
   if (!match) return null;
   const seconds = Number(match[1]);
   const days = seconds / 86400;
-  const span = Number.isInteger(days)
-    ? `${days} day${days === 1 ? '' : 's'}`
-    : `${Math.round(seconds / 3600)} hours`;
-  return `The recipient can claim it within ${span}, after that the sender can take it back.`;
+  if (!Number.isInteger(days)) {
+    return t('The recipient can claim it within {hours} hours, after that the sender can take it back.', { hours: Math.round(seconds / 3600) });
+  }
+  if (days === 1) {
+    return t('The recipient can claim it within 1 day, after that the sender can take it back.');
+  }
+  return t('The recipient can claim it within {days} days, after that the sender can take it back.', { days });
 }
 
 function registerText(value) {
@@ -50,7 +55,9 @@ function registerText(value) {
     let name = value.namespace
       ? `${value.namespace}::${value.name}`
       : value.name;
-    if (value.local && !value.mine) name += " (another user's local name)";
+    if (value.local && !value.mine) {
+      name = t("{name} (another user's local name)", { name });
+    }
     lines.push(name);
   }
   if (value.address) lines.push(value.address);
@@ -77,6 +84,7 @@ function fieldValue(key, value, contract) {
 
 export default function ContractDetails({ contract }) {
   if (!contract) return null;
+  const labels = getLabels();
   const entries = Object.entries(contract).filter(
     ([key, value]) =>
       !hiddenKeys.includes(key) && value !== undefined && value !== null

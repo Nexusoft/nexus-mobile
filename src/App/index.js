@@ -28,6 +28,7 @@ import BackgroundTimer from 'react-native-background-timer';
 
 import { selectLoggedIn, refreshUserSync } from 'lib/user';
 import { selectSetting } from 'lib/settings';
+import { useSelector } from 'react-redux';
 import { refreshCoreInfo } from 'lib/coreInfo';
 
 // Ignore the warning for long timer
@@ -87,8 +88,10 @@ async function checkPermissions() {
 
 function App() {
   const theme = useTheme();
+  //a language change draws every screen again
+  const language = useSelector(selectSetting('language'));
   return (
-    <View style={styles.container({ theme })}>
+    <View key={language} style={styles.container({ theme })}>
       <StatusBar
         barStyle="light-content"
         backgroundColor={

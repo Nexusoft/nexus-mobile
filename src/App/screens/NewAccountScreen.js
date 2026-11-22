@@ -16,6 +16,7 @@ import { goBack } from 'lib/navigation';
 import { createLocalNameFee } from 'lib/fees';
 import { useTheme, disabledColor } from 'lib/theme';
 import segmentAddress from 'utils/segmentAddress';
+import { t } from 'lib/i18n';
 
 const styles = {
   tokenSection: {
@@ -76,7 +77,7 @@ export default function NewAccountScreen() {
             <View style={styles.tokenSection}>
               <View style={styles.tokenNameSelect}>
                 <Text sub style={styles.tokenLabel}>
-                  Account token:
+                  {t('Account token:')}
                 </Text>
                 <Button
                   mode="text"
@@ -102,10 +103,12 @@ export default function NewAccountScreen() {
             <TextBox.Formik
               autoFocus
               name="name"
-              label="Account name (optional)"
+              label={t('Account name (optional)')}
             />
             <Text sub style={{ textAlign: 'center', marginTop: 30 }}>
-              Fee: {values.name ? createLocalNameFee : 0} NXS
+              {t('Fee: {fee} NXS', {
+                fee: values.name ? createLocalNameFee : 0,
+              })}
             </Text>
             <FAB
               mode="contained"
@@ -113,7 +116,7 @@ export default function NewAccountScreen() {
               loading={isSubmitting}
               style={{ marginTop: 10 }}
               onPress={handleSubmit}
-              label="Create account"
+              label={t('Create account')}
             />
 
             <TokenSelector

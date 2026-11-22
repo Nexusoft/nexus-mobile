@@ -7,6 +7,7 @@ import { getDeltaSign } from 'lib/contracts';
 import { refreshUserAccounts, selectLoggedIn } from 'lib/user';
 import { getStore, observeStore } from 'store';
 import { showError } from 'lib/ui';
+import { t } from 'lib/i18n';
 import formatNumber from 'utils/formatNumber';
 
 //a history download can add hundreds at once, older ones are not news
@@ -153,7 +154,7 @@ export async function loadTransactions({ reload } = { reload: false }) {
       transactions = await callAPI('profiles/transactions/master', params);
     } catch (err) {
       if (seq === txRequestSeq) {
-        showError(err?.message || 'Could not load transactions');
+        showError(err?.message || t('Could not load transactions'));
       }
       return;
     }
@@ -340,7 +341,7 @@ export function watchNewTransactions() {
             if (tx.confirmations <= 5) {
               scheduleNotificationAsync({
                 content: {
-                  title: 'New transaction',
+                  title: t('New transaction'),
                   body: changeLines.join(' \n'),
                   data: { type: 'new_transaction', txid: tx.txid },
                 },

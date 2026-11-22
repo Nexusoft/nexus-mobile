@@ -12,6 +12,7 @@ import baseCurrencies from 'consts/baseCurrencies';
 import SettingItem from './SettingItem';
 import commonStyles from './styles';
 import formatNumber from 'utils/formatNumber';
+import { languages, resolveLanguage, t } from 'lib/i18n';
 
 const styles = {
   ...commonStyles,
@@ -20,24 +21,35 @@ const styles = {
   },
 };
 
-const themeOptions = [
+//a function so the texts are translated at render time
+const getThemeOptions = () => [
   {
     value: 'auto',
-    display: 'Auto',
+    display: t('Auto'),
   },
   {
     value: 'dark',
-    display: 'Dark',
+    display: t('Dark'),
   },
   {
     value: 'light',
-    display: 'Light',
+    display: t('Light'),
   },
 ];
 
 export default function ApplicationSettings() {
   const loggedIn = useSelector(selectLoggedIn);
   const colorScheme = useSelector(selectSetting('colorScheme'));
+  const language = useSelector(selectSetting('language'));
+  const languageOptions = [
+    {
+      value: 'auto',
+      display: t('Phone language ({name})', {
+        name: languages[resolveLanguage('auto')],
+      }),
+    },
+    ...Object.entries(languages).map(([value, display]) => ({ value, display })),
+  ];
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const hideBalances = useSelector(selectSetting('hideBalances'));
   const ignoreSyncScreen = useSelector(selectSetting('ignoreSyncScreen'));
@@ -52,18 +64,35 @@ export default function ApplicationSettings() {
   return (
     <>
       <Text style={styles.title} sub>
-        Application
+        {t('Application')}
       </Text>
       <Surface style={styles.section}>
         <Select
-          options={themeOptions}
+          options={languageOptions}
+          value={language}
+          updateValue={(language) => {
+            updateSettings({ language });
+          }}
+          render={({ display, openSelect }) => (
+            <SettingItem
+              title={t('Language')}
+              description={display}
+              primary
+              onPress={openSelect}
+            />
+          )}
+        />
+
+        <Divider inset={20} />
+        <Select
+          options={getThemeOptions()}
           value={colorScheme}
           updateValue={(colorScheme) => {
             updateSettings({ colorScheme });
           }}
           render={({ display, openSelect }) => (
             <SettingItem
-              title="Color scheme"
+              title={t('Color scheme')}
               description={display}
               primary
               onPress={openSelect}
@@ -82,7 +111,7 @@ export default function ApplicationSettings() {
               }}
               render={({ display, openSelect }) => (
                 <SettingItem
-                  title="Base currency"
+                  title={t('Base currency')}
                   description={`${display}  ${pricePer}/NXS`}
                   primary
                   onPress={openSelect}
@@ -92,8 +121,8 @@ export default function ApplicationSettings() {
 
             <Divider inset={20} />
             <SettingItem
-              title="Hide balances"
-              description="Hide balances on Overview screen"
+              title={t('Hide balances')}
+              description={t('Hide balances on Overview screen')}
               right={
                 <Switch
                   value={hideBalances}
@@ -106,8 +135,8 @@ export default function ApplicationSettings() {
 
             <Divider inset={20} />
             <SettingItem
-              title="Hide unused trust account"
-              description="Hide trust account on Overview screen if account is not used"
+              title={t('Hide unused trust account')}
+              description={t('Hide trust account on Overview screen if account is not used')}
               right={
                 <Switch
                   value={hideUnusedTrustAccount}
@@ -122,8 +151,8 @@ export default function ApplicationSettings() {
         )}
 
         <SettingItem
-          title="Ignore database initialization"
-          description="Don't show the 'Initializing database' screen when the app initializes the blockchain database."
+          title={t('Ignore database initialization')}
+          description={t("Don't show the 'Initializing database' screen when the app initializes the blockchain database.")}
           right={
             <Switch
               value={ignoreSyncScreen}

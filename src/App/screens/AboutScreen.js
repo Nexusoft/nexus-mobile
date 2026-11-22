@@ -8,6 +8,7 @@ import InfoField from 'components/InfoField';
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 
 import { version, builddate, builddatecore } from '../../../package.json'; //not too happy about this
 
@@ -71,13 +72,21 @@ export default function CoreInfoScreen() {
   return (
     <ScreenBody>
       <Surface style={styles.infoSection}>
-        <InfoField inline label="Wallet version" value={version} />
+        <InfoField inline label={t('Wallet version')} value={version} />
         <Divider />
-        <InfoField inline label="Wallet build date" value={builddate} />
+        <InfoField inline label={t('Wallet build date')} value={builddate} />
         <Divider />
-        <InfoField inline label="Embedded core version" value={coreVer} />
+        <InfoField
+          inline
+          label={t('Embedded core version')}
+          value={coreVer}
+        />
         <Divider />
-        <InfoField inline label="Embedded core build date" value={coreDate} />
+        <InfoField
+          inline
+          label={t('Embedded core build date')}
+          value={coreDate}
+        />
       </Surface>
 
       <View style={styles.legal}>
@@ -103,15 +112,14 @@ export default function CoreInfoScreen() {
         <View style={styles.section}>
           <View style={styles.paragraph}>
             <Text bold style={styles.center}>
-              THIS IS EXPERIMENTAL SOFTWARE AND THE NEXUS EMBASSY HOLDS NO
-              LIABILITY FOR THE USE OF THIS SOFTWARE
+              {t('THIS IS EXPERIMENTAL SOFTWARE AND THE NEXUS EMBASSY HOLDS NO LIABILITY FOR THE USE OF THIS SOFTWARE')}
             </Text>
           </View>
         </View>
 
         <View style={styles.section}>
           <Text bold style={styles.header}>
-            License Agreement
+            {t('License Agreement')}
           </Text>
           <Text style={styles.paragraph}>Copyright 2021 Nexus</Text>
           <Text style={styles.paragraph}>
@@ -141,7 +149,7 @@ export default function CoreInfoScreen() {
 
         <View style={styles.section}>
           <Text bold style={styles.header}>
-            Open source credits
+            {t('Open source credits')}
           </Text>
 
           <View style={[styles.paragraph, { flexDirection: 'row' }]}>
@@ -173,7 +181,7 @@ export default function CoreInfoScreen() {
           </View>
 
           <View style={styles.paragraph}>
-            <Text style={styles.center}>Icons made by</Text>
+            <Text style={styles.center}>{t('Icons made by')}</Text>
             <View
               style={{
                 flexDirection: 'row',
@@ -206,7 +214,7 @@ export default function CoreInfoScreen() {
               </Link>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text>from </Text>
+              <Text>{t('from')} </Text>
               <Link url="https://www.flaticon.com/">www.flaticon.com</Link>
             </View>
           </View>

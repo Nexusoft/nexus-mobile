@@ -12,6 +12,7 @@ import TextBox from 'components/TextBox';
 import TokenName from 'components/TokenName';
 import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import { useTheme, disabledColor } from 'lib/theme';
+import { t } from 'lib/i18n';
 import { goBack } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { showNotification, showError } from 'lib/ui';
@@ -149,7 +150,7 @@ export default function ConfirmSendScreen({ route }) {
       showError(err && err.message);
       return;
     }
-    showNotification('Transaction sent');
+    showNotification(t('Transaction sent'));
     goBack(); // go back from ConfirmSend screen to Send screen
     goBack(); // go back from Send screen
   };
@@ -159,7 +160,7 @@ export default function ConfirmSendScreen({ route }) {
       const pin = await readPinWithBiometric(
         username,
         'send',
-        'Confirm the send'
+        t('Confirm the send')
       );
       if (!pin) return;
       //PIN changed since it was stored
@@ -167,7 +168,7 @@ export default function ConfirmSendScreen({ route }) {
         await disableBiometricPin(username, 'send');
         setCanBiometric(false);
         showError(
-          'Sending with fingerprint was turned off because the saved PIN no longer works. Enter your PIN.'
+          t('Sending with fingerprint was turned off because the saved PIN no longer works. Enter your PIN.')
         );
         return;
       }
@@ -180,7 +181,7 @@ export default function ConfirmSendScreen({ route }) {
     <ScreenBody style={styles.wrapper} surface>
       <View style={styles.amountSection}>
         <Text style={styles.label} sub>
-          You're sending
+          {t("You're sending")}
         </Text>
         <Text style={styles.amount}>
           {formatNumber(amount, { maximumFractionDigits: 6 })}{' '}
@@ -190,12 +191,12 @@ export default function ConfirmSendScreen({ route }) {
 
       <View style={styles.fromTo}>
         <Text style={styles.label} sub>
-          From
+          {t('From')}
         </Text>
         <View style={styles.accountInfo}>
           <SvgIcon icon={WalletIcon} size={16} />
           <Text bold style={styles.name} disabled={!account.name}>
-            {account.name || 'Unnamed'}
+            {account.name || t('Unnamed')}
           </Text>
         </View>
         <View style={styles.addressBox({ theme })}>
@@ -207,7 +208,7 @@ export default function ConfirmSendScreen({ route }) {
 
       <View style={styles.fromTo}>
         <Text style={styles.label} sub>
-          To
+          {t('To')}
         </Text>
         {!!(recipient.name || recipient.contactName) && (
           <View style={styles.accountInfo}>
@@ -230,15 +231,15 @@ export default function ConfirmSendScreen({ route }) {
       <View style={styles.claimNote({ theme })}>
         <Text sub size={13}>
           {toOwnAccount
-            ? 'This goes to one of your own accounts.'
-            : 'The recipient has 7 days to claim this payment. If it is not claimed by then, you can take it back.'}
+            ? t('This goes to one of your own accounts.')
+            : t('The recipient has 7 days to claim this payment. If it is not claimed by then, you can take it back.')}
         </Text>
       </View>
 
       {(!!reference || reference === 0) && (
         <View style={styles.referenceSection}>
           <Text style={styles.label} sub size={16}>
-            Reference number
+            {t('Reference number')}
           </Text>
           <Text style={styles.referenceNo}>{reference}</Text>
         </View>
@@ -249,7 +250,7 @@ export default function ConfirmSendScreen({ route }) {
           pin: '',
         }}
         validationSchema={yup.object().shape({
-          pin: yup.string().required('Required!'),
+          pin: yup.string().required(t('Required!')),
         })}
         onSubmit={({ pin }) => send(pin)}
       >
@@ -257,7 +258,7 @@ export default function ConfirmSendScreen({ route }) {
           <>
             <View style={styles.pinSection}>
               <Text sub style={styles.note}>
-                Double check your transaction before confirming
+                {t('Double check your transaction before confirming')}
               </Text>
 
               {canBiometric && (
@@ -271,14 +272,18 @@ export default function ConfirmSendScreen({ route }) {
                   )}
                   onPress={sendWithBiometric}
                 >
-                  Confirm with fingerprint
+                  {t('Confirm with fingerprint')}
                 </Button>
               )}
 
               <TextBox.Formik
                 mode="outlined"
                 name="pin"
-                label={canBiometric ? 'Or enter your PIN' : 'Enter your PIN to confirm'}
+                label={
+                  canBiometric
+                    ? t('Or enter your PIN')
+                    : t('Enter your PIN to confirm')
+                }
                 background={['surface', 0]}
                 secure
                 keyboardType={
@@ -299,7 +304,7 @@ export default function ConfirmSendScreen({ route }) {
                   goBack();
                 }}
               >
-                Cancel
+                {t('Cancel')}
               </Button>
 
               <FAB
@@ -312,7 +317,7 @@ export default function ConfirmSendScreen({ route }) {
                 onPress={handleSubmit}
                 loading={isSubmitting || sending}
                 disabled={isSubmitting || sending}
-                label={isSubmitting || sending ? 'Sending...' : 'Send'}
+                label={isSubmitting || sending ? t('Sending...') : t('Send')}
               />
             </View>
           </>

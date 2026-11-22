@@ -5,6 +5,7 @@ import Text from 'components/Text';
 import TokenName from 'components/TokenName';
 import { getDeltaSign, deltaColor } from 'lib/contracts';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
 
@@ -48,8 +49,8 @@ const styles = {
 };
 
 const kindColors = {
-  in: { light: '#def5e8', dark: '#1f3d2e', fg: '#1b9e5a', glyph: '↙' },
-  out: { light: '#fde4e2', dark: '#45251f', fg: '#d9534f', glyph: '↗' },
+  in: { light: '#def5e8', dark: '#1f3d2e', fg: '#1b9e5a', glyph: '\u2199' },
+  out: { light: '#fde4e2', dark: '#45251f', fg: '#d9534f', glyph: '\u2197' },
   stake: { light: '#e3f5fe', dark: '#173445', fg: '#0789c2', glyph: '★' },
   other: { light: '#eef1f5', dark: '#2a3038', fg: '#6b7685', glyph: '•' },
 };
@@ -81,9 +82,9 @@ function creditSource(contract) {
     case 'DEBIT':
       return registerLabel(contract.from || contract.to);
     case 'LEGACY':
-      return 'Legacy transaction';
+      return t('Legacy transaction');
     case 'COINBASE':
-      return 'Mining reward';
+      return t('Mining reward');
     default:
       return registerLabel(contract.from);
   }
@@ -95,37 +96,55 @@ export function describeContract(contract) {
       return {
         kind: 'out',
         title: registerLabel(contract.to),
-        action: 'Sent from ' + registerLabel(contract.from),
+        action: t('Sent from {account}', {
+          account: registerLabel(contract.from),
+        }),
       };
     case 'CREDIT':
       return {
         kind: 'in',
         title: creditSource(contract),
-        action: 'Received to ' + registerLabel(contract.to),
+        action: t('Received to {account}', {
+          account: registerLabel(contract.to),
+        }),
       };
     case 'LEGACY':
       return {
         kind: 'out',
         title: shortAddress(contract.to?.address),
-        action: 'Sent to a legacy address',
+        action: t('Sent to a legacy address'),
       };
     case 'FEE':
       return {
         kind: 'out',
-        title: 'Fee',
-        action: 'from ' + registerLabel(contract.from),
+        title: t('Fee'),
+        action: t('from {account}', { account: registerLabel(contract.from) }),
       };
     case 'TRUST':
-      return { kind: 'stake', title: 'Staking reward', action: 'Trust' };
+      return {
+        kind: 'stake',
+        title: t('Staking reward'),
+        action: t('Trust'),
+      };
     case 'GENESIS':
-      return { kind: 'stake', title: 'Staking started', action: 'Genesis' };
+      return {
+        kind: 'stake',
+        title: t('Staking started'),
+        action: t('Genesis'),
+      };
     case 'COINBASE':
-      return { kind: 'in', title: 'Mining reward', action: 'Coinbase' };
+      return {
+        kind: 'in',
+        title: t('Mining reward'),
+        action: t('Coinbase'),
+      };
     case 'MIGRATE':
       return {
         kind: 'in',
-        title: 'Migrated from legacy',
-        action: 'to ' + (contract.account_name || shortAddress(contract.account)),
+        title: t('Migrated from legacy'),
+        action: t('to {account}', {
+          account: contract.account_name || shortAddress(contract.account),
+        }),
       };
     case 'CREATE': {
       const what =
@@ -134,7 +153,7 @@ export function describeContract(contract) {
           : (contract.type || 'register').toLowerCase();
       return {
         kind: 'other',
-        title: 'Created ' + what,
+        title: t('Created {type}', { type: what }),
         action: shortAddress(contract.address),
       };
     }
@@ -142,25 +161,33 @@ export function describeContract(contract) {
     case 'APPEND':
       return {
         kind: 'other',
-        title: 'Updated ' + registerLabel({ address: contract.address }),
-        action: contract.OP === 'WRITE' ? 'Write' : 'Append',
+        title: t('Updated {register}', {
+          register: registerLabel({ address: contract.address }),
+        }),
+        action: contract.OP === 'WRITE' ? t('Write') : t('Append'),
       };
     case 'TRANSFER':
       return {
         kind: 'other',
-        title: 'Transferred ' + registerLabel({ address: contract.address }),
-        action: 'to ' + registerLabel({ address: contract.destination }),
+        title: t('Transferred {register}', {
+          register: registerLabel({ address: contract.address }),
+        }),
+        action: t('to {account}', {
+          account: registerLabel({ address: contract.destination }),
+        }),
       };
     case 'CLAIM':
       return {
         kind: 'other',
-        title: 'Claimed ' + registerLabel({ address: contract.address }),
-        action: 'Claim',
+        title: t('Claimed {register}', {
+          register: registerLabel({ address: contract.address }),
+        }),
+        action: t('Claim'),
       };
     case 'AUTHORIZE':
       return {
         kind: 'other',
-        title: 'Authorized transaction',
+        title: t('Authorized transaction'),
         action: shortAddress(contract.txid),
       };
     default:
@@ -193,7 +220,7 @@ export default function Contract({ contract, time, pending }) {
           {pending && (
             <View style={styles.pending}>
               <Text size={11} style={{ color: '#a4720a' }}>
-                Pending
+                {t('Pending')}
               </Text>
             </View>
           )}

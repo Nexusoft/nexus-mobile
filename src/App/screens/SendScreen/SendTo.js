@@ -8,6 +8,7 @@ import TextBox from 'components/TextBox';
 import TokenName from 'components/TokenName';
 import AddressPicker from 'components/AddressPicker';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 import formatNumber from 'utils/formatNumber';
 import parseAmount from 'utils/parseAmount';
 import { selectSetting } from 'lib/settings';
@@ -94,7 +95,7 @@ function ContactShortcuts({ setFieldValue }) {
           style={styles.contact}
           borderless
           onPress={() => setFieldValue('nameOrAddress', address)}
-          accessibilityLabel={'Send to ' + name}
+          accessibilityLabel={t('Send to {name}', { name })}
         >
           <View style={{ alignItems: 'center' }}>
             <View style={styles.avatar({ theme })}>
@@ -145,10 +146,10 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
 
   return (
     <View style={styles.wrapper({ theme })}>
-      <Text style={styles.heading}>Send to</Text>
+      <Text style={styles.heading}>{t('Send to')}</Text>
       {!!values?.requestLabel && (
         <Text sub style={styles.requestLabel}>
-          Payment request: {values.requestLabel}
+          {t('Payment request: {label}', { label: values.requestLabel })}
         </Text>
       )}
 
@@ -159,7 +160,7 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
           name="nameOrAddress"
           mode="outlined"
           background={['surface', 2]}
-          label="Recipient name/address"
+          label={t('Recipient name/address')}
           blurOnSubmit
         />
         <AddressPicker
@@ -176,7 +177,7 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
           name="amount"
           mode="outlined"
           background={['surface', 2]}
-          label={`Amount (${TokenName.from({ account })})`}
+          label={t('Amount ({ticker})', { ticker: TokenName.from({ account }) })}
           keyboardType="numeric"
           autoCapitalize="none"
         />
@@ -189,9 +190,10 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
           }}
           labelStyle={{ fontSize: 12 }}
         >
-          Max (
-          {formatNumber(account.balance, { maximumFractionDigits: 6 })}{' '}
-          {TokenName.from({ account })})
+          {t('Max ({amount} {ticker})', {
+            amount: formatNumber(account.balance, { maximumFractionDigits: 6 }),
+            ticker: TokenName.from({ account }),
+          })}
         </Button>
       </View>
 
@@ -207,7 +209,7 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
             setAdvancedOpen(!advancedOpen);
           }}
         >
-          Advanced options
+          {t('Advanced options')}
         </Button>
 
         <View style={styles.advancedOptions({ expanded: advancedOpen })}>
@@ -215,7 +217,7 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
             name="reference"
             mode="outlined"
             background={['surface', 2]}
-            label="Reference number (optional)"
+            label={t('Reference number (optional)')}
             keyboardType="number-pad"
           />
         </View>

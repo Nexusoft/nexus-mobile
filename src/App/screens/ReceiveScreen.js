@@ -10,6 +10,7 @@ import Divider from 'components/Divider';
 import TextBox from 'components/TextBox';
 import TokenName from 'components/TokenName';
 import { showNotification } from 'lib/ui';
+import { t } from 'lib/i18n';
 import { buildPaymentRequest } from 'lib/paymentRequest';
 import parseAmount from 'utils/parseAmount';
 import formatNumber from 'utils/formatNumber';
@@ -93,7 +94,7 @@ export default function ReceiveScreen({ route }) {
       <View>
         <Surface style={styles.main}>
           <View style={styles.topInstruction}>
-            <Text sub>Show this QR code to the sender</Text>
+            <Text sub>{t('Show this QR code to the sender')}</Text>
           </View>
 
           {/* always dark on light, scanners can fail on inverted codes */}
@@ -110,16 +111,27 @@ export default function ReceiveScreen({ route }) {
           </Text>
           {requesting && amountValid && (
             <Text bold style={styles.requested}>
-              Requesting {formatNumber(amountValue, { maximumFractionDigits: 6 })}{' '}
-              {ticker}
-              {reference ? ` (reference ${reference})` : ''}
+              {reference
+                ? t('Requesting {amount} {ticker} (reference {reference})', {
+                    amount: formatNumber(amountValue, {
+                      maximumFractionDigits: 6,
+                    }),
+                    ticker,
+                    reference,
+                  })
+                : t('Requesting {amount} {ticker}', {
+                    amount: formatNumber(amountValue, {
+                      maximumFractionDigits: 6,
+                    }),
+                    ticker,
+                  })}
             </Text>
           )}
 
           <View style={styles.separator}>
             <Divider style={styles.separatorLine} />
             <Text style={styles.separatorLabel} disabled>
-              or
+              {t('or')}
             </Text>
             <Divider style={styles.separatorLine} />
           </View>
@@ -131,17 +143,17 @@ export default function ReceiveScreen({ route }) {
             icon={({ size }) => <SvgIcon icon={CopyIcon} size={size} />}
             onPress={() => {
               Clipboard.setString(address);
-              showNotification('Copied to clipboard');
+              showNotification(t('Copied to clipboard'));
             }}
           >
-            <Text>Copy account address</Text>
+            <Text>{t('Copy account address')}</Text>
           </Button>
 
           {requesting ? (
             <View style={styles.request}>
               <TextBox
                 mode="outlined"
-                label={`Amount to request (${ticker})`}
+                label={t('Amount to request ({ticker})', { ticker })}
                 keyboardType="numeric"
                 value={amount}
                 onChangeText={setAmount}
@@ -149,7 +161,7 @@ export default function ReceiveScreen({ route }) {
               />
               <TextBox
                 mode="outlined"
-                label="Reference number (optional)"
+                label={t('Reference number (optional)')}
                 keyboardType="number-pad"
                 value={reference}
                 onChangeText={setReference}
@@ -166,7 +178,7 @@ export default function ReceiveScreen({ route }) {
                   Share.share({ message: link }).catch(() => {});
                 }}
               >
-                Share payment request
+                {t('Share payment request')}
               </Button>
             </View>
           ) : (
@@ -180,7 +192,7 @@ export default function ReceiveScreen({ route }) {
                 setRequesting(true);
               }}
             >
-              Request a specific amount
+              {t('Request a specific amount')}
             </Button>
           )}
         </Surface>

@@ -19,6 +19,7 @@ import {
 } from 'lib/invoices';
 import { navigate } from 'lib/navigation';
 import { showError } from 'lib/ui';
+import { t } from 'lib/i18n';
 import formatNumber from 'utils/formatNumber';
 import useRefresh from 'utils/useRefresh';
 import InvoiceIcon from 'icons/invoice.svg';
@@ -50,15 +51,15 @@ const styles = {
 export const shortHash = (hash, n = 6) =>
   hash ? `${hash.slice(0, n)}...${hash.slice(-4)}` : '';
 
-const tabs = [
-  { key: 'pay', label: 'To pay' },
-  { key: 'sent', label: 'Sent by me' },
-  { key: 'history', label: 'Closed' },
+const tabs = () => [
+  { key: 'pay', label: t('To pay') },
+  { key: 'sent', label: t('Sent by me') },
+  { key: 'history', label: t('Closed') },
 ];
 
 export function InvoiceTag({ status, toMe }) {
   const label =
-    status === 'OUTSTANDING' ? (toMe ? 'TO PAY' : 'WAITING') : (statusLabel[status] || status).toUpperCase();
+    status === 'OUTSTANDING' ? (toMe ? t('TO PAY') : t('WAITING')) : (statusLabel()[status] || status).toUpperCase();
   return (
     <View style={styles.tag({ status })}>
       <Text size={11} bold style={styles.tagText({ status })}>
@@ -73,8 +74,8 @@ function InvoiceCard({ invoice, me, accounts }) {
   const title =
     invoice.items[0]?.description || invoice.reference || shortHash(invoice.address);
   const who = toMe
-    ? `from ${shortHash(invoiceIssuer(invoice, me))}`
-    : `to ${shortHash(invoice.recipient)}`;
+    ? t('from {who}', { who: shortHash(invoiceIssuer(invoice, me)) })
+    : t('to {who}', { who: shortHash(invoice.recipient) });
   return (
     <Surface style={styles.card}>
       <TouchableRipple
@@ -152,12 +153,12 @@ export default function InvoicesScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.chips}
         >
-          {tabs.map((t) => (
+          {tabs().map((item) => (
             <Chip
-              key={t.key}
-              label={t.label}
-              active={tab === t.key}
-              onPress={() => setTab(t.key)}
+              key={item.key}
+              label={item.label}
+              active={tab === item.key}
+              onPress={() => setTab(item.key)}
             />
           ))}
         </ScrollView>
@@ -169,10 +170,10 @@ export default function InvoicesScreen() {
           <View style={styles.center}>
             <Text sub style={{ textAlign: 'center' }}>
               {tab === 'pay'
-                ? 'No invoices to pay.'
+                ? t('No invoices to pay.')
                 : tab === 'sent'
-                ? 'No open invoices sent by you.'
-                : 'No paid, rejected or cancelled invoices.'}
+                ? t('No open invoices sent by you.')
+                : t('No paid, rejected or cancelled invoices.')}
             </Text>
           </View>
         ) : (
@@ -191,7 +192,7 @@ export default function InvoicesScreen() {
         style={styles.fab}
         icon="plus"
         color={theme.onPrimary}
-        label="New invoice"
+        label={t('New invoice')}
         onPress={() => navigate('NewInvoice')}
       />
     </View>

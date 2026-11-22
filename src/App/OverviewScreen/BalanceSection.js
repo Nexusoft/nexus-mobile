@@ -10,6 +10,7 @@ import { useTheme, subColor } from 'lib/theme';
 import { refreshUserBalances } from 'lib/user';
 import { refreshMarketPrice, selectMarketPrice } from 'lib/market';
 import { selectSetting } from 'lib/settings';
+import { t } from 'lib/i18n';
 import { selectTestNetworkLabel } from 'lib/coreInfo';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
@@ -125,7 +126,7 @@ export default function BalanceSection({ filteredAccounts }) {
   );
   const renderBalance = (amount, formatOptions, currency = 'NXS') => {
     if (hideBalances) return '??? ' + currency;
-    if (!nxsBalances) return 'N/A';
+    if (!nxsBalances) return t('N/A');
     // VND doesn't have decimal digits
     if (currency === 'VND') {
       formatOptions.maximumFractionDigits = 0;
@@ -143,7 +144,7 @@ export default function BalanceSection({ filteredAccounts }) {
     >
       <>
         <View style={styles.brief}>
-          <BalanceText style={styles.balanceLabel}>Balance</BalanceText>
+          <BalanceText style={styles.balanceLabel}>{t('Balance')}</BalanceText>
           <BalanceText style={styles.balance}>
             {renderBalance(available + stake, { maximumFractionDigits: 2 })}
           </BalanceText>
@@ -161,7 +162,7 @@ export default function BalanceSection({ filteredAccounts }) {
           )}
           {!!testNetwork && (
             <BalanceText style={styles.networkTag({ theme })}>
-              {testNetwork}, no real value
+              {t('{network}, no real value', { network: testNetwork })}
             </BalanceText>
           )}
           <SvgIcon
@@ -173,27 +174,27 @@ export default function BalanceSection({ filteredAccounts }) {
 
         <View style={styles.subBalances({ expanded })}>
           <View style={styles.subBalance}>
-            <BalanceText>Available</BalanceText>
+            <BalanceText>{t('Available')}</BalanceText>
             <BalanceText>{renderBalance(available)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Staking (locked)</BalanceText>
+            <BalanceText>{t('Staking (locked)')}</BalanceText>
             <BalanceText>{renderBalance(stake)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Unclaimed</BalanceText>
+            <BalanceText>{t('Unclaimed')}</BalanceText>
             <BalanceText>{renderBalance(unclaimed)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Unconfirmed</BalanceText>
+            <BalanceText>{t('Unconfirmed')}</BalanceText>
             <BalanceText>{renderBalance(unconfirmed)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Immature</BalanceText>
+            <BalanceText>{t('Immature')}</BalanceText>
             <BalanceText>{renderBalance(immature)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Total</BalanceText>
+            <BalanceText>{t('Total')}</BalanceText>
             <BalanceText>
               {renderBalance(
                 available + stake + unclaimed + unconfirmed + immature

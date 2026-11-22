@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
 import Text from 'components/Text';
+import { t } from 'lib/i18n';
 
 const styles = {
   dots: {
@@ -65,9 +66,9 @@ export default function PinPad({ value, onChange, onKeyboard, color, disabled })
         {digits.map((d) => (
           <Key key={d} k={d} label={d} />
         ))}
-        <Key k="abc" label="ABC" plain a11y="Type PIN with keyboard" />
+        <Key k="abc" label="ABC" plain a11y={t('Type PIN with keyboard')} />
         <Key k="0" label="0" />
-        <Key k="back" label={'⌫'} plain a11y="Delete" />
+        <Key k="back" label={'⌫'} plain a11y={t('Delete')} />
       </View>
     </View>
   );

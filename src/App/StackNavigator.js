@@ -32,12 +32,22 @@ import InvoicesScreen from './screens/InvoicesScreen';
 import InvoiceScreen from './screens/InvoiceScreen';
 import NewInvoiceScreen from './screens/NewInvoiceScreen';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 import { selectLoggedIn } from 'lib/user';
 import { resetToBase } from 'lib/navigation';
 import { getStore } from 'store';
 import BaseScreen from './BaseScreen';
 
 const Stack = createStackNavigator();
+
+//screen titles are English in each screen's nav options
+const translateOptions = (options, name) => ({
+  ...options,
+  title: typeof options?.title === 'string' ? t(options.title) : t(name),
+  ...(typeof options?.headerTitle === 'string' && {
+    headerTitle: t(options.headerTitle),
+  }),
+});
 
 const screens = [
   BaseScreen,
@@ -129,7 +139,7 @@ export default function StackNavigator({ navigation }) {
               key={name}
               name={name}
               component={Screen}
-              options={options}
+              options={translateOptions(options, name)}
               listeners={listeners}
             />
           );

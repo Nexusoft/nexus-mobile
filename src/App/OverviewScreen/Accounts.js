@@ -8,6 +8,7 @@ import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import TokenName from 'components/TokenName';
 import { navigate } from 'lib/navigation';
+import { t } from 'lib/i18n';
 import { refreshUserAccounts, refreshUserBalances } from 'lib/user';
 import { refreshMarketPrice } from 'lib/market';
 import { selectSetting } from 'lib/settings';
@@ -90,7 +91,7 @@ function Account({ account }) {
           <View style={styles.accNameIcon}>
             <SvgIcon icon={WalletIcon} size={14} style={styles.accIcon} />
             <Text style={styles.accName} bold disabled={!account.name}>
-              {account.name || 'Unnamed'}
+              {account.name || t('Unnamed')}
             </Text>
           </View>
           <Text style={styles.accBalance}>
@@ -109,7 +110,7 @@ function Account({ account }) {
             navigate('Receive', { account });
           }}
         >
-          <Text style={styles.accActionLabel({ theme })}>RECEIVE</Text>
+          <Text style={styles.accActionLabel({ theme })}>{t('RECEIVE')}</Text>
         </TouchableRipple>
 
         <Divider vertical inset={10} />
@@ -120,7 +121,7 @@ function Account({ account }) {
             navigate('Send', { account });
           }}
         >
-          <Text style={styles.accActionLabel({ theme })}>SEND</Text>
+          <Text style={styles.accActionLabel({ theme })}>{t('SEND')}</Text>
         </TouchableRipple>
       </View>
     </View>
@@ -154,7 +155,7 @@ export default function Accounts({ filteredAccounts }) {
             }}
           >
             <Text style={styles.accountsHeader} sub>
-              Your Accounts
+              {t('Your Accounts')}
             </Text>
           </TouchableWithoutFeedback>
         </>
@@ -164,7 +165,7 @@ export default function Accounts({ filteredAccounts }) {
         Array.isArray(filteredAccounts) ? (
           <View style={styles.empty}>
             <Text sub style={styles.emptyText}>
-              You have no accounts yet.
+              {t('You have no accounts yet.')}
             </Text>
             <Button
               mode="text"
@@ -172,7 +173,7 @@ export default function Accounts({ filteredAccounts }) {
                 navigate('NewAccount');
               }}
             >
-              Create account
+              {t('Create account')}
             </Button>
           </View>
         ) : null

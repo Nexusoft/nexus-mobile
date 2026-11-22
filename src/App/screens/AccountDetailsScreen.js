@@ -16,6 +16,7 @@ import { navigate } from 'lib/navigation';
 import { refreshUserAccount } from 'lib/user';
 import segmentAddress from 'utils/segmentAddress';
 import useRefresh from 'utils/useRefresh';
+import { t } from 'lib/i18n';
 import CopyIcon from 'icons/copy.svg';
 
 const styles = {
@@ -56,11 +57,11 @@ export default function AccountDetailsScreen({ route }) {
           <InfoField
             compact
             inline
-            label="Account name"
+            label={t('Account name')}
             value={
               account.name || (
                 <Text disabled style={{ marginRight: 10 }}>
-                  Unnamed
+                  {t('Unnamed')}
                 </Text>
               )
             }
@@ -68,7 +69,7 @@ export default function AccountDetailsScreen({ route }) {
           <Divider />
           <InfoField
             compact
-            label="Account address"
+            label={t('Account address')}
             control={
               <Button
                 mode="text"
@@ -76,10 +77,10 @@ export default function AccountDetailsScreen({ route }) {
                 labelStyle={{ fontSize: 12 }}
                 onPress={() => {
                   Clipboard.setString(account.address);
-                  showNotification('Copied to clipboard');
+                  showNotification(t('Copied to clipboard'));
                 }}
               >
-                Copy
+                {t('Copy')}
               </Button>
             }
             value={
@@ -92,26 +93,26 @@ export default function AccountDetailsScreen({ route }) {
           <InfoField
             compact
             inline
-            label="Created at"
+            label={t('Created at')}
             value={moment.unix(account.created).format('llll')}
           />
           <Divider />
           <InfoField
             compact
             inline
-            label="Last modified"
+            label={t('Last modified')}
             value={moment.unix(account.modified).format('llll')}
           />
           <Divider />
           <InfoField
             compact
             inline
-            label="Token name"
+            label={t('Token name')}
             value={
               account.ticker ||
               account.token_name || (
                 <Text disabled style={{ marginRight: 10 }}>
-                  Unnamed
+                  {t('Unnamed')}
                 </Text>
               )
             }
@@ -119,7 +120,7 @@ export default function AccountDetailsScreen({ route }) {
           {!!account.token && account.token?.length === 51 && (
             <InfoField
               compact
-              label="Token address"
+              label={t('Token address')}
               value={
                 <Text mono style={styles.address}>
                   {segmentAddress(account.token)}
@@ -132,7 +133,7 @@ export default function AccountDetailsScreen({ route }) {
             <>
               <InfoField
                 compact
-                label="Data"
+                label={t('Data')}
                 value={<Text mono>{account.data}</Text>}
               />
               <Divider />
@@ -141,7 +142,7 @@ export default function AccountDetailsScreen({ route }) {
           <InfoField
             compact
             inline
-            label="Available balance"
+            label={t('Available balance')}
             value={
               <Text>
                 {formatNumber(account.balance || 0, { maximumFractionDigits: 6 })}{' '}
@@ -153,7 +154,7 @@ export default function AccountDetailsScreen({ route }) {
           <InfoField
             compact
             inline
-            label="Unclaimed balance"
+            label={t('Unclaimed balance')}
             value={
               <Text>
                 {formatNumber(account.unclaimed || 0, { maximumFractionDigits: 6 })}{' '}
@@ -165,7 +166,7 @@ export default function AccountDetailsScreen({ route }) {
           <InfoField
             compact
             inline
-            label="Unconfirmed balance"
+            label={t('Unconfirmed balance')}
             value={
               <Text>
                 {formatNumber(account.unconfirmed || 0, { maximumFractionDigits: 6 })}{' '}
@@ -179,7 +180,7 @@ export default function AccountDetailsScreen({ route }) {
               <InfoField
                 compact
                 inline
-                label="Staking balance (locked)"
+                label={t('Staking balance (locked)')}
                 value={
                   <Text>
                     {formatNumber(account.stake || 0, { maximumFractionDigits: 6 })}{' '}
@@ -195,7 +196,7 @@ export default function AccountDetailsScreen({ route }) {
               <InfoField
                 compact
                 inline
-                label="Immature balance"
+                label={t('Immature balance')}
                 value={
                   <Text>
                     {formatNumber(account.immature || 0, { maximumFractionDigits: 6 })}{' '}
@@ -217,7 +218,7 @@ export default function AccountDetailsScreen({ route }) {
                 navigate('Receive', { account });
               }}
             >
-              Receive
+              {t('Receive')}
             </Button>
             <Divider vertical inset={10} />
             {!account.name?.endsWith(':default') &&
@@ -229,7 +230,7 @@ export default function AccountDetailsScreen({ route }) {
                     navigate('RenameAccount', { account });
                   }}
                 >
-                  Rename
+                  {t('Rename')}
                 </Button>
               )}
             <Divider vertical inset={10} />
@@ -240,7 +241,7 @@ export default function AccountDetailsScreen({ route }) {
                 navigate('Send', { account });
               }}
             >
-              Send
+              {t('Send')}
             </Button>
           </View>
         </Surface>

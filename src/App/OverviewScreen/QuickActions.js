@@ -4,6 +4,7 @@ import { TouchableRipple } from 'react-native-paper';
 
 import Text from 'components/Text';
 import { navigate } from 'lib/navigation';
+import { t } from 'lib/i18n';
 import { useTheme } from 'lib/theme';
 import { mainAccount } from 'lib/user';
 
@@ -59,26 +60,26 @@ export default function QuickActions({ accounts }) {
   return (
     <View style={styles.row}>
       <Action
-        glyph={'↗'}
-        label="Send"
+        glyph={'\u2197'}
+        label={t('Send')}
         disabled={!account}
         onPress={() => navigate('Send', { account })}
       />
       <Action
-        glyph={'↙'}
-        label="Receive"
+        glyph={'\u2199'}
+        label={t('Receive')}
         disabled={!account}
         onPress={() => navigate('Receive', { account })}
       />
       <Action
         glyph={'▦'}
-        label="Scan QR"
+        label={t('Scan QR')}
         disabled={!account}
         onPress={() => navigate('Send', { account, scan: true })}
       />
       <Action
-        glyph={'⇅'}
-        label="History"
+        glyph={'\u21c5'}
+        label={t('History')}
         onPress={() => navigate('Transactions')}
       />
     </View>

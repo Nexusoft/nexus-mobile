@@ -12,6 +12,7 @@ import SvgIcon from 'components/SvgIcon';
 import { navigate } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 import { addressRegex } from 'consts/regex';
 import parseAmount from 'utils/parseAmount';
 import { getStore } from 'store';
@@ -154,23 +155,23 @@ export default function SendScreen({ route }) {
         requestLabel: route.params?.label || '',
       }}
       validationSchema={yup.object().shape({
-        nameOrAddress: yup.string().required('Required!'),
+        nameOrAddress: yup.string().required(t('Required!')),
         amount: yup
           .string()
-          .required('Required!')
-          .test('amount', 'Invalid!', (value) => parseAmount(value) > 0)
+          .required(t('Required!'))
+          .test('amount', t('Invalid!'), (value) => parseAmount(value) > 0)
           .test(
             'balance',
-            'More than the account holds',
+            t('More than the account holds'),
             (value) =>
               typeof account?.balance !== 'number' ||
               !(parseAmount(value) > account.balance)
           ),
         reference: yup
           .number()
-          .typeError('Invalid!')
-          .integer('Invalid!')
-          .min(0, 'Invalid!'),
+          .typeError(t('Invalid!'))
+          .integer(t('Invalid!'))
+          .min(0, t('Invalid!')),
       })}
       onSubmit={async (
         { nameOrAddress, amount, reference },
@@ -182,7 +183,7 @@ export default function SendScreen({ route }) {
         } catch (err) {
           setFieldError(
             'nameOrAddress',
-            err?.message || 'Could not check this name/address'
+            err?.message || t('Could not check this name/address')
           );
           return;
         }
@@ -194,7 +195,7 @@ export default function SendScreen({ route }) {
             reference: reference === '' ? undefined : Number(reference),
           });
         } else {
-          setFieldError('nameOrAddress', 'Invalid name/address!');
+          setFieldError('nameOrAddress', t('Invalid name/address!'));
         }
       }}
     >
@@ -234,8 +235,8 @@ export default function SendScreen({ route }) {
             label={
               endReached
                 ? isSubmitting
-                  ? 'Validating...'
-                  : 'Proceed'
+                  ? t('Validating...')
+                  : t('Proceed')
                 : undefined
             }
           />

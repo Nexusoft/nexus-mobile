@@ -18,6 +18,7 @@ import {
 import { goBack } from 'lib/navigation';
 import { showError } from 'lib/ui';
 import { refreshCoreInfo } from 'lib/coreInfo';
+import { t } from 'lib/i18n';
 
 const styles = {
   screen: {
@@ -81,7 +82,7 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
     navigation.setOptions({
       headerRight: () => (
         <Button mode="text" disabled={isSubmitting} onPress={handleSubmit}>
-          Done
+          {t('Done')}
         </Button>
       ),
     });
@@ -92,7 +93,7 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
       <Surface style={styles.section}>
         <View style={[styles.field, { justifyContent: 'space-between' }]}>
           <Text style={styles.label}>
-            {coreMode === 'external' ? 'On' : 'Off'}
+            {coreMode === 'external' ? t('On') : t('Off')}
           </Text>
           <Switch
             value={coreMode === 'external'}
@@ -104,20 +105,14 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
       </Surface>
 
       <Text sub style={styles.description}>
-        Manually connect to an external Nexus Core run on another machine
-        instead of the internal Nexus Core packaged along with this app. Be
-        aware of possible version incompatibility between the app interface and
-        the external Nexus Core. The API username and password are the apiuser
-        and apipassword lines in that core's nexus.conf. A core with the
-        apissl option on answers HTTPS (usually port 7080), otherwise HTTP
-        (port 8080).
+        {t("Manually connect to an external Nexus Core run on another machine instead of the internal Nexus Core packaged along with this app. Be aware of possible version incompatibility between the app interface and the external Nexus Core. The API username and password are the apiuser and apipassword lines in that core's nexus.conf. A core with the apissl option on answers HTTPS (usually port 7080), otherwise HTTP (port 8080).")}
       </Text>
 
       {coreMode === 'external' && (
         <>
           <Surface style={styles.section}>
             <View style={styles.field}>
-              <Text style={styles.label}>IP address</Text>
+              <Text style={styles.label}>{t('IP address')}</Text>
               <TextBox
                 name="externalCoreIP"
                 placeholder={defaultSettings.externalCoreIP}
@@ -127,11 +122,11 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
           </Surface>
 
           <Text sub style={styles.title}>
-            API server
+            {t('API server')}
           </Text>
           <Surface style={styles.section}>
             <View style={styles.field}>
-              <Text style={styles.label}>API port</Text>
+              <Text style={styles.label}>{t('API port')}</Text>
               <TextBox
                 name="externalCoreAPIPort"
                 placeholder={defaultSettings.externalCoreAPIPort}
@@ -140,12 +135,12 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
             </View>
             <Divider inset={20} />
             <View style={[styles.field, { justifyContent: 'space-between' }]}>
-              <Text style={styles.label}>Use HTTPS</Text>
+              <Text style={styles.label}>{t('Use HTTPS')}</Text>
               <Switch.Formik name="externalCoreSSL" />
             </View>
             <Divider inset={20} />
             <View style={styles.field}>
-              <Text style={styles.label}>API username</Text>
+              <Text style={styles.label}>{t('API username')}</Text>
               <TextBox
                 name="externalCoreAPIUser"
                 placeholder={defaultSettings.externalCoreAPIUser}
@@ -153,7 +148,7 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
             </View>
             <Divider inset={20} />
             <View style={styles.field}>
-              <Text style={styles.label}>API password</Text>
+              <Text style={styles.label}>{t('API password')}</Text>
               <TextBox
                 name="externalCoreAPIPassword"
                 placeholder={defaultSettings.externalCoreAPIPassword}

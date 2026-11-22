@@ -7,6 +7,7 @@ import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import AttentionIcon from 'components/AttentionIcon';
 import { navigate } from 'lib/navigation';
+import { t } from 'lib/i18n';
 import { useTheme } from 'lib/theme';
 import { selectSetting } from 'lib/settings';
 import { flatHeader } from 'utils/styles';
@@ -103,7 +104,7 @@ OverviewScreen.stackOptions = ({ theme, navigation }) => ({
           paddingTop: 15,
         }}
       >
-        Beta
+        {t('Beta')}
       </Text>
       <IconButton
         icon={({ size }) => (

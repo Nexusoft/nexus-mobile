@@ -8,6 +8,7 @@ import InfoField from 'components/InfoField';
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import formatNumber from 'utils/formatNumber';
+import { t } from 'lib/i18n';
 
 const styles = {
   body: {
@@ -26,7 +27,7 @@ const styles = {
 };
 
 function displayDownloadRate(byteRate) {
-  if (!byteRate) return 'N/A';
+  if (!byteRate) return t('N/A');
   let number = byteRate;
   let unit = 'B';
   if (byteRate > 1000000000) {
@@ -48,22 +49,22 @@ export default function CoreInfoScreen() {
   return (
     <ScreenBody style={styles.body}>
       <Text sub style={styles.subHeader}>
-        Core
+        {t('Core')}
       </Text>
       <Surface style={styles.section}>
-        <InfoField inline label="Core version" value={coreInfo?.version} />
+        <InfoField inline label={t('Core version')} value={coreInfo?.version} />
         <Divider />
         <InfoField
           inline
-          label="LLP version"
+          label={t('LLP version')}
           value={coreInfo?.protocolversion}
         />
         <Divider />
-        <InfoField inline label="Host name" value={coreInfo?.hostname} />
+        <InfoField inline label={t('Host name')} value={coreInfo?.hostname} />
         <Divider />
         <InfoField
           inline
-          label="Timestamp"
+          label={t('Timestamp')}
           value={
             !!coreInfo?.timestamp
               ? moment.unix(coreInfo.timestamp).format('llll')
@@ -73,48 +74,54 @@ export default function CoreInfoScreen() {
         <Divider />
         <InfoField
           inline
-          label="Multi-user mode"
-          value={coreInfo?.multiuser ? 'Yes' : 'No'}
+          label={t('Multi-user mode')}
+          value={coreInfo?.multiuser ? t('Yes') : t('No')}
         />
         <Divider />
         <InfoField
           inline
-          label="Lite mode"
-          value={coreInfo?.litemode ? 'Yes' : 'No'}
+          label={t('Lite mode')}
+          value={coreInfo?.litemode ? t('Yes') : t('No')}
         />
       </Surface>
 
       <Text sub style={styles.subHeader}>
-        Network
+        {t('Network')}
       </Text>
       <Surface style={styles.section}>
         <InfoField
           inline
-          label="Active network"
-          value={`${coreInfo?.private ? 'Private' : 'Public'} ${
-            coreInfo?.testnet ? 'testnet ' + coreInfo.testnet : 'mainnet'
-          }`}
+          label={t('Active network')}
+          value={
+            coreInfo?.private
+              ? coreInfo?.testnet
+                ? t('Private testnet {testnet}', { testnet: coreInfo.testnet })
+                : t('Private mainnet')
+              : coreInfo?.testnet
+              ? t('Public testnet {testnet}', { testnet: coreInfo.testnet })
+              : t('Public mainnet')
+          }
         />
         <Divider />
-        <InfoField inline label="Connections" value={coreInfo?.connections} />
+        <InfoField inline label={t('Connections')} value={coreInfo?.connections} />
         <Divider />
         <InfoField
           inline
-          label="Synchronizing"
-          value={coreInfo?.syncing ? 'Yes' : 'No'}
+          label={t('Synchronizing')}
+          value={coreInfo?.syncing ? t('Yes') : t('No')}
         />
         <Divider />
         {!!coreInfo?.syncing && (
           <>
             <InfoField
               inline
-              label="Sync. progress"
+              label={t('Sync. progress')}
               value={coreInfo.syncing.progress + '%'}
             />
             <Divider />
             <InfoField
               inline
-              label="Blocks"
+              label={t('Blocks')}
               value={`${formatNumber(coreInfo.blocks, {
                 maximumFractionDigits: 0,
               })} / ${formatNumber(coreInfo.syncing.networkBlock, {
@@ -124,13 +131,13 @@ export default function CoreInfoScreen() {
             <Divider />
             <InfoField
               inline
-              label="Download rate"
+              label={t('Download rate')}
               value={displayDownloadRate(coreInfo.syncing.downloadRate)}
             />
             <Divider />
             <InfoField
               inline
-              label="Est. time remaining"
+              label={t('Est. time remaining')}
               value={coreInfo.syncing.timeRemaining}
             />
             <Divider />
@@ -139,7 +146,7 @@ export default function CoreInfoScreen() {
         {!coreInfo?.syncing && (
           <InfoField
             inline
-            label="Block height"
+            label={t('Block height')}
             value={
               coreInfo?.blocks
                 ? formatNumber(coreInfo.blocks, { maximumFractionDigits: 0 })

@@ -20,6 +20,7 @@ import { selectSetting } from 'lib/settings';
 import { selectUsername } from 'lib/user';
 import { logOut } from 'lib/session';
 import { showError } from 'lib/ui';
+import { t } from 'lib/i18n';
 import LockIcon from 'icons/lock.svg';
 import UnlockIcon from 'icons/unlock.svg';
 
@@ -48,7 +49,7 @@ function LockScreen() {
   const color = theme.dark ? theme.foreground : theme.onPrimary;
 
   const tryBiometric = async () => {
-    if (await checkBiometric('Open Nexus Wallet')) unlockApp();
+    if (await checkBiometric(t('Open Nexus Wallet'))) unlockApp();
   };
 
   React.useEffect(() => {
@@ -69,10 +70,12 @@ function LockScreen() {
       const ok = await checkPin(value);
       if (ok === false) {
         setPin('');
-        showError('Wrong PIN');
+        showError(t('Wrong PIN'));
       } else if (ok === null) {
         showError(
-          'This Nexus Core cannot check a PIN. Log out and log in again to open the wallet.'
+          t(
+            'This Nexus Core cannot check a PIN. Log out and log in again to open the wallet.'
+          )
         );
       } else {
         unlockApp();
@@ -85,10 +88,10 @@ function LockScreen() {
   };
 
   return (
-    <View style={styles.cover({ theme })} accessibilityLabel="Wallet locked">
+    <View style={styles.cover({ theme })} accessibilityLabel={t('Wallet locked')}>
       <SvgIcon icon={LockIcon} size={48} color={color} />
       <Text style={styles.title} size={22} color={color}>
-        Wallet locked
+        {t('Wallet locked')}
       </Text>
       {!!username && (
         <Text sub size={14} color={color} style={{ marginTop: 4 }}>
@@ -100,7 +103,7 @@ function LockScreen() {
           mode="flat"
           style={styles.pinInput}
           background={theme.dark ? 'background' : 'primary'}
-          label="Enter your PIN"
+          label={t('Enter your PIN')}
           value={pin}
           onChangeText={setPin}
           onSubmitEditing={() => submit()}
@@ -129,7 +132,7 @@ function LockScreen() {
           theme.dark ? undefined : { backgroundColor: theme.onPrimary },
         ]}
         icon={(props) => <SvgIcon icon={UnlockIcon} {...props} />}
-        label={checking ? 'Checking...' : 'Open wallet'}
+        label={checking ? t('Checking...') : t('Open wallet')}
       />
       {canBiometric && (
         <Button
@@ -138,7 +141,7 @@ function LockScreen() {
           labelStyle={{ fontSize: 12 }}
           onPress={tryBiometric}
         >
-          Use fingerprint / face
+          {t('Use fingerprint / face')}
         </Button>
       )}
       <Button
@@ -147,7 +150,7 @@ function LockScreen() {
         labelStyle={{ fontSize: 12 }}
         onPress={() => logOut().catch((err) => showError(err?.message))}
       >
-        Log out
+        {t('Log out')}
       </Button>
     </View>
   );

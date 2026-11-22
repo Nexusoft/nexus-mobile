@@ -19,6 +19,7 @@ import {
 import { mainAccount, selectUsername, refreshUserAccounts } from 'lib/user';
 import { goBack } from 'lib/navigation';
 import { confirmPin, showError, showSuccess } from 'lib/ui';
+import { t } from 'lib/i18n';
 
 const styles = {
   wrapper: { paddingHorizontal: 20, paddingVertical: 20 },
@@ -78,7 +79,11 @@ export default function NewNameScreen() {
     try {
       await createName({ name: trimmed, register, global, pin });
       refreshUserAccounts();
-      showSuccess(`${shown} is registered. It works once the transaction is confirmed.`);
+      showSuccess(
+        t('{name} is registered. It works once the transaction is confirmed.', {
+          name: shown,
+        })
+      );
       goBack();
     } catch (err) {
       showError(err?.message);
@@ -109,7 +114,7 @@ export default function NewNameScreen() {
     <ScreenBody style={styles.wrapper}>
       <TextBox
         mode="outlined"
-        label="Name"
+        label={t('Name')}
         value={name}
         onChangeText={setName}
         autoCapitalize="none"
@@ -130,30 +135,36 @@ export default function NewNameScreen() {
       >
         {problem ||
           (free === false
-            ? `${shown} is taken`
+            ? t('{name} is taken', { name: shown })
             : free
-            ? `${shown} is free`
+            ? t('{name} is free', { name: shown })
             : trimmed && free === undefined
-            ? 'Checking...'
+            ? t('Checking...')
             : ' ')}
       </Text>
 
       <Text sub size={13} style={styles.label}>
-        Kind
+        {t('Kind')}
       </Text>
       <Option
         value={false}
-        title="Local name"
-        sub={`${username}:${trimmed || 'name'}  ·  fee ${nameFee(false)} NXS`}
+        title={t('Local name')}
+        sub={t('{name}  ·  fee {fee} NXS', {
+          name: `${username}:${trimmed || t('name')}`,
+          fee: nameFee(false),
+        })}
       />
       <Option
         value={true}
-        title="Global name"
-        sub={`${trimmed || 'name'}  ·  fee ${nameFee(true).toLocaleString('en-US')} NXS, unique on the network`}
+        title={t('Global name')}
+        sub={t('{name}  ·  fee {fee} NXS, unique on the network', {
+          name: trimmed || t('name'),
+          fee: nameFee(true).toLocaleString('en-US'),
+        })}
       />
 
       <Text sub size={13} style={styles.label}>
-        Points to
+        {t('Points to')}
       </Text>
       <Select
         options={accounts.map((a) => ({
@@ -165,7 +176,7 @@ export default function NewNameScreen() {
         render={({ display, openSelect }) => (
           <TouchableRipple onPress={openSelect}>
             <Text style={{ color: theme.primary, paddingVertical: 8 }} size={16}>
-              {display || 'Pick an account'}
+              {display || t('Pick an account')}
             </Text>
           </TouchableRipple>
         )}
@@ -174,14 +185,14 @@ export default function NewNameScreen() {
       {!!trimmed && !problem && (
         <Surface style={styles.preview}>
           <Text sub size={12} style={{ textTransform: 'uppercase' }}>
-            People will send to
+            {t('People will send to')}
           </Text>
           <Text bold size={18} style={{ marginTop: 4 }}>
             {shown}
           </Text>
           {!!account && (
             <Text sub size={12} style={{ marginTop: 4 }}>
-              {`instead of ${short(account.address)}`}
+              {t('instead of {address}', { address: short(account.address) })}
             </Text>
           )}
         </Surface>
@@ -194,7 +205,7 @@ export default function NewNameScreen() {
         disabled={!canSave}
         loading={saving}
         onPress={save}
-        label={`Register name (${fee.toLocaleString('en-US')} NXS)`}
+        label={t('Register name ({fee} NXS)', { fee: fee.toLocaleString('en-US') })}
       />
       <ZeroConnectionsOverlay />
     </ScreenBody>

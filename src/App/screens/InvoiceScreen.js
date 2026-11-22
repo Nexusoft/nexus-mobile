@@ -23,6 +23,7 @@ import {
 import { refreshUserAccounts, refreshUserBalances } from 'lib/user';
 import { goBack } from 'lib/navigation';
 import { confirm, confirmPin, showError, showSuccess } from 'lib/ui';
+import { t } from 'lib/i18n';
 import formatNumber from 'utils/formatNumber';
 import { InvoiceTag, shortHash } from './InvoicesScreen';
 
@@ -126,18 +127,18 @@ export default function InvoiceScreen({ route }) {
       <Surface style={styles.card}>
         <View style={[styles.line, { marginBottom: 12 }]}>
           <Text bold size={17} style={{ flex: 1, marginRight: 8 }}>
-            {invoice.items[0]?.description || 'Invoice'}
+            {invoice.items[0]?.description || t('Invoice')}
           </Text>
           <InvoiceTag status={invoice.status} toMe={toMe} />
         </View>
-        <Line label={toMe ? 'From' : 'Issued by'} value={mine ? 'You' : shortHash(issuer, 8)} mono={!mine} />
-        <Line label="Payer" value={toMe ? 'You' : shortHash(invoice.recipient, 8)} mono={!toMe} />
-        <Line label="Paid into" value={invoice.to && invoice.to.length < 40 ? invoice.to : shortHash(invoice.to || invoice.account, 8)} />
+        <Line label={toMe ? t('From') : t('Issued by')} value={mine ? t('You') : shortHash(issuer, 8)} mono={!mine} />
+        <Line label={t('Payer')} value={toMe ? t('You') : shortHash(invoice.recipient, 8)} mono={!toMe} />
+        <Line label={t('Paid into')} value={invoice.to && invoice.to.length < 40 ? invoice.to : shortHash(invoice.to || invoice.account, 8)} />
         {!!invoice.created && (
-          <Line label="Date" value={moment.unix(invoice.created).format('D MMM YYYY HH:mm')} />
+          <Line label={t('Date')} value={moment.unix(invoice.created).format('D MMM YYYY HH:mm')} />
         )}
-        {!!invoice.reference && <Line label="Note" value={invoice.reference} />}
-        <Line label="Status" value={statusLabel[invoice.status] || invoice.status} />
+        {!!invoice.reference && <Line label={t('Note')} value={invoice.reference} />}
+        <Line label={t('Status')} value={statusLabel()[invoice.status] || invoice.status} />
       </Surface>
 
       <Surface style={styles.card}>
@@ -154,7 +155,7 @@ export default function InvoiceScreen({ route }) {
         ))}
         <Divider />
         <View style={[styles.line, { marginTop: 8, marginBottom: 0 }]}>
-          <Text bold>Total</Text>
+          <Text bold>{t('Total')}</Text>
           <Text bold size={17}>{`${num(invoice.amount)} ${ticker}`}</Text>
         </View>
       </Surface>
@@ -174,7 +175,7 @@ export default function InvoiceScreen({ route }) {
                   <TouchableRipple onPress={openSelect}>
                     <View>
                       <Text sub size={12}>
-                        Pay from
+                        {t('Pay from')}
                       </Text>
                       <Text style={{ color: theme.primary, paddingVertical: 4 }}>
                         {display}
@@ -185,13 +186,13 @@ export default function InvoiceScreen({ route }) {
               />
               {tooMuch && (
                 <Text size={12} style={{ color: deltaColor('-') }}>
-                  Not enough in this account
+                  {t('Not enough in this account')}
                 </Text>
               )}
             </>
           ) : (
             <Text size={13} style={{ color: deltaColor('-') }}>
-              {`You have no ${ticker} account to pay this from.`}
+              {t('You have no {ticker} account to pay this from.', { ticker })}
             </Text>
           )}
           <View style={styles.actions}>
@@ -202,10 +203,10 @@ export default function InvoiceScreen({ route }) {
               disabled={busy || !account || tooMuch}
               loading={busy}
               onPress={() =>
-                run((pin) => payInvoice(invoice.address, from, pin), 'Invoice paid')
+                run((pin) => payInvoice(invoice.address, from, pin), t('Invoice paid'))
               }
             >
-              Pay
+              {t('Pay')}
             </Button>
             <Button
               mode="outlined"
@@ -214,17 +215,17 @@ export default function InvoiceScreen({ route }) {
               onPress={async () => {
                 if (
                   await confirm({
-                    title: 'Reject this invoice?',
-                    message: 'The issuer sees it as rejected and it cannot be paid any more.',
-                    confirmLabel: 'Reject',
+                    title: t('Reject this invoice?'),
+                    message: t('The issuer sees it as rejected and it cannot be paid any more.'),
+                    confirmLabel: t('Reject'),
                     danger: true,
                   })
                 ) {
-                  run((pin) => rejectInvoice(invoice.address, pin), 'Invoice rejected');
+                  run((pin) => rejectInvoice(invoice.address, pin), t('Invoice rejected'));
                 }
               }}
             >
-              Reject
+              {t('Reject')}
             </Button>
           </View>
         </Surface>
@@ -233,7 +234,7 @@ export default function InvoiceScreen({ route }) {
       {open && mine && (
         <Surface style={styles.card}>
           <Text sub size={13}>
-            Waiting for the payer. You can cancel it while it is not paid.
+            {t('Waiting for the payer. You can cancel it while it is not paid.')}
           </Text>
           <Button
             mode="outlined"
@@ -244,17 +245,17 @@ export default function InvoiceScreen({ route }) {
             onPress={async () => {
               if (
                 await confirm({
-                  title: 'Cancel this invoice?',
-                  confirmLabel: 'Cancel invoice',
-                  cancelLabel: 'Keep it',
+                  title: t('Cancel this invoice?'),
+                  confirmLabel: t('Cancel invoice'),
+                  cancelLabel: t('Keep it'),
                   danger: true,
                 })
               ) {
-                run((pin) => cancelInvoice(invoice.address, pin), 'Invoice cancelled');
+                run((pin) => cancelInvoice(invoice.address, pin), t('Invoice cancelled'));
               }
             }}
           >
-            Cancel invoice
+            {t('Cancel invoice')}
           </Button>
         </Surface>
       )}

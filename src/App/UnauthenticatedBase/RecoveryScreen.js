@@ -13,6 +13,7 @@ import { useTheme } from 'lib/theme';
 import { refreshUserStatus } from 'lib/session';
 import { callAPI } from 'lib/api';
 import { showError, showSuccess } from 'lib/ui';
+import { t } from 'lib/i18n';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 
@@ -48,12 +49,12 @@ function ConfirmCredentialsDialog({
           validationSchema={yup.object().shape({
             password: yup
               .string()
-              .required('Required!')
-              .oneOf([credentials.password], 'Mismatch!'),
+              .required(t('Required!'))
+              .oneOf([credentials.password], t('Mismatch!')),
             pin: yup
               .string()
-              .required('Required!')
-              .oneOf([credentials.pin], 'Mismatch!'),
+              .required(t('Required!'))
+              .oneOf([credentials.pin], t('Mismatch!')),
           })}
           onSubmit={onConfirm}
         >
@@ -61,14 +62,14 @@ function ConfirmCredentialsDialog({
             <Dialog.Content>
               <TextBox.Formik
                 name="password"
-                label="Re-enter new password"
+                label={t('Re-enter new password')}
                 background={['surface', 2]}
                 secure
                 style={styles.field}
               />
               <TextBox.Formik
                 name="pin"
-                label="Re-enter new PIN"
+                label={t('Re-enter new PIN')}
                 background={['surface', 2]}
                 secure
                 style={styles.field}
@@ -76,7 +77,7 @@ function ConfirmCredentialsDialog({
               <FAB
                 style={styles.submitBtn}
                 onPress={handleSubmit}
-                label="Confirm"
+                label={t('Confirm')}
               />
             </Dialog.Content>
           )}
@@ -98,27 +99,27 @@ function RecoveryForm({
     <View>
       <TextBox.Formik
         name="username"
-        label="Username"
+        label={t('Username')}
         background={['surface', 2]}
         style={styles.field}
       />
       <TextBox.Formik
         name="recovery"
-        label="Recovery phrase"
+        label={t('Recovery phrase')}
         background={['surface', 2]}
         multiline
         style={styles.field}
       />
       <TextBox.Formik
         name="password"
-        label="New password"
+        label={t('New password')}
         background={['surface', 2]}
         secure
         style={styles.field}
       />
       <TextBox.Formik
         name="pin"
-        label="New PIN"
+        label={t('New PIN')}
         background={['surface', 2]}
         secure
         style={styles.field}
@@ -140,7 +141,7 @@ function RecoveryForm({
           }
           setConfirming(true);
         }}
-        label={isSubmitting ? 'Recovering' : 'Recover'}
+        label={isSubmitting ? t('Recovering') : t('Recover')}
       />
       <ConfirmCredentialsDialog
         visible={confirming}
@@ -163,7 +164,7 @@ export default function RecoveryScreen() {
     <Backdrop
       backdropContent={
         <>
-          <Text style={styles.heading({ theme })}>Recover user on</Text>
+          <Text style={styles.heading({ theme })}>{t('Recover user on')}</Text>
           <SvgIcon
             icon={LogoIcon}
             width={180}
@@ -182,16 +183,16 @@ export default function RecoveryScreen() {
           pin: '',
         }}
         validationSchema={yup.object().shape({
-          username: yup.string().required('Required!'),
-          recovery: yup.string().required('Required'),
+          username: yup.string().required(t('Required!')),
+          recovery: yup.string().required(t('Required')),
           password: yup
             .string()
-            .required('Required!')
-            .min(8, 'Must be at least 8 characters!'),
+            .required(t('Required!'))
+            .min(8, t('Must be at least 8 characters!')),
           pin: yup
             .string()
-            .required('Required!')
-            .min(4, 'Must be at least 4 characters!'),
+            .required(t('Required!'))
+            .min(4, t('Must be at least 4 characters!')),
         })}
         onSubmit={async (
           { username, recovery, password, pin },
@@ -210,7 +211,9 @@ export default function RecoveryScreen() {
           }
           resetForm();
           showSuccess(
-            'Your password and PIN have been reset. You can now log in with the new password and PIN.'
+            t(
+              'Your password and PIN have been reset. You can now log in with the new password and PIN.'
+            )
           );
           await refreshUserStatus();
         }}

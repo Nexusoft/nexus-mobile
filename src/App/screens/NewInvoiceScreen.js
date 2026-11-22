@@ -14,6 +14,7 @@ import { createInvoice } from 'lib/invoices';
 import { mainAccount } from 'lib/user';
 import { goBack } from 'lib/navigation';
 import { confirmPin, showError, showSuccess } from 'lib/ui';
+import { t } from 'lib/i18n';
 import formatNumber from 'utils/formatNumber';
 import parseAmount from 'utils/parseAmount';
 import { shortHash } from './InvoicesScreen';
@@ -55,11 +56,11 @@ export default function NewInvoiceScreen() {
   }));
   const itemErrors = parsed.map((it) =>
     !it.description
-      ? 'Describe the item'
+      ? t('Describe the item')
       : !(it.amount > 0)
-      ? 'Enter a price'
+      ? t('Enter a price')
       : !(it.units > 0) || !Number.isInteger(it.units)
-      ? 'Quantity is a whole number'
+      ? t('Quantity is a whole number')
       : null
   );
   const total = parsed.reduce(
@@ -89,7 +90,7 @@ export default function NewInvoiceScreen() {
         reference: reference.trim(),
         pin,
       });
-      showSuccess(`Invoice sent to ${recipient.trim()}`);
+      showSuccess(t('Invoice sent to {recipient}', { recipient: recipient.trim() }));
       goBack();
     } catch (err) {
       showError(err?.message);
@@ -101,7 +102,7 @@ export default function NewInvoiceScreen() {
     <ScreenBody style={styles.wrapper}>
       <TextBox
         mode="outlined"
-        label="Who pays (username)"
+        label={t('Who pays (username)')}
         value={recipient}
         onChangeText={setRecipient}
         autoCapitalize="none"
@@ -109,7 +110,7 @@ export default function NewInvoiceScreen() {
       />
 
       <Text sub size={13} style={styles.label}>
-        Paid into
+        {t('Paid into')}
       </Text>
       <Select
         options={accounts.map((a) => ({
@@ -121,14 +122,14 @@ export default function NewInvoiceScreen() {
         render={({ display, openSelect }) => (
           <TouchableRipple onPress={openSelect}>
             <Text style={{ color: theme.primary, paddingVertical: 6 }} size={16}>
-              {display || 'Pick an account'}
+              {display || t('Pick an account')}
             </Text>
           </TouchableRipple>
         )}
       />
 
       <Text sub size={13} style={styles.label}>
-        Items
+        {t('Items')}
       </Text>
       {items.map((it, i) => (
         <Surface key={i} style={styles.item}>
@@ -137,7 +138,7 @@ export default function NewInvoiceScreen() {
               <TextBox
                 dense
                 mode="outlined"
-                label="Description"
+                label={t('Description')}
                 value={it.description}
                 onChangeText={(v) => setItem(i, 'description', v)}
               />
@@ -145,7 +146,7 @@ export default function NewInvoiceScreen() {
             {items.length > 1 && (
               <IconButton
                 icon="close"
-                accessibilityLabel="Remove item"
+                accessibilityLabel={t('Remove item')}
                 onPress={() => setItems(items.filter((_, j) => j !== i))}
               />
             )}
@@ -155,7 +156,7 @@ export default function NewInvoiceScreen() {
               <TextBox
                 dense
                 mode="outlined"
-                label={`Price (${ticker})`}
+                label={t('Price ({ticker})', { ticker })}
                 value={it.price}
                 onChangeText={(v) => setItem(i, 'price', v)}
                 keyboardType="decimal-pad"
@@ -165,7 +166,7 @@ export default function NewInvoiceScreen() {
               <TextBox
                 dense
                 mode="outlined"
-                label="Quantity"
+                label={t('Quantity')}
                 value={it.units}
                 onChangeText={(v) => setItem(i, 'units', v)}
                 keyboardType="number-pad"
@@ -184,19 +185,19 @@ export default function NewInvoiceScreen() {
         style={{ alignSelf: 'flex-start' }}
         onPress={() => setItems([...items, emptyItem()])}
       >
-        Add item
+        {t('Add item')}
       </Button>
 
       <TextBox
         mode="outlined"
-        label="Note (optional)"
+        label={t('Note (optional)')}
         value={reference}
         onChangeText={setReference}
         style={{ marginTop: 12 }}
       />
 
       <View style={styles.total}>
-        <Text bold>Total</Text>
+        <Text bold>{t('Total')}</Text>
         <Text bold size={17}>
           {`${formatNumber(total, { maximumFractionDigits: 6 })} ${ticker}`}
         </Text>
@@ -209,10 +210,10 @@ export default function NewInvoiceScreen() {
         disabled={!ready}
         loading={saving}
         onPress={save}
-        label="Send invoice"
+        label={t('Send invoice')}
       />
       <Text sub size={12} style={{ textAlign: 'center', marginTop: 10 }}>
-        The payer sees it in their wallet and can pay it with one tap.
+        {t('The payer sees it in their wallet and can pay it with one tap.')}
       </Text>
       <View style={{ height: 30 }} />
       <ZeroConnectionsOverlay />

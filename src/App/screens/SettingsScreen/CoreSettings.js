@@ -12,6 +12,7 @@ import SettingItem from './SettingItem';
 import commonStyles from './styles';
 import { confirm, showSuccess, showError } from 'lib/ui';
 import { callAPI } from 'lib/api';
+import { t } from 'lib/i18n';
 import {
   scanFile,
   unlink,
@@ -32,7 +33,7 @@ async function deleteCoreData(subPath, doneMessage) {
     await unlink(coreDir + subPath);
     if (Platform.OS === 'android') await scanFile(ExternalDirectoryPath);
   } catch (err) {
-    showError('Could not delete: ' + (err?.message || err));
+    showError(t('Could not delete: {error}', { error: err?.message || err }));
     return;
   }
   showSuccess(doneMessage);
@@ -97,7 +98,7 @@ export default function CoreSettings() {
   return (
     <>
       <Text style={styles.title} sub>
-        Core (Advanced)
+        {t('Core (Advanced)')}
       </Text>
       {/* <View style={styles.coreModeWrapper}>
         <View style={styles.coreModeSelector({ theme })}>
@@ -108,12 +109,12 @@ export default function CoreSettings() {
       <Surface style={styles.section}>
         <SettingItem
           small
-          title="External Core"
+          title={t('External Core')}
           right="arrow"
           onPress={() => {
             navigate('ExternalCoreConfig');
           }}
-          description={coreMode === 'external' ? 'On' : 'Off'}
+          description={coreMode === 'external' ? t('On') : t('Off')}
           primary
         />
 
@@ -121,7 +122,7 @@ export default function CoreSettings() {
           <>
             <SettingItem
               small
-              title="Core Log"
+              title={t('Core Log')}
               right="arrow"
               onPress={() => {
                 navigate('EmbeddedCoreLogReader');
@@ -130,18 +131,18 @@ export default function CoreSettings() {
 
             <SettingItem
               small
-              title="Delete Peer Info"
-              description="Clear Address Database"
+              title={t('Delete Peer Info')}
+              description={t('Clear Address Database')}
               onPress={async () => {
                 const confirmed = await confirm({
-                  title: 'Are you sure you want to delete the Address Folder?',
-                  confirmLabel: 'Delete Part of Database',
+                  title: t('Are you sure you want to delete the Address Folder?'),
+                  confirmLabel: t('Delete Part of Database'),
                   danger: true,
                 });
                 if (confirmed) {
                   await deleteCoreData(
                     '/_ADDR',
-                    'Addresses deleted. Close the app completely and open it again.'
+                    t('Addresses deleted. Close the app completely and open it again.')
                   );
                 }
               }}
@@ -149,18 +150,18 @@ export default function CoreSettings() {
 
             <SettingItem
               small
-              title="Delete Database"
-              description="Delete all core data and resync from scratch"
+              title={t('Delete Database')}
+              description={t('Delete all core data and resync from scratch')}
               onPress={async () => {
                 const confirmed = await confirm({
-                  title: 'Are you sure you want Delete?',
-                  confirmLabel: 'Delete Database',
+                  title: t('Are you sure you want Delete?'),
+                  confirmLabel: t('Delete Database'),
                   danger: true,
                 });
                 if (confirmed) {
                   await deleteCoreData(
                     '',
-                    'Database deleted. Close the app completely and open it again.'
+                    t('Database deleted. Close the app completely and open it again.')
                   );
                 }
               }}

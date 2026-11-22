@@ -12,6 +12,7 @@ import { fetchMyNames, fullName } from 'lib/names';
 import { selectUsername } from 'lib/user';
 import { navigate } from 'lib/navigation';
 import { showError, showNotification } from 'lib/ui';
+import { t } from 'lib/i18n';
 import useRefresh from 'utils/useRefresh';
 import NameIcon from 'icons/abc.svg';
 
@@ -69,9 +70,7 @@ export default function NamesScreen() {
         }
       >
         <Text sub size={13} style={styles.intro}>
-          People can send to a name instead of a long address. Local names
-          (yourname:name) are cheap; a global name has no prefix and is unique
-          on the whole network. Tap a name to copy it.
+          {t('People can send to a name instead of a long address. Local names (yourname:name) are cheap; a global name has no prefix and is unique on the whole network. Tap a name to copy it.')}
         </Text>
         {names === null ? (
           <View style={styles.center}>
@@ -79,7 +78,7 @@ export default function NamesScreen() {
           </View>
         ) : !names.length ? (
           <View style={styles.center}>
-            <Text sub>No names yet.</Text>
+            <Text sub>{t('No names yet.')}</Text>
           </View>
         ) : (
           <Surface style={styles.card}>
@@ -92,17 +91,17 @@ export default function NamesScreen() {
                     style={styles.row}
                     onPress={() => {
                       Clipboard.setString(text);
-                      showNotification(`Copied ${text}`);
+                      showNotification(t('Copied {text}', { text }));
                     }}
                   >
                     <View>
                       <Text bold>{text}</Text>
                       <Text sub size={12}>
-                        {`for ${target(n.register)}`}
+                        {t('for {target}', { target: target(n.register) })}
                       </Text>
                       <View style={styles.tag({ global: n.global })}>
                         <Text size={11} style={{ color: n.global ? '#1b7a47' : '#566175' }}>
-                          {n.global ? 'GLOBAL' : 'LOCAL'}
+                          {n.global ? t('GLOBAL') : t('LOCAL')}
                         </Text>
                       </View>
                     </View>
@@ -118,7 +117,7 @@ export default function NamesScreen() {
         style={styles.fab}
         icon="plus"
         color={theme.onPrimary}
-        label="New name"
+        label={t('New name')}
         onPress={() => navigate('NewName')}
       />
     </View>

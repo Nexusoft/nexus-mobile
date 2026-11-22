@@ -10,6 +10,7 @@ import RNFS from 'react-native-fs';
 import SvgIcon from 'components/SvgIcon';
 import RecoveryIcon from 'icons/recovery.svg';
 import { showError } from 'lib/ui';
+import { t } from 'lib/i18n';
 
 const styles = {
   screen: {
@@ -53,7 +54,7 @@ const LogOutput = () => {
   handleReadFile(logOutput, setLogOutput);
   const theme = useTheme();
   if (logOutput === true) {
-    return <Text style={{ color: theme.foreground }}>Loading</Text>;
+    return <Text style={{ color: theme.foreground }}>{t('Loading')}</Text>;
   } else {
     return (
       <TextInput multiline editable={false} style={{ color: theme.foreground }}>

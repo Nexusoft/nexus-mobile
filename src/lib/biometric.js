@@ -1,5 +1,6 @@
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStore from 'expo-secure-store';
+import { t } from 'lib/i18n';
 
 //the PIN lives only in the phone's secure storage (Android Keystore / iOS
 //Keychain) and is read after a fingerprint or face check: 'unlock' opens a
@@ -23,7 +24,7 @@ export async function checkBiometric(promptMessage) {
   try {
     const result = await LocalAuthentication.authenticateAsync({
       promptMessage,
-      fallbackLabel: 'Use PIN',
+      fallbackLabel: t('Use PIN'),
     });
     return !!result.success;
   } catch (err) {
@@ -43,8 +44,8 @@ export async function hasBiometricPin(username, purpose) {
 export async function enableBiometricPin(username, pin, purpose) {
   const ok = await checkBiometric(
     purpose === 'send'
-      ? 'Confirm to send with fingerprint / face'
-      : 'Confirm to turn on fingerprint / face unlock'
+      ? t('Confirm to send with fingerprint / face')
+      : t('Confirm to turn on fingerprint / face unlock')
   );
   if (!ok) return false;
   await SecureStore.setItemAsync(pinKey(username, purpose), pin);
@@ -59,7 +60,7 @@ export async function disableBiometricPin(username, purpose) {
 }
 
 export async function readPinWithBiometric(username, purpose, promptMessage) {
-  const ok = await checkBiometric(promptMessage || 'Unlock Nexus Wallet');
+  const ok = await checkBiometric(promptMessage || t('Unlock Nexus Wallet'));
   if (!ok) return null;
   return await SecureStore.getItemAsync(pinKey(username, purpose));
 }

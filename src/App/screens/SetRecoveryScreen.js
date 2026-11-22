@@ -15,6 +15,7 @@ import { callAPI } from 'lib/api';
 import { goBack } from 'lib/navigation';
 import { showError, showNotification } from 'lib/ui';
 import { disabledColor, useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 import { getRandomBytes } from 'expo-random';
 
 //uniform index from a secure source, rejection sampling avoids modulo bias
@@ -68,8 +69,8 @@ function ConfirmRecoveryDialog({ newRecovery, visible, onDismiss, onConfirm }) {
         validationSchema={yup.object().shape({
           recovery: yup
             .string()
-            .required('Required!')
-            .oneOf([newRecovery], 'Mismatch!'),
+            .required(t('Required!'))
+            .oneOf([newRecovery], t('Mismatch!')),
         })}
         onSubmit={onConfirm}
       >
@@ -78,21 +79,20 @@ function ConfirmRecoveryDialog({ newRecovery, visible, onDismiss, onConfirm }) {
             <Dialog.Content>
               <View style={styles.msgBox({ theme })}>
                 <Text sub>
-                  Re-enter your recovery phrase to make sure you have it backed
-                  up
+                  {t('Re-enter your recovery phrase to make sure you have it backed up')}
                 </Text>
               </View>
               <TextBox.Formik
                 autoFocus
                 multiline
                 name="recovery"
-                label="Re-enter new recovery phrase"
+                label={t('Re-enter new recovery phrase')}
               />
               <FAB
                 mode="contained"
                 style={{ marginTop: 10 }}
                 onPress={handleSubmit}
-                label="Confirm"
+                label={t('Confirm')}
               />
             </Dialog.Content>
           </Dialog>
@@ -132,15 +132,15 @@ export default function SetRecoveryScreen() {
           newRecovery: '',
         }}
         validationSchema={yup.object().shape({
-          password: yup.string().required('Required!'),
-          pin: yup.string().required('Required!'),
+          password: yup.string().required(t('Required!')),
+          pin: yup.string().required(t('Required!')),
           recovery: hasRecoveryPhrase
-            ? yup.string().required('Required!')
+            ? yup.string().required(t('Required!'))
             : undefined,
           newRecovery: yup
             .string()
-            .required('Required!')
-            .min(40, 'Must be at least 40 characters'),
+            .required(t('Required!'))
+            .min(40, t('Must be at least 40 characters')),
         })}
         onSubmit={async ({ password, pin, recovery, newRecovery }) => {
           try {
@@ -155,7 +155,7 @@ export default function SetRecoveryScreen() {
             return;
           }
           refreshUserStatus();
-          showNotification('Recovery phrase has been updated');
+          showNotification(t('Recovery phrase has been updated'));
           goBack();
         }}
       >
@@ -174,35 +174,35 @@ export default function SetRecoveryScreen() {
             <>
               <View style={styles.msgBox({ theme })}>
                 <Text>
-                  Recovery phrase can be used to recover your account and set
-                  new password and PIN in the event that you lose or forget
-                  them.
+                  {t('Recovery phrase can be used to recover your account and set new password and PIN in the event that you lose or forget them.')}
                 </Text>
                 <Text style={{ marginTop: 5 }}>
-                  <Text bold>Save your recovery phrase in a safe place</Text>,
-                  because if you lose it, there will be <Text bold>no way</Text>{' '}
-                  to recover it.
+                  <Text bold>
+                    {t('Save your recovery phrase in a safe place')}
+                  </Text>
+                  ,{' '}
+                  {t('because if you lose it, there will be no way to recover it.')}
                 </Text>
               </View>
 
               <TextBox.Formik
                 secure
                 name="password"
-                label="Password"
+                label={t('Password')}
                 autoFocus
               />
-              <TextBox.Formik secure name="pin" label="PIN" />
+              <TextBox.Formik secure name="pin" label={t('PIN')} />
               {hasRecoveryPhrase && (
                 <TextBox.Formik
                   multiline
                   name="recovery"
-                  label="Current recovery phrase"
+                  label={t('Current recovery phrase')}
                 />
               )}
 
               <View style={styles.generation}>
                 <Text style={styles.generateText}>
-                  Generate random recovery phrase
+                  {t('Generate random recovery phrase')}
                 </Text>
                 <View style={styles.btns}>
                   <Button
@@ -215,7 +215,7 @@ export default function SetRecoveryScreen() {
                     style={styles.btn}
                     labelStyle={{ fontSize: 13 }}
                   >
-                    10 words
+                    {t('{count} words', { count: 10 })}
                   </Button>
                   <Button
                     compact
@@ -227,7 +227,7 @@ export default function SetRecoveryScreen() {
                     style={[styles.btn, { marginHorizontal: 10 }]}
                     labelStyle={{ fontSize: 13 }}
                   >
-                    20 words
+                    {t('{count} words', { count: 20 })}
                   </Button>
                   <Button
                     compact
@@ -239,7 +239,7 @@ export default function SetRecoveryScreen() {
                     style={styles.btn}
                     labelStyle={{ fontSize: 13 }}
                   >
-                    100 words
+                    {t('{count} words', { count: 100 })}
                   </Button>
                 </View>
               </View>
@@ -247,7 +247,9 @@ export default function SetRecoveryScreen() {
                 multiline
                 name="newRecovery"
                 label={
-                  hasRecoveryPhrase ? 'New recovery phrase' : 'Recovery phrase'
+                  hasRecoveryPhrase
+                    ? t('New recovery phrase')
+                    : t('Recovery phrase')
                 }
               />
               <FAB
@@ -258,7 +260,7 @@ export default function SetRecoveryScreen() {
                 onPress={() => {
                   setConfirming(true);
                 }}
-                label="Update recovery phrase"
+                label={t('Update recovery phrase')}
               />
               <ConfirmRecoveryDialog
                 visible={confirming}

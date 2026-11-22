@@ -6,6 +6,7 @@ import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 
 import { callAPI } from 'lib/api';
+import { t } from 'lib/i18n';
 import useRefresh from 'utils/useRefresh';
 import TransactionDetails from './TransactionDetails';
 import ContractDetails from './ContractDetails';
@@ -34,7 +35,7 @@ export default function TransactionDetailsScreen({ route }) {
       setError(null);
       setTransaction(tx);
     } catch (err) {
-      setError(err?.message || 'Could not load this transaction');
+      setError(err?.message || t('Could not load this transaction'));
     }
   };
   const [refreshing, refresh] = useRefresh(loadTransaction);
@@ -52,7 +53,7 @@ export default function TransactionDetailsScreen({ route }) {
           <TransactionDetails transaction={transaction} />
 
           <Text sub style={styles.subHeader}>
-            Contracts
+            {t('Contracts')}
           </Text>
           {transaction?.contracts?.map((contract) => (
             <ContractDetails key={contract.id} contract={contract} />

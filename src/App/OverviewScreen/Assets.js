@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
 import { navigate } from 'lib/navigation';
+import { t } from 'lib/i18n';
 import { selectSetting } from 'lib/settings';
 import formatNumber from 'utils/formatNumber';
 import { selectMarketPrice } from 'lib/market';
@@ -74,7 +75,7 @@ export default function Assets({ accounts }) {
   return (
     <View>
       <Text sub style={styles.header}>
-        Assets
+        {t('Assets')}
       </Text>
       {assets.map((asset, i) => (
         <React.Fragment key={asset.token}>
@@ -89,7 +90,9 @@ export default function Assets({ accounts }) {
               <View style={styles.name}>
                 <Text bold>{asset.ticker}</Text>
                 <Text sub size={12}>
-                  {asset.count} account{asset.count === 1 ? '' : 's'}
+                  {asset.count === 1
+                    ? t('1 account')
+                    : t('{count} accounts', { count: asset.count })}
                 </Text>
               </View>
               <View style={styles.value}>

@@ -22,6 +22,7 @@ import {
 } from 'lib/summary';
 import { selectUsername } from 'lib/user';
 import { showError, showNotification } from 'lib/ui';
+import { t } from 'lib/i18n';
 import formatNumber from 'utils/formatNumber';
 import ChevronLeft from 'icons/chevron-left.svg';
 import ChevronRight from 'icons/chevron-right.svg';
@@ -114,10 +115,10 @@ function Line({ label, value, color }) {
   );
 }
 
-const exportOptions = [
-  { value: 'month', display: 'Selected month' },
-  { value: 'year', display: 'Selected year' },
-  { value: 'all', display: 'Whole history' },
+const exportOptions = () => [
+  { value: 'month', display: t('Selected month') },
+  { value: 'year', display: t('Selected year') },
+  { value: 'all', display: t('Whole history') },
 ];
 
 export default function SummaryScreen() {
@@ -146,7 +147,7 @@ export default function SummaryScreen() {
           setLoaded({ since: windowStart, entries: toEntries(txs) });
         }
       } catch (err) {
-        if (!cancelled) showError(err?.message || 'Could not load transactions');
+        if (!cancelled) showError(err?.message || t('Could not load transactions'));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -205,7 +206,7 @@ export default function SummaryScreen() {
         (e) => !until || e.timestamp < until.unix()
       );
       if (!entries.length) {
-        showNotification('No transactions in this period');
+        showNotification(t('No transactions in this period'));
         return;
       }
       const name = `nexus-${username || 'wallet'}-${label}.csv`.replace(
@@ -214,7 +215,7 @@ export default function SummaryScreen() {
       );
       await shareCsv(name, toCsv(entries));
     } catch (err) {
-      showError(err?.message || 'Could not export');
+      showError(err?.message || t('Could not export'));
     } finally {
       setExporting(false);
     }
@@ -224,7 +225,7 @@ export default function SummaryScreen() {
     <ScreenBody>
       <View style={styles.monthBar}>
         <IconButton
-          accessibilityLabel="Previous month"
+          accessibilityLabel={t('Previous month')}
           icon={({ size, color }) => (
             <SvgIcon icon={ChevronLeft} size={size} color={color} />
           )}
@@ -234,7 +235,7 @@ export default function SummaryScreen() {
           {month.format('MMMM YYYY')}
         </Text>
         <IconButton
-          accessibilityLabel="Next month"
+          accessibilityLabel={t('Next month')}
           disabled={isCurrentMonth}
           icon={({ size, color }) => (
             <SvgIcon icon={ChevronRight} size={size} color={color} />
@@ -264,29 +265,33 @@ export default function SummaryScreen() {
         <View style={styles.center}>
           <ActivityIndicator />
           <Text sub style={{ marginTop: 10 }}>
-            {progress ? `Reading transactions... ${progress}` : 'Reading transactions...'}
+            {progress
+              ? t('Reading transactions... {progress}', { progress })
+              : t('Reading transactions...')}
           </Text>
         </View>
       ) : !sum ? (
         <View style={styles.center}>
-          <Text sub>No transactions in {month.format('MMMM YYYY')}.</Text>
+          <Text sub>
+            {t('No transactions in {month}.', { month: month.format('MMMM YYYY') })}
+          </Text>
         </View>
       ) : (
         <Surface style={styles.card}>
-          <Line label="Received" value={amount(sum.in, shownTicker, '+')} color={deltaColor('+')} />
-          <Line label="Sent" value={amount(sum.out, shownTicker, '-')} color={deltaColor('-')} />
+          <Line label={t('Received')} value={amount(sum.in, shownTicker, '+')} color={deltaColor('+')} />
+          <Line label={t('Sent')} value={amount(sum.out, shownTicker, '-')} color={deltaColor('-')} />
           {!!sum.stake && (
             <Line
-              label="Staking rewards"
+              label={t('Staking rewards')}
               value={amount(sum.stake, shownTicker, '+')}
               color={deltaColor('+')}
             />
           )}
           {!!sum.fee && (
-            <Line label="Fees" value={amount(sum.fee, shownTicker, '-')} />
+            <Line label={t('Fees')} value={amount(sum.fee, shownTicker, '-')} />
           )}
           <View style={styles.net({ theme })}>
-            <Text bold>Change this month</Text>
+            <Text bold>{t('Change this month')}</Text>
             <Text bold style={{ color: deltaColor(sum.net < 0 ? '-' : '+') }}>
               {amount(Math.abs(sum.net), shownTicker, sum.net < 0 ? '-' : '+')}
             </Text>
@@ -294,12 +299,14 @@ export default function SummaryScreen() {
           {!!sum.own && (
             <Text sub size={12} style={{ marginTop: 8 }}>
               {sum.own === 1
-                ? '1 move between your own accounts, not counted'
-                : `${sum.own} moves between your own accounts, not counted`}
+                ? t('1 move between your own accounts, not counted')
+                : t('{count} moves between your own accounts, not counted', {
+                    count: sum.own,
+                  })}
             </Text>
           )}
 
-          <View style={styles.bars} accessibilityLabel="Last 6 months">
+          <View style={styles.bars} accessibilityLabel={t('Last 6 months')}>
             {chart.map((m, i) => (
               <View key={i} style={styles.barSlot}>
                 <View style={styles.bar({ color: inColor, ratio: m.in / chartMax })} />
@@ -323,36 +330,35 @@ export default function SummaryScreen() {
           <View style={styles.legend}>
             <View style={styles.legendDot({ color: inColor })} />
             <Text sub size={11}>
-              In
+              {t('In')}
             </Text>
             <View style={styles.legendDot({ color: outColor })} />
             <Text sub size={11}>
-              Out
+              {t('Out')}
             </Text>
           </View>
         </Surface>
       )}
 
       <Text sub size={13} style={styles.sectionTitle}>
-        Export history
+        {t('Export history')}
       </Text>
       <Surface style={styles.card}>
         <Text sub size={13} style={{ marginBottom: 8 }}>
-          A CSV file with every transaction of the period, all tokens, for taxes or
-          bookkeeping. It opens in any spreadsheet.
+          {t('A CSV file with every transaction of the period, all tokens, for taxes or bookkeeping. It opens in any spreadsheet.')}
         </Text>
         <Select
-          options={exportOptions}
+          options={exportOptions()}
           value={period}
           updateValue={setPeriod}
           render={({ display, openSelect }) => (
             <View style={[styles.line, { alignItems: 'center' }]}>
-              <Text>Period</Text>
+              <Text>{t('Period')}</Text>
               <Button compact uppercase={false} onPress={openSelect}>
                 {period === 'month'
                   ? month.format('MMMM YYYY')
                   : period === 'year'
-                  ? `Year ${month.format('YYYY')}`
+                  ? t('Year {year}', { year: month.format('YYYY') })
                   : display}
               </Button>
             </View>
@@ -365,7 +371,7 @@ export default function SummaryScreen() {
           disabled={exporting}
           onPress={exportCsv}
         >
-          Share CSV file
+          {t('Share CSV file')}
         </Button>
       </Surface>
     </ScreenBody>

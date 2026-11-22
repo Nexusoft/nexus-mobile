@@ -4,6 +4,7 @@ import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
 import { forgetBiometricPins } from 'lib/biometric';
 import { selectUsername } from 'lib/user';
+import { t } from 'lib/i18n';
 
 const maxIndexingWaitMs = 180000;
 
@@ -68,21 +69,22 @@ export async function refreshUserStatus() {
 export function friendlyLoginError(err) {
   const syncing = !!getStore()?.getState().core.info?.syncing;
   const syncNote = syncing
-    ? ' Nexus Core is still synchronizing, which can also cause this. Wait for it to finish and try again.'
+    ? ' ' +
+      t('Nexus Core is still synchronizing, which can also cause this. Wait for it to finish and try again.')
     : '';
   switch (err?.code) {
     case -139:
-      return 'Wrong username, password or PIN.' + syncNote;
+      return t('Wrong username, password or PIN.') + syncNote;
     case -130:
-      return 'No account with this username was found.' + syncNote;
+      return t('No account with this username was found.') + syncNote;
     case -309:
-      return 'Wrong PIN, or the saved login could not be opened.';
+      return t('Wrong PIN, or the saved login could not be opened.');
     case 'TIMEOUT':
     case 'NETWORK':
     case 401:
       return err.message;
     default:
-      return (err?.message || 'Login failed') + syncNote;
+      return (err?.message || t('Login failed')) + syncNote;
   }
 }
 
