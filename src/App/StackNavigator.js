@@ -25,6 +25,7 @@ import ChangePasswordScreen from './screens/ChangePasswordScreen';
 import CoreInfoScreen from './screens/CoreInfoScreen';
 import AboutScreen from './screens/AboutScreen';
 import SummaryScreen from './screens/SummaryScreen';
+import StakingScreen from './screens/StakingScreen';
 import { useTheme } from 'lib/theme';
 import { selectLoggedIn } from 'lib/user';
 import { resetToBase } from 'lib/navigation';
@@ -55,6 +56,7 @@ const screens = [
   CoreInfoScreen,
   AboutScreen,
   SummaryScreen,
+  StakingScreen,
 ];
 
 export default function StackNavigator({ navigation }) {
