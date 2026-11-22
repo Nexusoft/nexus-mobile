@@ -11,6 +11,12 @@ export const defaultSettings = {
   hideBalances: false,
   hideUnusedTrustAccount: true,
 
+  // Security
+  appLock: false,
+  appLockAfter: 60, // seconds in the background before the lock
+  hidePreview: false,
+  sendBiometricMax: 1000, // above it the PIN is asked, 0 = no limit
+
   // Core
   coreMode: 'embedded',
   embeddedUser: 'apiserver',

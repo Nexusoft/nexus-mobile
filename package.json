@@ -32,6 +32,7 @@
     "expo-local-authentication": "~12.3.0",
     "expo-notifications": "~0.16.0",
     "expo-random": "~12.3.0",
+    "expo-screen-capture": "~4.3.0",
     "expo-secure-store": "~11.3.0",
     "expo-splash-screen": "^0.16.2",
     "expo-web-browser": "^11.0.0",

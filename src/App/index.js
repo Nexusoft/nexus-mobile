@@ -20,6 +20,7 @@ import ThemeContainer from './ThemeContainer';
 import StatusBar from './StatusBar';
 import Notifications from './Notifications';
 import Dialogs from './Dialogs';
+import AppLock from './AppLock';
 import DrawerNavigator from './DrawerNavigator';
 import initStore from './initStore';
 
@@ -101,6 +102,7 @@ function App() {
         }
       />
       <DrawerNavigator />
+      <AppLock />
       <Dialogs />
       <Notifications />
     </View>

@@ -12,13 +12,6 @@ import baseCurrencies from 'consts/baseCurrencies';
 import SettingItem from './SettingItem';
 import commonStyles from './styles';
 import formatNumber from 'utils/formatNumber';
-import { confirmPin, showError, showNotification } from 'lib/ui';
-import {
-  biometricAvailable,
-  hasBiometricUnlock,
-  enableBiometricUnlock,
-  disableBiometricUnlock,
-} from 'lib/biometric';
 
 const styles = {
   ...commonStyles,
@@ -41,55 +34,6 @@ const themeOptions = [
     display: 'Light',
   },
 ];
-
-function BiometricSetting() {
-  const savedUsername = useSelector(selectSetting('savedUsername'));
-  const sessionSaved = useSelector((state) => !!state.user.status?.saved);
-  const [available, setAvailable] = React.useState(false);
-  const [enabled, setEnabled] = React.useState(false);
-  React.useEffect(() => {
-    (async () => {
-      setAvailable(await biometricAvailable());
-      setEnabled(await hasBiometricUnlock(savedUsername));
-    })();
-  }, [savedUsername]);
-  if (!available) return null;
-  return (
-    <>
-      <Divider inset={20} />
-      <SettingItem
-        title="Fingerprint / face unlock"
-        description={
-          sessionSaved && savedUsername
-            ? 'Open the wallet with your fingerprint or face instead of typing the PIN. The PIN is still asked for every send.'
-            : 'Log in with "Remember username" and "Keep me logged in" on to use this.'
-        }
-        right={
-          <Switch
-            value={enabled}
-            disabled={!sessionSaved || !savedUsername}
-            onValueChange={async (value) => {
-              if (!value) {
-                await disableBiometricUnlock(savedUsername);
-                setEnabled(false);
-                return;
-              }
-              const pin = await confirmPin({});
-              if (!pin) return;
-              try {
-                const ok = await enableBiometricUnlock(savedUsername, pin);
-                setEnabled(ok);
-                if (ok) showNotification('Fingerprint / face unlock is on');
-              } catch (err) {
-                showError(err?.message);
-              }
-            }}
-          />
-        }
-      />
-    </>
-  );
-}
 
 export default function ApplicationSettings() {
   const loggedIn = useSelector(selectLoggedIn);
@@ -173,7 +117,7 @@ export default function ApplicationSettings() {
                 />
               }
             />
-            <BiometricSetting />
+            <Divider inset={20} />
           </>
         )}
 

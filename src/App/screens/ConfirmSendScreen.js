@@ -15,12 +15,22 @@ import { useTheme, disabledColor } from 'lib/theme';
 import { goBack } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { showNotification, showError } from 'lib/ui';
+import { selectUsername } from 'lib/user';
+import { selectSetting } from 'lib/settings';
+import { checkPin } from 'lib/appLock';
+import {
+  biometricAvailable,
+  hasBiometricPin,
+  readPinWithBiometric,
+  disableBiometricPin,
+} from 'lib/biometric';
 import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
 import WalletIcon from 'icons/wallet.svg';
 import SendIcon from 'icons/send.svg';
 import ContactsIcon from 'icons/address-book.svg';
 import NameIcon from 'icons/abc.svg';
+import KeyIcon from 'icons/key.svg';
 
 const styles = {
   wrapper: {
@@ -106,6 +116,66 @@ export default function ConfirmSendScreen({ route }) {
       (acc) => acc.address === recipient?.address
     )
   );
+  const username = useSelector(selectUsername);
+  const sendMax = useSelector(selectSetting('sendBiometricMax'));
+  const [canBiometric, setCanBiometric] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  React.useEffect(() => {
+    (async () => {
+      const withinMax = !sendMax || Number(amount) <= sendMax;
+      setCanBiometric(
+        withinMax &&
+          (await biometricAvailable()) &&
+          (await hasBiometricPin(username, 'send'))
+      );
+    })();
+  }, [username, sendMax, amount]);
+
+  const send = async (pin) => {
+    if (sendingRef.current) return;
+    const params = { pin, from: account.address, amount };
+    params.to = recipient.address;
+    if (reference || reference === 0) {
+      params.reference = reference;
+    }
+
+    sendingRef.current = true;
+    setSending(true);
+    try {
+      await callAPI('finance/debit/account,trust', params);
+    } catch (err) {
+      sendingRef.current = false;
+      setSending(false);
+      showError(err && err.message);
+      return;
+    }
+    showNotification('Transaction sent');
+    goBack(); // go back from ConfirmSend screen to Send screen
+    goBack(); // go back from Send screen
+  };
+
+  const sendWithBiometric = async () => {
+    try {
+      const pin = await readPinWithBiometric(
+        username,
+        'send',
+        'Confirm the send'
+      );
+      if (!pin) return;
+      //PIN changed since it was stored
+      if ((await checkPin(pin)) === false) {
+        await disableBiometricPin(username, 'send');
+        setCanBiometric(false);
+        showError(
+          'Sending with fingerprint was turned off because the saved PIN no longer works. Enter your PIN.'
+        );
+        return;
+      }
+      await send(pin);
+    } catch (err) {
+      showError(err?.message);
+    }
+  };
   return (
     <ScreenBody style={styles.wrapper} surface>
       <View style={styles.amountSection}>
@@ -181,26 +251,7 @@ export default function ConfirmSendScreen({ route }) {
         validationSchema={yup.object().shape({
           pin: yup.string().required('Required!'),
         })}
-        onSubmit={async ({ pin }) => {
-          if (sendingRef.current) return;
-          const params = { pin, from: account.address, amount };
-          params.to = recipient.address;
-          if (reference || reference === 0) {
-            params.reference = reference;
-          }
-
-          sendingRef.current = true;
-          try {
-            await callAPI('finance/debit/account,trust', params);
-          } catch (err) {
-            sendingRef.current = false;
-            showError(err && err.message);
-            return;
-          }
-          showNotification('Transaction sent');
-          goBack(); // go back from ConfirmSend screen to Send screen
-          goBack(); // go back from Send screen
-        }}
+        onSubmit={({ pin }) => send(pin)}
       >
         {({ handleSubmit, isSubmitting }) => (
           <>
@@ -209,10 +260,24 @@ export default function ConfirmSendScreen({ route }) {
                 Double check your transaction before confirming
               </Text>
 
+              {canBiometric && (
+                <Button
+                  mode="contained"
+                  style={{ marginBottom: 20 }}
+                  disabled={isSubmitting || sending}
+                  icon={({ size, color }) => (
+                    <SvgIcon icon={KeyIcon} {...{ size, color }} />
+                  )}
+                  onPress={sendWithBiometric}
+                >
+                  Confirm with fingerprint
+                </Button>
+              )}
+
               <TextBox.Formik
                 mode="outlined"
                 name="pin"
-                label="Enter your PIN to confirm"
+                label={canBiometric ? 'Or enter your PIN' : 'Enter your PIN to confirm'}
                 background={['surface', 0]}
                 secure
                 keyboardType={
@@ -244,9 +309,9 @@ export default function ConfirmSendScreen({ route }) {
                   <SvgIcon icon={SendIcon} {...{ size, color }} />
                 )}
                 onPress={handleSubmit}
-                loading={isSubmitting}
-                disabled={isSubmitting}
-                label={isSubmitting ? 'Sending...' : 'Send'}
+                loading={isSubmitting || sending}
+                disabled={isSubmitting || sending}
+                label={isSubmitting || sending ? 'Sending...' : 'Send'}
               />
             </View>
           </>

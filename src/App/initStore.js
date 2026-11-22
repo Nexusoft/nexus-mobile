@@ -8,6 +8,7 @@ import {
 import { refreshUserStatus } from 'lib/session';
 import { watchNewTransactions } from 'lib/transactions';
 import { watchPaymentLinks } from 'lib/paymentLinks';
+import { watchAppLock, lockOnStart } from 'lib/appLock';
 import { pollMarketPrice } from 'lib/market';
 import { selectSetting } from 'lib/settings';
 import { loadEmbeddedCredentials } from 'lib/embeddedCore';
@@ -44,11 +45,16 @@ export default function initStore() {
     }
     await withTimeout(refreshCoreInfo, 1000);
 
+    let startChecked = false;
     store.observe(
       (state) => state.core.info,
       async (coreInfo) => {
         if (coreInfo) {
           await refreshUserStatus();
+          if (!startChecked) {
+            startChecked = true;
+            lockOnStart();
+          }
         }
         resolve();
       }
@@ -80,6 +86,7 @@ export default function initStore() {
 
     watchNewTransactions();
     watchPaymentLinks();
+    watchAppLock();
     pollMarketPrice();
   });
 }

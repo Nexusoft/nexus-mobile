@@ -2,7 +2,8 @@ import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
 import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
-import { disableBiometricUnlock } from 'lib/biometric';
+import { forgetBiometricPins } from 'lib/biometric';
+import { selectUsername } from 'lib/user';
 
 const maxIndexingWaitMs = 180000;
 
@@ -142,15 +143,19 @@ export async function logOut() {
   refreshUserStatusLock = true;
   try {
     const store = getStore();
+    const state = store.getState();
     const {
       user: {
         status: { saved },
       },
       settings: { savedUsername },
-    } = store.getState();
+    } = state;
+    const username = selectUsername(state);
 
     await callAPI('sessions/terminate/local', saved ? { clear: 1 } : null);
-    if (saved) await disableBiometricUnlock(savedUsername);
+    if (saved) await forgetBiometricPins(savedUsername);
+    if (username && username !== savedUsername)
+      await forgetBiometricPins(username);
   } finally {
     // Release the lock
     refreshUserStatusLock = false;
