@@ -9,6 +9,9 @@ import { getStore, observeStore } from 'store';
 import { showError } from 'lib/ui';
 import formatNumber from 'utils/formatNumber';
 
+//a history download can add hundreds at once, older ones are not news
+const maxNewTransactionsFetch = 20;
+
 export const isConfirmed = (tx) => !!tx.confirmations;
 
 let watchedIds = [];
@@ -285,8 +288,9 @@ export function watchNewTransactions() {
     (state) => state,
     async (state, oldState) => {
       if (!oldState || !state) return;
-      const txCount = state?.user?.status?.transactions;
-      const oldTxCount = oldState?.user?.status?.transactions;
+      //core 5.1 has the count in profiles/status, not sessions/status
+      const txCount = state?.user?.profileStatus?.transactions;
+      const oldTxCount = oldState?.user?.profileStatus?.transactions;
       const wasSyncing = !!oldState?.core?.info?.syncing;
       if (
         txCount > oldTxCount &&
@@ -298,7 +302,7 @@ export function watchNewTransactions() {
         try {
           transactions = await callAPI('ledger/list/transactions', {
             verbose: 'summary',
-            limit: txCount - oldTxCount,
+            limit: Math.min(txCount - oldTxCount, maxNewTransactionsFetch),
           });
         } catch (err) {
           return;
@@ -322,7 +326,7 @@ export function watchNewTransactions() {
                   data: { type: 'new_transaction', txid: tx.txid },
                 },
                 trigger: { channelId: 'transaction-channel-id' },
-              });
+              }).catch(() => {});
             }
           }
         });
