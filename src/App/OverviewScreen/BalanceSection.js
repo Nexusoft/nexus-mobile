@@ -66,6 +66,7 @@ const selectBalances = memoize(
   (balances) => {
     if (!balances) return [undefined, undefined];
     const nxsIndex = balances.findIndex(({ token }) => token === '0');
+    if (nxsIndex < 0) return [undefined, [...balances]];
     const tokenBalances = [...balances];
     const [nxsBalances] = tokenBalances.splice(nxsIndex, 1);
     return [nxsBalances, tokenBalances];

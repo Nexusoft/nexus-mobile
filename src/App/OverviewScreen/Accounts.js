@@ -117,7 +117,11 @@ function Account({ account }) {
 }
 
 const refreshData = () =>
-  Promise.all([refreshUserAccounts, refreshUserBalances, refreshMarketPrice]);
+  Promise.all([
+    refreshUserAccounts(),
+    refreshUserBalances(),
+    refreshMarketPrice(),
+  ]);
 
 export default function Accounts({ filteredAccounts }) {
   const [refreshing, refresh] = useRefresh(refreshData);

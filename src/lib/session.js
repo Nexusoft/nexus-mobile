@@ -3,6 +3,8 @@ import { callAPI } from 'lib/api';
 import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
 
+const maxIndexingWaitMs = 180000;
+
 // Don't refresh user status while login process is not yet done
 let refreshUserStatusLock = false;
 export async function refreshUserStatus() {
@@ -81,11 +83,13 @@ export async function logIn({
       password,
       pin,
     });
-    let finishedIndexing = false;
-    while (!finishedIndexing) {
-      // This checks if the account has finished indexing after downloading the sigchain, consider revising this.
-      let status = await callAPI('sessions/status/local');
-      finishedIndexing = !status.indexing;
+    //wait for the sigchain download and indexing...
+    const indexingDeadline = Date.now() + maxIndexingWaitMs;
+    while (true) {
+      const status = await callAPI('sessions/status/local');
+      if (!status?.indexing) break;
+      //very large sigchains: go on, balances fill in when indexing ends
+      if (Date.now() > indexingDeadline) break;
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
     updateSettings({

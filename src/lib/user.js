@@ -71,7 +71,7 @@ export async function refreshHeaders() {
     const result = await callAPI('ledger/sync/headers');
     return result;
   } catch (error) {
-    if (error.code === '-306') {
+    if (String(error?.code) === '-306') {
       setTimeout(() => {
         refreshHeaders();
       }, 500);
