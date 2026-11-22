@@ -223,7 +223,7 @@ const getBalanceChanges = (tx) =>
           let change = changes.find(
             contract.ticker || contract.token_name
               ? (change) =>
-                  change.ticker === contract.ticker || contract.token_name
+                  change.ticker === (contract.ticker || contract.token_name)
               : (change) => change.token === contract.token
           );
           if (change) {
@@ -240,7 +240,7 @@ const getBalanceChanges = (tx) =>
         }
         return changes;
       }, [])
-    : 0;
+    : [];
 
 export async function fetchTransaction({ txid, where, limit }) {
   let tx;
