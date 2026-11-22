@@ -8,6 +8,7 @@ import ContactsIcon from 'icons/address-book.svg';
 import TransactionIcon from 'icons/transaction.svg';
 import ChartIcon from 'icons/chart.svg';
 import StakeIcon from 'icons/stake.svg';
+import NameIcon from 'icons/abc.svg';
 import MenuItem from './MenuItem';
 
 export default function SideMenu() {
@@ -15,6 +16,7 @@ export default function SideMenu() {
     <>
       <MenuItem linkTo="Accounts" icon={WalletIcon} label="Accounts" />
       <MenuItem linkTo="Contacts" icon={ContactsIcon} label="Contacts" />
+      <MenuItem linkTo="Names" icon={NameIcon} label="Names" />
       <MenuItem
         linkTo="Transactions"
         icon={TransactionIcon}
