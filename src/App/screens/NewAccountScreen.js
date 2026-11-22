@@ -71,7 +71,7 @@ export default function NewAccountScreen() {
           }
         }}
       >
-        {({ handleSubmit, isSubmitting, values, setValues }) => (
+        {({ handleSubmit, isSubmitting, values, setFieldValue }) => (
           <>
             <View style={styles.tokenSection}>
               <View style={styles.tokenNameSelect}>
@@ -122,7 +122,7 @@ export default function NewAccountScreen() {
                 setSelectorOpen(false);
               }}
               selectedToken={values.token}
-              selectToken={(token) => setValues({ token })}
+              selectToken={(token) => setFieldValue('token', token)}
             />
           </>
         )}
