@@ -10,6 +10,7 @@ import ScreenBody from 'components/ScreenBody';
 import SvgIcon from 'components/SvgIcon';
 import InfoField from 'components/InfoField';
 import TokenName from 'components/TokenName';
+import formatNumber from 'utils/formatNumber';
 import { showNotification } from 'lib/ui';
 import { navigate } from 'lib/navigation';
 import { refreshUserAccount } from 'lib/user';
@@ -143,7 +144,8 @@ export default function AccountDetailsScreen({ route }) {
             label="Available balance"
             value={
               <Text>
-                {account.balance} <TokenName account={account} />
+                {formatNumber(account.balance || 0, { maximumFractionDigits: 6 })}{' '}
+                <TokenName account={account} />
               </Text>
             }
           />
@@ -154,7 +156,8 @@ export default function AccountDetailsScreen({ route }) {
             label="Unclaimed balance"
             value={
               <Text>
-                {account.unclaimed} <TokenName account={account} />
+                {formatNumber(account.unclaimed || 0, { maximumFractionDigits: 6 })}{' '}
+                <TokenName account={account} />
               </Text>
             }
           />
@@ -165,7 +168,8 @@ export default function AccountDetailsScreen({ route }) {
             label="Unconfirmed balance"
             value={
               <Text>
-                {account.unconfirmed} <TokenName account={account} />
+                {formatNumber(account.unconfirmed || 0, { maximumFractionDigits: 6 })}{' '}
+                <TokenName account={account} />
               </Text>
             }
           />
@@ -178,7 +182,8 @@ export default function AccountDetailsScreen({ route }) {
                 label="Staking balance (locked)"
                 value={
                   <Text>
-                    {account.stake} <TokenName account={account} />
+                    {formatNumber(account.stake || 0, { maximumFractionDigits: 6 })}{' '}
+                <TokenName account={account} />
                   </Text>
                 }
               />
@@ -193,7 +198,8 @@ export default function AccountDetailsScreen({ route }) {
                 label="Immature balance"
                 value={
                   <Text>
-                    {account.immature} <TokenName account={account} />
+                    {formatNumber(account.immature || 0, { maximumFractionDigits: 6 })}{' '}
+                <TokenName account={account} />
                   </Text>
                 }
               />

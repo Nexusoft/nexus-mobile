@@ -59,10 +59,11 @@ export const shortAddress = (address) =>
     ? address.slice(0, 4) + '...' + address.slice(-4)
     : address || '';
 
-//contact name, own or global name, else a short address (another user's local name is ambiguous)
+//own account name, contact name, global name, else a short address (another user's local name is ambiguous)
 export function registerLabel(register) {
   if (!register) return '';
   const { name, address, local, namespace, mine } = register;
+  if (mine && name) return name;
   const contacts = getStore()?.getState().contacts;
   const contact =
     contacts &&
