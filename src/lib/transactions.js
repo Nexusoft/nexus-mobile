@@ -14,6 +14,13 @@ const maxNewTransactionsFetch = 20;
 
 export const isConfirmed = (tx) => !!tx.confirmations;
 
+export const quickFilters = [
+  { label: 'All', ops: null },
+  { label: 'Sent', ops: ['DEBIT', 'LEGACY', 'FEE'] },
+  { label: 'Received', ops: ['CREDIT', 'COINBASE', 'MIGRATE'] },
+  { label: 'Staking', ops: ['TRUST', 'GENESIS'] },
+];
+
 let watchedIds = [];
 let unsubscribe = null;
 function startWatcher() {
@@ -89,7 +96,9 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
     }
   }
   if (operation) {
-    queries.push(`results.contracts.OP=${operation}`);
+    const ops = Array.isArray(operation) ? operation : [operation];
+    const opQuery = ops.map((op) => `results.contracts.OP=${op}`).join(' OR ');
+    queries.push(ops.length > 1 ? `(${opQuery})` : opQuery);
   }
   if (addressQuery) {
     const buildAddressQuery =
@@ -111,6 +120,7 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
 }
 
 const txCountPerPage = 50;
+let txRequestSeq = 0;
 export async function loadTransactions({ reload } = { reload: false }) {
   const store = getStore();
   const {
@@ -119,9 +129,10 @@ export async function loadTransactions({ reload } = { reload: false }) {
     },
     ui: { transactionsFilter },
   } = store.getState();
-  if (loading) return;
+  if (loading && !reload) return;
 
   const offset = reload ? 0 : currentTransactions.length;
+  const seq = ++txRequestSeq;
   store.dispatch({
     type: TYPE.START_FETCHING_TXS,
     payload: { reload },
@@ -141,9 +152,13 @@ export async function loadTransactions({ reload } = { reload: false }) {
     try {
       transactions = await callAPI('profiles/transactions/master', params);
     } catch (err) {
-      showError(err?.message || 'Could not load transactions');
+      if (seq === txRequestSeq) {
+        showError(err?.message || 'Could not load transactions');
+      }
       return;
     }
+    //a newer load (filter change) started meanwhile
+    if (seq !== txRequestSeq) return;
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
@@ -155,9 +170,11 @@ export async function loadTransactions({ reload } = { reload: false }) {
     });
     watchIfUnconfirmed(transactions);
   } finally {
-    store.dispatch({
-      type: TYPE.STOP_FETCHING_TXS,
-    });
+    if (seq === txRequestSeq) {
+      store.dispatch({
+        type: TYPE.STOP_FETCHING_TXS,
+      });
+    }
   }
 }
 
@@ -193,10 +210,12 @@ function filterTransactions(transactions) {
         return false;
       }
     }
-    if (
-      operation &&
-      !tx.contracts.some((contract) => contract.OP === operation)
-    ) {
+    const ops = operation
+      ? Array.isArray(operation)
+        ? operation
+        : [operation]
+      : null;
+    if (ops && !tx.contracts.some((contract) => ops.includes(contract.OP))) {
       return false;
     }
     if (addressQuery) {
