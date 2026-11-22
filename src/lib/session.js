@@ -2,6 +2,7 @@ import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
 import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
+import { disableBiometricUnlock } from 'lib/biometric';
 
 const maxIndexingWaitMs = 180000;
 
@@ -61,6 +62,28 @@ export async function refreshUserStatus() {
 }
 
 // Functions
+
+//core error codes and network failures in plain words
+export function friendlyLoginError(err) {
+  const syncing = !!getStore()?.getState().core.info?.syncing;
+  const syncNote = syncing
+    ? ' Nexus Core is still synchronizing, which can also cause this. Wait for it to finish and try again.'
+    : '';
+  switch (err?.code) {
+    case -139:
+      return 'Wrong username, password or PIN.' + syncNote;
+    case -130:
+      return 'No account with this username was found.' + syncNote;
+    case -309:
+      return 'Wrong PIN, or the saved login could not be opened.';
+    case 'TIMEOUT':
+    case 'NETWORK':
+    case 401:
+      return err.message;
+    default:
+      return (err?.message || 'Login failed') + syncNote;
+  }
+}
 
 //wait for the sigchain download and indexing...
 export async function waitForIndexing() {
@@ -123,9 +146,11 @@ export async function logOut() {
       user: {
         status: { saved },
       },
+      settings: { savedUsername },
     } = store.getState();
 
     await callAPI('sessions/terminate/local', saved ? { clear: 1 } : null);
+    if (saved) await disableBiometricUnlock(savedUsername);
   } finally {
     // Release the lock
     refreshUserStatusLock = false;

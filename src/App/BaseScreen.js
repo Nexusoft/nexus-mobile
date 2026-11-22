@@ -21,7 +21,18 @@ import {
   selectUserIsConfirmed,
   selectUsername,
 } from 'lib/user';
-import { refreshUserStatus, waitForIndexing } from 'lib/session';
+import {
+  refreshUserStatus,
+  waitForIndexing,
+  friendlyLoginError,
+} from 'lib/session';
+import {
+  biometricAvailable,
+  hasBiometricUnlock,
+  readPinWithBiometric,
+  disableBiometricUnlock,
+} from 'lib/biometric';
+import PinPad from 'components/PinPad';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
 import { showError, showNotification, confirm } from 'lib/ui';
@@ -49,7 +60,7 @@ const styles = {
     marginTop: 40,
     textAlign: 'center',
   },
-  username: { marginTop: 10, marginBottom: 30, textAlign: 'center' },
+  username: { marginTop: 10, marginBottom: 4, textAlign: 'center' },
   pinInput: {
     // fontSize: 18,
     marginBottom: 30,
@@ -144,57 +155,95 @@ function UnlockingBase() {
   const theme = useTheme();
   const [pin, setPin] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+  const [useKeyboard, setUseKeyboard] = React.useState(false);
+  const [canBiometric, setCanBiometric] = React.useState(false);
   const savedUsername = useSelector((state) => state.settings.savedUsername);
+  const color = theme.dark ? theme.foreground : theme.onPrimary;
 
-  const unlock = async () => {
-    if (loading) return;
+  const unlock = async (pinValue = pin, { fromBiometric } = {}) => {
+    if (loading || !pinValue) return;
     setLoading(true);
     try {
       await callAPI('sessions/load/local', {
-        pin,
+        pin: pinValue,
         username: savedUsername,
       });
       await waitForIndexing();
-      await callAPI('sessions/save/local', { pin });
-      await callAPI('sessions/unlock/local', { pin, notifications: true });
+      await callAPI('sessions/save/local', { pin: pinValue });
+      await callAPI('sessions/unlock/local', {
+        pin: pinValue,
+        notifications: true,
+      });
       await refreshUserStatus();
     } catch (err) {
       setLoading(false);
+      setPin('');
+      if (fromBiometric) {
+        //stored PIN no longer works (changed elsewhere), forget it
+        await disableBiometricUnlock(savedUsername);
+        setCanBiometric(false);
+        showError(
+          'Fingerprint / face unlock was turned off because the saved PIN no longer works. Enter your PIN.'
+        );
+      } else {
+        showError(friendlyLoginError(err));
+      }
+    }
+  };
+
+  const unlockWithBiometric = async () => {
+    try {
+      const storedPin = await readPinWithBiometric(savedUsername);
+      if (storedPin) await unlock(storedPin, { fromBiometric: true });
+    } catch (err) {
       showError(err?.message);
     }
   };
 
+  React.useEffect(() => {
+    (async () => {
+      const available =
+        (await biometricAvailable()) &&
+        (await hasBiometricUnlock(savedUsername));
+      setCanBiometric(available);
+      if (available) unlockWithBiometric();
+    })();
+  }, [savedUsername]);
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <BaseScreenContainer>
-        <SvgIcon
-          icon={UserIcon}
-          size={66}
-          colorName={theme.dark ? 'foreground' : 'onPrimary'}
-        />
-        <Text
-          style={styles.username}
-          size={26}
-          colorName={theme.dark ? 'foreground' : 'onPrimary'}
-        >
-          {savedUsername}
+        <SvgIcon icon={UserIcon} size={56} color={color} />
+        <Text style={styles.username} size={24} color={color}>
+          Welcome back, {savedUsername}
         </Text>
-        <TextBox
-          mode="flat"
-          style={styles.pinInput}
-          background={theme.dark ? 'background' : 'primary'}
-          label="Enter your PIN"
-          value={pin}
-          onChangeText={setPin}
-          onSubmitEditing={unlock}
-          secure
-          keyboardType={
-            Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
-          }
-        />
+        {useKeyboard ? (
+          <TextBox
+            mode="flat"
+            style={styles.pinInput}
+            background={theme.dark ? 'background' : 'primary'}
+            label="Enter your PIN"
+            value={pin}
+            onChangeText={setPin}
+            onSubmitEditing={() => unlock()}
+            secure
+            autoFocus
+            keyboardType={
+              Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
+            }
+          />
+        ) : (
+          <PinPad
+            value={pin}
+            onChange={setPin}
+            color={color}
+            disabled={loading}
+            onKeyboard={() => setUseKeyboard(true)}
+          />
+        )}
         <FAB
-          disabled={loading}
-          onPress={unlock}
+          disabled={loading || !pin}
+          onPress={() => unlock()}
           loading={loading}
           color={theme.dark ? theme.onPrimary : theme.primary}
           style={[
@@ -204,9 +253,19 @@ function UnlockingBase() {
           icon={(props) => <SvgIcon icon={UnlockIcon} {...props} />}
           label={loading ? 'Unlocking...' : 'Unlock wallet'}
         />
+        {canBiometric && !loading && (
+          <Button
+            mode="text"
+            color={color}
+            labelStyle={{ fontSize: 12 }}
+            onPress={unlockWithBiometric}
+          >
+            Use fingerprint / face
+          </Button>
+        )}
         <Button
           mode="text"
-          color={theme.dark ? theme.foreground : theme.onPrimary}
+          color={color}
           labelStyle={{ fontSize: 12 }}
           onPress={() => {
             getStore().dispatch({
