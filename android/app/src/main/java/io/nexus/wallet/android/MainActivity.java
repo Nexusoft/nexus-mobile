@@ -21,6 +21,7 @@ import expo.modules.splashscreen.SplashScreenImageResizeMode;
 public class MainActivity extends ReactActivity {
 
     private  PowerManager.WakeLock wakeLock;
+    private static final long coreShutdownWaitMs = 4000;
 
 
   @Override
@@ -55,8 +56,18 @@ public class MainActivity extends ReactActivity {
     protected void onDestroy() {
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
-        wakeLock.release();
+        if (wakeLock.isHeld()) wakeLock.release();
         Log.d("NEXUS","&& ONDESTROY");
+        //let the core finish writing before the process exits
+        ShutDownNexusCore();
+        Thread core = NexusService.coreThread;
+        if (core != null) {
+            try {
+                core.join(coreShutdownWaitMs);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
         stopService(new Intent(this, NexusService.class));
         super.onDestroy();
         finish();
