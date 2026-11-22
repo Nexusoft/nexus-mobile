@@ -293,7 +293,7 @@ function SynchronizingBase() {
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Completed {syncInfo.completed}%
+        Completed {syncInfo?.completed ?? 0}%
       </Text>
       <Text
         sub
@@ -301,7 +301,7 @@ function SynchronizingBase() {
         size={18}
         style={{ textAlign: 'center' }}
       >
-        Est. time remaining: {syncInfo.timeRemaining}
+        Est. time remaining: {syncInfo?.timeRemaining ?? '...'}
       </Text>
 
       <Button
