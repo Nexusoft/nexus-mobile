@@ -108,8 +108,9 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
         instead of the internal Nexus Core packaged along with this app. Be
         aware of possible version incompatibility between the app interface and
         the external Nexus Core. The API username and password are the apiuser
-        and apipassword lines in that core's nexus.conf. A core started with
-        answers HTTPS (usually port 7080), otherwise HTTP (port 8080).
+        and apipassword lines in that core's nexus.conf. A core with the
+        apissl option on answers HTTPS (usually port 7080), otherwise HTTP
+        (port 8080).
       </Text>
 
       {coreMode === 'external' && (
