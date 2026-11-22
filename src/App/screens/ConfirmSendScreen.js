@@ -93,6 +93,7 @@ const styles = {
 export default function ConfirmSendScreen({ route }) {
   const theme = useTheme();
   const { account, recipient, amount, reference } = route.params || {};
+  const sendingRef = React.useRef(false);
   return (
     <ScreenBody style={styles.wrapper} surface>
       <View style={styles.amountSection}>
@@ -161,19 +162,18 @@ export default function ConfirmSendScreen({ route }) {
           pin: yup.string().required('Required!'),
         })}
         onSubmit={async ({ pin }) => {
+          if (sendingRef.current) return;
           const params = { pin, from: account.address, amount };
-          if (recipient.name) {
-            params.to = recipient.name;
-          } else {
-            params.to = recipient.address;
-          }
+          params.to = recipient.address;
           if (reference || reference === 0) {
             params.reference = reference;
           }
 
+          sendingRef.current = true;
           try {
             await callAPI('finance/debit/account,trust', params);
           } catch (err) {
+            sendingRef.current = false;
             showError(err && err.message);
             return;
           }
@@ -201,7 +201,7 @@ export default function ConfirmSendScreen({ route }) {
                     : 'numbers-and-punctuation'
                 }
                 returnKeyType="send"
-                onSubmitEditing={handleSubmit}
+                onSubmitEditing={isSubmitting ? undefined : handleSubmit}
               />
             </View>
 
