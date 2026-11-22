@@ -6,6 +6,7 @@ import { callAPI } from 'lib/api';
 import { getDeltaSign } from 'lib/contracts';
 import { refreshUserAccounts, selectLoggedIn } from 'lib/user';
 import { getStore, observeStore } from 'store';
+import { showError } from 'lib/ui';
 import formatNumber from 'utils/formatNumber';
 
 export const isConfirmed = (tx) => !!tx.confirmations;
@@ -133,7 +134,13 @@ export async function loadTransactions({ reload } = { reload: false }) {
     if (query) {
       params.where = query;
     }
-    const transactions = await callAPI('profiles/transactions/master', params);
+    let transactions;
+    try {
+      transactions = await callAPI('profiles/transactions/master', params);
+    } catch (err) {
+      showError(err?.message || 'Could not load transactions');
+      return;
+    }
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
@@ -280,17 +287,23 @@ export function watchNewTransactions() {
       if (!oldState || !state) return;
       const txCount = state?.user?.status?.transactions;
       const oldTxCount = oldState?.user?.status?.transactions;
-      const wasSyncing = oldState?.core?.info?.synchronizing;
+      const wasSyncing = !!oldState?.core?.info?.syncing;
       if (
         txCount > oldTxCount &&
         typeof txCount === 'number' &&
         typeof oldTxCount === 'number' &&
         !wasSyncing
       ) {
-        const transactions = await callAPI('ledger/list/transactions', {
-          verbose: 'summary',
-          limit: txCount - oldTxCount,
-        });
+        let transactions;
+        try {
+          transactions = await callAPI('ledger/list/transactions', {
+            verbose: 'summary',
+            limit: txCount - oldTxCount,
+          });
+        } catch (err) {
+          return;
+        }
+        if (!Array.isArray(transactions)) return;
 
         transactions.forEach((tx) => {
           const changes = getBalanceChanges(tx);
@@ -308,8 +321,7 @@ export function watchNewTransactions() {
                   body: changeLines.join(' \n'),
                   data: { type: 'new_transaction', txid: tx.txid },
                 },
-                trigger: null,
-                channelId: 'transaction-channel-id',
+                trigger: { channelId: 'transaction-channel-id' },
               });
             }
           }

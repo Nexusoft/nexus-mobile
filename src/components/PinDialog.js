@@ -29,7 +29,6 @@ export default function PinDialog({
     onConfirm?.(pin);
     onDismiss?.();
   };
-  console.log(fee);
   return (
     <Portal>
       <Dialog

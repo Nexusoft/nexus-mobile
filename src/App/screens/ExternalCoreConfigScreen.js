@@ -120,7 +120,7 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
               <TextBox
                 name="externalCoreIP"
                 placeholder={defaultSettings.externalCoreIP}
-                keyboardType="decimal-pad"
+                keyboardType="url"
               />
             </View>
           </Surface>
