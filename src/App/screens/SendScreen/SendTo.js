@@ -12,6 +12,7 @@ import formatNumber from 'utils/formatNumber';
 import parseAmount from 'utils/parseAmount';
 import { selectSetting } from 'lib/settings';
 import { selectMarketPrice } from 'lib/market';
+import { parsePaymentRequest } from 'lib/paymentRequest';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -27,6 +28,11 @@ const styles = {
     textAlign: 'center',
     marginBottom: 30,
     opacity: 0.75,
+  },
+  requestLabel: {
+    textAlign: 'center',
+    marginTop: -20,
+    marginBottom: 20,
   },
   sendAll: {
     alignSelf: 'flex-end',
@@ -121,11 +127,30 @@ function FiatValue({ account, amount }) {
 
 export default function SendTo({ account, setFieldValue, autoScan, values }) {
   const theme = useTheme();
-  const [advancedOpen, setAdvancedOpen] = React.useState(false);
+  const [advancedOpen, setAdvancedOpen] = React.useState(!!values?.reference);
+  const applyRequest = (request) => {
+    setFieldValue('nameOrAddress', request.address);
+    if (request.amount) setFieldValue('amount', request.amount);
+    if (request.reference) {
+      setFieldValue('reference', request.reference);
+      setAdvancedOpen(true);
+    }
+    setFieldValue('requestLabel', request.label || '');
+  };
+  //a link pasted or typed straight into the field
+  React.useEffect(() => {
+    const request = parsePaymentRequest(values?.nameOrAddress);
+    if (request) applyRequest(request);
+  }, [values?.nameOrAddress]);
 
   return (
     <View style={styles.wrapper({ theme })}>
       <Text style={styles.heading}>Send to</Text>
+      {!!values?.requestLabel && (
+        <Text sub style={styles.requestLabel}>
+          Payment request: {values.requestLabel}
+        </Text>
+      )}
 
       <ContactShortcuts setFieldValue={setFieldValue} />
       <View style={styles.section}>
@@ -139,8 +164,9 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
         />
         <AddressPicker
           autoScan={autoScan}
-          setAddress={(address) => {
+          setAddress={(address, request) => {
             setFieldValue('nameOrAddress', address);
+            if (request) applyRequest(request);
           }}
         />
       </View>

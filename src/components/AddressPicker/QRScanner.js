@@ -9,6 +9,7 @@ import Portal from 'components/Portal';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import QRIcon from 'icons/qr.svg';
+import { parsePaymentRequest } from 'lib/paymentRequest';
 
 const useBackHandler = useAndroidBackHandler || (() => {});
 
@@ -68,8 +69,8 @@ export default function QRScanner({ setAddress, style, autoOpen }) {
             barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
             onBarCodeScanned={({ data }) => {
               Vibration.vibrate();
-              //accept nexus:ADDRESS?... payment links too
-              setAddress(String(data).replace(/^nexus:/i, '').split('?')[0].trim());
+              const request = parsePaymentRequest(data);
+              setAddress(request ? request.address : String(data).trim(), request);
               setScanning(false);
             }}
           />

@@ -18,6 +18,16 @@ export const selectUsername = (state) => {
   return profileStatus?.session?.username || status?.username || '';
 };
 
+//the account Send / Receive / Scan use when none is picked
+export function mainAccount(accounts) {
+  if (!accounts?.length) return null;
+  return (
+    accounts.find((acc) => acc.name === 'default' && acc.token === '0') ||
+    accounts.find((acc) => acc.token === '0' && acc.type !== 'TRUST') ||
+    accounts[0]
+  );
+}
+
 // Refreshes
 
 export async function refreshUserBalances() {

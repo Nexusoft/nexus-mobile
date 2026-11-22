@@ -7,6 +7,7 @@ import {
 } from 'lib/user';
 import { refreshUserStatus } from 'lib/session';
 import { watchNewTransactions } from 'lib/transactions';
+import { watchPaymentLinks } from 'lib/paymentLinks';
 import { pollMarketPrice } from 'lib/market';
 import { selectSetting } from 'lib/settings';
 import { loadEmbeddedCredentials } from 'lib/embeddedCore';
@@ -78,6 +79,7 @@ export default function initStore() {
     );
 
     watchNewTransactions();
+    watchPaymentLinks();
     pollMarketPrice();
   });
 }

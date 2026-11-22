@@ -44,6 +44,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="nexuswallet"/>
         <data android:scheme="io.nexus.wallet.android"/>
+        <data android:scheme="nexus"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Clipboard } from 'react-native';
+import { View, ScrollView, Clipboard, Share, LayoutAnimation } from 'react-native';
 import { Button, Surface } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
 import { useTheme } from 'lib/theme';
@@ -7,7 +7,12 @@ import { useTheme } from 'lib/theme';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
+import TextBox from 'components/TextBox';
+import TokenName from 'components/TokenName';
 import { showNotification } from 'lib/ui';
+import { buildPaymentRequest } from 'lib/paymentRequest';
+import parseAmount from 'utils/parseAmount';
+import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
 import { flatHeader } from 'utils/styles';
 import CopyIcon from 'icons/copy.svg';
@@ -45,11 +50,35 @@ const styles = {
   separatorLabel: {
     paddingHorizontal: 15,
   },
+  requested: {
+    marginTop: 10,
+  },
+  request: {
+    alignSelf: 'stretch',
+    marginTop: 15,
+  },
+  requestButton: {
+    alignSelf: 'stretch',
+    marginTop: 10,
+  },
 };
 
 export default function ReceiveScreen({ route }) {
   const theme = useTheme();
-  const address = route.params?.account?.address;
+  const account = route.params?.account;
+  const address = account?.address;
+  const [requesting, setRequesting] = React.useState(false);
+  const [amount, setAmount] = React.useState('');
+  const [reference, setReference] = React.useState('');
+  const amountValue = parseAmount(amount);
+  const amountValid = amountValue > 0;
+  const referenceValid = reference === '' || /^\d+$/.test(reference);
+  const link = buildPaymentRequest({
+    address,
+    amount: requesting && amountValid ? amountValue : undefined,
+    reference: requesting && referenceValid ? reference : undefined,
+  });
+  const ticker = TokenName.from({ account });
   return (
     <ScrollView
       style={styles.wrapper({ theme })}
@@ -69,7 +98,7 @@ export default function ReceiveScreen({ route }) {
 
           {/* always dark on light, scanners can fail on inverted codes */}
           <QRCode
-            value={address}
+            value={requesting && amountValid ? link : address}
             size={200}
             color="#000"
             backgroundColor="#fff"
@@ -79,6 +108,13 @@ export default function ReceiveScreen({ route }) {
           <Text mono style={styles.address}>
             {segmentAddress(address)}
           </Text>
+          {requesting && amountValid && (
+            <Text bold style={styles.requested}>
+              Requesting {formatNumber(amountValue, { maximumFractionDigits: 6 })}{' '}
+              {ticker}
+              {reference ? ` (reference ${reference})` : ''}
+            </Text>
+          )}
 
           <View style={styles.separator}>
             <Divider style={styles.separatorLine} />
@@ -100,6 +136,53 @@ export default function ReceiveScreen({ route }) {
           >
             <Text>Copy account address</Text>
           </Button>
+
+          {requesting ? (
+            <View style={styles.request}>
+              <TextBox
+                mode="outlined"
+                label={`Amount to request (${ticker})`}
+                keyboardType="numeric"
+                value={amount}
+                onChangeText={setAmount}
+                error={!!amount && !amountValid}
+              />
+              <TextBox
+                mode="outlined"
+                label="Reference number (optional)"
+                keyboardType="number-pad"
+                value={reference}
+                onChangeText={setReference}
+                error={!referenceValid}
+                style={{ marginTop: 10 }}
+              />
+              <Button
+                style={styles.requestButton}
+                mode="contained"
+                uppercase={false}
+                icon="share-variant"
+                disabled={!amountValid || !referenceValid}
+                onPress={() => {
+                  Share.share({ message: link }).catch(() => {});
+                }}
+              >
+                Share payment request
+              </Button>
+            </View>
+          ) : (
+            <Button
+              style={styles.requestButton}
+              mode="text"
+              uppercase={false}
+              icon="cash-plus"
+              onPress={() => {
+                LayoutAnimation.easeInEaseOut();
+                setRequesting(true);
+              }}
+            >
+              Request a specific amount
+            </Button>
+          )}
         </Surface>
       </View>
     </ScrollView>

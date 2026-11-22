@@ -50,6 +50,7 @@
 			<array>
 				<string>myapp</string>
 				<string>com.nexus.mobile.ios</string>
+				<string>nexus</string>
 			</array>
 		</dict>
 	</array>

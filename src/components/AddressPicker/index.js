@@ -6,6 +6,7 @@ import SvgIcon from 'components/SvgIcon';
 import PasteIcon from 'icons/paste.svg';
 import ContactSelector from './ContactSelector';
 import QRScanner from './QRScanner';
+import { parsePaymentRequest } from 'lib/paymentRequest';
 
 const styles = {
   wrapper: {
@@ -32,7 +33,8 @@ export default function AddressPicker({
         onPress={async () => {
           const clipboard = await Clipboard.getString();
           if (clipboard) {
-            setAddress(clipboard);
+            const request = parsePaymentRequest(clipboard);
+            setAddress(request ? request.address : clipboard, request);
           }
         }}
       />

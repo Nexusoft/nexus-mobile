@@ -148,9 +148,10 @@ export default function SendScreen({ route }) {
   return (
     <Formik
       initialValues={{
-        amount: '',
+        amount: route.params?.amount || '',
         nameOrAddress: sendTo || '',
-        reference: '',
+        reference: route.params?.reference || '',
+        requestLabel: route.params?.label || '',
       }}
       validationSchema={yup.object().shape({
         nameOrAddress: yup.string().required('Required!'),
