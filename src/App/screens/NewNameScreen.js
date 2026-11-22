@@ -43,7 +43,7 @@ export default function NewNameScreen() {
   const theme = useTheme();
   const username = useSelector(selectUsername);
   const accounts = useSelector((state) =>
-    (state.user.accounts || []).filter((a) => a.name !== 'trust')
+    (state.user.accounts || []).filter((a) => a.type !== 'TRUST')
   );
   const [name, setName] = React.useState('');
   const [global, setGlobal] = React.useState(false);
