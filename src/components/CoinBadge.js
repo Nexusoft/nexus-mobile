@@ -27,14 +27,14 @@ const styles = {
 };
 
 //round Nexus logo for NXS, token glyph for tokens
-export function CoinIcon({ coin = true, size = 16, style }) {
+export function CoinIcon({ coin = true, size = 16, color, style }) {
   const theme = useTheme();
   return (
     <SvgIcon
       icon={coin ? NexusIcon : TokenIcon}
       size={size}
-      color={coin ? theme.primary : undefined}
-      sub={!coin}
+      color={color || (coin ? theme.primary : undefined)}
+      sub={!coin && !color}
       style={style}
     />
   );

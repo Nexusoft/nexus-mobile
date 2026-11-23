@@ -3,11 +3,10 @@ import { View } from 'react-native';
 import { shadow } from 'react-native-paper';
 
 import Text from 'components/Text';
-import SvgIcon from 'components/SvgIcon';
+import AccountPicker from 'components/AccountPicker';
 import { useTheme, disabledColor } from 'lib/theme';
 import { t } from 'lib/i18n';
 import segmentAddress from 'utils/segmentAddress';
-import WalletIcon from 'icons/wallet.svg';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -39,7 +38,7 @@ const styles = {
   },
 };
 
-export default function SendFrom({ account }) {
+export default function SendFrom({ account, onChange }) {
   const theme = useTheme();
   const color = theme.dark ? theme.foreground : theme.onPrimary;
 
@@ -50,17 +49,12 @@ export default function SendFrom({ account }) {
       </Text>
       {!!account && (
         <>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <SvgIcon
-              icon={WalletIcon}
-              size={16}
-              color={color}
-              style={{ marginRight: 8 }}
-            />
-            <Text bold color={color} size={16} disabled={!account.name}>
-              {account.name || t('Unnamed')}
-            </Text>
-          </View>
+          <AccountPicker
+            account={account}
+            title={t('Send from')}
+            color={color}
+            onChange={onChange}
+          />
           <View style={styles.addressBox({ theme })}>
             <Text mono color={color} style={styles.address}>
               {segmentAddress(account.address)}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Clipboard, Share, LayoutAnimation } from 'react-native';
+import { View, ScrollView, Clipboard, Share } from 'react-native';
 import { Button, Surface } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
 import { useTheme } from 'lib/theme';
@@ -17,6 +17,9 @@ import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
 import { flatHeader } from 'utils/styles';
 import CopyIcon from 'icons/copy.svg';
+import { useSelector } from 'react-redux';
+import AccountPicker from 'components/AccountPicker';
+import { defaultAccountOf } from 'lib/accounts';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -24,8 +27,16 @@ const styles = {
     flex: 1,
     paddingHorizontal: 20,
   }),
+  receiveTo: {
+    alignSelf: 'stretch',
+    marginBottom: 20,
+  },
+  receiveToLabel: {
+    textTransform: 'uppercase',
+    marginBottom: 2,
+  },
   topInstruction: {
-    marginBottom: 30,
+    marginBottom: 20,
     alignItems: 'center',
   },
   main: {
@@ -64,9 +75,13 @@ const styles = {
   },
 };
 
-export default function ReceiveScreen({ route }) {
+export default function ReceiveScreen({ route, navigation }) {
   const theme = useTheme();
-  const account = route.params?.account;
+  const accounts = useSelector((state) => state.user.accounts);
+  const account =
+    accounts?.find((a) => a.address === route.params?.account?.address) ||
+    route.params?.account ||
+    defaultAccountOf(accounts);
   const address = account?.address;
   const [requesting, setRequesting] = React.useState(false);
   const [amount, setAmount] = React.useState('');
@@ -93,6 +108,16 @@ export default function ReceiveScreen({ route }) {
     >
       <View>
         <Surface style={styles.main}>
+          <View style={styles.receiveTo}>
+            <Text sub size={12} style={styles.receiveToLabel}>
+              {t('Receive to')}
+            </Text>
+            <AccountPicker
+              account={account}
+              title={t('Receive to')}
+              onChange={(picked) => navigation.setParams({ account: picked })}
+            />
+          </View>
           <View style={styles.topInstruction}>
             <Text sub>{t('Show this QR code to the sender')}</Text>
           </View>
@@ -187,10 +212,7 @@ export default function ReceiveScreen({ route }) {
               mode="text"
               uppercase={false}
               icon="cash-plus"
-              onPress={() => {
-                LayoutAnimation.easeInEaseOut();
-                setRequesting(true);
-              }}
+              onPress={() => setRequesting(true)}
             >
               {t('Request a specific amount')}
             </Button>
@@ -205,7 +227,7 @@ ReceiveScreen.nav = ({ theme }) => ({
   name: 'Receive',
   options: ({ route }) => ({
     headerTitleAlign: 'center',
-    headerTitle: route.params?.account?.name,
+    headerTitle: t('Receive'),
     headerStyle: flatHeader(theme),
   }),
 });

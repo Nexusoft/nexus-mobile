@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, LayoutAnimation } from 'react-native';
+import { ScrollView } from 'react-native';
 import { HeaderTitle } from '@react-navigation/elements';
 import { FAB, overlay } from 'react-native-paper';
 import { Formik } from 'formik';
@@ -16,6 +16,8 @@ import { t } from 'lib/i18n';
 import { addressRegex } from 'consts/regex';
 import parseAmount from 'utils/parseAmount';
 import { getStore } from 'store';
+import { useSelector } from 'react-redux';
+import { defaultAccountOf } from 'lib/accounts';
 import SendIcon from 'icons/send.svg';
 import SendFrom from './SendFrom';
 import SendTo from './SendTo';
@@ -103,10 +105,7 @@ function useEndReached() {
     if (viewHeight === undefined || contentHeight === undefined) return;
     scrollPosition = scrollPosition || 0;
     const tempEndReached = scrollPosition + viewHeight > contentHeight - 1;
-    if (tempEndReached !== endReached) {
-      LayoutAnimation.easeInEaseOut();
-      setEndReached(tempEndReached);
-    }
+    if (tempEndReached !== endReached) setEndReached(tempEndReached);
   };
   const scrollHandler = ({
     nativeEvent: {
@@ -140,9 +139,14 @@ function useEndReached() {
   };
 }
 
-export default function SendScreen({ route }) {
+export default function SendScreen({ route, navigation }) {
   const theme = useTheme();
-  const account = route.params?.account;
+  const accounts = useSelector((state) => state.user.accounts);
+  //fresh balance of the picked account, default account when none was given
+  const account =
+    accounts?.find((a) => a.address === route.params?.account?.address) ||
+    route.params?.account ||
+    defaultAccountOf(accounts);
   const sendTo = route.params?.sendTo;
   const { endReached, scrollViewProps } = useEndReached();
 
@@ -206,7 +210,10 @@ export default function SendScreen({ route }) {
             scrollEventThrottle={160}
             {...scrollViewProps}
           >
-            <SendFrom account={account} />
+            <SendFrom
+              account={account}
+              onChange={(picked) => navigation.setParams({ account: picked })}
+            />
 
             <SendTo
               account={account}
