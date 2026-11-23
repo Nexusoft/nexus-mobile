@@ -592,4 +592,5 @@ export default {
   "Your phone is downloading the Nexus blockchain headers so it can check everything itself.": "Dina-download ng phone mo ang mga header ng Nexus blockchain para ma-check nito ang lahat nang mag-isa.",
   "Your phone runs its own Nexus node. No server holds your coins or your keys.": "May sariling Nexus node ang phone mo. Walang server na may hawak ng coins o keys mo.",
   "Your username, password and PIN are your wallet. They work in the desktop wallet too.": "Ang username, password at PIN mo ang wallet mo. Gumagana rin ang mga ito sa desktop wallet.",
+  "Your wallet is still being indexed. Try again in a minute.": "Ini-index pa ang iyong wallet. Subukan ulit pagkalipas ng isang minuto.",
 };

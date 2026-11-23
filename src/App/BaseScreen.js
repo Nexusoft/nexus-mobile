@@ -25,6 +25,7 @@ import {
   refreshUserStatus,
   waitForIndexing,
   friendlyLoginError,
+  isWrongPinError,
 } from 'lib/session';
 import {
   biometricAvailable,
@@ -177,15 +178,20 @@ function UnlockingBase() {
       });
       await waitForIndexing();
       await callAPI('sessions/save/local', { pin: pinValue });
-      await callAPI('sessions/unlock/local', {
-        pin: pinValue,
-        notifications: true,
-      });
+      try {
+        await callAPI('sessions/unlock/local', {
+          pin: pinValue,
+          notifications: true,
+        });
+      } catch (err) {
+        //-208 = already unlocked
+        if (err?.code !== -208) throw err;
+      }
       await refreshUserStatus();
     } catch (err) {
       setLoading(false);
       setPin('');
-      if (fromBiometric) {
+      if (fromBiometric && isWrongPinError(err)) {
         //stored PIN no longer works (changed elsewhere), forget it
         await disableBiometricUnlock(savedUsername);
         setCanBiometric(false);

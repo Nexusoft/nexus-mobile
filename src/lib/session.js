@@ -66,12 +66,23 @@ export async function refreshUserStatus() {
 // Functions
 
 //core error codes and network failures in plain words
+//the core uses -139 for "still indexing" too
+const isIndexingError = (err) =>
+  err?.code === -139 && /initializing/i.test(err?.message || '');
+
+//only these mean the PIN itself is wrong, anything else (timeout, indexing) is worth a retry
+export const isWrongPinError = (err) =>
+  err?.code === -309 || (err?.code === -139 && !isIndexingError(err));
+
 export function friendlyLoginError(err) {
   const syncing = !!getStore()?.getState().core.info?.syncing;
   const syncNote = syncing
     ? ' ' +
       t('Nexus Core is still synchronizing, which can also cause this. Wait for it to finish and try again.')
     : '';
+  if (isIndexingError(err)) {
+    return t('Your wallet is still being indexed. Try again in a minute.');
+  }
   switch (err?.code) {
     case -139:
       return t('Wrong username, password or PIN.') + syncNote;

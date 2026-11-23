@@ -592,4 +592,5 @@ export default {
   "Your phone is downloading the Nexus blockchain headers so it can check everything itself.": "Tvoj telefon preuzima zaglavlja Nexus blockchaina kako bi sve mogao sam provjeriti.",
   "Your phone runs its own Nexus node. No server holds your coins or your keys.": "Tvoj telefon pokreće vlastiti Nexus node. Nijedan poslužitelj ne čuva tvoje kovanice ni ključeve.",
   "Your username, password and PIN are your wallet. They work in the desktop wallet too.": "Tvoje korisničko ime, lozinka i PIN su tvoj novčanik. Rade i u desktop novčaniku.",
+  "Your wallet is still being indexed. Try again in a minute.": "Tvoj novčanik se još indeksira. Pokušaj ponovno za minutu.",
 };

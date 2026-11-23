@@ -592,4 +592,5 @@ export default {
   "Your phone is downloading the Nexus blockchain headers so it can check everything itself.": "Ponsel Anda sedang mengunduh header blockchain Nexus agar bisa memeriksa semuanya sendiri.",
   "Your phone runs its own Nexus node. No server holds your coins or your keys.": "Ponsel Anda menjalankan node Nexus sendiri. Tidak ada server yang menyimpan koin atau kunci Anda.",
   "Your username, password and PIN are your wallet. They work in the desktop wallet too.": "Nama pengguna, kata sandi, dan PIN Anda adalah dompet Anda. Semuanya juga berfungsi di dompet desktop.",
+  "Your wallet is still being indexed. Try again in a minute.": "Dompetmu masih diindeks. Coba lagi dalam satu menit.",
 };

@@ -592,4 +592,5 @@ export default {
   "Your phone is downloading the Nexus blockchain headers so it can check everything itself.": "Je telefoon downloadt de headers van de Nexus-blockchain, zodat hij alles zelf kan controleren.",
   "Your phone runs its own Nexus node. No server holds your coins or your keys.": "Je telefoon draait een eigen Nexus-node. Geen enkele server bewaart je coins of je sleutels.",
   "Your username, password and PIN are your wallet. They work in the desktop wallet too.": "Je gebruikersnaam, wachtwoord en PIN zijn je wallet. Ze werken ook in de desktopwallet.",
+  "Your wallet is still being indexed. Try again in a minute.": "Je wallet wordt nog geïndexeerd. Probeer het over een minuut opnieuw.",
 };

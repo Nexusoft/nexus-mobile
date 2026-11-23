@@ -592,4 +592,5 @@ export default {
   "Your phone is downloading the Nexus blockchain headers so it can check everything itself.": "Votre téléphone télécharge les en-têtes de la blockchain Nexus pour pouvoir tout vérifier lui-même.",
   "Your phone runs its own Nexus node. No server holds your coins or your keys.": "Votre téléphone exécute son propre nœud Nexus. Aucun serveur ne détient vos coins ni vos clés.",
   "Your username, password and PIN are your wallet. They work in the desktop wallet too.": "Votre nom d'utilisateur, votre mot de passe et votre PIN sont votre portefeuille. Ils fonctionnent aussi dans le portefeuille de bureau.",
+  "Your wallet is still being indexed. Try again in a minute.": "Ton portefeuille est encore en cours d’indexation. Réessaie dans une minute.",
 };
