@@ -16,6 +16,9 @@ import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
 import useRefresh from 'utils/useRefresh';
 import WalletIcon from 'icons/wallet.svg';
+import StakeIcon from 'icons/stake.svg';
+import { CoinIcon } from 'components/CoinBadge';
+import { accountRole, isNxs, sortAccounts } from 'lib/accounts';
 import QuickActions from './QuickActions';
 import Assets from './Assets';
 
@@ -79,6 +82,7 @@ const styles = {
 function Account({ account }) {
   const theme = useTheme();
   const hideBalances = useSelector(selectSetting('hideBalances'));
+  const role = accountRole(account);
 
   return (
     <View style={styles.account}>
@@ -89,10 +93,24 @@ function Account({ account }) {
       >
         <View style={styles.accInfo}>
           <View style={styles.accNameIcon}>
-            <SvgIcon icon={WalletIcon} size={14} style={styles.accIcon} />
+            {role ? (
+              <SvgIcon
+                icon={role === 'trust' ? StakeIcon : WalletIcon}
+                size={14}
+                color={role === 'trust' ? '#1b9e5a' : theme.primary}
+                style={styles.accIcon}
+              />
+            ) : (
+              <CoinIcon coin={isNxs(account)} size={14} style={styles.accIcon} />
+            )}
             <Text style={styles.accName} bold disabled={!account.name}>
               {account.name || t('Unnamed')}
             </Text>
+            {!!role && (
+              <Text sub size={11} style={{ marginLeft: 6 }}>
+                {role === 'trust' ? t('Staking') : t('Main')}
+              </Text>
+            )}
           </View>
           <Text style={styles.accBalance}>
             {hideBalances
@@ -142,7 +160,7 @@ export default function Accounts({ filteredAccounts }) {
       refreshing={refreshing}
       onRefresh={refresh}
       style={styles.accounts}
-      data={filteredAccounts}
+      data={sortAccounts(filteredAccounts)}
       keyExtractor={(acc) => acc.address}
       renderItem={({ item: account }) => <Account account={account} />}
       ListHeaderComponent={
