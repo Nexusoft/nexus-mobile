@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 
 import Portal from 'components/Portal';
 import Dialog from 'components/Dialog';
@@ -29,7 +30,7 @@ export default function SuccessDialog({
             size={20}
             style={{ marginRight: 5 }}
           />{' '}
-          Success
+          {t('Success')}
         </Dialog.Title>
         <Dialog.Content>
           <Text>{message}</Text>
@@ -39,7 +40,7 @@ export default function SuccessDialog({
             getButtons({ onDismiss })
           ) : (
             <Button mode="text" onPress={onDismiss}>
-              Dismiss
+              {t('Dismiss')}
             </Button>
           )}
         </Dialog.Actions>

@@ -32,6 +32,7 @@ public class NexusService extends Service {
 
     static final public String channelID = "core-status-channel";
     static final public int notificationID = 201409;
+    static volatile Thread coreThread;
 
     @Nullable
     @Override
@@ -69,6 +70,7 @@ public class NexusService extends Service {
         };
         SetUpCoreStatusChannel();
         _servicethread = new Thread(_nexuscore);
+        coreThread = _servicethread;
         _servicethread.start();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.notification_icon))
@@ -82,7 +84,12 @@ public class NexusService extends Service {
                 .setOngoing(true);
 
         Notification coreNotification = builder.build();
-        startForeground(notificationID, coreNotification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+        //3-arg form only from API 34 (specialUse type), older versions take the type from the manifest
+        if (Build.VERSION.SDK_INT >= 34) {
+            startForeground(notificationID, coreNotification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+        } else {
+            startForeground(notificationID, coreNotification);
+        }
 
         super.onCreate();
     }

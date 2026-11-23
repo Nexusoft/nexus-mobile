@@ -5,6 +5,7 @@ import notifications from './notifications';
 import dialogs from './dialogs';
 import ignoreSavedSession from './ignoreSavedSession';
 import transactionsFilter from './transactionsFilter';
+import appLocked from './appLocked';
 
 export default combineReducers({
   contactSearch,
@@ -12,4 +13,5 @@ export default combineReducers({
   dialogs,
   ignoreSavedSession,
   transactionsFilter,
+  appLocked,
 });

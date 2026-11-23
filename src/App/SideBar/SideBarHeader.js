@@ -20,6 +20,7 @@ import { useTheme, subColor } from 'lib/theme';
 import { selectUsername } from 'lib/user';
 import { logOut } from 'lib/session';
 import { confirm, showNotification } from 'lib/ui';
+import { t } from 'lib/i18n';
 // import { addNavListener } from 'lib/navigation';
 import UserIcon from 'icons/user.svg';
 import IDIcon from 'icons/id.svg';
@@ -96,7 +97,7 @@ function UserIdDialog({ visible, onDismiss }) {
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={onDismiss} bla="bloooo">
-        <Dialog.Title>User ID</Dialog.Title>
+        <Dialog.Title>{t('User ID')}</Dialog.Title>
         <Dialog.Content>
           <TextBox
             multiline
@@ -129,10 +130,10 @@ function UserIdDialog({ visible, onDismiss }) {
             icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
             onPress={() => {
               Clipboard.setString(userID);
-              showNotification('Copied to clipboard');
+              showNotification(t('Copied to clipboard'));
             }}
           >
-            Copy
+            {t('Copy')}
           </Button>
         </Dialog.Actions>
       </Dialog>
@@ -142,8 +143,8 @@ function UserIdDialog({ visible, onDismiss }) {
 
 async function confirmLogout({ closeDrawer }) {
   const confirmed = await confirm({
-    title: 'Are you sure you want to log out?',
-    confirmLabel: 'Log out',
+    title: t('Are you sure you want to log out?'),
+    confirmLabel: t('Log out'),
     danger: true,
   });
   if (confirmed) {

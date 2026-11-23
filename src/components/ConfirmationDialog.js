@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 
 import Portal from 'components/Portal';
 import Dialog from 'components/Dialog';
@@ -40,7 +41,7 @@ export default function ConfirmationDialog({
             }}
             style={{ marginRight: 15 }}
           >
-            {cancelLabel || 'Cancel'}
+            {cancelLabel || t('Cancel')}
           </Button>
           <Button
             mode="text"
@@ -50,7 +51,7 @@ export default function ConfirmationDialog({
               onDismiss && onDismiss();
             }}
           >
-            {confirmLabel || 'Confirm'}
+            {confirmLabel || t('Confirm')}
           </Button>
         </Dialog.Actions>
       </Dialog>

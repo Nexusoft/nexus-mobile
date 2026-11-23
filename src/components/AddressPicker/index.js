@@ -6,6 +6,7 @@ import SvgIcon from 'components/SvgIcon';
 import PasteIcon from 'icons/paste.svg';
 import ContactSelector from './ContactSelector';
 import QRScanner from './QRScanner';
+import { parsePaymentRequest } from 'lib/paymentRequest';
 
 const styles = {
   wrapper: {
@@ -15,11 +16,15 @@ const styles = {
   },
   button: {
     marginVertical: 0,
-    marginTop: -20,
+    marginTop: 2,
   },
 };
 
-export default function AddressPicker({ pickContacts = true, setAddress }) {
+export default function AddressPicker({
+  pickContacts = true,
+  setAddress,
+  autoScan,
+}) {
   return (
     <View style={styles.wrapper}>
       <IconButton
@@ -28,14 +33,19 @@ export default function AddressPicker({ pickContacts = true, setAddress }) {
         onPress={async () => {
           const clipboard = await Clipboard.getString();
           if (clipboard) {
-            setAddress(clipboard);
+            const request = parsePaymentRequest(clipboard);
+            setAddress(request ? request.address : clipboard, request);
           }
         }}
       />
       {pickContacts && (
         <ContactSelector setAddress={setAddress} style={styles.button} />
       )}
-      <QRScanner setAddress={setAddress} style={styles.button} />
+      <QRScanner
+        setAddress={setAddress}
+        style={styles.button}
+        autoOpen={autoScan}
+      />
     </View>
   );
 }

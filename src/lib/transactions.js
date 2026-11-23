@@ -4,11 +4,23 @@ import TokenName from 'components/TokenName';
 import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
 import { getDeltaSign } from 'lib/contracts';
-import { refreshUserAccounts } from 'lib/user';
-import { getStore } from 'store';
+import { refreshUserAccounts, selectLoggedIn } from 'lib/user';
+import { getStore, observeStore } from 'store';
+import { showError } from 'lib/ui';
+import { t } from 'lib/i18n';
 import formatNumber from 'utils/formatNumber';
 
+//a history download can add hundreds at once, older ones are not news
+const maxNewTransactionsFetch = 20;
+
 export const isConfirmed = (tx) => !!tx.confirmations;
+
+export const quickFilters = [
+  { label: 'All', ops: null },
+  { label: 'Sent', ops: ['DEBIT', 'LEGACY', 'FEE'] },
+  { label: 'Received', ops: ['CREDIT', 'COINBASE', 'MIGRATE'] },
+  { label: 'Staking', ops: ['TRUST', 'GENESIS'] },
+];
 
 let watchedIds = [];
 let unsubscribe = null;
@@ -19,10 +31,12 @@ function startWatcher() {
       // Clear watcher if user is logged out or core is disconnected or user is switched
       const genesis = state.user.status?.genesis;
       const oldGenesis = oldState.user.status?.genesis;
-      if (!isLoggedIn(state) || genesis !== oldGenesis) {
+      if (!oldState) return;
+      if (!selectLoggedIn(state) || genesis !== oldGenesis) {
         unsubscribe?.();
         unsubscribe = null;
         watchedIds = [];
+        return;
       }
 
       // Only refetch transaction each time there is a new block
@@ -31,12 +45,12 @@ function startWatcher() {
       if (!blocks || blocks === oldBlocks) return;
 
       // Fetch the updated transaction info
-      const transactions = await Promise.all([
-        watchedIds.map((txid) => fetchTransaction({ txid })),
-      ]);
+      const transactions = await Promise.all(
+        watchedIds.map((txid) => fetchTransaction({ txid }).catch(() => null))
+      );
 
       for (const tx of transactions) {
-        if (isConfirmed(tx)) {
+        if (tx && isConfirmed(tx)) {
           unwatchTransaction(tx.txid);
           // Reload the account list
           // so that the account balances (available & unconfirmed) are up-to-date
@@ -77,13 +91,15 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
   if (timeSpan) {
     const pastDate = getThresholdDate(timeSpan);
     if (pastDate) {
-      queries.push(
-        `results.timestamp>date(\`${pastDate.toISOString().split('T')[0]}\`);`
-      );
+      //no leading zeros, the core reads 08 and 09 as bad octal numbers
+      const day = `${pastDate.getUTCFullYear()}-${pastDate.getUTCMonth() + 1}-${pastDate.getUTCDate()}`;
+      queries.push(`results.timestamp>date(\`${day}\`);`);
     }
   }
   if (operation) {
-    queries.push(`results.contracts.OP=${operation}`);
+    const ops = Array.isArray(operation) ? operation : [operation];
+    const opQuery = ops.map((op) => `results.contracts.OP=${op}`).join(' OR ');
+    queries.push(ops.length > 1 ? `(${opQuery})` : opQuery);
   }
   if (addressQuery) {
     const buildAddressQuery =
@@ -105,6 +121,7 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
 }
 
 const txCountPerPage = 50;
+let txRequestSeq = 0;
 export async function loadTransactions({ reload } = { reload: false }) {
   const store = getStore();
   const {
@@ -113,9 +130,10 @@ export async function loadTransactions({ reload } = { reload: false }) {
     },
     ui: { transactionsFilter },
   } = store.getState();
-  if (loading) return;
+  if (loading && !reload) return;
 
   const offset = reload ? 0 : currentTransactions.length;
+  const seq = ++txRequestSeq;
   store.dispatch({
     type: TYPE.START_FETCHING_TXS,
     payload: { reload },
@@ -131,7 +149,17 @@ export async function loadTransactions({ reload } = { reload: false }) {
     if (query) {
       params.where = query;
     }
-    const transactions = await callAPI('profiles/transactions/master', params);
+    let transactions;
+    try {
+      transactions = await callAPI('profiles/transactions/master', params);
+    } catch (err) {
+      if (seq === txRequestSeq) {
+        showError(err?.message || t('Could not load transactions'));
+      }
+      return;
+    }
+    //a newer load (filter change) started meanwhile
+    if (seq !== txRequestSeq) return;
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
@@ -143,9 +171,11 @@ export async function loadTransactions({ reload } = { reload: false }) {
     });
     watchIfUnconfirmed(transactions);
   } finally {
-    store.dispatch({
-      type: TYPE.STOP_FETCHING_TXS,
-    });
+    if (seq === txRequestSeq) {
+      store.dispatch({
+        type: TYPE.STOP_FETCHING_TXS,
+      });
+    }
   }
 }
 
@@ -181,10 +211,12 @@ function filterTransactions(transactions) {
         return false;
       }
     }
-    if (
-      operation &&
-      !tx.contracts.some((contract) => contract.OP === operation)
-    ) {
+    const ops = operation
+      ? Array.isArray(operation)
+        ? operation
+        : [operation]
+      : null;
+    if (ops && !tx.contracts.some((contract) => ops.includes(contract.OP))) {
       return false;
     }
     if (addressQuery) {
@@ -221,7 +253,7 @@ const getBalanceChanges = (tx) =>
           let change = changes.find(
             contract.ticker || contract.token_name
               ? (change) =>
-                  change.ticker === contract.ticker || contract.token_name
+                  change.ticker === (contract.ticker || contract.token_name)
               : (change) => change.token === contract.token
           );
           if (change) {
@@ -238,7 +270,7 @@ const getBalanceChanges = (tx) =>
         }
         return changes;
       }, [])
-    : 0;
+    : [];
 
 export async function fetchTransaction({ txid, where, limit }) {
   let tx;
@@ -276,19 +308,26 @@ export function watchNewTransactions() {
     (state) => state,
     async (state, oldState) => {
       if (!oldState || !state) return;
-      const txCount = state?.user?.status?.transactions;
-      const oldTxCount = oldState?.user?.status?.transactions;
-      const wasSyncing = oldState?.core?.info?.synchronizing;
+      //core 5.1 has the count in profiles/status, not sessions/status
+      const txCount = state?.user?.profileStatus?.transactions;
+      const oldTxCount = oldState?.user?.profileStatus?.transactions;
+      const wasSyncing = !!oldState?.core?.info?.syncing;
       if (
         txCount > oldTxCount &&
         typeof txCount === 'number' &&
         typeof oldTxCount === 'number' &&
         !wasSyncing
       ) {
-        const transactions = await callAPI('ledger/list/transactions', {
-          verbose: 'summary',
-          limit: txCount - oldTxCount,
-        });
+        let transactions;
+        try {
+          transactions = await callAPI('ledger/list/transactions', {
+            verbose: 'summary',
+            limit: Math.min(txCount - oldTxCount, maxNewTransactionsFetch),
+          });
+        } catch (err) {
+          return;
+        }
+        if (!Array.isArray(transactions)) return;
 
         transactions.forEach((tx) => {
           const changes = getBalanceChanges(tx);
@@ -302,13 +341,12 @@ export function watchNewTransactions() {
             if (tx.confirmations <= 5) {
               scheduleNotificationAsync({
                 content: {
-                  title: 'New transaction',
+                  title: t('New transaction'),
                   body: changeLines.join(' \n'),
                   data: { type: 'new_transaction', txid: tx.txid },
                 },
-                trigger: null,
-                channelId: 'transaction-channel-id',
-              });
+                trigger: { channelId: 'transaction-channel-id' },
+              }).catch(() => {});
             }
           }
         });

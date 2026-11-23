@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import Text from 'components/Text';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 
 const styles = {
   container: ({ theme }) => ({
@@ -31,7 +32,7 @@ export default function ZeroConnectionsOverlay() {
       <View style={styles.container({ theme })}>
         <ActivityIndicator animating color={theme.foreground} />
         <Text sub color={theme.foreground} size={18} style={styles.message}>
-          Please wait while we connect you to the network...
+          {t('Please wait while we connect you to the network...')}
         </Text>
       </View>
     )

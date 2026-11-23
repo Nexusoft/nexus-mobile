@@ -1,16 +1,25 @@
 import React from 'react';
-import { View, ScrollView, Clipboard } from 'react-native';
-import { Button, overlay, Surface } from 'react-native-paper';
+import { View, ScrollView, Clipboard, Share } from 'react-native';
+import { Button, Surface } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
 import { useTheme } from 'lib/theme';
 
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
+import TextBox from 'components/TextBox';
+import TokenName from 'components/TokenName';
 import { showNotification } from 'lib/ui';
+import { t } from 'lib/i18n';
+import { buildPaymentRequest } from 'lib/paymentRequest';
+import parseAmount from 'utils/parseAmount';
+import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
 import { flatHeader } from 'utils/styles';
 import CopyIcon from 'icons/copy.svg';
+import { useSelector } from 'react-redux';
+import AccountPicker from 'components/AccountPicker';
+import { defaultAccountOf } from 'lib/accounts';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -18,15 +27,16 @@ const styles = {
     flex: 1,
     paddingHorizontal: 20,
   }),
-  upperPart: {
-    flex: 1,
-    justifyContent: 'flex-end',
+  receiveTo: {
+    alignSelf: 'stretch',
+    marginBottom: 20,
   },
-  lowerPart: {
-    flex: 3,
+  receiveToLabel: {
+    textTransform: 'uppercase',
+    marginBottom: 2,
   },
   topInstruction: {
-    marginBottom: 30,
+    marginBottom: 20,
     alignItems: 'center',
   },
   main: {
@@ -52,11 +62,39 @@ const styles = {
   separatorLabel: {
     paddingHorizontal: 15,
   },
+  requested: {
+    marginTop: 10,
+  },
+  request: {
+    alignSelf: 'stretch',
+    marginTop: 15,
+  },
+  requestButton: {
+    alignSelf: 'stretch',
+    marginTop: 10,
+  },
 };
 
-export default function ReceiveScreen({ route }) {
+export default function ReceiveScreen({ route, navigation }) {
   const theme = useTheme();
-  const address = route.params?.account?.address;
+  const accounts = useSelector((state) => state.user.accounts);
+  const account =
+    accounts?.find((a) => a.address === route.params?.account?.address) ||
+    route.params?.account ||
+    defaultAccountOf(accounts);
+  const address = account?.address;
+  const [requesting, setRequesting] = React.useState(false);
+  const [amount, setAmount] = React.useState('');
+  const [reference, setReference] = React.useState('');
+  const amountValue = parseAmount(amount);
+  const amountValid = amountValue > 0;
+  const referenceValid = reference === '' || /^\d+$/.test(reference);
+  const link = buildPaymentRequest({
+    address,
+    amount: requesting && amountValid ? amountValue : undefined,
+    reference: requesting && referenceValid ? reference : undefined,
+  });
+  const ticker = TokenName.from({ account });
   return (
     <ScrollView
       style={styles.wrapper({ theme })}
@@ -64,32 +102,61 @@ export default function ReceiveScreen({ route }) {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100%',
-        paddingVertical: 20,
+        paddingTop: 20,
+        paddingBottom: 60,
       }}
     >
-      <View style={styles.upperPart}>
+      <View>
         <Surface style={styles.main}>
+          <View style={styles.receiveTo}>
+            <Text sub size={12} style={styles.receiveToLabel}>
+              {t('Receive to')}
+            </Text>
+            <AccountPicker
+              account={account}
+              title={t('Receive to')}
+              onChange={(picked) => navigation.setParams({ account: picked })}
+            />
+          </View>
           <View style={styles.topInstruction}>
-            <Text sub>Show this QR code to the sender</Text>
+            <Text sub>{t('Show this QR code to the sender')}</Text>
           </View>
 
+          {/* always dark on light, scanners can fail on inverted codes */}
           <QRCode
-            value={address}
+            value={requesting && amountValid ? link : address}
             size={200}
-            color={theme.foreground}
-            backgroundColor={
-              theme.dark ? overlay(5, theme.surface) : theme.surface
-            }
+            color="#000"
+            backgroundColor="#fff"
+            quietZone={10}
           />
 
           <Text mono style={styles.address}>
             {segmentAddress(address)}
           </Text>
+          {requesting && amountValid && (
+            <Text bold style={styles.requested}>
+              {reference
+                ? t('Requesting {amount} {ticker} (reference {reference})', {
+                    amount: formatNumber(amountValue, {
+                      maximumFractionDigits: 6,
+                    }),
+                    ticker,
+                    reference,
+                  })
+                : t('Requesting {amount} {ticker}', {
+                    amount: formatNumber(amountValue, {
+                      maximumFractionDigits: 6,
+                    }),
+                    ticker,
+                  })}
+            </Text>
+          )}
 
           <View style={styles.separator}>
             <Divider style={styles.separatorLine} />
             <Text style={styles.separatorLabel} disabled>
-              or
+              {t('or')}
             </Text>
             <Divider style={styles.separatorLine} />
           </View>
@@ -101,15 +168,57 @@ export default function ReceiveScreen({ route }) {
             icon={({ size }) => <SvgIcon icon={CopyIcon} size={size} />}
             onPress={() => {
               Clipboard.setString(address);
-              showNotification('Copied to clipboard');
+              showNotification(t('Copied to clipboard'));
             }}
           >
-            <Text>Copy account address</Text>
+            <Text>{t('Copy account address')}</Text>
           </Button>
+
+          {requesting ? (
+            <View style={styles.request}>
+              <TextBox
+                mode="outlined"
+                label={t('Amount to request ({ticker})', { ticker })}
+                decimal
+                value={amount}
+                onChangeText={setAmount}
+                error={!!amount && !amountValid}
+              />
+              <TextBox
+                mode="outlined"
+                label={t('Reference number (optional)')}
+                keyboardType="number-pad"
+                value={reference}
+                onChangeText={setReference}
+                error={!referenceValid}
+                style={{ marginTop: 10 }}
+              />
+              <Button
+                style={styles.requestButton}
+                mode="contained"
+                uppercase={false}
+                icon="share-variant"
+                disabled={!amountValid || !referenceValid}
+                onPress={() => {
+                  Share.share({ message: link }).catch(() => {});
+                }}
+              >
+                {t('Share payment request')}
+              </Button>
+            </View>
+          ) : (
+            <Button
+              style={styles.requestButton}
+              mode="text"
+              uppercase={false}
+              icon="cash-plus"
+              onPress={() => setRequesting(true)}
+            >
+              {t('Request a specific amount')}
+            </Button>
+          )}
         </Surface>
       </View>
-
-      <View style={styles.lowerPart} />
     </ScrollView>
   );
 }
@@ -118,7 +227,7 @@ ReceiveScreen.nav = ({ theme }) => ({
   name: 'Receive',
   options: ({ route }) => ({
     headerTitleAlign: 'center',
-    headerTitle: route.params?.account?.name,
+    headerTitle: t('Receive'),
     headerStyle: flatHeader(theme),
   }),
 });

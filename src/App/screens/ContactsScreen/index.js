@@ -13,6 +13,7 @@ import { fade } from 'utils/color';
 import { selectSetting, updateSettings } from 'lib/settings';
 import { useTheme, disabledColor } from 'lib/theme';
 import memoize from 'utils/memoize';
+import { t } from 'lib/i18n';
 import Contact from './Contact';
 
 const styles = {
@@ -67,7 +68,7 @@ function NoContacts() {
   return (
     <View style={{ alignItems: 'center' }}>
       <Text sub style={styles.emptyMessage}>
-        You don't have any contact yet
+        {t("You don't have any contact yet")}
       </Text>
       <FAB
         style={styles.emptyAddBtn}
@@ -75,7 +76,7 @@ function NoContacts() {
         onPress={() => {
           navigate('NewContact');
         }}
-        label="Add contact"
+        label={t('Add contact')}
       />
     </View>
   );
@@ -85,7 +86,7 @@ function NoResults() {
   return (
     <View>
       <Text sub style={styles.emptyMessage}>
-        No matching results
+        {t('No matching results')}
       </Text>
     </View>
   );
@@ -106,9 +107,7 @@ export default function ContactsScreen() {
       {showContactsTip && (
         <View style={styles.descBox({ theme })}>
           <Text sub>
-            Contacts are stored locally on this phone and not bound to any
-            individual user. Therefore, anyone who logs in to this app on this
-            phone would see the same contacts.
+            {t('Contacts are stored locally on this phone and not bound to any individual user. Therefore, anyone who logs in to this app on this phone would see the same contacts.')}
           </Text>
           <Button
             compact
@@ -118,7 +117,7 @@ export default function ContactsScreen() {
               updateSettings({ showContactsTip: false });
             }}
           >
-            I got it
+            {t('I got it')}
           </Button>
         </View>
       )}
@@ -155,7 +154,7 @@ ContactsScreen.nav = ({ contactSearch, theme }) => ({
               onChangeText={setContactSearch}
               autoFocus
               dense
-              placeholder="Search contact"
+              placeholder={t('Search contact')}
             />
           )
         : 'Contacts',

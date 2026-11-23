@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 
 import Portal from 'components/Portal';
 import Dialog from 'components/Dialog';
@@ -24,14 +25,14 @@ export default function InfoDialog({ message, onDismiss, ...rest }) {
             size={20}
             style={{ marginRight: 5 }}
           />{' '}
-          Info
+          {t('Info')}
         </Dialog.Title>
         <Dialog.Content>
           <Text>{message}</Text>
         </Dialog.Content>
         <Dialog.Actions>
           <Button mode="text" onPress={onDismiss}>
-            Dismiss
+            {t('Dismiss')}
           </Button>
         </Dialog.Actions>
       </Dialog>

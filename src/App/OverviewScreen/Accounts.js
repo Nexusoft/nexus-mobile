@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableWithoutFeedback, FlatList } from 'react-native';
-import { TouchableRipple } from 'react-native-paper';
+import { TouchableRipple, Button } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import Text from 'components/Text';
@@ -8,6 +8,7 @@ import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import TokenName from 'components/TokenName';
 import { navigate } from 'lib/navigation';
+import { t } from 'lib/i18n';
 import { refreshUserAccounts, refreshUserBalances } from 'lib/user';
 import { refreshMarketPrice } from 'lib/market';
 import { selectSetting } from 'lib/settings';
@@ -15,6 +16,11 @@ import { useTheme } from 'lib/theme';
 import formatNumber from 'utils/formatNumber';
 import useRefresh from 'utils/useRefresh';
 import WalletIcon from 'icons/wallet.svg';
+import StakeIcon from 'icons/stake.svg';
+import { CoinIcon } from 'components/CoinBadge';
+import { accountRole, isNxs, sortAccounts } from 'lib/accounts';
+import QuickActions from './QuickActions';
+import Assets from './Assets';
 
 const styles = {
   accountsHeader: {
@@ -50,6 +56,15 @@ const styles = {
   accBalance: {
     fontSize: 15,
   },
+  empty: {
+    alignItems: 'center',
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+  },
+  emptyText: {
+    textAlign: 'center',
+    marginBottom: 10,
+  },
   accActions: {
     flexDirection: 'row',
   },
@@ -67,6 +82,7 @@ const styles = {
 function Account({ account }) {
   const theme = useTheme();
   const hideBalances = useSelector(selectSetting('hideBalances'));
+  const role = accountRole(account);
 
   return (
     <View style={styles.account}>
@@ -77,10 +93,24 @@ function Account({ account }) {
       >
         <View style={styles.accInfo}>
           <View style={styles.accNameIcon}>
-            <SvgIcon icon={WalletIcon} size={14} style={styles.accIcon} />
+            {role ? (
+              <SvgIcon
+                icon={role === 'trust' ? StakeIcon : WalletIcon}
+                size={14}
+                color={role === 'trust' ? '#1b9e5a' : theme.primary}
+                style={styles.accIcon}
+              />
+            ) : (
+              <CoinIcon coin={isNxs(account)} size={14} style={styles.accIcon} />
+            )}
             <Text style={styles.accName} bold disabled={!account.name}>
-              {account.name || 'Unnamed'}
+              {account.name || t('Unnamed')}
             </Text>
+            {!!role && (
+              <Text sub size={11} style={{ marginLeft: 6 }}>
+                {role === 'trust' ? t('Staking') : t('Main')}
+              </Text>
+            )}
           </View>
           <Text style={styles.accBalance}>
             {hideBalances
@@ -98,7 +128,7 @@ function Account({ account }) {
             navigate('Receive', { account });
           }}
         >
-          <Text style={styles.accActionLabel({ theme })}>RECEIVE</Text>
+          <Text style={styles.accActionLabel({ theme })}>{t('RECEIVE')}</Text>
         </TouchableRipple>
 
         <Divider vertical inset={10} />
@@ -109,7 +139,7 @@ function Account({ account }) {
             navigate('Send', { account });
           }}
         >
-          <Text style={styles.accActionLabel({ theme })}>SEND</Text>
+          <Text style={styles.accActionLabel({ theme })}>{t('SEND')}</Text>
         </TouchableRipple>
       </View>
     </View>
@@ -117,30 +147,55 @@ function Account({ account }) {
 }
 
 const refreshData = () =>
-  Promise.all([refreshUserAccounts, refreshUserBalances, refreshMarketPrice]);
+  Promise.all([
+    refreshUserAccounts(),
+    refreshUserBalances(),
+    refreshMarketPrice(),
+  ]);
 
 export default function Accounts({ filteredAccounts }) {
   const [refreshing, refresh] = useRefresh(refreshData);
   return (
-    <>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigate('Accounts');
-        }}
-      >
-        <Text style={styles.accountsHeader} sub>
-          Your Accounts
-        </Text>
-      </TouchableWithoutFeedback>
-      <FlatList
-        refreshing={refreshing}
-        onRefresh={refresh}
-        style={styles.accounts}
-        data={filteredAccounts}
-        keyExtractor={(acc) => acc.address}
-        renderItem={({ item: account }) => <Account account={account} />}
-        ItemSeparatorComponent={() => <Divider inset={20} />}
-      />
-    </>
+    <FlatList
+      refreshing={refreshing}
+      onRefresh={refresh}
+      style={styles.accounts}
+      data={sortAccounts(filteredAccounts)}
+      keyExtractor={(acc) => acc.address}
+      renderItem={({ item: account }) => <Account account={account} />}
+      ListHeaderComponent={
+        <>
+          <QuickActions accounts={filteredAccounts} />
+          <Assets accounts={filteredAccounts} />
+          <TouchableWithoutFeedback
+            onPress={() => {
+              navigate('Accounts');
+            }}
+          >
+            <Text style={styles.accountsHeader} sub>
+              {t('Your Accounts')}
+            </Text>
+          </TouchableWithoutFeedback>
+        </>
+      }
+      ItemSeparatorComponent={() => <Divider inset={20} />}
+      ListEmptyComponent={
+        Array.isArray(filteredAccounts) ? (
+          <View style={styles.empty}>
+            <Text sub style={styles.emptyText}>
+              {t('You have no accounts yet.')}
+            </Text>
+            <Button
+              mode="text"
+              onPress={() => {
+                navigate('NewAccount');
+              }}
+            >
+              {t('Create account')}
+            </Button>
+          </View>
+        ) : null
+      }
+    />
   );
 }

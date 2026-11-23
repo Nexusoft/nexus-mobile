@@ -3,6 +3,10 @@ import * as TYPE from 'consts/actionTypes';
 
 import { selectSetting } from './settings';
 
+//test coins have no market value
+export const selectMarketPrice = (state) =>
+  state.core.info?.testnet || state.core.info?.private ? null : state.market.price;
+
 let timerId = null;
 export async function refreshMarketPrice() {
   const store = getStore();

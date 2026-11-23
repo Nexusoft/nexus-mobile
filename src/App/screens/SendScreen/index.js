@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, LayoutAnimation } from 'react-native';
+import { ScrollView } from 'react-native';
 import { HeaderTitle } from '@react-navigation/elements';
 import { FAB, overlay } from 'react-native-paper';
 import { Formik } from 'formik';
@@ -9,12 +9,15 @@ import ScreenBody from 'components/ScreenBody';
 import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import TokenName from 'components/TokenName';
 import SvgIcon from 'components/SvgIcon';
-import Text from 'components/Text';
 import { navigate } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 import { addressRegex } from 'consts/regex';
+import parseAmount from 'utils/parseAmount';
 import { getStore } from 'store';
+import { useSelector } from 'react-redux';
+import { defaultAccountOf } from 'lib/accounts';
 import SendIcon from 'icons/send.svg';
 import SendFrom from './SendFrom';
 import SendTo from './SendTo';
@@ -37,18 +40,11 @@ async function reverseLookup(address) {
       return namespace + '::' + name;
     }
 
+    //another user's local name is ambiguous, show the address instead
     if (local) {
-      if (mine) {
-        return name;
-      } else {
-        return (
-          <Text>
-            <Text sub>(?):</Text>
-            {name}
-          </Text>
-        );
-      }
+      return mine ? name : null;
     }
+    return name;
   } catch (err) {
     console.error(err);
     return null;
@@ -56,6 +52,7 @@ async function reverseLookup(address) {
 }
 
 async function resolveNameOrAddress(nameOrAddress) {
+  nameOrAddress = nameOrAddress?.trim();
   if (!nameOrAddress) return null;
 
   if (addressRegex.test(nameOrAddress)) {
@@ -108,10 +105,7 @@ function useEndReached() {
     if (viewHeight === undefined || contentHeight === undefined) return;
     scrollPosition = scrollPosition || 0;
     const tempEndReached = scrollPosition + viewHeight > contentHeight - 1;
-    if (tempEndReached !== endReached) {
-      LayoutAnimation.easeInEaseOut();
-      setEndReached(tempEndReached);
-    }
+    if (tempEndReached !== endReached) setEndReached(tempEndReached);
   };
   const scrollHandler = ({
     nativeEvent: {
@@ -145,42 +139,67 @@ function useEndReached() {
   };
 }
 
-export default function SendScreen({ route }) {
+export default function SendScreen({ route, navigation }) {
   const theme = useTheme();
-  const account = route.params?.account;
+  const accounts = useSelector((state) => state.user.accounts);
+  //fresh balance of the picked account, default account when none was given
+  const account =
+    accounts?.find((a) => a.address === route.params?.account?.address) ||
+    route.params?.account ||
+    defaultAccountOf(accounts);
   const sendTo = route.params?.sendTo;
   const { endReached, scrollViewProps } = useEndReached();
 
   return (
     <Formik
       initialValues={{
-        amount: '',
+        amount: route.params?.amount || '',
         nameOrAddress: sendTo || '',
-        reference: '',
+        reference: route.params?.reference || '',
+        requestLabel: route.params?.label || '',
       }}
       validationSchema={yup.object().shape({
-        nameOrAddress: yup.string().required('Required!'),
-        amount: yup.number().typeError('Invalid!').min(0, 'Invalid!'),
+        nameOrAddress: yup.string().required(t('Required!')),
+        amount: yup
+          .string()
+          .required(t('Required!'))
+          .test('amount', t('Invalid!'), (value) => parseAmount(value) > 0)
+          .test(
+            'balance',
+            t('More than the account holds'),
+            (value) =>
+              typeof account?.balance !== 'number' ||
+              !(parseAmount(value) > account.balance)
+          ),
         reference: yup
           .number()
-          .typeError('Invalid!')
-          .integer('Invalid!')
-          .min(0, 'Invalid!'),
+          .typeError(t('Invalid!'))
+          .integer(t('Invalid!'))
+          .min(0, t('Invalid!')),
       })}
       onSubmit={async (
         { nameOrAddress, amount, reference },
         { setFieldError }
       ) => {
-        const resolved = await resolveNameOrAddress(nameOrAddress);
+        let resolved = null;
+        try {
+          resolved = await resolveNameOrAddress(nameOrAddress);
+        } catch (err) {
+          setFieldError(
+            'nameOrAddress',
+            err?.message || t('Could not check this name/address')
+          );
+          return;
+        }
         if (resolved) {
           navigate('ConfirmSend', {
             account,
             recipient: resolved,
-            amount,
-            reference,
+            amount: parseAmount(amount),
+            reference: reference === '' ? undefined : Number(reference),
           });
         } else {
-          setFieldError('nameOrAddress', 'Invalid name/address!');
+          setFieldError('nameOrAddress', t('Invalid name/address!'));
         }
       }}
     >
@@ -191,10 +210,14 @@ export default function SendScreen({ route }) {
             scrollEventThrottle={160}
             {...scrollViewProps}
           >
-            <SendFrom account={account} />
+            <SendFrom
+              account={account}
+              onChange={(picked) => navigation.setParams({ account: picked })}
+            />
 
             <SendTo
               account={account}
+              autoScan={!!route.params?.scan}
               handleSubmit={handleSubmit}
               isSubmitting={isSubmitting}
               {...rest}
@@ -219,8 +242,8 @@ export default function SendScreen({ route }) {
             label={
               endReached
                 ? isSubmitting
-                  ? 'Validating...'
-                  : 'Proceed'
+                  ? t('Validating...')
+                  : t('Proceed')
                 : undefined
             }
           />

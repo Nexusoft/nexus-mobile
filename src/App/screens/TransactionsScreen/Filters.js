@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 import { TouchableRipple, Button, shadow, List } from 'react-native-paper';
 
 import Text from 'components/Text';
@@ -10,7 +11,11 @@ import Select from 'components/Select';
 import TokenName from 'components/TokenName';
 import SvgIcon from 'components/SvgIcon';
 import { toggleTransactionsFilter, showOptions } from 'lib/ui';
-import { updateFilter, loadTransactions } from 'lib/transactions';
+import {
+  updateFilter,
+  loadTransactions,
+  quickFilters,
+} from 'lib/transactions';
 import { refreshUserTokens, refreshUserAccounts } from 'lib/user';
 import { disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
@@ -35,41 +40,45 @@ const operations = [
   'WRITE',
 ];
 
-const opOptions = [
+//functions so the texts are translated at render time
+const getOpOptions = () => [
   {
     value: null,
     display: (
       <Text bold colorName="">
-        All
+        {t('All')}
       </Text>
     ),
   },
+  ...quickFilters
+    .filter(({ ops }) => ops)
+    .map(({ label, ops }) => ({ value: ops, display: t(label) })),
   ...operations.map((op) => ({
     value: op,
     display: op,
   })),
 ];
 
-const timeOptions = [
+const getTimeOptions = () => [
   {
     value: null,
     display: (
       <Text bold colorName="">
-        All
+        {t('All')}
       </Text>
     ),
   },
   {
     value: 'year',
-    display: 'Past Year',
+    display: t('Past Year'),
   },
   {
     value: 'month',
-    display: 'Past Month',
+    display: t('Past Month'),
   },
   {
     value: 'week',
-    display: 'Past Week',
+    display: t('Past Week'),
   },
 ];
 
@@ -189,13 +198,22 @@ export default function Filters() {
   const showSearchOptions = () =>
     showOptions({
       sectioned: true,
-      options: searchOptions,
+      //key is shown as the section header, id keeps the English one
+      options: searchOptions.map((section) => ({
+        ...section,
+        id: section.key,
+        key: {
+          Accounts: t('Accounts'),
+          Tokens: t('Tokens'),
+          Contacts: t('Contacts'),
+        }[section.key],
+      })),
       renderOption: (option, { section }) => {
-        switch (section.key) {
+        switch (section.id) {
           case 'Accounts':
             return (
               <List.Item
-                title={option.name || <Text disabled>Unnamed account</Text>}
+                title={option.name || <Text disabled>{t('Unnamed account')}</Text>}
               />
             );
           case 'Tokens':
@@ -215,14 +233,14 @@ export default function Filters() {
     <View style={styles.wrapper({ theme, expanded: open })}>
       <View style={styles.selectLine}>
         <Select
-          options={opOptions}
+          options={getOpOptions()}
           value={operation}
           updateValue={(operation) => updateFilter({ operation })}
           render={({ display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
               <View style={styles.filterSelect}>
                 <FilterText style={styles.filterLabel} sub>
-                  Operation:
+                  {t('Operation:')}
                 </FilterText>
                 <FilterText>{display}</FilterText>
               </View>
@@ -230,14 +248,14 @@ export default function Filters() {
           )}
         />
         <Select
-          options={timeOptions}
+          options={getTimeOptions()}
           value={timeSpan}
           updateValue={(timeSpan) => updateFilter({ timeSpan })}
           render={({ display, openSelect }) => (
             <TouchableRipple onPress={openSelect}>
               <View style={styles.filterSelect}>
                 <FilterText style={styles.filterLabel} sub>
-                  Time:
+                  {t('Time:')}
                 </FilterText>
                 <FilterText>{display}</FilterText>
               </View>
@@ -250,7 +268,7 @@ export default function Filters() {
         style={styles.filterInput}
         background={theme.dark ? 'background' : 'primary'}
         dense
-        label="Search for account/token address"
+        label={t('Search for account/token address')}
         value={searchInput}
         onChangeText={setSearchInput}
         onEndEditing={() => {
@@ -276,7 +294,7 @@ export default function Filters() {
         }}
         labelStyle={{ fontSize: 12 }}
       >
-        Apply filter
+        {t('Apply filter')}
       </Button>
     </View>
   );

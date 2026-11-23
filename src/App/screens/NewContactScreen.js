@@ -11,6 +11,7 @@ import { createContact } from 'lib/contacts';
 import { goBack } from 'lib/navigation';
 import { showError } from 'lib/ui';
 import memoize from 'utils/memoize';
+import { t } from 'lib/i18n';
 
 const selectContactNames = memoize(
   (contacts) => Object.keys(contacts),
@@ -34,12 +35,12 @@ export default function NewContactScreen() {
         validationSchema={yup.object().shape({
           name: yup
             .string()
-            .required('Required!')
-            .notOneOf(contactNames, 'Existed!'),
+            .required(t('Required!'))
+            .notOneOf(contactNames, t('Existed!')),
           address: yup
             .string()
-            .required('Required!')
-            .notOneOf(contactAddresses, 'Existed!'),
+            .required(t('Required!'))
+            .notOneOf(contactAddresses, t('Existed!')),
         })}
         onSubmit={async ({ name, address }) => {
           try {
@@ -55,10 +56,10 @@ export default function NewContactScreen() {
             <TextBox.Formik
               autoFocus
               name="name"
-              label="Contact name"
+              label={t('Contact name')}
               autoCapitalize="words"
             />
-            <TextBox.Formik name="address" label="Nexus address" multiline />
+            <TextBox.Formik name="address" label={t('Nexus address')} multiline />
             <AddressPicker
               pickContacts={false}
               setAddress={(address) => {
@@ -71,7 +72,7 @@ export default function NewContactScreen() {
               disabled={isSubmitting}
               style={{ marginTop: 30 }}
               onPress={handleSubmit}
-              label="Create contact"
+              label={t('Create contact')}
             />
           </>
         )}

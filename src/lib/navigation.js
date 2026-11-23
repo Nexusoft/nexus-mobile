@@ -20,3 +20,8 @@ export function goBack(...args) {
 // export function addNavListener(...args) {
 //   navContainerRef.current?.addListener(...args);
 // }
+
+//navigate to an existing stack route pops back to it
+export function resetToBase() {
+  navContainerRef.current?.navigate('Base');
+}

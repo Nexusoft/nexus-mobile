@@ -24,12 +24,30 @@ import SetRecoveryScreen from './screens/SetRecoveryScreen';
 import ChangePasswordScreen from './screens/ChangePasswordScreen';
 import CoreInfoScreen from './screens/CoreInfoScreen';
 import AboutScreen from './screens/AboutScreen';
+import SummaryScreen from './screens/SummaryScreen';
+import StakingScreen from './screens/StakingScreen';
+import NamesScreen from './screens/NamesScreen';
+import NewNameScreen from './screens/NewNameScreen';
+import InvoicesScreen from './screens/InvoicesScreen';
+import InvoiceScreen from './screens/InvoiceScreen';
+import NewInvoiceScreen from './screens/NewInvoiceScreen';
 import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 import { selectLoggedIn } from 'lib/user';
+import { resetToBase } from 'lib/navigation';
 import { getStore } from 'store';
 import BaseScreen from './BaseScreen';
 
 const Stack = createStackNavigator();
+
+//screen titles are English in each screen's nav options
+const translateOptions = (options, name) => ({
+  ...options,
+  title: typeof options?.title === 'string' ? t(options.title) : t(name),
+  ...(typeof options?.headerTitle === 'string' && {
+    headerTitle: t(options.headerTitle),
+  }),
+});
 
 const screens = [
   BaseScreen,
@@ -52,16 +70,28 @@ const screens = [
   ChangePasswordScreen,
   CoreInfoScreen,
   AboutScreen,
+  SummaryScreen,
+  StakingScreen,
+  NamesScreen,
+  NewNameScreen,
+  InvoicesScreen,
+  InvoiceScreen,
+  NewInvoiceScreen,
 ];
 
 export default function StackNavigator({ navigation }) {
   const theme = useTheme();
   const txFilterOpen = useSelector((state) => state.ui.transactionsFilter.open);
+  const contactSearch = useSelector((state) => state.ui.contactSearch);
   React.useEffect(() => {
     const store = getStore();
-    store.observe(selectLoggedIn, (loggedIn) => {
+    return store.observe(selectLoggedIn, (loggedIn, wasLoggedIn) => {
       if (!loggedIn) {
         navigation.closeDrawer();
+      }
+      //back to Base so no screen keeps the old user's data
+      if (!loggedIn && wasLoggedIn) {
+        resetToBase();
       }
     });
   }, []);
@@ -99,9 +129,9 @@ export default function StackNavigator({ navigation }) {
         }}
       >
         {screens.map((Screen) => {
-          const { name, options } =
+          const { name, options, listeners } =
             typeof Screen.nav === 'function'
-              ? Screen.nav({ theme, txFilterOpen })
+              ? Screen.nav({ theme, txFilterOpen, contactSearch })
               : Screen.nav;
 
           return (
@@ -109,7 +139,8 @@ export default function StackNavigator({ navigation }) {
               key={name}
               name={name}
               component={Screen}
-              options={options}
+              options={translateOptions(options, name)}
+              listeners={listeners}
             />
           );
         })}

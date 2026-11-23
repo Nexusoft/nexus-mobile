@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Platform } from 'react-native';
 import { FAB, Button } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -11,15 +12,26 @@ import TextBox from 'components/TextBox';
 import TokenName from 'components/TokenName';
 import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import { useTheme, disabledColor } from 'lib/theme';
+import { t } from 'lib/i18n';
 import { goBack } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { showNotification, showError } from 'lib/ui';
+import { selectUsername } from 'lib/user';
+import { selectSetting } from 'lib/settings';
+import { checkPin } from 'lib/appLock';
+import {
+  biometricAvailable,
+  hasBiometricPin,
+  readPinWithBiometric,
+  disableBiometricPin,
+} from 'lib/biometric';
 import formatNumber from 'utils/formatNumber';
 import segmentAddress from 'utils/segmentAddress';
 import WalletIcon from 'icons/wallet.svg';
 import SendIcon from 'icons/send.svg';
 import ContactsIcon from 'icons/address-book.svg';
 import NameIcon from 'icons/abc.svg';
+import KeyIcon from 'icons/key.svg';
 
 const styles = {
   wrapper: {
@@ -75,6 +87,12 @@ const styles = {
     textAlign: 'center',
   },
   note: { textAlign: 'center', marginBottom: 20 },
+  claimNote: ({ theme }) => ({
+    marginTop: 10,
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: theme.dark ? '#173445' : '#e3f5fe',
+  }),
   arrow: {
     paddingVertical: 20,
     alignSelf: 'center',
@@ -93,11 +111,77 @@ const styles = {
 export default function ConfirmSendScreen({ route }) {
   const theme = useTheme();
   const { account, recipient, amount, reference } = route.params || {};
+  const sendingRef = React.useRef(false);
+  const toOwnAccount = useSelector((state) =>
+    (state.user.accounts || []).some(
+      (acc) => acc.address === recipient?.address
+    )
+  );
+  const username = useSelector(selectUsername);
+  const sendMax = useSelector(selectSetting('sendBiometricMax'));
+  const [canBiometric, setCanBiometric] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  React.useEffect(() => {
+    (async () => {
+      const withinMax = !sendMax || Number(amount) <= sendMax;
+      setCanBiometric(
+        withinMax &&
+          (await biometricAvailable()) &&
+          (await hasBiometricPin(username, 'send'))
+      );
+    })();
+  }, [username, sendMax, amount]);
+
+  const send = async (pin) => {
+    if (sendingRef.current) return;
+    const params = { pin, from: account.address, amount };
+    params.to = recipient.address;
+    if (reference || reference === 0) {
+      params.reference = reference;
+    }
+
+    sendingRef.current = true;
+    setSending(true);
+    try {
+      await callAPI('finance/debit/account,trust', params);
+    } catch (err) {
+      sendingRef.current = false;
+      setSending(false);
+      showError(err && err.message);
+      return;
+    }
+    showNotification(t('Transaction sent'));
+    goBack(); // go back from ConfirmSend screen to Send screen
+    goBack(); // go back from Send screen
+  };
+
+  const sendWithBiometric = async () => {
+    try {
+      const pin = await readPinWithBiometric(
+        username,
+        'send',
+        t('Confirm the send')
+      );
+      if (!pin) return;
+      //PIN changed since it was stored
+      if ((await checkPin(pin)) === false) {
+        await disableBiometricPin(username, 'send');
+        setCanBiometric(false);
+        showError(
+          t('Sending with fingerprint was turned off because the saved PIN no longer works. Enter your PIN.')
+        );
+        return;
+      }
+      await send(pin);
+    } catch (err) {
+      showError(err?.message);
+    }
+  };
   return (
     <ScreenBody style={styles.wrapper} surface>
       <View style={styles.amountSection}>
         <Text style={styles.label} sub>
-          You're sending
+          {t("You're sending")}
         </Text>
         <Text style={styles.amount}>
           {formatNumber(amount, { maximumFractionDigits: 6 })}{' '}
@@ -107,12 +191,12 @@ export default function ConfirmSendScreen({ route }) {
 
       <View style={styles.fromTo}>
         <Text style={styles.label} sub>
-          From
+          {t('From')}
         </Text>
         <View style={styles.accountInfo}>
           <SvgIcon icon={WalletIcon} size={16} />
           <Text bold style={styles.name} disabled={!account.name}>
-            {account.name || 'Unnamed'}
+            {account.name || t('Unnamed')}
           </Text>
         </View>
         <View style={styles.addressBox({ theme })}>
@@ -124,16 +208,16 @@ export default function ConfirmSendScreen({ route }) {
 
       <View style={styles.fromTo}>
         <Text style={styles.label} sub>
-          To
+          {t('To')}
         </Text>
         {!!(recipient.name || recipient.contactName) && (
           <View style={styles.accountInfo}>
             <SvgIcon
-              icon={recipient.name ? NameIcon : ContactsIcon}
+              icon={recipient.contactName ? ContactsIcon : NameIcon}
               size={16}
             />
             <Text bold style={styles.name}>
-              {recipient.name || recipient.contactName}
+              {recipient.contactName || recipient.name}
             </Text>
           </View>
         )}
@@ -144,10 +228,18 @@ export default function ConfirmSendScreen({ route }) {
         </View>
       </View>
 
+      <View style={styles.claimNote({ theme })}>
+        <Text sub size={13}>
+          {toOwnAccount
+            ? t('This goes to one of your own accounts.')
+            : t('The recipient has 7 days to claim this payment. If it is not claimed by then, you can take it back.')}
+        </Text>
+      </View>
+
       {(!!reference || reference === 0) && (
         <View style={styles.referenceSection}>
           <Text style={styles.label} sub size={16}>
-            Reference number
+            {t('Reference number')}
           </Text>
           <Text style={styles.referenceNo}>{reference}</Text>
         </View>
@@ -158,41 +250,40 @@ export default function ConfirmSendScreen({ route }) {
           pin: '',
         }}
         validationSchema={yup.object().shape({
-          pin: yup.string().required('Required!'),
+          pin: yup.string().required(t('Required!')),
         })}
-        onSubmit={async ({ pin }) => {
-          const params = { pin, from: account.address, amount };
-          if (recipient.name) {
-            params.to = recipient.name;
-          } else {
-            params.to = recipient.address;
-          }
-          if (reference || reference === 0) {
-            params.reference = reference;
-          }
-
-          try {
-            await callAPI('finance/debit/account,trust', params);
-          } catch (err) {
-            showError(err && err.message);
-            return;
-          }
-          showNotification('Transaction sent');
-          goBack(); // go back from ConfirmSend screen to Send screen
-          goBack(); // go back from Send screen
-        }}
+        onSubmit={({ pin }) => send(pin)}
       >
         {({ handleSubmit, isSubmitting }) => (
           <>
             <View style={styles.pinSection}>
               <Text sub style={styles.note}>
-                Double check your transaction before confirming
+                {t('Double check your transaction before confirming')}
               </Text>
+
+              {canBiometric && (
+                <Button
+                  mode="contained"
+                  labelStyle={{ color: theme.onPrimary }}
+                  style={{ marginBottom: 20 }}
+                  disabled={isSubmitting || sending}
+                  icon={({ size, color }) => (
+                    <SvgIcon icon={KeyIcon} {...{ size, color }} />
+                  )}
+                  onPress={sendWithBiometric}
+                >
+                  {t('Confirm with fingerprint')}
+                </Button>
+              )}
 
               <TextBox.Formik
                 mode="outlined"
                 name="pin"
-                label="Enter your PIN to confirm"
+                label={
+                  canBiometric
+                    ? t('Or enter your PIN')
+                    : t('Enter your PIN to confirm')
+                }
                 background={['surface', 0]}
                 secure
                 keyboardType={
@@ -201,7 +292,7 @@ export default function ConfirmSendScreen({ route }) {
                     : 'numbers-and-punctuation'
                 }
                 returnKeyType="send"
-                onSubmitEditing={handleSubmit}
+                onSubmitEditing={isSubmitting ? undefined : handleSubmit}
               />
             </View>
 
@@ -213,7 +304,7 @@ export default function ConfirmSendScreen({ route }) {
                   goBack();
                 }}
               >
-                Cancel
+                {t('Cancel')}
               </Button>
 
               <FAB
@@ -224,9 +315,9 @@ export default function ConfirmSendScreen({ route }) {
                   <SvgIcon icon={SendIcon} {...{ size, color }} />
                 )}
                 onPress={handleSubmit}
-                loading={isSubmitting}
-                disabled={isSubmitting}
-                label={isSubmitting ? 'Sending...' : 'Send'}
+                loading={isSubmitting || sending}
+                disabled={isSubmitting || sending}
+                label={isSubmitting || sending ? t('Sending...') : t('Send')}
               />
             </View>
           </>

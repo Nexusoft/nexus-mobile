@@ -10,6 +10,7 @@ import SvgIcon from 'components/SvgIcon';
 import CustomBottomTabBar from 'components/CustomBottomTabBar';
 import { useTheme, subColor } from 'lib/theme';
 import { navigate } from 'lib/navigation';
+import { t } from 'lib/i18n';
 import { flatHeader } from 'utils/styles';
 import { fade } from 'utils/color';
 import SettingsIcon from 'icons/settings.svg';
@@ -87,8 +88,8 @@ export default function UnauthenticatedBase() {
               component={Screen}
               listeners={listeners}
               options={{
-                title: title || name,
-                tabBarLabel: title || name,
+                title: t(title || name),
+                tabBarLabel: t(title || name),
                 tabBarIcon: () => null,
                 ...options,
               }}
@@ -123,7 +124,7 @@ UnauthenticatedBase.stackOptions = ({ theme, route }) => {
           colorName={theme.dark ? 'foreground' : 'onPrimary'}
           style={styles.versionText}
         >
-          v{version} Beta <SyncStatus />
+          {t('v{version} Beta', { version })} <SyncStatus />
         </Text>
       </View>
     ),
@@ -152,7 +153,8 @@ function SyncStatus() {
 
   return (
     <Text style={styles.sync({ theme })}>
-      | Synchronizing... {syncing?.progress}%
+      |{' '}
+      {t('Synchronizing... {progress}%', { progress: syncing?.progress ?? syncing?.completed })}
     </Text>
   );
 }

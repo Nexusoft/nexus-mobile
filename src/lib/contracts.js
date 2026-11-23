@@ -16,3 +16,7 @@ export const getDeltaSign = (contract) => {
       return '';
   }
 };
+
+//amount colours of money in / out
+export const deltaColor = (sign) =>
+  sign === '-' ? '#d9534f' : sign === '+' ? '#1b9e5a' : undefined;
