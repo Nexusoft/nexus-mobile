@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, LayoutAnimation } from 'react-native';
+import { View } from 'react-native';
 import { Button, overlay, TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
@@ -14,6 +14,8 @@ import parseAmount from 'utils/parseAmount';
 import { selectSetting } from 'lib/settings';
 import { selectMarketPrice } from 'lib/market';
 import { parsePaymentRequest } from 'lib/paymentRequest';
+import { addressRegex } from 'consts/regex';
+import segmentAddress from 'utils/segmentAddress';
 
 const styles = {
   wrapper: ({ theme }) => ({
@@ -63,6 +65,14 @@ const styles = {
     justifyContent: 'center',
     marginBottom: 3,
   }),
+  preview: ({ theme }) => ({
+    marginTop: -12,
+    marginBottom: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+    backgroundColor: theme.dark ? 'rgba(255,255,255,0.05)' : '#eef4fa',
+  }),
   fiat: {
     marginTop: 4,
     marginLeft: 4,
@@ -71,16 +81,23 @@ const styles = {
     alignSelf: 'flex-start',
     marginBottom: 5,
   },
-  advancedOptions: ({ expanded }) => ({
-    // setting height to 0 makes text have the stretch effect
-    // setting height to > 0 makes text have the revealing effect (on Android)
-    height: expanded ? undefined : 0.01,
-    overflow: 'hidden',
-    alignSelf: 'stretch',
-  }),
 };
 
 const maxContactShortcuts = 5;
+
+//a long address does not fit the one line field, show it whole and grouped below
+function RecipientPreview({ value }) {
+  const theme = useTheme();
+  const text = value?.trim();
+  if (!text || !addressRegex.test(text)) return null;
+  return (
+    <View style={styles.preview({ theme })}>
+      <Text mono size={14} style={{ textAlign: 'center' }}>
+        {segmentAddress(text)}
+      </Text>
+    </View>
+  );
+}
 
 function ContactShortcuts({ setFieldValue }) {
   const theme = useTheme();
@@ -156,13 +173,13 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
       <ContactShortcuts setFieldValue={setFieldValue} />
       <View style={styles.section}>
         <TextBox.Formik
-          multiline
           name="nameOrAddress"
           mode="outlined"
           background={['surface', 2]}
           label={t('Recipient name/address')}
           blurOnSubmit
         />
+        <RecipientPreview value={values?.nameOrAddress} />
         <AddressPicker
           autoScan={autoScan}
           setAddress={(address, request) => {
@@ -204,15 +221,13 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
           icon={advancedOpen ? 'chevron-down' : 'chevron-right'}
           style={styles.advancedToggle}
           labelStyle={{ fontSize: 12 }}
-          onPress={() => {
-            LayoutAnimation.easeInEaseOut();
-            setAdvancedOpen(!advancedOpen);
-          }}
+          onPress={() => setAdvancedOpen(!advancedOpen)}
         >
           {t('Advanced options')}
         </Button>
 
-        <View style={styles.advancedOptions({ expanded: advancedOpen })}>
+        {/* mounted when shown: a field measured while hidden or animating draws no label until focused */}
+        {advancedOpen && (
           <TextBox.Formik
             name="reference"
             mode="outlined"
@@ -220,7 +235,7 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
             label={t('Reference number (optional)')}
             keyboardType="number-pad"
           />
-        </View>
+        )}
       </View>
     </View>
   );
