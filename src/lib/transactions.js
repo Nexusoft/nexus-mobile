@@ -91,9 +91,9 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
   if (timeSpan) {
     const pastDate = getThresholdDate(timeSpan);
     if (pastDate) {
-      queries.push(
-        `results.timestamp>date(\`${pastDate.toISOString().split('T')[0]}\`);`
-      );
+      //no leading zeros, the core reads 08 and 09 as bad octal numbers
+      const day = `${pastDate.getUTCFullYear()}-${pastDate.getUTCMonth() + 1}-${pastDate.getUTCDate()}`;
+      queries.push(`results.timestamp>date(\`${day}\`);`);
     }
   }
   if (operation) {

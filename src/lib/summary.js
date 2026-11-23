@@ -10,21 +10,21 @@ const maxTransactions = 10000;
 
 //all transactions from a moment on (null = whole history), newest first
 export async function fetchTransactionsSince(since, onProgress) {
-  //the core compares whole days, the exact cut is made below
-  const where = since
-    ? `results.timestamp>date(\`${moment(since)
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD')}\`);`
-    : undefined;
+  //plain pages, newest first, stop once past the start (no where filter, lighter on the phone's core)
   const sinceUnix = since ? moment(since).unix() : 0;
   let all = [];
   for (let offset = 0; offset < maxTransactions; offset += pageSize) {
-    const params = { verbose: 'summary', limit: pageSize, offset };
-    if (where) params.where = where;
-    const page = (await callAPI('profiles/transactions/master', params)) || [];
+    const page =
+      (await callAPI('profiles/transactions/master', {
+        verbose: 'summary',
+        limit: pageSize,
+        offset,
+      })) || [];
     all = all.concat(page);
     onProgress?.(all.length);
     if (page.length < pageSize) break;
+    const oldest = page[page.length - 1]?.timestamp;
+    if (since && oldest && oldest < sinceUnix) break;
   }
   return all.filter((tx) => tx.timestamp >= sinceUnix);
 }

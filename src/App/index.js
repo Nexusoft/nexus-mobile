@@ -2,7 +2,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import React from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
-import { AppState, Platform, UIManager, View, LogBox } from 'react-native';
+import { Alert, AppState, Platform, UIManager, View, LogBox } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import {
@@ -33,6 +33,24 @@ import { refreshCoreInfo } from 'lib/coreInfo';
 
 // Ignore the warning for long timer
 LogBox.ignoreLogs(['Setting a timer']);
+
+//release build: show a JS crash with its text before closing, so it can be reported
+if (!__DEV__ && global.ErrorUtils) {
+  const previousHandler = global.ErrorUtils.getGlobalHandler();
+  let shown = false;
+  global.ErrorUtils.setGlobalHandler((error, isFatal) => {
+    if (!isFatal || shown) return previousHandler?.(error, isFatal);
+    shown = true;
+    Alert.alert(
+      'The app ran into an error',
+      `${error?.name || 'Error'}: ${error?.message || error}\n\n${String(
+        error?.stack || ''
+      ).slice(0, 800)}`,
+      [{ text: 'Close app', onPress: () => previousHandler?.(error, isFatal) }],
+      { cancelable: false }
+    );
+  });
+}
 
 // For using LayoutAnimation
 if (Platform.OS === 'android') {
