@@ -9,6 +9,7 @@ import Portal from 'components/Portal';
 import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import QRIcon from 'icons/qr.svg';
+import { parsePaymentRequest } from 'lib/paymentRequest';
 
 const useBackHandler = useAndroidBackHandler || (() => {});
 
@@ -33,8 +34,19 @@ const styles = {
   },
 };
 
-export default function QRScanner({ setAddress, style }) {
+async function startScan(setScanning) {
+  const { status } = await BarCodeScanner.requestPermissionsAsync();
+  if (status === 'granted') {
+    setScanning(true);
+    Keyboard.dismiss();
+  }
+}
+
+export default function QRScanner({ setAddress, style, autoOpen }) {
   const [scanning, setScanning] = React.useState(false);
+  React.useEffect(() => {
+    if (autoOpen) startScan(setScanning);
+  }, []);
   const insets = useSafeAreaInsets();
   useBackHandler(() => {
     if (scanning) {
@@ -48,13 +60,7 @@ export default function QRScanner({ setAddress, style }) {
       <IconButton
         style={style}
         icon={() => <SvgIcon icon={QRIcon} size={16} />}
-        onPress={async () => {
-          const { status } = await BarCodeScanner.requestPermissionsAsync();
-          if (status === 'granted') {
-            setScanning(true);
-            Keyboard.dismiss();
-          }
-        }}
+        onPress={() => startScan(setScanning)}
       />
       {scanning && (
         <Portal>
@@ -63,7 +69,8 @@ export default function QRScanner({ setAddress, style }) {
             barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
             onBarCodeScanned={({ data }) => {
               Vibration.vibrate();
-              setAddress(data);
+              const request = parsePaymentRequest(data);
+              setAddress(request ? request.address : String(data).trim(), request);
               setScanning(false);
             }}
           />

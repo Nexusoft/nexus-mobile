@@ -19,6 +19,7 @@ export const defaultSettings = {
   externalCoreAPIPort: '8080',
   externalCoreAPIUser: 'apiserver',
   externalCoreAPIPassword: 'password',
+  externalCoreSSL: true,
 
   // Hidden
   showContactsTip: true,

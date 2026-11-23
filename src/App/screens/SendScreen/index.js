@@ -9,11 +9,11 @@ import ScreenBody from 'components/ScreenBody';
 import ZeroConnectionsOverlay from 'components/ZeroConnectionsOverlay';
 import TokenName from 'components/TokenName';
 import SvgIcon from 'components/SvgIcon';
-import Text from 'components/Text';
 import { navigate } from 'lib/navigation';
 import { callAPI } from 'lib/api';
 import { useTheme } from 'lib/theme';
 import { addressRegex } from 'consts/regex';
+import parseAmount from 'utils/parseAmount';
 import { getStore } from 'store';
 import SendIcon from 'icons/send.svg';
 import SendFrom from './SendFrom';
@@ -37,18 +37,11 @@ async function reverseLookup(address) {
       return namespace + '::' + name;
     }
 
+    //another user's local name is ambiguous, show the address instead
     if (local) {
-      if (mine) {
-        return name;
-      } else {
-        return (
-          <Text>
-            <Text sub>(?):</Text>
-            {name}
-          </Text>
-        );
-      }
+      return mine ? name : null;
     }
+    return name;
   } catch (err) {
     console.error(err);
     return null;
@@ -56,6 +49,7 @@ async function reverseLookup(address) {
 }
 
 async function resolveNameOrAddress(nameOrAddress) {
+  nameOrAddress = nameOrAddress?.trim();
   if (!nameOrAddress) return null;
 
   if (addressRegex.test(nameOrAddress)) {
@@ -154,13 +148,24 @@ export default function SendScreen({ route }) {
   return (
     <Formik
       initialValues={{
-        amount: '',
+        amount: route.params?.amount || '',
         nameOrAddress: sendTo || '',
-        reference: '',
+        reference: route.params?.reference || '',
+        requestLabel: route.params?.label || '',
       }}
       validationSchema={yup.object().shape({
         nameOrAddress: yup.string().required('Required!'),
-        amount: yup.number().typeError('Invalid!').min(0, 'Invalid!'),
+        amount: yup
+          .string()
+          .required('Required!')
+          .test('amount', 'Invalid!', (value) => parseAmount(value) > 0)
+          .test(
+            'balance',
+            'More than the account holds',
+            (value) =>
+              typeof account?.balance !== 'number' ||
+              !(parseAmount(value) > account.balance)
+          ),
         reference: yup
           .number()
           .typeError('Invalid!')
@@ -171,13 +176,22 @@ export default function SendScreen({ route }) {
         { nameOrAddress, amount, reference },
         { setFieldError }
       ) => {
-        const resolved = await resolveNameOrAddress(nameOrAddress);
+        let resolved = null;
+        try {
+          resolved = await resolveNameOrAddress(nameOrAddress);
+        } catch (err) {
+          setFieldError(
+            'nameOrAddress',
+            err?.message || 'Could not check this name/address'
+          );
+          return;
+        }
         if (resolved) {
           navigate('ConfirmSend', {
             account,
             recipient: resolved,
-            amount,
-            reference,
+            amount: parseAmount(amount),
+            reference: reference === '' ? undefined : Number(reference),
           });
         } else {
           setFieldError('nameOrAddress', 'Invalid name/address!');
@@ -195,6 +209,7 @@ export default function SendScreen({ route }) {
 
             <SendTo
               account={account}
+              autoScan={!!route.params?.scan}
               handleSubmit={handleSubmit}
               isSubmitting={isSubmitting}
               {...rest}

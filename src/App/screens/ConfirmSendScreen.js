@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Platform } from 'react-native';
 import { FAB, Button } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -75,6 +76,12 @@ const styles = {
     textAlign: 'center',
   },
   note: { textAlign: 'center', marginBottom: 20 },
+  claimNote: ({ theme }) => ({
+    marginTop: 10,
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: theme.dark ? '#173445' : '#e3f5fe',
+  }),
   arrow: {
     paddingVertical: 20,
     alignSelf: 'center',
@@ -93,6 +100,12 @@ const styles = {
 export default function ConfirmSendScreen({ route }) {
   const theme = useTheme();
   const { account, recipient, amount, reference } = route.params || {};
+  const sendingRef = React.useRef(false);
+  const toOwnAccount = useSelector((state) =>
+    (state.user.accounts || []).some(
+      (acc) => acc.address === recipient?.address
+    )
+  );
   return (
     <ScreenBody style={styles.wrapper} surface>
       <View style={styles.amountSection}>
@@ -129,11 +142,11 @@ export default function ConfirmSendScreen({ route }) {
         {!!(recipient.name || recipient.contactName) && (
           <View style={styles.accountInfo}>
             <SvgIcon
-              icon={recipient.name ? NameIcon : ContactsIcon}
+              icon={recipient.contactName ? ContactsIcon : NameIcon}
               size={16}
             />
             <Text bold style={styles.name}>
-              {recipient.name || recipient.contactName}
+              {recipient.contactName || recipient.name}
             </Text>
           </View>
         )}
@@ -142,6 +155,14 @@ export default function ConfirmSendScreen({ route }) {
             {segmentAddress(recipient.address)}
           </Text>
         </View>
+      </View>
+
+      <View style={styles.claimNote({ theme })}>
+        <Text sub size={13}>
+          {toOwnAccount
+            ? 'This goes to one of your own accounts.'
+            : 'The recipient has 7 days to claim this payment. If it is not claimed by then, you can take it back.'}
+        </Text>
       </View>
 
       {(!!reference || reference === 0) && (
@@ -161,19 +182,18 @@ export default function ConfirmSendScreen({ route }) {
           pin: yup.string().required('Required!'),
         })}
         onSubmit={async ({ pin }) => {
+          if (sendingRef.current) return;
           const params = { pin, from: account.address, amount };
-          if (recipient.name) {
-            params.to = recipient.name;
-          } else {
-            params.to = recipient.address;
-          }
+          params.to = recipient.address;
           if (reference || reference === 0) {
             params.reference = reference;
           }
 
+          sendingRef.current = true;
           try {
             await callAPI('finance/debit/account,trust', params);
           } catch (err) {
+            sendingRef.current = false;
             showError(err && err.message);
             return;
           }
@@ -201,7 +221,7 @@ export default function ConfirmSendScreen({ route }) {
                     : 'numbers-and-punctuation'
                 }
                 returnKeyType="send"
-                onSubmitEditing={handleSubmit}
+                onSubmitEditing={isSubmitting ? undefined : handleSubmit}
               />
             </View>
 

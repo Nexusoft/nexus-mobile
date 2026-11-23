@@ -4,6 +4,14 @@ import { getStore } from 'store';
 
 export const selectConnected = (state) => !!state.core.info;
 
+//null on mainnet
+export const selectTestNetworkLabel = (state) => {
+  const info = state.core.info;
+  if (info?.private) return 'Private network';
+  if (info?.testnet) return 'Testnet ' + info.testnet;
+  return null;
+};
+
 async function getInfo() {
   const store = getStore();
   try {

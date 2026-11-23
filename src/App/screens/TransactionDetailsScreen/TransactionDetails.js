@@ -1,5 +1,6 @@
 import React from 'react';
-import { Clipboard } from 'react-native';
+import { Clipboard, Linking } from 'react-native';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { Button, Surface } from 'react-native-paper';
 
@@ -16,7 +17,12 @@ const styles = {
   },
 };
 
+const explorerUrl = 'https://explorer.nexus.io';
+
 export default function TransactionDetails({ transaction }) {
+  const mainnet = useSelector(
+    (state) => !state.core.info?.testnet && !state.core.info?.private
+  );
   return (
     <Surface style={styles.wrapper}>
       <InfoField
@@ -54,6 +60,20 @@ export default function TransactionDetails({ transaction }) {
         label="Confirmations"
         value={transaction.confirmations}
       />
+      {mainnet && (
+        <>
+          <Divider />
+          <Button
+            mode="text"
+            style={{ marginVertical: 8 }}
+            onPress={() => {
+              Linking.openURL(`${explorerUrl}/scan/${transaction.txid}`);
+            }}
+          >
+            View on explorer
+          </Button>
+        </>
+      )}
     </Surface>
   );
 }

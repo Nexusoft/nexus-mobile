@@ -195,7 +195,8 @@ function FormikTextBox({ name, onChangeText, ...rest }) {
           helpers.setValue(...args);
         }}
         onBlur={() => {
-          helpers.setTouched(true);
+          //empty fields get marked on submit, an autofocused field loses focus when the drawer closes
+          if (field.value) helpers.setTouched(true);
         }}
         {...rest}
       />

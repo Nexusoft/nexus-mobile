@@ -10,7 +10,7 @@ import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
 import Switch from 'components/Switch';
 import { useTheme } from 'lib/theme';
-import { logIn } from 'lib/session';
+import { logIn, friendlyLoginError } from 'lib/session';
 import * as TYPE from 'consts/actionTypes';
 import { showError } from 'lib/ui';
 import { getStore } from 'store';
@@ -152,17 +152,7 @@ export default function LoginScreen() {
           try {
             await logIn({ username, password, pin, rememberMe, keepLoggedIn });
           } catch (err) {
-            const syncing = getStore()?.getState().core.info?.syncing;
-            const message =
-              err?.message +
-              (syncing &&
-              // Error code -130: Account doesn't exist or connection failed.
-              (err?.code === -130 ||
-                // Error code -139: Invalid credentials
-                err?.code === -139)
-                ? '\n\nNot being fully synchronized may have caused this error. Please wait for synchronization to complete and try again.'
-                : '');
-            showError(message);
+            showError(friendlyLoginError(err));
           }
         }}
         component={LoginForm}
