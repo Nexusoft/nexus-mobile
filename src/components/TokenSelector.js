@@ -29,7 +29,9 @@ const selectTokenOptions = memoize(
     const options = [null, ...(userTokens || [])];
     const selectedAnotherToken =
       !!selectedToken &&
-      !userTokens.some((token) => token.address === selectedToken.address);
+      !(userTokens || []).some(
+        (token) => token.address === selectedToken.address
+      );
     if (selectedAnotherToken) {
       options.unshift(selectedToken);
     }

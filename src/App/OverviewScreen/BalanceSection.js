@@ -8,8 +8,9 @@ import Text from 'components/Text';
 import SvgIcon from 'components/SvgIcon';
 import { useTheme, subColor } from 'lib/theme';
 import { refreshUserBalances } from 'lib/user';
-import { refreshMarketPrice } from 'lib/market';
+import { refreshMarketPrice, selectMarketPrice } from 'lib/market';
 import { selectSetting } from 'lib/settings';
+import { selectTestNetworkLabel } from 'lib/coreInfo';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
 import memoize from 'utils/memoize';
@@ -18,7 +19,7 @@ import DownArrowIcon from 'icons/chevron-down.svg';
 
 const styles = {
   wrapper: {
-    minHeight: '30%',
+    minHeight: 150,
     paddingVertical: 25,
     paddingHorizontal: 20,
     justifyContent: 'center',
@@ -38,6 +39,17 @@ const styles = {
   fiatValue: {
     fontSize: 18,
   },
+  networkTag: ({ theme }) => ({
+    marginTop: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: subColor(theme.dark ? theme.foreground : theme.onPrimary),
+    fontSize: 11,
+    textTransform: 'uppercase',
+    overflow: 'hidden',
+  }),
   expandIcon: ({ theme }) => ({
     position: 'absolute',
     top: 4,
@@ -66,6 +78,7 @@ const selectBalances = memoize(
   (balances) => {
     if (!balances) return [undefined, undefined];
     const nxsIndex = balances.findIndex(({ token }) => token === '0');
+    if (nxsIndex < 0) return [undefined, [...balances]];
     const tokenBalances = [...balances];
     const [nxsBalances] = tokenBalances.splice(nxsIndex, 1);
     return [nxsBalances, tokenBalances];
@@ -90,7 +103,8 @@ export default function BalanceSection({ filteredAccounts }) {
   const [nxsBalances] = useSelector(selectBalances);
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const hideBalances = useSelector(selectSetting('hideBalances'));
-  const price = useSelector(({ market: { price } }) => price);
+  const price = useSelector(selectMarketPrice);
+  const testNetwork = useSelector(selectTestNetworkLabel);
   const { available, unclaimed, unconfirmed, stake, immature } =
     nxsBalances || {};
   React.useEffect(() => {
@@ -143,6 +157,11 @@ export default function BalanceSection({ filteredAccounts }) {
                 },
                 baseCurrency
               )}
+            </BalanceText>
+          )}
+          {!!testNetwork && (
+            <BalanceText style={styles.networkTag({ theme })}>
+              {testNetwork}, no real value
             </BalanceText>
           )}
           <SvgIcon

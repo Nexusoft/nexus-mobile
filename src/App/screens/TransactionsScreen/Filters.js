@@ -10,7 +10,11 @@ import Select from 'components/Select';
 import TokenName from 'components/TokenName';
 import SvgIcon from 'components/SvgIcon';
 import { toggleTransactionsFilter, showOptions } from 'lib/ui';
-import { updateFilter, loadTransactions } from 'lib/transactions';
+import {
+  updateFilter,
+  loadTransactions,
+  quickFilters,
+} from 'lib/transactions';
 import { refreshUserTokens, refreshUserAccounts } from 'lib/user';
 import { disabledColor } from 'lib/theme';
 import { fade } from 'utils/color';
@@ -44,6 +48,9 @@ const opOptions = [
       </Text>
     ),
   },
+  ...quickFilters
+    .filter(({ ops }) => ops)
+    .map(({ label, ops }) => ({ value: ops, display: label })),
   ...operations.map((op) => ({
     value: op,
     display: op,

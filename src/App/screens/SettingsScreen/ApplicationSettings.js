@@ -117,6 +117,7 @@ export default function ApplicationSettings() {
                 />
               }
             />
+            <Divider inset={20} />
           </>
         )}
 

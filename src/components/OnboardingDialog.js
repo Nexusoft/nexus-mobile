@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 
 import Portal from 'components/Portal';
