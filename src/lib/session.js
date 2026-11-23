@@ -2,6 +2,9 @@ import * as TYPE from 'consts/actionTypes';
 import { callAPI } from 'lib/api';
 import { updateSettings } from 'lib/settings';
 import { getStore } from 'store';
+import { disableBiometricUnlock } from 'lib/biometric';
+
+const maxIndexingWaitMs = 180000;
 
 // Don't refresh user status while login process is not yet done
 let refreshUserStatusLock = false;
@@ -34,37 +37,65 @@ export async function refreshUserStatus() {
     });
     return status;
   } catch (err) {
-    // Don't log "Session not found" errors
+    //timeouts and other passing errors keep the current state, only a lost session logs out
     if (err?.code !== -11) {
       console.error('refresh status', err);
+      return null;
     }
-    try {
-      const {
-        settings: { savedUsername },
-      } = store.getState();
-      if (savedUsername) {
-        const { saved } = await callAPI('sessions/status/local', {
-          username: savedUsername,
-        });
-        if (saved) {
-          store.dispatch({ type: TYPE.SET_SESSION_SAVED, payload: true });
-        }
-      }
-    } catch (err) {
-      if (err?.code === -11) {
-        // Error code -11 "Session not found"
-        store.dispatch({ type: TYPE.SET_SESSION_SAVED, payload: false });
-        return null;
-      } else {
-        console.error(err);
+    const {
+      settings: { savedUsername },
+    } = store.getState();
+    let saved = false;
+    if (savedUsername) {
+      try {
+        saved = !!(
+          await callAPI('sessions/status/local', { username: savedUsername })
+        )?.saved;
+      } catch (err) {
+        saved = false;
       }
     }
+    store.dispatch({ type: TYPE.SET_SESSION_SAVED, payload: saved });
     store.dispatch({ type: TYPE.LOGOUT });
     return null;
   }
 }
 
 // Functions
+
+//core error codes and network failures in plain words
+export function friendlyLoginError(err) {
+  const syncing = !!getStore()?.getState().core.info?.syncing;
+  const syncNote = syncing
+    ? ' Nexus Core is still synchronizing, which can also cause this. Wait for it to finish and try again.'
+    : '';
+  switch (err?.code) {
+    case -139:
+      return 'Wrong username, password or PIN.' + syncNote;
+    case -130:
+      return 'No account with this username was found.' + syncNote;
+    case -309:
+      return 'Wrong PIN, or the saved login could not be opened.';
+    case 'TIMEOUT':
+    case 'NETWORK':
+    case 401:
+      return err.message;
+    default:
+      return (err?.message || 'Login failed') + syncNote;
+  }
+}
+
+//wait for the sigchain download and indexing...
+export async function waitForIndexing() {
+  const indexingDeadline = Date.now() + maxIndexingWaitMs;
+  while (true) {
+    const status = await callAPI('sessions/status/local');
+    if (!status?.indexing) return;
+    //very large sigchains: go on, balances fill in when indexing ends
+    if (Date.now() > indexingDeadline) return;
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+}
 
 export async function logIn({
   username,
@@ -81,13 +112,7 @@ export async function logIn({
       password,
       pin,
     });
-    let finishedIndexing = false;
-    while (!finishedIndexing) {
-      // This checks if the account has finished indexing after downloading the sigchain, consider revising this.
-      let status = await callAPI('sessions/status/local');
-      finishedIndexing = !status.indexing;
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
+    await waitForIndexing();
     updateSettings({
       savedUsername: rememberMe ? username : null,
     });
@@ -121,9 +146,11 @@ export async function logOut() {
       user: {
         status: { saved },
       },
+      settings: { savedUsername },
     } = store.getState();
 
     await callAPI('sessions/terminate/local', saved ? { clear: 1 } : null);
+    if (saved) await disableBiometricUnlock(savedUsername);
   } finally {
     // Release the lock
     refreshUserStatusLock = false;

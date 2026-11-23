@@ -6,12 +6,14 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case TYPE.SET_CORE_INFO: {
       const coreInfo = action.payload;
-      // Sometimes first system/get/info call doesn't return syncing
-      // TODO: handle testnet differently
-      if (coreInfo?.blocks < 3000000) {
+      if (!coreInfo || coreInfo.testnet || coreInfo.private) {
+        return false;
+      }
+      //first system/get/info can come without syncing, mainnet height is far above 3M
+      if (coreInfo.blocks < 3000000 && !coreInfo.synchronized) {
         return true;
       }
-      if (!coreInfo?.syncing) {
+      if (!coreInfo.syncing) {
         return false;
       }
       if (coreInfo?.syncing?.completed < 50) {

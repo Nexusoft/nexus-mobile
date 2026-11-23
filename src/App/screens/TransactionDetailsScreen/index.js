@@ -24,12 +24,18 @@ export default function TransactionDetailsScreen({ route }) {
     params: { txid },
   } = route;
   const [transaction, setTransaction] = React.useState(null);
+  const [error, setError] = React.useState(null);
   const loadTransaction = async () => {
-    const tx = await callAPI('ledger/get/transaction', {
-      txid,
-      verbose: 'summary',
-    });
-    setTransaction(tx);
+    try {
+      const tx = await callAPI('ledger/get/transaction', {
+        txid,
+        verbose: 'summary',
+      });
+      setError(null);
+      setTransaction(tx);
+    } catch (err) {
+      setError(err?.message || 'Could not load this transaction');
+    }
   };
   const [refreshing, refresh] = useRefresh(loadTransaction);
   React.useEffect(() => {
@@ -52,6 +58,8 @@ export default function TransactionDetailsScreen({ route }) {
             <ContractDetails key={contract.id} contract={contract} />
           ))}
         </>
+      ) : error ? (
+        <Text style={{ padding: 20, textAlign: 'center' }}>{error}</Text>
       ) : (
         <ActivityIndicator />
       )}

@@ -12,7 +12,7 @@ import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { refreshUserStatus } from 'lib/session';
 import { callAPI } from 'lib/api';
-import { showError } from 'lib/ui';
+import { showError, showSuccess } from 'lib/ui';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
 
@@ -86,7 +86,13 @@ function ConfirmCredentialsDialog({
   );
 }
 
-function RecoveryForm({ values, handleSubmit, isSubmitting }) {
+function RecoveryForm({
+  values,
+  handleSubmit,
+  isSubmitting,
+  validateForm,
+  setTouched,
+}) {
   const [confirming, setConfirming] = React.useState(false);
   return (
     <View>
@@ -121,7 +127,19 @@ function RecoveryForm({ values, handleSubmit, isSubmitting }) {
         style={styles.recoverBtn}
         disabled={isSubmitting}
         loading={isSubmitting}
-        onPress={handleSubmit}
+        onPress={async () => {
+          const errors = await validateForm();
+          if (Object.keys(errors).length) {
+            setTouched({
+              username: true,
+              recovery: true,
+              password: true,
+              pin: true,
+            });
+            return;
+          }
+          setConfirming(true);
+        }}
         label={isSubmitting ? 'Recovering' : 'Recover'}
       />
       <ConfirmCredentialsDialog
@@ -175,18 +193,26 @@ export default function RecoveryScreen() {
             .required('Required!')
             .min(4, 'Must be at least 4 characters!'),
         })}
-        onSubmit={async ({ username, recovery, password, pin }) => {
+        onSubmit={async (
+          { username, recovery, password, pin },
+          { resetForm }
+        ) => {
           try {
             await callAPI('profiles/recover/master', {
               username,
-              recovery,
+              recovery: recovery.trim().replace(/\s+/g, ' '),
               password,
               pin,
             });
-            await refreshUserStatus();
           } catch (err) {
             showError(err && err.message);
+            return;
           }
+          resetForm();
+          showSuccess(
+            'Your password and PIN have been reset. You can now log in with the new password and PIN.'
+          );
+          await refreshUserStatus();
         }}
         component={RecoveryForm}
       />

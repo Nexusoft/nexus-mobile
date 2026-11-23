@@ -9,7 +9,12 @@ import Text from 'components/Text';
 import Switch from 'components/Switch';
 import Divider from 'components/Divider';
 import { useTheme, disabledColor } from 'lib/theme';
-import { defaultSettings, updateSettings, selectSetting } from 'lib/settings';
+import {
+  defaultSettings,
+  updateSettings,
+  selectSetting,
+  selectSettings,
+} from 'lib/settings';
 import { goBack } from 'lib/navigation';
 import { showError } from 'lib/ui';
 import { refreshCoreInfo } from 'lib/coreInfo';
@@ -102,7 +107,10 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
         Manually connect to an external Nexus Core run on another machine
         instead of the internal Nexus Core packaged along with this app. Be
         aware of possible version incompatibility between the app interface and
-        the external Nexus Core.
+        the external Nexus Core. The API username and password are the apiuser
+        and apipassword lines in that core's nexus.conf. A core with the
+        apissl option on answers HTTPS (usually port 7080), otherwise HTTP
+        (port 8080).
       </Text>
 
       {coreMode === 'external' && (
@@ -113,7 +121,7 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
               <TextBox
                 name="externalCoreIP"
                 placeholder={defaultSettings.externalCoreIP}
-                keyboardType="decimal-pad"
+                keyboardType="url"
               />
             </View>
           </Surface>
@@ -129,6 +137,11 @@ function ExternalCoreConfigForm({ navigation, isSubmitting, handleSubmit }) {
                 placeholder={defaultSettings.externalCoreAPIPort}
                 keyboardType="number-pad"
               />
+            </View>
+            <Divider inset={20} />
+            <View style={[styles.field, { justifyContent: 'space-between' }]}>
+              <Text style={styles.label}>Use HTTPS</Text>
+              <Switch.Formik name="externalCoreSSL" />
             </View>
             <Divider inset={20} />
             <View style={styles.field}>
@@ -160,7 +173,8 @@ export default function ExternalCoreConfigScreen({ navigation }) {
     externalCoreAPIPort,
     externalCoreAPIUser,
     externalCoreAPIPassword,
-  } = useSelector((state) => state.settings);
+    externalCoreSSL,
+  } = useSelector(selectSettings);
   return (
     <ScreenBody style={styles.screen}>
       <Formik
@@ -169,6 +183,7 @@ export default function ExternalCoreConfigScreen({ navigation }) {
           externalCoreAPIPort,
           externalCoreAPIUser,
           externalCoreAPIPassword,
+          externalCoreSSL,
         }}
         onSubmit={async (updates) => {
           try {

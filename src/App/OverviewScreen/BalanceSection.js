@@ -18,7 +18,7 @@ import DownArrowIcon from 'icons/chevron-down.svg';
 
 const styles = {
   wrapper: {
-    minHeight: '30%',
+    minHeight: 150,
     paddingVertical: 25,
     paddingHorizontal: 20,
     justifyContent: 'center',
@@ -66,6 +66,7 @@ const selectBalances = memoize(
   (balances) => {
     if (!balances) return [undefined, undefined];
     const nxsIndex = balances.findIndex(({ token }) => token === '0');
+    if (nxsIndex < 0) return [undefined, [...balances]];
     const tokenBalances = [...balances];
     const [nxsBalances] = tokenBalances.splice(nxsIndex, 1);
     return [nxsBalances, tokenBalances];

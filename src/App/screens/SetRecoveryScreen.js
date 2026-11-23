@@ -15,6 +15,17 @@ import { callAPI } from 'lib/api';
 import { goBack } from 'lib/navigation';
 import { showError, showNotification } from 'lib/ui';
 import { disabledColor, useTheme } from 'lib/theme';
+import { getRandomBytes } from 'expo-random';
+
+//uniform index from a secure source, rejection sampling avoids modulo bias
+function secureRandomIndex(count) {
+  const limit = Math.floor(0x100000000 / count) * count;
+  while (true) {
+    const b = getRandomBytes(4);
+    const value = ((b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3]) >>> 0;
+    if (value < limit) return value % count;
+  }
+}
 
 const styles = {
   screen: {
@@ -153,8 +164,7 @@ export default function SetRecoveryScreen() {
             if (!wordList) return;
             const words = [];
             for (let i = 0; i < wordCount; i++) {
-              const randomIndex = Math.floor(Math.random() * wordList.length);
-              words.push(wordList[randomIndex]);
+              words.push(wordList[secureRandomIndex(wordList.length)]);
             }
             const recovery = words.join(' ');
             setFieldValue('newRecovery', recovery);

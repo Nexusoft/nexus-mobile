@@ -26,6 +26,7 @@ import CoreInfoScreen from './screens/CoreInfoScreen';
 import AboutScreen from './screens/AboutScreen';
 import { useTheme } from 'lib/theme';
 import { selectLoggedIn } from 'lib/user';
+import { resetToBase } from 'lib/navigation';
 import { getStore } from 'store';
 import BaseScreen from './BaseScreen';
 
@@ -57,11 +58,16 @@ const screens = [
 export default function StackNavigator({ navigation }) {
   const theme = useTheme();
   const txFilterOpen = useSelector((state) => state.ui.transactionsFilter.open);
+  const contactSearch = useSelector((state) => state.ui.contactSearch);
   React.useEffect(() => {
     const store = getStore();
-    store.observe(selectLoggedIn, (loggedIn) => {
+    return store.observe(selectLoggedIn, (loggedIn, wasLoggedIn) => {
       if (!loggedIn) {
         navigation.closeDrawer();
+      }
+      //back to Base so no screen keeps the old user's data
+      if (!loggedIn && wasLoggedIn) {
+        resetToBase();
       }
     });
   }, []);
@@ -99,9 +105,9 @@ export default function StackNavigator({ navigation }) {
         }}
       >
         {screens.map((Screen) => {
-          const { name, options } =
+          const { name, options, listeners } =
             typeof Screen.nav === 'function'
-              ? Screen.nav({ theme, txFilterOpen })
+              ? Screen.nav({ theme, txFilterOpen, contactSearch })
               : Screen.nav;
 
           return (
@@ -110,6 +116,7 @@ export default function StackNavigator({ navigation }) {
               name={name}
               component={Screen}
               options={options}
+              listeners={listeners}
             />
           );
         })}

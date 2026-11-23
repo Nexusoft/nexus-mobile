@@ -8,7 +8,7 @@ export const selectLoggedIn = (state) => !!state.user.status?.genesis;
 
 // Return user's confirmed status
 export const selectUserIsConfirmed = (state) =>
-  state.user?.status?.confirmed !== false;
+  state.user?.profileStatus?.confirmed !== false;
 
 export const selectUsername = (state) => {
   const {
@@ -31,13 +31,19 @@ export async function refreshUserBalances() {
   }
 }
 
+let emptyAccountRetries = 0;
 export async function refreshUserAccounts() {
   const store = getStore();
   try {
     const accounts = await callAPI('finance/list/any');
-    if (!accounts?.length) {
-      // In a very rare case the sigchain is not fully downloaded, try again
-      setTimeout(refreshUserAccounts, 500);
+    //sigchain not fully downloaded yet, try again a few times
+    if (!accounts?.length && emptyAccountRetries < 20) {
+      emptyAccountRetries++;
+      setTimeout(() => {
+        if (selectLoggedIn(store.getState())) refreshUserAccounts();
+      }, 1000);
+    } else {
+      emptyAccountRetries = 0;
     }
     store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: accounts });
     return accounts;
@@ -71,7 +77,7 @@ export async function refreshHeaders() {
     const result = await callAPI('ledger/sync/headers');
     return result;
   } catch (error) {
-    if (error.code === '-306') {
+    if (String(error?.code) === '-306') {
       setTimeout(() => {
         refreshHeaders();
       }, 500);

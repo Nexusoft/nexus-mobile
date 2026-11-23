@@ -13,6 +13,7 @@ import { navigate } from 'lib/navigation';
 import { refreshUserAccounts } from 'lib/user';
 import { disabledColor } from 'lib/theme';
 import segmentAddress from 'utils/segmentAddress';
+import formatNumber from 'utils/formatNumber';
 import useRefresh from 'utils/useRefresh';
 import WalletIcon from 'icons/wallet.svg';
 
@@ -33,6 +34,8 @@ const styles = {
   accNameIcon: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexShrink: 1,
+    marginRight: 10,
   },
   accIcon: {
     marginRight: 8,
@@ -92,7 +95,10 @@ export default function AccountsScreen() {
                       {account.name || 'Unnamed'}
                     </Text>
                   </View>
-                  <TokenName bold disabled account={account} />
+                  <Text>
+                    {formatNumber(account.balance || 0)}{' '}
+                    <TokenName bold disabled account={account} />
+                  </Text>
                 </View>
                 <View style={styles.addressBox({ theme })}>
                   <Text style={styles.address} mono>

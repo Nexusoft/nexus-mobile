@@ -36,7 +36,7 @@ export default (state = initialState, action) => {
       };
 
     case TYPE.UPDATE_TRANSACTION: {
-      if (loaded !== 'none') {
+      if (state.loaded !== 'none') {
         const txid = action.payload?.txid;
         const index = state.transactions.findIndex((tx) => tx.txid === txid);
         if (txid && index >= 0) {
@@ -52,10 +52,12 @@ export default (state = initialState, action) => {
     }
 
     case TYPE.ADD_TRANSACTIONS:
-      if (loaded !== 'none') {
+      if (state.loaded !== 'none') {
+        const known = new Set(state.transactions.map((tx) => tx.txid));
+        const added = action.payload.filter((tx) => !known.has(tx.txid));
         return {
           ...state,
-          transactions: [...action.payload, ...state.transactions],
+          transactions: [...added, ...state.transactions],
         };
       } else {
         return state;
