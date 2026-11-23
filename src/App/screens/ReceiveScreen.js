@@ -179,7 +179,7 @@ export default function ReceiveScreen({ route, navigation }) {
               <TextBox
                 mode="outlined"
                 label={t('Amount to request ({ticker})', { ticker })}
-                keyboardType="numeric"
+                decimal
                 value={amount}
                 onChangeText={setAmount}
                 error={!!amount && !amountValid}

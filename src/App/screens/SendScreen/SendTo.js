@@ -195,7 +195,7 @@ export default function SendTo({ account, setFieldValue, autoScan, values }) {
           mode="outlined"
           background={['surface', 2]}
           label={t('Amount ({ticker})', { ticker: TokenName.from({ account }) })}
-          keyboardType="numeric"
+          decimal
           autoCapitalize="none"
         />
         <FiatValue account={account} amount={values?.amount} />

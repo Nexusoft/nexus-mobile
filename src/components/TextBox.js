@@ -140,9 +140,16 @@ export default function TextBox({
   leftIcon,
   rightButton,
   style,
+  decimal,
+  onChangeText,
   ...rest
 }) {
   const theme = useTheme();
+  //amounts always show a dot, also when the keyboard only has a comma
+  const changeText =
+    decimal && onChangeText
+      ? (text) => onChangeText(String(text).replace(/,/g, '.'))
+      : onChangeText;
   const [backgroundName, elevation] = Array.isArray(background)
     ? background
     : [background, 4];
@@ -177,7 +184,9 @@ export default function TextBox({
           {...props}
         />
       )}
+      keyboardType={decimal ? 'decimal-pad' : undefined}
       {...rest}
+      onChangeText={changeText}
     />
   );
 }

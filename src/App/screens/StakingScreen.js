@@ -324,7 +324,7 @@ function StakeControl({ info, lite, onChanged }) {
                   const v = parseAmount(text);
                   if (v >= 0 && v <= max) setTarget(v);
                 }}
-                keyboardType="decimal-pad"
+                decimal
                 error={!!typedError}
                 style={{ marginTop: 8 }}
               />

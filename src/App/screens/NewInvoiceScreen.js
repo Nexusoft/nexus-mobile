@@ -159,7 +159,7 @@ export default function NewInvoiceScreen() {
                 label={t('Price ({ticker})', { ticker })}
                 value={it.price}
                 onChangeText={(v) => setItem(i, 'price', v)}
-                keyboardType="decimal-pad"
+                decimal
               />
             </View>
             <View style={{ flex: 1 }}>
