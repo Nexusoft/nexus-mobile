@@ -20,15 +20,15 @@ import ThemeContainer from './ThemeContainer';
 import StatusBar from './StatusBar';
 import Notifications from './Notifications';
 import Dialogs from './Dialogs';
+import AppLock from './AppLock';
 import DrawerNavigator from './DrawerNavigator';
 import initStore from './initStore';
 
 import BackgroundTimer from 'react-native-background-timer';
 
-import { selectLoggedIn, refreshUserSync, refreshHeaders } from 'lib/user';
-import { selectSetting, updateSettings } from 'lib/settings';
-
-import RNFS from 'react-native-fs';
+import { selectLoggedIn, refreshUserSync } from 'lib/user';
+import { selectSetting } from 'lib/settings';
+import { useSelector } from 'react-redux';
 import { refreshCoreInfo } from 'lib/coreInfo';
 
 // Ignore the warning for long timer
@@ -88,8 +88,10 @@ async function checkPermissions() {
 
 function App() {
   const theme = useTheme();
+  //a language change draws every screen again
+  const language = useSelector(selectSetting('language'));
   return (
-    <View style={styles.container({ theme })}>
+    <View key={language} style={styles.container({ theme })}>
       <StatusBar
         barStyle="light-content"
         backgroundColor={
@@ -103,6 +105,7 @@ function App() {
         }
       />
       <DrawerNavigator />
+      <AppLock />
       <Dialogs />
       <Notifications />
     </View>
@@ -155,8 +158,7 @@ const _handleAppStateChange = (nextAppState) => {
               if (isRegistered) {
                 BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
                 await refreshCoreInfo();
-                await refreshHeaders();
-                await refreshUserSync();
+                refreshUserSync();
               }
             }
           );
@@ -187,29 +189,15 @@ export default function Root(props) {
 
   React.useEffect(() => {
     checkPermissions();
+    const subscription = AppState.addEventListener(
+      'change',
+      _handleAppStateChange
+    );
     (async () => {
       try {
-        //suppressed warning, should probably be refactored
-        SplashScreen.preventAutoHideAsync()
-          .then((result) => {
-            return;
-          })
-          .catch((error) => {
-            return;
-          });
+        SplashScreen.preventAutoHideAsync().catch(() => {});
 
         await Promise.all([initStore(), loadResources()]);
-        //Reading Nexus.conf
-        const result = await RNFS.readFile(
-          (Platform.OS === 'android'
-            ? RNFS.ExternalDirectoryPath
-            : RNFS.DocumentDirectoryPath) + '/Nexus/nexus.conf',
-          'ascii'
-        );
-        updateSettings({
-          embeddedUser: result.split('\n')[0].replace('apiuser=', ''),
-          embeddedPassword: result.split('\n')[1].replace('apipassword=', ''),
-        });
 
         const showOnboard = selectSetting('showOnboarding')(
           getStore().getState()
@@ -217,18 +205,19 @@ export default function Root(props) {
         if (showOnboard) {
           showOnboarding();
         }
-        setLoadingComplete(true);
+      } catch (err) {
+        console.error('startup', err);
       } finally {
-        //suppressed warning, should probably be refactored
-        SplashScreen.hideAsync();
+        setLoadingComplete(true);
+        SplashScreen.hideAsync().catch(() => {});
       }
-    })(() => AppState.removeEventListener('change', _handleAppStateChange));
+    })();
+    return () => subscription?.remove();
   }, []);
 
-  if (!loadingComplete) {
+  if (!loadingComplete || !getStore()) {
     return null;
   } else {
-    AppState.addEventListener('change', _handleAppStateChange);
     return (
       <ReduxProvider store={getStore()}>
         <SafeAreaProvider>

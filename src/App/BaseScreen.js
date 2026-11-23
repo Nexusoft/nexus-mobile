@@ -21,10 +21,22 @@ import {
   selectUserIsConfirmed,
   selectUsername,
 } from 'lib/user';
-import { refreshUserStatus } from 'lib/session';
+import {
+  refreshUserStatus,
+  waitForIndexing,
+  friendlyLoginError,
+} from 'lib/session';
+import {
+  biometricAvailable,
+  hasBiometricUnlock,
+  readPinWithBiometric,
+  disableBiometricUnlock,
+} from 'lib/biometric';
+import PinPad from 'components/PinPad';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
 import { showError, showNotification, confirm } from 'lib/ui';
+import { t } from 'lib/i18n';
 import { updateSettings } from 'lib/settings';
 import * as TYPE from 'consts/actionTypes';
 import { getStore } from 'store';
@@ -49,7 +61,7 @@ const styles = {
     marginTop: 40,
     textAlign: 'center',
   },
-  username: { marginTop: 10, marginBottom: 30, textAlign: 'center' },
+  username: { marginTop: 10, marginBottom: 4, textAlign: 'center' },
   pinInput: {
     // fontSize: 18,
     marginBottom: 30,
@@ -62,6 +74,12 @@ const styles = {
     marginBottom: 60,
   },
 };
+
+//stack options set here skip the navigator, so the title is translated here
+const translateTitle = (options) =>
+  typeof options.title === 'string'
+    ? { ...options, title: t(options.title) }
+    : options;
 
 const doubleBackTime = 3000;
 function BaseScreenContainer({ unStyled, children }) {
@@ -97,7 +115,7 @@ function BaseScreenContainer({ unStyled, children }) {
           setSnackbarVisible(false);
         }}
       >
-        Press back again to close the app
+        {t('Press back again to close the app')}
       </Snackbar>
     </View>
   );
@@ -118,7 +136,7 @@ function DisconnectedBase() {
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Connecting to Nexus Core...
+        {t('Connecting to Nexus Core...')}
       </Text>
       <Button
         mode="outlined"
@@ -134,7 +152,7 @@ function DisconnectedBase() {
         }}
         labelStyle={theme.dark ? undefined : { color: theme.onPrimary }}
       >
-        {refreshing ? 'Refreshing...' : 'Refresh'}
+        {refreshing ? t('Refreshing...') : t('Refresh')}
       </Button>
     </BaseScreenContainer>
   );
@@ -143,63 +161,98 @@ function DisconnectedBase() {
 function UnlockingBase() {
   const theme = useTheme();
   const [pin, setPin] = React.useState('');
-  const [loading, setLoading] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  const [useKeyboard, setUseKeyboard] = React.useState(false);
+  const [canBiometric, setCanBiometric] = React.useState(false);
   const savedUsername = useSelector((state) => state.settings.savedUsername);
+  const color = theme.dark ? theme.foreground : theme.onPrimary;
 
-  const unlock = async () => {
+  const unlock = async (pinValue = pin, { fromBiometric } = {}) => {
+    if (loading || !pinValue) return;
     setLoading(true);
     try {
       await callAPI('sessions/load/local', {
-        pin,
+        pin: pinValue,
         username: savedUsername,
       });
-      let finishedIndexing = false;
-      while (!finishedIndexing) {
-        // This checks if the account has finished indexing after downloading the sigchain, consider revising this.
-        let status = await callAPI('sessions/status/local');
-        finishedIndexing = !status?.indexing;
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
-      await callAPI('sessions/save/local', { pin });
-      await callAPI('sessions/unlock/local', { pin, notifications: true });
+      await waitForIndexing();
+      await callAPI('sessions/save/local', { pin: pinValue });
+      await callAPI('sessions/unlock/local', {
+        pin: pinValue,
+        notifications: true,
+      });
       await refreshUserStatus();
     } catch (err) {
       setLoading(false);
+      setPin('');
+      if (fromBiometric) {
+        //stored PIN no longer works (changed elsewhere), forget it
+        await disableBiometricUnlock(savedUsername);
+        setCanBiometric(false);
+        showError(
+          t(
+            'Fingerprint / face unlock was turned off because the saved PIN no longer works. Enter your PIN.'
+          )
+        );
+      } else {
+        showError(friendlyLoginError(err));
+      }
+    }
+  };
+
+  const unlockWithBiometric = async () => {
+    try {
+      const storedPin = await readPinWithBiometric(savedUsername);
+      if (storedPin) await unlock(storedPin, { fromBiometric: true });
+    } catch (err) {
       showError(err?.message);
     }
   };
 
+  React.useEffect(() => {
+    (async () => {
+      const available =
+        (await biometricAvailable()) &&
+        (await hasBiometricUnlock(savedUsername));
+      setCanBiometric(available);
+      if (available) unlockWithBiometric();
+    })();
+  }, [savedUsername]);
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <BaseScreenContainer>
-        <SvgIcon
-          icon={UserIcon}
-          size={66}
-          colorName={theme.dark ? 'foreground' : 'onPrimary'}
-        />
-        <Text
-          style={styles.username}
-          size={26}
-          colorName={theme.dark ? 'foreground' : 'onPrimary'}
-        >
-          {savedUsername}
+        <SvgIcon icon={UserIcon} size={56} color={color} />
+        <Text style={styles.username} size={24} color={color}>
+          {t('Welcome back, {username}', { username: savedUsername })}
         </Text>
-        <TextBox
-          mode="flat"
-          style={styles.pinInput}
-          background={theme.dark ? 'background' : 'primary'}
-          label="Enter your PIN"
-          value={pin}
-          onChangeText={setPin}
-          onSubmitEditing={unlock}
-          secure
-          keyboardType={
-            Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
-          }
-        />
+        {useKeyboard ? (
+          <TextBox
+            mode="flat"
+            style={styles.pinInput}
+            background={theme.dark ? 'background' : 'primary'}
+            label={t('Enter your PIN')}
+            value={pin}
+            onChangeText={setPin}
+            onSubmitEditing={() => unlock()}
+            secure
+            autoFocus
+            keyboardType={
+              Platform.OS === 'android' ? 'default' : 'numbers-and-punctuation'
+            }
+          />
+        ) : (
+          <PinPad
+            value={pin}
+            onChange={setPin}
+            color={color}
+            disabled={loading}
+            onKeyboard={() => setUseKeyboard(true)}
+          />
+        )}
         <FAB
-          disabled={loading}
-          onPress={unlock}
+          disabled={loading || !pin}
+          onPress={() => unlock()}
           loading={loading}
           color={theme.dark ? theme.onPrimary : theme.primary}
           style={[
@@ -207,11 +260,21 @@ function UnlockingBase() {
             theme.dark ? undefined : { backgroundColor: theme.onPrimary },
           ]}
           icon={(props) => <SvgIcon icon={UnlockIcon} {...props} />}
-          label={loading ? 'Unlocking...' : 'Unlock wallet'}
+          label={loading ? t('Unlocking...') : t('Unlock wallet')}
         />
+        {canBiometric && !loading && (
+          <Button
+            mode="text"
+            color={color}
+            labelStyle={{ fontSize: 12 }}
+            onPress={unlockWithBiometric}
+          >
+            {t('Use fingerprint / face')}
+          </Button>
+        )}
         <Button
           mode="text"
-          color={theme.dark ? theme.foreground : theme.onPrimary}
+          color={color}
           labelStyle={{ fontSize: 12 }}
           onPress={() => {
             getStore().dispatch({
@@ -220,7 +283,7 @@ function UnlockingBase() {
             });
           }}
         >
-          Log in as another user
+          {t('Log in as another user')}
         </Button>
       </BaseScreenContainer>
     </TouchableWithoutFeedback>
@@ -236,14 +299,13 @@ function UnconfirmedUserBase() {
     <BaseScreenContainer>
       <ActivityIndicator animating color={color} />
       <Text style={styles.creatingText} sub color={color} size={18}>
-        User registration for{' '}
-        <Text bold color={color}>
-          {username}
-        </Text>{' '}
-        is waiting to be confirmed on Nexus blockchain...
+        {t(
+          'User registration for {username} is waiting to be confirmed on Nexus blockchain...',
+          { username }
+        )}
       </Text>
       <InfoField
-        label="Transaction ID"
+        label={t('Transaction ID')}
         color={color}
         control={
           <Button
@@ -253,10 +315,10 @@ function UnconfirmedUserBase() {
             labelStyle={{ fontSize: 12 }}
             onPress={() => {
               Clipboard.setString(txid);
-              showNotification('Copied to clipboard');
+              showNotification(t('Copied to clipboard'));
             }}
           >
-            Copy
+            {t('Copy')}
           </Button>
         }
         value={
@@ -285,7 +347,7 @@ function SynchronizingBase() {
         size={24}
         style={{ textAlign: 'center', marginTop: 15 }}
       >
-        Initializing database...
+        {t('Initializing database...')}
       </Text>
       <Text
         sub
@@ -293,7 +355,7 @@ function SynchronizingBase() {
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Completed {syncInfo.completed}%
+        {t('Completed {percent}%', { percent: syncInfo?.completed ?? 0 })}
       </Text>
       <Text
         sub
@@ -301,7 +363,9 @@ function SynchronizingBase() {
         size={18}
         style={{ textAlign: 'center' }}
       >
-        Est. time remaining: {syncInfo.timeRemaining}
+        {t('Est. time remaining: {time}', {
+          time: syncInfo?.timeRemaining ?? '...',
+        })}
       </Text>
 
       <Button
@@ -314,11 +378,12 @@ function SynchronizingBase() {
         }}
         onPress={async () => {
           const confirmed = await confirm({
-            title: 'Ignore database initialization?',
-            message:
-              'When the app is initializing the blockchain database, login might not work as intended and inaccurate balances might be shown.\nAre you sure you want to ignore this process and proceed to use the app anyway?',
-            cancelLabel: 'Stay and wait',
-            confirmLabel: 'Ignore',
+            title: t('Ignore database initialization?'),
+            message: t(
+              'When the app is initializing the blockchain database, login might not work as intended and inaccurate balances might be shown.\nAre you sure you want to ignore this process and proceed to use the app anyway?'
+            ),
+            cancelLabel: t('Stay and wait'),
+            confirmLabel: t('Ignore'),
             danger: true,
           });
           if (confirmed) {
@@ -326,7 +391,7 @@ function SynchronizingBase() {
           }
         }}
       >
-        Ignore
+        {t('Ignore')}
       </Button>
     </BaseScreenContainer>
   );
@@ -346,7 +411,7 @@ function IndexingBase() {
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Downloading and Indexing Sigchain...
+        {t('Downloading and Indexing Sigchain...')}
       </Text>
     </BaseScreenContainer>
   );
@@ -365,13 +430,13 @@ function useDynamicNavOptions({ loggedIn, route, navigation }) {
         contactSearch,
         route,
       });
-      navigation.setOptions(options);
+      navigation.setOptions(translateTitle(options));
     } else {
       const options = UnauthenticatedBase.stackOptions({
         theme,
         route,
       });
-      navigation.setOptions(options);
+      navigation.setOptions(translateTitle(options));
     }
   }, [route, navigation, theme, loggedIn, txFilterOpen, contactSearch]);
 }
@@ -404,6 +469,8 @@ export default function BaseScreen({ route, navigation }) {
 
   if (indexing) return <IndexingBase />;
 
+  if (loggedIn && !confirmedUser) return <UnconfirmedUserBase />;
+
   if (loggedIn)
     return (
       <BaseScreenContainer unStyled>
@@ -412,8 +479,6 @@ export default function BaseScreen({ route, navigation }) {
     );
 
   if (hasSavedSession && !ignoreSavedSession) return <UnlockingBase />;
-
-  if (!confirmedUser) return <UnconfirmedUserBase />;
 
   return (
     <BaseScreenContainer unStyled>

@@ -3,305 +3,243 @@ import { View } from 'react-native';
 
 import Text from 'components/Text';
 import TokenName from 'components/TokenName';
-import SvgIcon from 'components/SvgIcon';
-import { getDeltaSign } from 'lib/contracts';
+import { getDeltaSign, deltaColor } from 'lib/contracts';
+import { useTheme } from 'lib/theme';
+import { t } from 'lib/i18n';
 import { getStore } from 'store';
-import walletIcon from 'icons/wallet.svg';
-import tokenIcon from 'icons/token.svg';
+import formatNumber from 'utils/formatNumber';
 
 const styles = {
-  contract: {
-    padding: 20,
-    paddingLeft: 0,
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
-  contractContent: {
+  icon: ({ background }) => ({
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: background,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  }),
+  middle: {
     flex: 1,
+    minWidth: 0,
   },
-  operation: {
-    textTransform: 'uppercase',
-    fontFamily: 'noto-sans-bold',
-    fontWeight: 'bold',
+  sub: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: 2,
   },
-  registerType: {
-    textTransform: 'lowercase',
+  pending: {
+    marginLeft: 6,
+    paddingHorizontal: 7,
+    paddingVertical: 1,
+    borderRadius: 9,
+    backgroundColor: '#fff3d6',
+  },
+  amount: {
+    marginLeft: 10,
+    textAlign: 'right',
   },
 };
 
-function Delta({ negative, ...rest }) {
-  return (
-    <Text colorName={negative ? 'danger' : 'primary'} size={14} {...rest} />
-  );
-}
+const kindColors = {
+  in: { light: '#def5e8', dark: '#1f3d2e', fg: '#1b9e5a', glyph: '\u2199' },
+  out: { light: '#fde4e2', dark: '#45251f', fg: '#d9534f', glyph: '\u2197' },
+  stake: { light: '#e3f5fe', dark: '#173445', fg: '#0789c2', glyph: '★' },
+  other: { light: '#eef1f5', dark: '#2a3038', fg: '#6b7685', glyph: '•' },
+};
 
-function Hash({ children, ...rest }) {
-  if (!children || typeof children !== 'string' || children.length <= 11) {
-    return <Text {...rest}>{children}</Text>;
-  } else {
-    return (
-      <Text mono {...rest}>
-        {children.slice(0, 6)}...{children.slice(-5)}
-      </Text>
-    );
-  }
-}
+export const shortAddress = (address) =>
+  address && address.length > 11
+    ? address.slice(0, 4) + '...' + address.slice(-4)
+    : address || '';
 
-const accountLabel = ({ name, address, local, namespace, mine }) => {
-  const store = getStore();
-  const contacts = store?.getState().contacts;
-  const match =
+//own account name, contact name, global name, else a short address (another user's local name is ambiguous)
+export function registerLabel(register) {
+  if (!register) return '';
+  const { name, address, local, namespace, mine } = register;
+  if (mine && name) return name;
+  const contacts = getStore()?.getState().contacts;
+  const contact =
     contacts &&
-    Object.entries(contacts).find(
-      ([name, contactAddress]) => address === contactAddress
-    );
-  if (match) {
-    return match[0];
-  }
-
+    Object.entries(contacts).find(([, c]) => c?.address === address);
+  if (contact) return contact[0];
   if (name) {
-    if (namespace) {
-      return namespace + '::' + name;
-    }
-
-    if (local) {
-      const prefix = mine ? '' : <Text sub>(?):</Text>;
-      return (
-        <Text>
-          {prefix}
-          {name}
-        </Text>
-      );
-    }
-
-    return name;
+    if (namespace) return namespace + '::' + name;
+    if (!local || mine) return name;
   }
+  return shortAddress(address);
+}
 
-  return null;
-};
-
-const Register = ({ name, address, local, namespace, mine, type }) => {
-  const label = accountLabel({ name, address, local, namespace, mine });
-  const typeIcon =
-    type === 'ACCOUNT' || type === 'TRUST'
-      ? walletIcon
-      : type === 'TOKEN'
-      ? tokenIcon
-      : null;
-  const display = label ? <Text>{label}</Text> : <Hash>{address}</Hash>;
-  return (
-    <Text>
-      {!!typeIcon && (
-        <>
-          <Text>&nbsp;</Text>
-          <SvgIcon icon={typeIcon} size={12} />
-          <Text>&nbsp;</Text>
-        </>
-      )}
-      <Text bold>{display}</Text>
-    </Text>
-  );
-};
-
-const creditFrom = (contract) => {
+function creditSource(contract) {
   switch (contract.for) {
     case 'DEBIT':
-      return contract.from ? (
-        <Register {...contract.from} />
-      ) : (
-        <Register {...contract.to} />
-      ); //If no from then these are return credits
-
+      return registerLabel(contract.from || contract.to);
     case 'LEGACY':
-      return <Text>Legacy transaction</Text>;
-
+      return t('Legacy transaction');
     case 'COINBASE':
-      return <Text>Coinbase transaction</Text>;
-
+      return t('Mining reward');
     default:
-      return '';
+      return registerLabel(contract.from);
   }
-};
+}
 
-const contractContent = (contract) => {
+export function describeContract(contract) {
   switch (contract.OP) {
-    case 'WRITE': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Write</Text>
-          <Text sub> data to </Text>
-          <Register address={contract.address} />
-        </Text>
-      );
-    }
-
-    case 'APPEND': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Append</Text>
-          <Text sub> data to </Text>
-          <Register address={contract.address} />
-        </Text>
-      );
-    }
-
+    case 'DEBIT':
+      return {
+        kind: 'out',
+        title: registerLabel(contract.to),
+        action: t('Sent from {account}', {
+          account: registerLabel(contract.from),
+        }),
+      };
+    case 'CREDIT':
+      return {
+        kind: 'in',
+        title: creditSource(contract),
+        action: t('Received to {account}', {
+          account: registerLabel(contract.to),
+        }),
+      };
+    case 'LEGACY':
+      return {
+        kind: 'out',
+        title: shortAddress(contract.to?.address),
+        action: t('Sent to a legacy address'),
+      };
+    case 'FEE':
+      return {
+        kind: 'out',
+        title: t('Fee'),
+        action: t('from {account}', { account: registerLabel(contract.from) }),
+      };
+    case 'TRUST':
+      return {
+        kind: 'stake',
+        title: t('Staking reward'),
+        action: t('Trust'),
+      };
+    case 'GENESIS':
+      return {
+        kind: 'stake',
+        title: t('Staking started'),
+        action: t('Genesis'),
+      };
+    case 'COINBASE':
+      return {
+        kind: 'in',
+        title: t('Mining reward'),
+        action: t('Coinbase'),
+      };
+    case 'MIGRATE':
+      return {
+        kind: 'in',
+        title: t('Migrated from legacy'),
+        action: t('to {account}', {
+          account: contract.account_name || shortAddress(contract.account),
+        }),
+      };
     case 'CREATE': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Create</Text>
-          <Text sub> new </Text>
-          <Text style={styles.registerType}>
-            {contract.type === 'OBJECT' && contract.object_type + ' '}
-            {contract.type}
-          </Text>
-          <Text sub> register</Text>
-          {'\n'}
-          <Text sub>at address </Text>
-          <Hash>{contract.address}</Hash>
-        </Text>
-      );
+      const what =
+        contract.type === 'OBJECT' && contract.object_type
+          ? contract.object_type.toLowerCase()
+          : (contract.type || 'register').toLowerCase();
+      return {
+        kind: 'other',
+        title: t('Created {type}', { type: what }),
+        action: shortAddress(contract.address),
+      };
     }
-
-    case 'TRANSFER': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Transfer</Text>
-          <Text sub> ownership of </Text>
-          <Register address={contract.address} /> to{' '}
-          <Register address={contract.destination} />
-        </Text>
-      );
-    }
-
-    case 'CLAIM': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Claim</Text>
-          <Text sub> ownership of </Text>
-          <Register address={contract.address} />
-        </Text>
-      );
-    }
-
-    case 'COINBASE': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Coinbase</Text>
-        </Text>
-      );
-    }
-
-    case 'TRUST': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Trust</Text>
-        </Text>
-      );
-    }
-
-    case 'GENESIS': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Genesis</Text>{' '}
-          <Hash>{contract.address}</Hash>
-        </Text>
-      );
-    }
-
-    case 'DEBIT': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Debit</Text>
-          <Text sub> from </Text>
-          <Register {...contract.from} />
-          {'\n'}
-          <Text sub>to </Text>
-          <Register {...contract.to} />
-        </Text>
-      );
-    }
-
-    case 'CREDIT': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Credit</Text>
-          <Text sub> to </Text>
-          <Register {...contract.to} />
-          {'\n'}
-          <Text sub>from </Text>
-          {creditFrom(contract)}
-        </Text>
-      );
-    }
-
-    case 'MIGRATE': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Migrate</Text>
-          <Text sub> trust key to </Text>
-          <Register name={contract.account_name} address={contract.account} />
-          {'\n'}
-          <Text sub>from </Text>
-          <Hash>{contract.trustkey}</Hash>
-        </Text>
-      );
-    }
-
-    case 'AUTHORIZE': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Authorize</Text>
-          <Text sub> transaction </Text>
-          <Hash>{contract.txid}</Hash>
-          {'\n'}
-          <Text sub>with a temporal proof </Text>
-          <Hash>{contract.proof}</Hash>
-        </Text>
-      );
-    }
-
-    case 'FEE': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Fee</Text>
-          <Text sub> from </Text>
-          <Register {...contract.from} />
-        </Text>
-      );
-    }
-
-    case 'LEGACY': {
-      return (
-        <Text>
-          <Text style={styles.operation}>Legacy</Text>
-          <Text sub> debit from </Text>
-          <Register {...contract.from} />
-          {'\n'}
-          <Text sub>to </Text>
-          <Register address={contract.to.address} />
-        </Text>
-      );
-    }
-
-    default: {
-      return <Text style={styles.operation}>{contract.OP}</Text>;
-    }
+    case 'WRITE':
+    case 'APPEND':
+      return {
+        kind: 'other',
+        title: t('Updated {register}', {
+          register: registerLabel({ address: contract.address }),
+        }),
+        action: contract.OP === 'WRITE' ? t('Write') : t('Append'),
+      };
+    case 'TRANSFER':
+      return {
+        kind: 'other',
+        title: t('Transferred {register}', {
+          register: registerLabel({ address: contract.address }),
+        }),
+        action: t('to {account}', {
+          account: registerLabel({ address: contract.destination }),
+        }),
+      };
+    case 'CLAIM':
+      return {
+        kind: 'other',
+        title: t('Claimed {register}', {
+          register: registerLabel({ address: contract.address }),
+        }),
+        action: t('Claim'),
+      };
+    case 'AUTHORIZE':
+      return {
+        kind: 'other',
+        title: t('Authorized transaction'),
+        action: shortAddress(contract.txid),
+      };
+    default:
+      return { kind: 'other', title: contract.OP, action: '' };
   }
-};
+}
 
-export default function Contract({ contract }) {
+export default function Contract({ contract, time, pending }) {
+  const theme = useTheme();
   const sign = getDeltaSign(contract);
+  const { kind, title, action } = describeContract(contract);
+  const colors = kindColors[kind];
   return (
-    <View style={styles.contract}>
-      <View style={styles.contractContent}>{contractContent(contract)}</View>
-
+    <View style={styles.row}>
+      <View
+        style={styles.icon({
+          background: theme.dark ? colors.dark : colors.light,
+        })}
+      >
+        <Text style={{ color: colors.fg, fontSize: 17 }}>{colors.glyph}</Text>
+      </View>
+      <View style={styles.middle}>
+        <Text bold numberOfLines={1}>
+          {title}
+        </Text>
+        <View style={styles.sub}>
+          <Text sub size={12} numberOfLines={1}>
+            {[action, time].filter(Boolean).join(' · ')}
+          </Text>
+          {pending && (
+            <View style={styles.pending}>
+              <Text size={11} style={{ color: '#a4720a' }}>
+                {t('Pending')}
+              </Text>
+            </View>
+          )}
+        </View>
+      </View>
       {!!contract.amount && (
-        <Delta negative={sign === '-'}>
+        <Text
+          size={14}
+          style={[
+            styles.amount,
+            { color: deltaColor(sign) },
+          ]}
+        >
           {sign}
-          {contract.amount}{' '}
-          {contract.token ? TokenName.from({ contract }) : 'NXS'}
-        </Delta>
+          {formatNumber(contract.amount, { maximumFractionDigits: 6 })}{' '}
+          {contract.token && contract.token !== '0'
+            ? TokenName.from({ contract })
+            : 'NXS'}
+        </Text>
       )}
     </View>
   );

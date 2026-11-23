@@ -11,6 +11,7 @@ import ScreenBody from 'components/ScreenBody';
 import { callAPI } from 'lib/api';
 import { goBack } from 'lib/navigation';
 import { showError, showNotification } from 'lib/ui';
+import { t } from 'lib/i18n';
 
 const styles = {
   screen: {
@@ -42,9 +43,12 @@ function ConfirmPasswordPinDialog({
         validationSchema={yup.object().shape({
           password: yup
             .string()
-            .required('Required!')
-            .oneOf([newPassword], 'Mismatch!'),
-          pin: yup.string().required('Required!').oneOf([newPin], 'Mismatch!'),
+            .required(t('Required!'))
+            .oneOf([newPassword], t('Mismatch!')),
+          pin: yup
+            .string()
+            .required(t('Required!'))
+            .oneOf([newPin], t('Mismatch!')),
         })}
         onSubmit={onConfirm}
       >
@@ -55,14 +59,14 @@ function ConfirmPasswordPinDialog({
                 autoFocus
                 secure
                 name="password"
-                label="Re-enter new password"
+                label={t('Re-enter new password')}
               />
-              <TextBox.Formik secure name="pin" label="Re-enter new PIN" />
+              <TextBox.Formik secure name="pin" label={t('Re-enter new PIN')} />
               <FAB
                 mode="contained"
                 style={{ marginTop: 10 }}
                 onPress={handleSubmit}
-                label="Confirm"
+                label={t('Confirm')}
               />
             </Dialog.Content>
           </Dialog>
@@ -85,16 +89,16 @@ export default function ChangePasswordScreen() {
           newPin: '',
         }}
         validationSchema={yup.object().shape({
-          password: yup.string().required('Required!'),
-          pin: yup.string().required('Required!'),
+          password: yup.string().required(t('Required!')),
+          pin: yup.string().required(t('Required!')),
           newPassword: yup
             .string()
-            .required('Required!')
-            .min(8, 'Must be at least 8 characters!'),
+            .required(t('Required!'))
+            .min(8, t('Must be at least 8 characters!')),
           newPin: yup
             .string()
-            .required('Required!')
-            .min(4, 'Must be at least 4 characters!'),
+            .required(t('Required!'))
+            .min(4, t('Must be at least 4 characters!')),
         })}
         onSubmit={async ({ password, pin, newPassword, newPin }) => {
           try {
@@ -108,7 +112,7 @@ export default function ChangePasswordScreen() {
             showError(err && err.message);
             return;
           }
-          showNotification('Password & PIN has been updated');
+          showNotification(t('Password & PIN has been updated'));
           goBack();
         }}
       >
@@ -117,14 +121,14 @@ export default function ChangePasswordScreen() {
             <TextBox.Formik
               secure
               name="password"
-              label="Current password"
+              label={t('Current password')}
               autoFocus
             />
-            <TextBox.Formik secure name="pin" label="Current PIN" />
+            <TextBox.Formik secure name="pin" label={t('Current PIN')} />
 
             <View style={styles.newCredentials}>
-              <TextBox.Formik secure name="newPassword" label="New password" />
-              <TextBox.Formik secure name="newPin" label="New PIN" />
+              <TextBox.Formik secure name="newPassword" label={t('New password')} />
+              <TextBox.Formik secure name="newPin" label={t('New PIN')} />
             </View>
 
             <FAB
@@ -137,8 +141,8 @@ export default function ChangePasswordScreen() {
               }}
               label={
                 isSubmitting
-                  ? 'Updating Password & PIN...'
-                  : 'Update Password & PIN'
+                  ? t('Updating Password & PIN...')
+                  : t('Update Password & PIN')
               }
             />
             <ConfirmPasswordPinDialog

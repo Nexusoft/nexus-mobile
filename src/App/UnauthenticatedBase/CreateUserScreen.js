@@ -13,6 +13,7 @@ import Portal from 'components/Portal';
 import { useTheme } from 'lib/theme';
 import { callAPI } from 'lib/api';
 import { showError } from 'lib/ui';
+import { t } from 'lib/i18n';
 import { logIn, setRegistrationTxids } from 'lib/session';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
@@ -50,12 +51,12 @@ function ConfirmUserDialog({ visible, onDismiss, newUser, onConfirm }) {
           validationSchema={yup.object().shape({
             password: yup
               .string()
-              .required('Required!')
-              .oneOf([newUser.password], 'Mismatch!'),
+              .required(t('Required!'))
+              .oneOf([newUser.password], t('Mismatch!')),
             pin: yup
               .string()
-              .required('Required!')
-              .oneOf([newUser.pin], 'Mismatch!'),
+              .required(t('Required!'))
+              .oneOf([newUser.pin], t('Mismatch!')),
           })}
           onSubmit={onConfirm}
         >
@@ -63,14 +64,14 @@ function ConfirmUserDialog({ visible, onDismiss, newUser, onConfirm }) {
             <Dialog.Content>
               <TextBox.Formik
                 name="password"
-                label="Re-enter password"
+                label={t('Re-enter password')}
                 background={['surface', 2]}
                 secure
                 style={styles.field}
               />
               <TextBox.Formik
                 name="pin"
-                label="Re-enter PIN"
+                label={t('Re-enter PIN')}
                 background={['surface', 2]}
                 secure
                 style={styles.field}
@@ -78,7 +79,7 @@ function ConfirmUserDialog({ visible, onDismiss, newUser, onConfirm }) {
               <FAB
                 style={styles.submitBtn}
                 onPress={handleSubmit}
-                label="Confirm"
+                label={t('Confirm')}
               />
             </Dialog.Content>
           )}
@@ -94,20 +95,20 @@ function CreateUserForm({ values, handleSubmit, isSubmitting }) {
     <View>
       <TextBox.Formik
         name="username"
-        label="Username"
+        label={t('Username')}
         background={['surface', 2]}
         style={styles.field}
       />
       <TextBox.Formik
         name="password"
-        label="Password"
+        label={t('Password')}
         background={['surface', 2]}
         secure
         style={styles.field}
       />
       <TextBox.Formik
         name="pin"
-        label="PIN"
+        label={t('PIN')}
         background={['surface', 2]}
         secure
         style={styles.field}
@@ -119,15 +120,15 @@ function CreateUserForm({ values, handleSubmit, isSubmitting }) {
         onPress={() => {
           setConfirming(true);
         }}
-        label={isSubmitting ? 'Creating user' : 'Create user'}
+        label={isSubmitting ? t('Creating user') : t('Create user')}
       />
       <View style={styles.options}>
-        <Text sub>Remember username</Text>
+        <Text sub>{t('Remember username')}</Text>
         <Switch.Formik name="rememberMe" />
       </View>
       <View style={styles.options}>
         <Text sub={!!values.rememberMe} disabled={!values.rememberMe}>
-          Keep me logged in
+          {t('Keep me logged in')}
         </Text>
         <Switch.Formik name="keepLoggedIn" disabled={!values.rememberMe} />
       </View>
@@ -153,7 +154,7 @@ export default function CreateUserScreen() {
     <Backdrop
       backdropContent={
         <>
-          <Text style={styles.heading({ theme })}>Create user on</Text>
+          <Text style={styles.heading({ theme })}>{t('Create user on')}</Text>
           <SvgIcon
             icon={LogoIcon}
             width={180}
@@ -175,16 +176,16 @@ export default function CreateUserScreen() {
         validationSchema={yup.object().shape({
           username: yup
             .string()
-            .required('Required!')
-            .min(3, 'Must be at least 3 characters!'),
+            .required(t('Required!'))
+            .min(3, t('Must be at least 3 characters!')),
           password: yup
             .string()
-            .required('Required!')
-            .min(8, 'Must be at least 8 characters!'),
+            .required(t('Required!'))
+            .min(8, t('Must be at least 8 characters!')),
           pin: yup
             .string()
-            .required('Required!')
-            .min(4, 'Must be at least 4 characters!'),
+            .required(t('Required!'))
+            .min(4, t('Must be at least 4 characters!')),
           rememberMe: yup.bool(),
           keepLoggedIn: yup.bool(),
         })}
@@ -213,7 +214,10 @@ export default function CreateUserScreen() {
             showError(
               err &&
                 err.message +
-                  '\n Your account has been created but encountered an error while loggin in'
+                  '\n ' +
+                  t(
+                    'Your account has been created but encountered an error while loggin in'
+                  )
             );
             return;
           }

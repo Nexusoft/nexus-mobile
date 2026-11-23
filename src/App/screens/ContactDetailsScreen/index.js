@@ -16,6 +16,7 @@ import { navigate, goBack } from 'lib/navigation';
 import { updateContact, deleteContact } from 'lib/contacts';
 import { lighten, darken } from 'utils/color';
 import segmentAddress from 'utils/segmentAddress';
+import { t } from 'lib/i18n';
 import CopyIcon from 'icons/copy.svg';
 import SendIcon from 'icons/send.svg';
 import AccountSelector from './AccountSelector';
@@ -106,17 +107,17 @@ function DetailsMode({ startEditing, selectAccount }) {
       </View>
 
       <View style={styles.labelLine}>
-        <Text sub>Address</Text>
+        <Text sub>{t('Address')}</Text>
         <Button
           mode="text"
           icon={(props) => <SvgIcon icon={CopyIcon} {...props} />}
           labelStyle={{ fontSize: 12 }}
           onPress={() => {
             Clipboard.setString(contact.address);
-            showNotification('Copied to clipboard');
+            showNotification(t('Copied to clipboard'));
           }}
         >
-          Copy
+          {t('Copy')}
         </Button>
       </View>
       <Surface style={styles.addressBox}>
@@ -134,7 +135,7 @@ function DetailsMode({ startEditing, selectAccount }) {
         }}
         style={{ marginTop: 30 }}
       >
-        Send to {contact.name}
+        {t('Send to {name}', { name: contact.name })}
       </Button>
     </>
   );
@@ -178,11 +179,11 @@ function EditMode({ isSubmitting, endEditing, handleSubmit, setFieldValue }) {
       </View>
       <TextBox.Formik
         name="name"
-        label="Contact name"
+        label={t('Contact name')}
         autoCapitalize="words"
         style={{ alignSelf: 'stretch', marginBottom: 10 }}
       />
-      <TextBox.Formik name="address" label="Address" multiline />
+      <TextBox.Formik name="address" label={t('Address')} multiline />
       <AddressPicker
         pickContacts={false}
         setAddress={(address) => {
@@ -195,8 +196,8 @@ function EditMode({ isSubmitting, endEditing, handleSubmit, setFieldValue }) {
         color={theme.danger}
         onPress={async () => {
           const confirmed = await confirm({
-            message: 'Delete contact?',
-            confirmLabel: 'Delete',
+            message: t('Delete contact?'),
+            confirmLabel: t('Delete'),
             danger: true,
           });
           if (confirmed) {
@@ -205,7 +206,7 @@ function EditMode({ isSubmitting, endEditing, handleSubmit, setFieldValue }) {
           }
         }}
       >
-        Delete contact
+        {t('Delete contact')}
       </Button>
     </>
   );
@@ -226,8 +227,8 @@ export default function ContactDetailsScreen({ navigation, route }) {
               address: contact.address || '',
             }}
             validationSchema={yup.object().shape({
-              name: yup.string().required('Required!'),
-              address: yup.string().required('Required!'),
+              name: yup.string().required(t('Required!')),
+              address: yup.string().required(t('Required!')),
             })}
             onSubmit={async ({ name, address }) => {
               try {

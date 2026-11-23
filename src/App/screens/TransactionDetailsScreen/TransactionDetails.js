@@ -1,5 +1,6 @@
 import React from 'react';
-import { Clipboard } from 'react-native';
+import { Clipboard, Linking } from 'react-native';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { Button, Surface } from 'react-native-paper';
 
@@ -7,6 +8,7 @@ import Divider from 'components/Divider';
 import SvgIcon from 'components/SvgIcon';
 import InfoField from 'components/InfoField';
 import { showNotification } from 'lib/ui';
+import { t } from 'lib/i18n';
 import CopyIcon from 'icons/copy.svg';
 
 const styles = {
@@ -16,11 +18,16 @@ const styles = {
   },
 };
 
+const explorerUrl = 'https://explorer.nexus.io';
+
 export default function TransactionDetails({ transaction }) {
+  const mainnet = useSelector(
+    (state) => !state.core.info?.testnet && !state.core.info?.private
+  );
   return (
     <Surface style={styles.wrapper}>
       <InfoField
-        label="Transaction ID"
+        label={t('Transaction ID')}
         control={
           <Button
             mode="text"
@@ -28,10 +35,10 @@ export default function TransactionDetails({ transaction }) {
             labelStyle={{ fontSize: 12 }}
             onPress={() => {
               Clipboard.setString(transaction.txid);
-              showNotification('Copied to clipboard');
+              showNotification(t('Copied to clipboard'));
             }}
           >
-            Copy
+            {t('Copy')}
           </Button>
         }
         value={transaction.txid}
@@ -41,19 +48,37 @@ export default function TransactionDetails({ transaction }) {
       <Divider />
       <InfoField
         inline
-        label="Time"
+        label={t('Time')}
         value={moment.unix(transaction.timestamp).format('llll')}
       />
       <Divider />
-      <InfoField inline label="Type" value={transaction.type} />
-      <Divider />
-      <InfoField inline label="Sequence" value={transaction.sequence} />
+      <InfoField inline label={t('Type')} value={transaction.type} />
       <Divider />
       <InfoField
         inline
-        label="Confirmations"
+        label={t('Sequence')}
+        value={transaction.sequence}
+      />
+      <Divider />
+      <InfoField
+        inline
+        label={t('Confirmations')}
         value={transaction.confirmations}
       />
+      {mainnet && (
+        <>
+          <Divider />
+          <Button
+            mode="text"
+            style={{ marginVertical: 8 }}
+            onPress={() => {
+              Linking.openURL(`${explorerUrl}/scan/${transaction.txid}`);
+            }}
+          >
+            {t('View on explorer')}
+          </Button>
+        </>
+      )}
     </Surface>
   );
 }

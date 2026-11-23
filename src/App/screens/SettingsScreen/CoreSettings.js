@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import { TouchableRipple, Surface } from 'react-native-paper';
 
@@ -10,14 +10,34 @@ import { useTheme } from 'lib/theme';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import SettingItem from './SettingItem';
 import commonStyles from './styles';
-import { confirm, showSuccess } from 'lib/ui';
+import { confirm, showSuccess, showError } from 'lib/ui';
 import { callAPI } from 'lib/api';
+import { t } from 'lib/i18n';
 import {
   scanFile,
   unlink,
   ExternalDirectoryPath,
   DocumentDirectoryPath,
 } from 'react-native-fs';
+
+async function deleteCoreData(subPath, doneMessage) {
+  const coreDir =
+    (Platform.OS === 'android' ? ExternalDirectoryPath : DocumentDirectoryPath) +
+    '/Nexus/client';
+  try {
+    await callAPI('system/stop', {});
+  } catch (err) {
+    //core may already be down, still delete
+  }
+  try {
+    await unlink(coreDir + subPath);
+    if (Platform.OS === 'android') await scanFile(ExternalDirectoryPath);
+  } catch (err) {
+    showError(t('Could not delete: {error}', { error: err?.message || err }));
+    return;
+  }
+  showSuccess(doneMessage);
+}
 
 const styles = {
   ...commonStyles,
@@ -78,7 +98,7 @@ export default function CoreSettings() {
   return (
     <>
       <Text style={styles.title} sub>
-        Core (Advanced)
+        {t('Core (Advanced)')}
       </Text>
       {/* <View style={styles.coreModeWrapper}>
         <View style={styles.coreModeSelector({ theme })}>
@@ -89,12 +109,12 @@ export default function CoreSettings() {
       <Surface style={styles.section}>
         <SettingItem
           small
-          title="External Core"
+          title={t('External Core')}
           right="arrow"
           onPress={() => {
             navigate('ExternalCoreConfig');
           }}
-          description={coreMode === 'external' ? 'On' : 'Off'}
+          description={coreMode === 'external' ? t('On') : t('Off')}
           primary
         />
 
@@ -102,7 +122,7 @@ export default function CoreSettings() {
           <>
             <SettingItem
               small
-              title="Core Log"
+              title={t('Core Log')}
               right="arrow"
               onPress={() => {
                 navigate('EmbeddedCoreLogReader');
@@ -111,54 +131,38 @@ export default function CoreSettings() {
 
             <SettingItem
               small
-              title="Delete Peer Info"
-              description="Clear Address Database"
+              title={t('Delete Peer Info')}
+              description={t('Clear Address Database')}
               onPress={async () => {
                 const confirmed = await confirm({
-                  title: 'Are you sure you want to delete the Address Folder?',
-                  confirmLabel: 'Delete Part of Database',
+                  title: t('Are you sure you want to delete the Address Folder?'),
+                  confirmLabel: t('Delete Part of Database'),
                   danger: true,
                 });
                 if (confirmed) {
-                  await callAPI('system/stop', {});
-                  await unlink(
-                    (Platform.OS === 'android'
-                      ? ExternalDirectoryPath + '/Nexus/client/_ADDR'
-                      : DocumentDirectoryPath) + '/Nexus/client/_ADDR'
+                  await deleteCoreData(
+                    '/_ADDR',
+                    t('Addresses deleted. Close the app completely and open it again.')
                   );
-                  if (Platform.OS === 'android')
-                    await scanFile(ExternalDirectoryPath);
-                  showSuccess(
-                    'Addresses deleted. App must be closed complety and restarted.'
-                  );
-                  /* Not the best solution, but we do not expect this function to be used very ofter. */
                 }
               }}
             />
 
             <SettingItem
               small
-              title="Delete Database"
-              description="Delete all core data and resync from scratch"
+              title={t('Delete Database')}
+              description={t('Delete all core data and resync from scratch')}
               onPress={async () => {
                 const confirmed = await confirm({
-                  title: 'Are you sure you want Delete?',
-                  confirmLabel: 'Delete Database',
+                  title: t('Are you sure you want Delete?'),
+                  confirmLabel: t('Delete Database'),
                   danger: true,
                 });
                 if (confirmed) {
-                  await callAPI('system/stop', {});
-                  await unlink(
-                    (Platform.OS === 'android'
-                      ? ExternalDirectoryPath
-                      : DocumentDirectoryPath) + '/Nexus/client'
+                  await deleteCoreData(
+                    '',
+                    t('Database deleted. Close the app completely and open it again.')
                   );
-                  if (Platform.OS === 'android')
-                    await scanFile(ExternalDirectoryPath);
-                  showSuccess(
-                    'Database deleted. Please close and reopen the app.'
-                  );
-                  /* Not the best solution, but we do not expect this function to be used very often. */
                 }
               }}
             />

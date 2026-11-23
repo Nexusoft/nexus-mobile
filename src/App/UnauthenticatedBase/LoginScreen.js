@@ -10,9 +10,10 @@ import TextBox from 'components/TextBox';
 import SvgIcon from 'components/SvgIcon';
 import Switch from 'components/Switch';
 import { useTheme } from 'lib/theme';
-import { logIn } from 'lib/session';
+import { logIn, friendlyLoginError } from 'lib/session';
 import * as TYPE from 'consts/actionTypes';
 import { showError } from 'lib/ui';
+import { t } from 'lib/i18n';
 import { getStore } from 'store';
 import LogoIcon from 'icons/logo-full.svg';
 import Backdrop from './Backdrop';
@@ -52,20 +53,20 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
     <View style={styles.wrapper}>
       <TextBox.Formik
         name="username"
-        label="Username"
+        label={t('Username')}
         background={['surface', 2]}
         style={styles.field}
       />
       <TextBox.Formik
         name="password"
-        label="Password"
+        label={t('Password')}
         background={['surface', 2]}
         secure
         style={styles.field}
       />
       <TextBox.Formik
         name="pin"
-        label="PIN"
+        label={t('PIN')}
         background={['surface', 2]}
         secure
         style={styles.field}
@@ -75,16 +76,16 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
         disabled={isSubmitting}
         loading={isSubmitting}
         onPress={handleSubmit}
-        label={isSubmitting ? 'Logging in' : 'Log in'}
+        label={isSubmitting ? t('Logging in') : t('Log in')}
       />
 
       <View style={styles.options}>
-        <Text sub>Remember username</Text>
+        <Text sub>{t('Remember username')}</Text>
         <Switch.Formik name="rememberMe" />
       </View>
       <View style={styles.options}>
         <Text sub={!!values.rememberMe} disabled={!values.rememberMe}>
-          Keep me logged in
+          {t('Keep me logged in')}
         </Text>
         <Switch.Formik name="keepLoggedIn" disabled={!values.rememberMe} />
       </View>
@@ -102,7 +103,7 @@ function LoginForm({ handleSubmit, isSubmitting, values }) {
             });
           }}
         >
-          Return to saved session
+          {t('Return to saved session')}
         </Button>
       )}
     </View>
@@ -116,7 +117,7 @@ export default function LoginScreen() {
     <Backdrop
       backdropContent={
         <>
-          <Text style={styles.heading({ theme })}>Log in to</Text>
+          <Text style={styles.heading({ theme })}>{t('Log in to')}</Text>
           <SvgIcon
             icon={LogoIcon}
             width={180}
@@ -136,9 +137,9 @@ export default function LoginScreen() {
           keepLoggedIn: false,
         }}
         validationSchema={yup.object().shape({
-          username: yup.string().required('Required!'),
-          password: yup.string().min(8).required('Required!'),
-          pin: yup.string().min(4).required('Required!'),
+          username: yup.string().required(t('Required!')),
+          password: yup.string().min(8).required(t('Required!')),
+          pin: yup.string().min(4).required(t('Required!')),
           rememberMe: yup.bool(),
           keepLoggedIn: yup.bool(),
         })}
@@ -152,17 +153,7 @@ export default function LoginScreen() {
           try {
             await logIn({ username, password, pin, rememberMe, keepLoggedIn });
           } catch (err) {
-            const syncing = getStore()?.getState().core.info?.syncing;
-            const message =
-              err?.message +
-              (syncing &&
-              // Error code -130: Account doesn't exist or connection failed.
-              (err?.code === -130 ||
-                // Error code -139: Invalid credentials
-                err?.code === -139)
-                ? '\n\nNot being fully synchronized may have caused this error. Please wait for synchronization to complete and try again.'
-                : '');
-            showError(message);
+            showError(friendlyLoginError(err));
           }
         }}
         component={LoginForm}

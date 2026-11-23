@@ -9,6 +9,7 @@ import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
 import memoize from 'utils/memoize';
+import { t } from 'lib/i18n';
 import AddressBookIcon from 'icons/address-book.svg';
 import Contact from './Contact';
 
@@ -39,7 +40,7 @@ export default function ContactSelector({ setAddress, style }) {
           }}
         >
           <Dialog.Title>
-            <Text>Choose from Contacts</Text>
+            <Text>{t('Choose from Contacts')}</Text>
           </Dialog.Title>
           <Dialog.ScrollArea>
             <FlatList

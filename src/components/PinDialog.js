@@ -7,6 +7,7 @@ import SvgIcon from 'components/SvgIcon';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
 import Portal from 'components/Portal';
+import { t } from 'lib/i18n';
 import LockIcon from 'icons/lock.svg';
 
 const styles = {
@@ -26,10 +27,10 @@ export default function PinDialog({
 }) {
   const [pin, setPin] = React.useState('');
   const submit = () => {
+    if (!pin) return;
     onConfirm?.(pin);
     onDismiss?.();
   };
-  console.log(fee);
   return (
     <Portal>
       <Dialog
@@ -43,7 +44,7 @@ export default function PinDialog({
           <TextBox
             style={styles.pinInput}
             background="surface"
-            label="Confirm your PIN"
+            label={t('Confirm your PIN')}
             value={pin}
             onChangeText={setPin}
             autoFocus
@@ -55,7 +56,7 @@ export default function PinDialog({
           />
           {!!fee && (
             <Text sub style={styles.feeText}>
-              This operation will cost you {fee} NXS
+              {t('This operation will cost you {fee} NXS', { fee })}
             </Text>
           )}
           <Button
@@ -64,8 +65,9 @@ export default function PinDialog({
               <SvgIcon icon={LockIcon} color={color} size={size} />
             )}
             onPress={submit}
+            disabled={!pin}
           >
-            Proceed
+            {t('Proceed')}
           </Button>
         </Dialog.Content>
       </Dialog>

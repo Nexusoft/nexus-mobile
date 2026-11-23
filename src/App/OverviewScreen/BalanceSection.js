@@ -8,8 +8,10 @@ import Text from 'components/Text';
 import SvgIcon from 'components/SvgIcon';
 import { useTheme, subColor } from 'lib/theme';
 import { refreshUserBalances } from 'lib/user';
-import { refreshMarketPrice } from 'lib/market';
+import { refreshMarketPrice, selectMarketPrice } from 'lib/market';
 import { selectSetting } from 'lib/settings';
+import { t } from 'lib/i18n';
+import { selectTestNetworkLabel } from 'lib/coreInfo';
 import { getStore } from 'store';
 import formatNumber from 'utils/formatNumber';
 import memoize from 'utils/memoize';
@@ -18,7 +20,7 @@ import DownArrowIcon from 'icons/chevron-down.svg';
 
 const styles = {
   wrapper: {
-    minHeight: '30%',
+    minHeight: 150,
     paddingVertical: 25,
     paddingHorizontal: 20,
     justifyContent: 'center',
@@ -38,6 +40,17 @@ const styles = {
   fiatValue: {
     fontSize: 18,
   },
+  networkTag: ({ theme }) => ({
+    marginTop: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: subColor(theme.dark ? theme.foreground : theme.onPrimary),
+    fontSize: 11,
+    textTransform: 'uppercase',
+    overflow: 'hidden',
+  }),
   expandIcon: ({ theme }) => ({
     position: 'absolute',
     top: 4,
@@ -66,6 +79,7 @@ const selectBalances = memoize(
   (balances) => {
     if (!balances) return [undefined, undefined];
     const nxsIndex = balances.findIndex(({ token }) => token === '0');
+    if (nxsIndex < 0) return [undefined, [...balances]];
     const tokenBalances = [...balances];
     const [nxsBalances] = tokenBalances.splice(nxsIndex, 1);
     return [nxsBalances, tokenBalances];
@@ -90,7 +104,8 @@ export default function BalanceSection({ filteredAccounts }) {
   const [nxsBalances] = useSelector(selectBalances);
   const baseCurrency = useSelector(selectSetting('baseCurrency'));
   const hideBalances = useSelector(selectSetting('hideBalances'));
-  const price = useSelector(({ market: { price } }) => price);
+  const price = useSelector(selectMarketPrice);
+  const testNetwork = useSelector(selectTestNetworkLabel);
   const { available, unclaimed, unconfirmed, stake, immature } =
     nxsBalances || {};
   React.useEffect(() => {
@@ -111,7 +126,7 @@ export default function BalanceSection({ filteredAccounts }) {
   );
   const renderBalance = (amount, formatOptions, currency = 'NXS') => {
     if (hideBalances) return '??? ' + currency;
-    if (!nxsBalances) return 'N/A';
+    if (!nxsBalances) return t('N/A');
     // VND doesn't have decimal digits
     if (currency === 'VND') {
       formatOptions.maximumFractionDigits = 0;
@@ -129,7 +144,7 @@ export default function BalanceSection({ filteredAccounts }) {
     >
       <>
         <View style={styles.brief}>
-          <BalanceText style={styles.balanceLabel}>Balance</BalanceText>
+          <BalanceText style={styles.balanceLabel}>{t('Balance')}</BalanceText>
           <BalanceText style={styles.balance}>
             {renderBalance(available + stake, { maximumFractionDigits: 2 })}
           </BalanceText>
@@ -145,6 +160,11 @@ export default function BalanceSection({ filteredAccounts }) {
               )}
             </BalanceText>
           )}
+          {!!testNetwork && (
+            <BalanceText style={styles.networkTag({ theme })}>
+              {t('{network}, no real value', { network: testNetwork })}
+            </BalanceText>
+          )}
           <SvgIcon
             size={10}
             style={styles.expandIcon({ theme })}
@@ -154,27 +174,27 @@ export default function BalanceSection({ filteredAccounts }) {
 
         <View style={styles.subBalances({ expanded })}>
           <View style={styles.subBalance}>
-            <BalanceText>Available</BalanceText>
+            <BalanceText>{t('Available')}</BalanceText>
             <BalanceText>{renderBalance(available)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Staking (locked)</BalanceText>
+            <BalanceText>{t('Staking (locked)')}</BalanceText>
             <BalanceText>{renderBalance(stake)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Unclaimed</BalanceText>
+            <BalanceText>{t('Unclaimed')}</BalanceText>
             <BalanceText>{renderBalance(unclaimed)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Unconfirmed</BalanceText>
+            <BalanceText>{t('Unconfirmed')}</BalanceText>
             <BalanceText>{renderBalance(unconfirmed)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Immature</BalanceText>
+            <BalanceText>{t('Immature')}</BalanceText>
             <BalanceText>{renderBalance(immature)}</BalanceText>
           </View>
           <View style={styles.subBalance}>
-            <BalanceText>Total</BalanceText>
+            <BalanceText>{t('Total')}</BalanceText>
             <BalanceText>
               {renderBalance(
                 available + stake + unclaimed + unconfirmed + immature

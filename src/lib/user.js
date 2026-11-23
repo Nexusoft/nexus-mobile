@@ -8,7 +8,7 @@ export const selectLoggedIn = (state) => !!state.user.status?.genesis;
 
 // Return user's confirmed status
 export const selectUserIsConfirmed = (state) =>
-  state.user?.status?.confirmed !== false;
+  state.user?.profileStatus?.confirmed !== false;
 
 export const selectUsername = (state) => {
   const {
@@ -17,6 +17,16 @@ export const selectUsername = (state) => {
 
   return profileStatus?.session?.username || status?.username || '';
 };
+
+//the account Send / Receive / Scan use when none is picked
+export function mainAccount(accounts) {
+  if (!accounts?.length) return null;
+  return (
+    accounts.find((acc) => acc.name === 'default' && acc.token === '0') ||
+    accounts.find((acc) => acc.token === '0' && acc.type !== 'TRUST') ||
+    accounts[0]
+  );
+}
 
 // Refreshes
 
@@ -31,13 +41,19 @@ export async function refreshUserBalances() {
   }
 }
 
+let emptyAccountRetries = 0;
 export async function refreshUserAccounts() {
   const store = getStore();
   try {
     const accounts = await callAPI('finance/list/any');
-    if (!accounts?.length) {
-      // In a very rare case the sigchain is not fully downloaded, try again
-      setTimeout(refreshUserAccounts, 500);
+    //sigchain not fully downloaded yet, try again a few times
+    if (!accounts?.length && emptyAccountRetries < 20) {
+      emptyAccountRetries++;
+      setTimeout(() => {
+        if (selectLoggedIn(store.getState())) refreshUserAccounts();
+      }, 1000);
+    } else {
+      emptyAccountRetries = 0;
     }
     store.dispatch({ type: TYPE.SET_USER_ACCOUNTS, payload: accounts });
     return accounts;
@@ -57,26 +73,44 @@ export async function refreshUserTokens() {
   }
 }
 
-export async function refreshUserSync() {
-  try {
-    const result = await callAPI('ledger/sync/sigchain');
-    return result;
-  } catch (err) {
-    return null;
-  }
+const maxSigchainSyncRounds = 10;
+let sigchainSync = null;
+
+async function readTransactionCount() {
+  const status = await callAPI('profiles/status/master');
+  return status?.transactions;
 }
 
-export async function refreshHeaders() {
-  try {
-    const result = await callAPI('ledger/sync/headers');
-    return result;
-  } catch (error) {
-    if (error.code === '-306') {
-      setTimeout(() => {
-        refreshHeaders();
-      }, 500);
-    }
+//lite core only, a full node keeps the sigchain current by itself
+//core 5.1 has no ledger/sync/*, profiles/transactions downloads what is missing first
+//the core can stop a download early (peer dropped), so go on while it still brings new ones
+async function syncSigchain() {
+  let added = false;
+  let count = await readTransactionCount();
+  for (let round = 0; round < maxSigchainSyncRounds; round++) {
+    await callAPI('profiles/transactions', { limit: 1 });
+    const newCount = await readTransactionCount();
+    if (!(newCount > count)) break;
+    added = true;
+    count = newCount;
   }
+  return added;
+}
+
+//resolves true when older transactions came in
+export function refreshUserSync() {
+  const state = getStore().getState();
+  if (!state.core.info?.litemode || !selectLoggedIn(state)) {
+    return Promise.resolve(false);
+  }
+  if (!sigchainSync) {
+    sigchainSync = syncSigchain()
+      .catch(() => false)
+      .finally(() => {
+        sigchainSync = null;
+      });
+  }
+  return sigchainSync;
 }
 
 export async function refreshUserAccount(address) {

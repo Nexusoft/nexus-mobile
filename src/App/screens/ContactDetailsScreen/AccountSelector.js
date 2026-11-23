@@ -10,6 +10,7 @@ import SvgIcon from 'components/SvgIcon';
 import Divider from 'components/Divider';
 import { useTheme, disabledColor } from 'lib/theme';
 import segmentAddress from 'utils/segmentAddress';
+import { t } from 'lib/i18n';
 
 import WalletIcon from 'icons/wallet.svg';
 
@@ -47,7 +48,7 @@ export default function AccountSelector({ onSelectAccount, ...rest }) {
     <Portal>
       <Dialog {...rest}>
         <Dialog.Title>
-          <Text>Account to send from</Text>
+          <Text>{t('Account to send from')}</Text>
         </Dialog.Title>
         <Dialog.Content>
           <FlatList
@@ -69,7 +70,7 @@ export default function AccountSelector({ onSelectAccount, ...rest }) {
                       disabled={!account.name}
                     />
                     <Text style={styles.accName} bold disabled={!account.name}>
-                      {account.name || 'Unnamed'}
+                      {account.name || t('Unnamed')}
                     </Text>
                   </View>
 
