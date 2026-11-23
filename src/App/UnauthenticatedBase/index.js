@@ -154,7 +154,7 @@ function SyncStatus() {
   return (
     <Text style={styles.sync({ theme })}>
       |{' '}
-      {t('Synchronizing... {progress}%', { progress: syncing?.progress })}
+      {t('Synchronizing... {progress}%', { progress: syncing?.progress ?? syncing?.completed })}
     </Text>
   );
 }

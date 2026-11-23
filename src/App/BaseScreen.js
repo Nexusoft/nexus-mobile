@@ -35,9 +35,8 @@ import {
 import PinPad from 'components/PinPad';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
-import { showError, showNotification, confirm } from 'lib/ui';
+import { showError, showNotification } from 'lib/ui';
 import { t } from 'lib/i18n';
-import { updateSettings } from 'lib/settings';
 import * as TYPE from 'consts/actionTypes';
 import { getStore } from 'store';
 import CopyIcon from 'icons/copy.svg';
@@ -45,6 +44,7 @@ import UserIcon from 'icons/user.svg';
 import UnlockIcon from 'icons/unlock.svg';
 import UnauthenticatedBase from './UnauthenticatedBase';
 import OverviewScreen from './OverviewScreen';
+import SyncScreen from './SyncScreen';
 
 const styles = {
   container: ({ theme }) => ({
@@ -333,70 +333,6 @@ function UnconfirmedUserBase() {
   );
 }
 
-function SynchronizingBase() {
-  const theme = useTheme();
-  const syncInfo = useSelector((state) => state.core.info?.syncing);
-  return (
-    <BaseScreenContainer>
-      <ActivityIndicator
-        animating
-        color={theme.dark ? theme.foreground : theme.onPrimary}
-      />
-      <Text
-        colorName={theme.dark ? 'foreground' : 'onPrimary'}
-        size={24}
-        style={{ textAlign: 'center', marginTop: 15 }}
-      >
-        {t('Initializing database...')}
-      </Text>
-      <Text
-        sub
-        colorName={theme.dark ? 'foreground' : 'onPrimary'}
-        size={18}
-        style={{ textAlign: 'center', marginTop: 20 }}
-      >
-        {t('Completed {percent}%', { percent: syncInfo?.completed ?? 0 })}
-      </Text>
-      <Text
-        sub
-        colorName={theme.dark ? 'foreground' : 'onPrimary'}
-        size={18}
-        style={{ textAlign: 'center' }}
-      >
-        {t('Est. time remaining: {time}', {
-          time: syncInfo?.timeRemaining ?? '...',
-        })}
-      </Text>
-
-      <Button
-        mode="outlined"
-        color={theme.dark ? theme.foreground : theme.onPrimary}
-        labelStyle={{ fontSize: 12 }}
-        style={{
-          marginTop: 80,
-          borderColor: theme.dark ? theme.foreground : theme.onPrimary,
-        }}
-        onPress={async () => {
-          const confirmed = await confirm({
-            title: t('Ignore database initialization?'),
-            message: t(
-              'When the app is initializing the blockchain database, login might not work as intended and inaccurate balances might be shown.\nAre you sure you want to ignore this process and proceed to use the app anyway?'
-            ),
-            cancelLabel: t('Stay and wait'),
-            confirmLabel: t('Ignore'),
-            danger: true,
-          });
-          if (confirmed) {
-            updateSettings({ ignoreSyncScreen: true });
-          }
-        }}
-      >
-        {t('Ignore')}
-      </Button>
-    </BaseScreenContainer>
-  );
-}
-
 function IndexingBase() {
   const theme = useTheme();
   return (
@@ -465,7 +401,12 @@ export default function BaseScreen({ route, navigation }) {
 
   if (!connected) return <DisconnectedBase />;
 
-  if (syncingFromScratch && !ignoreSyncScreen) return <SynchronizingBase />;
+  if (syncingFromScratch && !ignoreSyncScreen)
+    return (
+      <BaseScreenContainer unStyled>
+        <SyncScreen />
+      </BaseScreenContainer>
+    );
 
   if (indexing) return <IndexingBase />;
 
