@@ -32,9 +32,17 @@ export async function fetchStakeRewards(limit = 20) {
 }
 
 //new total stake: more than now comes from the trust account balance, less goes back to it
-export async function setStake(amount, pin) {
-  return await callAPI('finance/set/stake', { amount, pin });
+//saved in the core that is called and applied by its next stake block; expires 0 = never (default 3 days)
+export async function setStake(amount, pin, expires) {
+  return await callAPI('finance/set/stake', {
+    amount,
+    pin,
+    ...(expires !== undefined ? { expires } : null),
+  });
 }
+
+//staking a total below this pops a warning: a small stake may never make a block
+export const lowStakeWarnBelow = 1000;
 
 //the core's stake minter for this profile, full nodes only
 export async function setStaking(on, pin) {

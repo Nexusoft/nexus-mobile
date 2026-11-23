@@ -7,7 +7,7 @@ import moment from 'moment';
 import ScreenBody from 'components/ScreenBody';
 import Text from 'components/Text';
 import TextBox from 'components/TextBox';
-import Switch from 'components/Switch';
+import Slider from 'components/Slider';
 import { useTheme } from 'lib/theme';
 import { deltaColor } from 'lib/contracts';
 import {
@@ -15,8 +15,11 @@ import {
   fetchStakeRewards,
   setStake,
   setStaking,
+  lowStakeWarnBelow,
 } from 'lib/staking';
-import { confirmPin, showError, showSuccess } from 'lib/ui';
+import { confirm, confirmPin, showError, showSuccess } from 'lib/ui';
+import { navigate } from 'lib/navigation';
+import { trustAccountOf, defaultAccountOf } from 'lib/accounts';
 import { refreshUserAccounts } from 'lib/user';
 import { t } from 'lib/i18n';
 import formatNumber from 'utils/formatNumber';
@@ -71,6 +74,37 @@ const styles = {
     backgroundColor: theme.dark ? '#173445' : '#e3f5fe',
   }),
   center: { padding: 30, alignItems: 'center' },
+  amountRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  presets: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  preset: {
+    marginRight: 6,
+    marginTop: 4,
+  },
+  warn: {
+    marginTop: 8,
+    padding: 8,
+    borderRadius: 6,
+    backgroundColor: '#fff3d6',
+  },
+  buttons: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 14,
+  },
+  button: {
+    marginRight: 8,
+    marginTop: 4,
+  },
 };
 
 const nxs = (value, digits = 6) =>
@@ -99,113 +133,277 @@ function Meter({ label, value }) {
   );
 }
 
-function ChangeStake({ info, onChanged }) {
-  const theme = useTheme();
-  const [value, setValue] = React.useState('');
-  const [saving, setSaving] = React.useState(false);
-  const amount = parseAmount(value);
-  const max = (info.stake || 0) + (info.balance || 0);
-  let error = null;
-  if (value && !(amount >= 0)) error = t('Enter an amount');
-  else if (value && amount === info.stake) error = t('That is the stake you have now');
-  else if (value && amount > max) error = t('More than staked plus the trust account balance');
-  const lower = value && !error && amount < info.stake;
+const sliderStep = (max) => (max >= 1000 ? 1 : max >= 10 ? 0.1 : 0.000001);
+const roundTo = (value, step) =>
+  step >= 1 ? Math.round(value) : Math.round(value / step) * step;
 
-  const save = async () => {
-    if (!value || error) return;
-    const pin = await confirmPin({});
-    if (!pin) return;
-    setSaving(true);
+function StakeControl({ info, lite, onChanged }) {
+  const theme = useTheme();
+  const accounts = useSelector((state) => state.user.accounts);
+  const stake = info.stake || 0;
+  const max = stake + (info.balance || 0);
+  const pendingTotal = info.change ? stake + (info.amount || 0) : null;
+  const [target, setTarget] = React.useState(pendingTotal ?? stake);
+  const [typing, setTyping] = React.useState(false);
+  const [typed, setTyped] = React.useState('');
+  const [busy, setBusy] = React.useState(false);
+  const step = sliderStep(max);
+  const isNew = !!info.new;
+  const stopPending = pendingTotal === 0;
+  const trust = trustAccountOf(accounts);
+  const from = defaultAccountOf(accounts);
+
+  React.useEffect(() => {
+    setTarget(pendingTotal ?? stake);
+  }, [stake, pendingTotal]);
+
+  const run = async (action) => {
+    setBusy(true);
     try {
-      await setStake(amount, pin);
-      setValue('');
-      showSuccess(
-        t('Stake change asked for. It is applied with the next stake block.')
-      );
+      await action();
       onChanged();
     } catch (err) {
       showError(err?.message);
     } finally {
-      setSaving(false);
+      setBusy(false);
     }
   };
 
-  return (
-    <Surface style={styles.card}>
-      <Text bold style={{ marginBottom: 6 }}>
-        {t('Change stake')}
-      </Text>
-      <Text sub size={13}>
-        {t('Trust account balance: {balance}. More than now comes from it, less goes back to it. To stake more, send NXS to the trust account first.', { balance: nxs(info.balance) })}
-      </Text>
-      <TextBox
-        mode="outlined"
-        label={t('New stake (total)')}
-        value={value}
-        onChangeText={setValue}
-        keyboardType="decimal-pad"
-        error={!!error}
-        style={{ marginTop: 10 }}
-      />
-      {!!error && (
-        <Text size={12} style={{ color: deltaColor('-'), marginTop: 4 }}>
-          {error}
-        </Text>
-      )}
-      {lower && (
-        <Text sub size={12} style={{ marginTop: 4 }}>
-          {t('Lowering the stake also lowers your trust in the same ratio.')}
-        </Text>
-      )}
-      <View style={[styles.line, { marginTop: 10, marginBottom: 0 }]}>
-        <Button compact onPress={() => setValue(String(max))}>
-          {t('Stake all')}
-        </Button>
-        <Button
-          mode="contained"
-          labelStyle={{ color: theme.onPrimary }}
-          disabled={!value || !!error || saving}
-          loading={saving}
-          onPress={save}
-        >
-          {t('Change stake')}
-        </Button>
-      </View>
-    </Surface>
-  );
-}
+  const warnSmall = async (amount) =>
+    !(amount > 0 && amount < lowStakeWarnBelow && amount > stake) ||
+    (await confirm({
+      title: t('Stake this small amount?'),
+      message: t(
+        'Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.'
+      ),
+      confirmLabel: t('Stake anyway'),
+      cancelLabel: t('Cancel'),
+      danger: true,
+    }));
 
-function StakeMinter({ info, onChanged }) {
-  const [busy, setBusy] = React.useState(false);
+  const changeStake = async () => {
+    if (!(await warnSmall(target))) return;
+    const pin = await confirmPin({});
+    if (!pin) return;
+    await run(async () => {
+      await setStake(target, pin);
+      showSuccess(t('Stake change saved. It is applied with the next stake block.'));
+    });
+  };
+
+  const start = async () => {
+    if (!isNew && target !== stake && !(await warnSmall(target))) return;
+    if (isNew && !(await warnSmall(info.balance || 0))) return;
+    const pin = await confirmPin({});
+    if (!pin) return;
+    await run(async () => {
+      if (!isNew && target !== stake) await setStake(target, pin);
+      await setStaking(true, pin);
+      showSuccess(t('Staking started.'));
+    });
+  };
+
+  const stop = async () => {
+    const ok = await confirm({
+      title: t('Stop staking?'),
+      message: isNew
+        ? t('The core stops staking for this profile. The NXS stay in the trust account.')
+        : t('Your stake is set to 0. The staked NXS go back to the trust account balance with the next stake block, so the core has to keep staking until then. The trust you built up is lost.'),
+      confirmLabel: t('Stop staking'),
+      cancelLabel: t('Cancel'),
+      danger: true,
+    });
+    if (!ok) return;
+    const pin = await confirmPin({});
+    if (!pin) return;
+    await run(async () => {
+      if (isNew) await setStaking(false, pin);
+      else {
+        await setStake(0, pin, 0);
+        showSuccess(t('Unstake saved. The NXS come back with the next stake block.'));
+      }
+    });
+  };
+
+  const typedAmount = parseAmount(typed);
+  const typedError =
+    typing && typed
+      ? !(typedAmount >= 0)
+        ? t('Enter an amount')
+        : typedAmount > max
+        ? t('More than staked plus the trust account balance')
+        : null
+      : null;
+
+  const delta = roundTo(target - stake, step);
+  const canChange = !lite && !isNew && !busy && target !== stake && !(pendingTotal !== null && target === pendingTotal);
+  const canStart = !lite && !busy && !info.staking && (isNew ? (info.balance || 0) > 0 : max > 0);
+  const canStop = !lite && !busy && (isNew ? !!info.staking : stake > 0 && !stopPending);
+
   return (
     <Surface style={styles.card}>
-      <View style={[styles.line, { marginBottom: 0 }]}>
-        <View style={{ flex: 1, marginRight: 10 }}>
-          <Text bold>{t('Stake with this core')}</Text>
-          <Text sub size={12}>
-            {info.staking
-              ? t('The core stakes for this profile now.')
-              : t('Keeps the profile unlocked for staking in the core.')}
+      <Text bold style={{ marginBottom: 4 }}>
+        {t('Your stake')}
+      </Text>
+
+      {isNew ? (
+        <Text sub size={13}>
+          {t('Your first stake block (Genesis) stakes the whole trust account balance: {balance}. After that you can set the amount here.', { balance: nxs(info.balance) })}
+        </Text>
+      ) : (
+        <>
+          <View style={styles.amountRow}>
+            <Text size={26}>{formatNumber(target, { maximumFractionDigits: step >= 1 ? 0 : 6 })}</Text>
+            <Text sub size={14} style={{ marginLeft: 6 }}>
+              NXS
+            </Text>
+          </View>
+          <Text sub size={13} style={{ textAlign: 'center', minHeight: 18 }}>
+            {delta > 0
+              ? t('{amount} more is locked from the trust account balance', { amount: nxs(delta) })
+              : delta < 0
+              ? t('{amount} goes back to the trust account balance', { amount: nxs(-delta) })
+              : pendingTotal !== null && target === pendingTotal
+              ? t('This change is already waiting')
+              : t('Your stake now')}
           </Text>
-        </View>
-        <Switch
-          value={!!info.staking}
-          disabled={busy}
-          onValueChange={async (on) => {
-            const pin = await confirmPin({});
-            if (!pin) return;
-            setBusy(true);
-            try {
-              await setStaking(on, pin);
-              onChanged();
-            } catch (err) {
-              showError(err?.message);
-            } finally {
-              setBusy(false);
-            }
-          }}
-        />
+          <Slider
+            value={target}
+            min={0}
+            max={max}
+            step={step}
+            disabled={lite || busy || max <= 0}
+            onChange={(v) => {
+              setTyping(false);
+              setTarget(v);
+            }}
+            style={{ marginTop: 8 }}
+            testID="stake-slider"
+          />
+          <View style={[styles.line, { marginBottom: 2 }]}>
+            <Text sub size={12}>0</Text>
+            <Text sub size={12}>{nxs(max)}</Text>
+          </View>
+          <View style={styles.presets}>
+            {[0.25, 0.5, 0.75, 1].map((part) => (
+              <Button
+                key={part}
+                compact
+                mode="outlined"
+                disabled={lite || busy || max <= 0}
+                style={styles.preset}
+                labelStyle={{ fontSize: 12, marginHorizontal: 4 }}
+                onPress={() => {
+                  setTyping(false);
+                  setTarget(part === 1 ? max : roundTo(max * part, step));
+                }}
+              >
+                {part === 1 ? t('All') : `${part * 100} %`}
+              </Button>
+            ))}
+            <Button
+              compact
+              disabled={lite || busy || max <= 0}
+              labelStyle={{ fontSize: 12, marginHorizontal: 4 }}
+              onPress={() => {
+                setTyped(String(target));
+                setTyping(!typing);
+              }}
+            >
+              {t('Type')}
+            </Button>
+          </View>
+          {typing && (
+            <>
+              <TextBox
+                mode="outlined"
+                label={t('New stake (total)')}
+                value={typed}
+                onChangeText={(text) => {
+                  setTyped(text);
+                  const v = parseAmount(text);
+                  if (v >= 0 && v <= max) setTarget(v);
+                }}
+                keyboardType="decimal-pad"
+                error={!!typedError}
+                style={{ marginTop: 8 }}
+              />
+              {!!typedError && (
+                <Text size={12} style={{ color: deltaColor('-'), marginTop: 4 }}>
+                  {typedError}
+                </Text>
+              )}
+            </>
+          )}
+          {delta < 0 && (
+            <Text sub size={12} style={{ marginTop: 6 }}>
+              {t('Lowering the stake also lowers your trust in the same ratio.')}
+            </Text>
+          )}
+          {target > 0 && target < lowStakeWarnBelow && (
+            <View style={styles.warn}>
+              <Text size={12} style={{ color: '#8a5d00' }}>
+                {t('Small stakes rarely produce a stake block, and staked NXS stay locked until one comes. Most stakers use well over {amount}.', { amount: nxs(lowStakeWarnBelow, 0) })}
+              </Text>
+            </View>
+          )}
+        </>
+      )}
+
+      <View style={styles.buttons}>
+        {!info.staking && (
+          <Button
+            mode="contained"
+            labelStyle={{ color: theme.onPrimary }}
+            disabled={!canStart}
+            loading={busy}
+            style={styles.button}
+            onPress={start}
+          >
+            {t('Start staking')}
+          </Button>
+        )}
+        {!isNew && (info.staking || stake > 0) && (
+          <Button
+            mode="contained"
+            labelStyle={{ color: theme.onPrimary }}
+            disabled={!canChange}
+            loading={busy}
+            style={styles.button}
+            onPress={changeStake}
+          >
+            {t('Set stake')}
+          </Button>
+        )}
+        {(isNew ? !!info.staking : stake > 0) && (
+          <Button
+            mode="outlined"
+            color={deltaColor('-')}
+            disabled={!canStop}
+            style={styles.button}
+            onPress={stop}
+          >
+            {stopPending ? t('Stop requested') : t('Stop staking')}
+          </Button>
+        )}
       </View>
+
+      {lite && (
+        <Text sub size={12} style={{ marginTop: 8 }}>
+          {t('Disabled on this phone: a light core cannot stake, and a stake change is saved only in the core that stakes. Change it in the wallet that stakes this profile, or connect this app to that core.')}
+        </Text>
+      )}
+
+      {!!trust && !!from && (from.balance || 0) > 0 && (
+        <Button
+          compact
+          mode="text"
+          style={{ alignSelf: 'flex-start', marginTop: 8, marginLeft: -6 }}
+          onPress={() => navigate('Send', { account: from, sendTo: trust.address })}
+        >
+          {t('Add NXS to the trust account')}
+        </Button>
+      )}
     </Surface>
   );
 }
@@ -297,7 +495,7 @@ export default function StakingScreen() {
       {lite && (
         <View style={styles.note({ theme })}>
           <Text sub size={13}>
-            {t('This phone runs a light Nexus core, which cannot stake itself. Staking runs on a full node with this profile, for example the desktop wallet. You can still see and change your stake here.')}
+            {t('This phone runs a light Nexus core, which cannot stake itself. Staking runs on a full node with this profile, for example the desktop wallet. You can follow your stake here.')}
           </Text>
         </View>
       )}
@@ -312,7 +510,7 @@ export default function StakingScreen() {
         <View style={styles.note({ theme })}>
           <Text sub size={13}>
             {t('Stake change to {amount} waits for the next stake block.', {
-              amount: nxs(info.amount),
+              amount: nxs((info.stake || 0) + (info.amount || 0)),
             })}
           </Text>
         </View>
@@ -348,8 +546,7 @@ export default function StakingScreen() {
         )}
       </Surface>
 
-      <ChangeStake info={info} onChanged={load} />
-      {!lite && <StakeMinter info={info} onChanged={load} />}
+      <StakeControl info={info} lite={lite} onChanged={load} />
       <View style={{ height: 30 }} />
     </ScreenBody>
   );
