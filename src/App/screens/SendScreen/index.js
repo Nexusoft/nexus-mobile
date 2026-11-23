@@ -55,7 +55,17 @@ async function reverseLookup(address) {
   }
 }
 
+export function parseAmount(text) {
+  const normalized = String(text ?? '')
+    .trim()
+    .replace(/\s/g, '')
+    .replace(',', '.');
+  if (!/^\d*\.?\d+$|^\d+\.$/.test(normalized)) return NaN;
+  return Number(normalized);
+}
+
 async function resolveNameOrAddress(nameOrAddress) {
+  nameOrAddress = nameOrAddress?.trim();
   if (!nameOrAddress) return null;
 
   if (addressRegex.test(nameOrAddress)) {
@@ -160,7 +170,17 @@ export default function SendScreen({ route }) {
       }}
       validationSchema={yup.object().shape({
         nameOrAddress: yup.string().required('Required!'),
-        amount: yup.number().typeError('Invalid!').min(0, 'Invalid!'),
+        amount: yup
+          .string()
+          .required('Required!')
+          .test('amount', 'Invalid!', (value) => parseAmount(value) > 0)
+          .test(
+            'balance',
+            'More than the account holds',
+            (value) =>
+              typeof account?.balance !== 'number' ||
+              !(parseAmount(value) > account.balance)
+          ),
         reference: yup
           .number()
           .typeError('Invalid!')
@@ -171,13 +191,22 @@ export default function SendScreen({ route }) {
         { nameOrAddress, amount, reference },
         { setFieldError }
       ) => {
-        const resolved = await resolveNameOrAddress(nameOrAddress);
+        let resolved = null;
+        try {
+          resolved = await resolveNameOrAddress(nameOrAddress);
+        } catch (err) {
+          setFieldError(
+            'nameOrAddress',
+            err?.message || 'Could not check this name/address'
+          );
+          return;
+        }
         if (resolved) {
           navigate('ConfirmSend', {
             account,
             recipient: resolved,
-            amount,
-            reference,
+            amount: parseAmount(amount),
+            reference: reference === '' ? undefined : Number(reference),
           });
         } else {
           setFieldError('nameOrAddress', 'Invalid name/address!');

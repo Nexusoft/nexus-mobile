@@ -3,6 +3,8 @@ import { refreshUserAccounts } from 'lib/user';
 import { refreshUserStatus } from 'lib/session';
 import { watchNewTransactions } from 'lib/transactions';
 import { pollMarketPrice } from 'lib/market';
+import { selectSetting } from 'lib/settings';
+import { loadEmbeddedCredentials } from 'lib/embeddedCore';
 import { createStore } from 'store';
 import loadInitialState from 'store/loadInitialState';
 
@@ -31,6 +33,9 @@ export default function initStore() {
     // Load initialState here to avoid circular dependencies
     const initialState = await loadInitialState();
     const store = createStore(initialState);
+    if (selectSetting('coreMode')(store.getState()) === 'embedded') {
+      await loadEmbeddedCredentials();
+    }
     await withTimeout(refreshCoreInfo, 1000);
 
     store.observe(

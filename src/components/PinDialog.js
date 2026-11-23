@@ -26,10 +26,10 @@ export default function PinDialog({
 }) {
   const [pin, setPin] = React.useState('');
   const submit = () => {
+    if (!pin) return;
     onConfirm?.(pin);
     onDismiss?.();
   };
-  console.log(fee);
   return (
     <Portal>
       <Dialog
@@ -64,6 +64,7 @@ export default function PinDialog({
               <SvgIcon icon={LockIcon} color={color} size={size} />
             )}
             onPress={submit}
+            disabled={!pin}
           >
             Proceed
           </Button>

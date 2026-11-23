@@ -54,7 +54,7 @@ const accountLabel = ({ name, address, local, namespace, mine }) => {
   const match =
     contacts &&
     Object.entries(contacts).find(
-      ([name, contactAddress]) => address === contactAddress
+      ([name, contact]) => address === contact?.address
     );
   if (match) {
     return match[0];

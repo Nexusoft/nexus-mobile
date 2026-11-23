@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, Clipboard } from 'react-native';
-import { Button, overlay, Surface } from 'react-native-paper';
+import { Button, Surface } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
 import { useTheme } from 'lib/theme';
 
@@ -18,13 +18,6 @@ const styles = {
     flex: 1,
     paddingHorizontal: 20,
   }),
-  upperPart: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  lowerPart: {
-    flex: 3,
-  },
   topInstruction: {
     marginBottom: 30,
     alignItems: 'center',
@@ -64,22 +57,23 @@ export default function ReceiveScreen({ route }) {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100%',
-        paddingVertical: 20,
+        paddingTop: 20,
+        paddingBottom: 60,
       }}
     >
-      <View style={styles.upperPart}>
+      <View>
         <Surface style={styles.main}>
           <View style={styles.topInstruction}>
             <Text sub>Show this QR code to the sender</Text>
           </View>
 
+          {/* always dark on light, scanners can fail on inverted codes */}
           <QRCode
             value={address}
             size={200}
-            color={theme.foreground}
-            backgroundColor={
-              theme.dark ? overlay(5, theme.surface) : theme.surface
-            }
+            color="#000"
+            backgroundColor="#fff"
+            quietZone={10}
           />
 
           <Text mono style={styles.address}>
@@ -108,8 +102,6 @@ export default function ReceiveScreen({ route }) {
           </Button>
         </Surface>
       </View>
-
-      <View style={styles.lowerPart} />
     </ScrollView>
   );
 }

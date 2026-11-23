@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableWithoutFeedback, FlatList } from 'react-native';
-import { TouchableRipple } from 'react-native-paper';
+import { TouchableRipple, Button } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import Text from 'components/Text';
@@ -49,6 +49,15 @@ const styles = {
   },
   accBalance: {
     fontSize: 15,
+  },
+  empty: {
+    alignItems: 'center',
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+  },
+  emptyText: {
+    textAlign: 'center',
+    marginBottom: 10,
   },
   accActions: {
     flexDirection: 'row',
@@ -117,7 +126,11 @@ function Account({ account }) {
 }
 
 const refreshData = () =>
-  Promise.all([refreshUserAccounts, refreshUserBalances, refreshMarketPrice]);
+  Promise.all([
+    refreshUserAccounts(),
+    refreshUserBalances(),
+    refreshMarketPrice(),
+  ]);
 
 export default function Accounts({ filteredAccounts }) {
   const [refreshing, refresh] = useRefresh(refreshData);
@@ -140,6 +153,23 @@ export default function Accounts({ filteredAccounts }) {
         keyExtractor={(acc) => acc.address}
         renderItem={({ item: account }) => <Account account={account} />}
         ItemSeparatorComponent={() => <Divider inset={20} />}
+        ListEmptyComponent={
+          Array.isArray(filteredAccounts) ? (
+            <View style={styles.empty}>
+              <Text sub style={styles.emptyText}>
+                You have no accounts yet.
+              </Text>
+              <Button
+                mode="text"
+                onPress={() => {
+                  navigate('NewAccount');
+                }}
+              >
+                Create account
+              </Button>
+            </View>
+          ) : null
+        }
       />
     </>
   );

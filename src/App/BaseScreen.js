@@ -21,7 +21,7 @@ import {
   selectUserIsConfirmed,
   selectUsername,
 } from 'lib/user';
-import { refreshUserStatus } from 'lib/session';
+import { refreshUserStatus, waitForIndexing } from 'lib/session';
 import { selectConnected, refreshCoreInfo } from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
 import { showError, showNotification, confirm } from 'lib/ui';
@@ -143,23 +143,18 @@ function DisconnectedBase() {
 function UnlockingBase() {
   const theme = useTheme();
   const [pin, setPin] = React.useState('');
-  const [loading, setLoading] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
   const savedUsername = useSelector((state) => state.settings.savedUsername);
 
   const unlock = async () => {
+    if (loading) return;
     setLoading(true);
     try {
       await callAPI('sessions/load/local', {
         pin,
         username: savedUsername,
       });
-      let finishedIndexing = false;
-      while (!finishedIndexing) {
-        // This checks if the account has finished indexing after downloading the sigchain, consider revising this.
-        let status = await callAPI('sessions/status/local');
-        finishedIndexing = !status?.indexing;
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
+      await waitForIndexing();
       await callAPI('sessions/save/local', { pin });
       await callAPI('sessions/unlock/local', { pin, notifications: true });
       await refreshUserStatus();
@@ -293,7 +288,7 @@ function SynchronizingBase() {
         size={18}
         style={{ textAlign: 'center', marginTop: 20 }}
       >
-        Completed {syncInfo.completed}%
+        Completed {syncInfo?.completed ?? 0}%
       </Text>
       <Text
         sub
@@ -301,7 +296,7 @@ function SynchronizingBase() {
         size={18}
         style={{ textAlign: 'center' }}
       >
-        Est. time remaining: {syncInfo.timeRemaining}
+        Est. time remaining: {syncInfo?.timeRemaining ?? '...'}
       </Text>
 
       <Button
@@ -404,6 +399,8 @@ export default function BaseScreen({ route, navigation }) {
 
   if (indexing) return <IndexingBase />;
 
+  if (loggedIn && !confirmedUser) return <UnconfirmedUserBase />;
+
   if (loggedIn)
     return (
       <BaseScreenContainer unStyled>
@@ -412,8 +409,6 @@ export default function BaseScreen({ route, navigation }) {
     );
 
   if (hasSavedSession && !ignoreSavedSession) return <UnlockingBase />;
-
-  if (!confirmedUser) return <UnconfirmedUserBase />;
 
   return (
     <BaseScreenContainer unStyled>
